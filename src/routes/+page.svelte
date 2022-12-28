@@ -15,7 +15,7 @@
 		<img src="THW.svg" class="w-32" width="128" height="128" alt="thw image" />
 		<h1 class="w-fit text-4xl font-bold">THW Tools</h1>
 		<h2 class="w-fit text-center">Ein paar inoffizielle Tools für die Nutzung im THW!</h2>
-		<div class="w-full flex flex-col gap-4">
+		<div class="w-full flex flex-col items-center gap-4 md:max-w-[16rem]">
 			<LinkButton name="AGT-Quiz" url="https://agt.codelam.de" />
 			<LinkButton name="Finnentest" url="https://finnentest.codelam.de" />
 		</div>
