@@ -18,13 +18,13 @@
 		<h1 class="w-fit text-4xl font-bold">THW Tools</h1>
 		<h2 class="w-fit text-center">Ein paar inoffizielle Tools für die Nutzung im THW!</h2>
 		<div class="w-full flex flex-col items-center gap-4 md:max-w-[16rem]">
-			<LinkButton url="https://agt.thw-tools.de">
+			<LinkButton url="https://agt.thw-tools.de" blank>
 				<div class="w-6">
 					<ChartSimpleIcon />
 				</div>
 				<div>AGT-Quiz</div>
 			</LinkButton>
-			<LinkButton url="https://finnentest.thw-tools.de">
+			<LinkButton url="https://finnentest.thw-tools.de" blank>
 				<div class="w-6">
 					<HearthPulseIcon />
 				</div>
@@ -32,5 +32,4 @@
 			</LinkButton>
 		</div>
 	</div>
-	<div>©2022 Malte Sehmer</div>
 </div>
