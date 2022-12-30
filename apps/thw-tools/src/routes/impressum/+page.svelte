@@ -2,6 +2,11 @@
 	import LinkButton from '../../lib/LinkButton.svelte';
 </script>
 
+<svelte:head>
+	<title>THW Tools - Impressum</title>
+	<meta name="robots" content="noindex" />
+</svelte:head>
+
 <div class="flex flex-col gap-4 m-4">
 	<LinkButton url="/">Zurück</LinkButton>
 	<h1 class="text-4xl font-bold">Impressum</h1>
