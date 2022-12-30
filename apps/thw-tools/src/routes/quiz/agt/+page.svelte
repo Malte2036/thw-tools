@@ -1,8 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { AGTQuestions } from './AGTQuestions';
-	import type { Question } from './Question';
-
 	import type { PageData } from './$types';
 	import { invalidate } from '$app/navigation';
 
