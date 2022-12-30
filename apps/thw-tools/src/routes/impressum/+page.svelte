@@ -1,5 +1,5 @@
 <script>
-	import LinkButton from '../LinkButton.svelte';
+	import LinkButton from '../../lib/LinkButton.svelte';
 </script>
 
 <div class="flex flex-col gap-4 m-4">

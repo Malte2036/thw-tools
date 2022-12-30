@@ -1,12 +1,6 @@
-<script>
-	/**
-	 * @type {string}
-	 */
-	export let url;
-	/**
-	 * @type {boolean}
-	 */
-	export let blank = false;
+<script lang="ts">
+	export let url: string;
+	export let blank: boolean = false;
 </script>
 
 <a

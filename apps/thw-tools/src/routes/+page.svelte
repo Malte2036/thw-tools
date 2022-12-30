@@ -1,7 +1,7 @@
 <script>
-	import ChartSimpleIcon from './ChartSimpleIcon.svelte';
-	import HearthPulseIcon from './HearthPulseIcon.svelte';
-	import LinkButton from './LinkButton.svelte';
+	import ChartSimpleIcon from '../lib/icons/ChartSimpleIcon.svelte';
+	import HearthPulseIcon from '../lib/icons/HearthPulseIcon.svelte';
+	import LinkButton from '../lib/LinkButton.svelte';
 </script>
 
 <svelte:head>
