@@ -55,7 +55,7 @@
 				});
 			}
 		}}
-		class="bg-thw text-white disabled:bg-white border border-thw disabled:text-thw py-2 rounded-lg text-xl font-bold"
+		class="bg-thw text-white py-2 rounded-lg text-xl font-bold disabled:bg-white disabled:border disabled:border-thw disabled:text-gray-500"
 		disabled={data.question.answers.every((answer) => answer.checked === false)}
 		>{revealAnswers ? 'Nächste Frage' : 'Überprüfen'}</button
 	>
