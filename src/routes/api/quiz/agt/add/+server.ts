@@ -15,7 +15,7 @@ export const POST: RequestHandler = async ({ request }: RequestEvent) => {
 	const body: StatisticsData = await request.json();
 
 	try {
-		let client = new sdk.Client();
+		const client = new sdk.Client();
 		const databases = new sdk.Databases(client);
 
 		client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECTID).setKey(APPWRITE_APIKEY);
