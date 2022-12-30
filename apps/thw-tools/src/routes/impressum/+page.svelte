@@ -22,6 +22,9 @@
 		veröffentlicht, sodass ein Impressum nach § 55 RstV ebenfalls nicht erforderlich ist.</span
 	>
 	<span
+		>Außerdem möchten wir darauf hinweisen, dass diese Website anonyme Nutzungsstatistiken sammelt.</span
+	>
+	<span
 		>Für Fragen und Hinweise können Sie mich (Malte Sehmer) über die E-Mail-Adresse
 		<a href="mailto:webmaster@thw-tools.de" class="text-thw underline">webmaster@thw-tools.de</a> erreichen.</span
 	><span
