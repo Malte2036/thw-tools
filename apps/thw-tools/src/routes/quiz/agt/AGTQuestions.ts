@@ -579,7 +579,7 @@ export const AGTQuestions: Question[] = [
 			}
 		],
 		number: 30,
-		text: 'An einer Einsatzstelle k\u00f6nnen Feuerwehrangeh\u00f6rige (Sb# als Atemschutzger\u00e4tetr\u00e4ger eingesetzt werden, wenn'
+		text: 'An einer Einsatzstelle k\u00f6nnen Feuerwehrangeh\u00f6rige (SB) als Atemschutzger\u00e4tetr\u00e4ger eingesetzt werden, wenn'
 	},
 	{
 		answers: [
@@ -857,7 +857,7 @@ export const AGTQuestions: Question[] = [
 			}
 		],
 		number: 43,
-		text: 'Beim Einsatz eines Filterger\u00e4tes (ABEK 2-P c#'
+		text: 'Beim Einsatz eines Filterger\u00e4tes (ABEK 2-P 3)'
 	},
 	{
 		answers: [
