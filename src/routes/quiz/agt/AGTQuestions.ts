@@ -427,7 +427,7 @@ export const AGTQuestions: Question[] = [
 			}
 		],
 		number: 24,
-		text: '\u00c4rztliche Untersuchungen f\u00fcr Atemschutzger\u00e4tetr\u00e4ger (bis zum 50'
+		text: '\u00c4rztliche Untersuchungen f\u00fcr Atemschutzger\u00e4tetr\u00e4ger (bis zum 50. Lebensjahr) m\u00fcssen durchgef\u00fchrt werden:'
 	},
 	{
 		answers: [
@@ -605,7 +605,7 @@ export const AGTQuestions: Question[] = [
 			}
 		],
 		number: 31,
-		text: 'Die Einsatzkurzpr\u00fcfung besteht aus'
+		text: 'Die Einsatzkurzpr\u00fcfung besteht aus:'
 	},
 	{
 		answers: [
@@ -1163,7 +1163,7 @@ export const AGTQuestions: Question[] = [
 			{ letter: 'd', text: '20 l/min', correct: false }
 		],
 		number: 58,
-		text: 'Bei einer Einsatzdauer von 15 Minuten \u00e4ndert sich bei einem 1-Flaschen-Ger\u00e4t (6 Liter Inhalt) der Flaschendruck um 100 bar'
+		text: 'Bei einer Einsatzdauer von 15 Minuten \u00e4ndert sich bei einem 1-Flaschen-Ger\u00e4t (6 Liter Inhalt) der Flaschendruck um 100 bar. Wie war der Luftverbrauch des Atemschutzger\u00e4tetr\u00e4gers in dieser Zeit pro Minute?'
 	},
 	{
 		answers: [
@@ -1177,7 +1177,7 @@ export const AGTQuestions: Question[] = [
 			{ letter: 'd', text: 'bei 155 bar Restdruck', correct: false }
 		],
 		number: 59,
-		text: 'Bei dem Hinweg zur Einsatzstelle hat der Druck um 60 bar abgenommen'
+		text: 'Bei dem Hinweg zur Einsatzstelle hat der Druck um 60 bar abgenommen. Vor Beginn des Einsatzes betrug der Flaschendruck 290 bar. Wann muss der R\u00fcckweg angetreten werden?'
 	},
 	{
 		answers: [
