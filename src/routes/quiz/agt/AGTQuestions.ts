@@ -72,7 +72,7 @@ export const AGTQuestions: Question[] = [
 			{ letter: 'c', text: 'die Ein- und Ausatmung', correct: false },
 			{
 				letter: 'd',
-				text: 'der Ersatz von Kohlenmonoxid (CO',
+				text: 'der Ersatz von Kohlenmonoxid (CO) durch Kohlendioxid (CO 2 )',
 				correct: false
 			}
 		],
@@ -160,7 +160,7 @@ export const AGTQuestions: Question[] = [
 			},
 			{
 				letter: 'd',
-				text: '78 % Stickstoff, 4 % Kohlenoxid (CO',
+				text: '78 % Stickstoff, 4 % Kohlenoxid (CO), 17 % Sauerstoff, Rest Kohlendioxid',
 				correct: false
 			}
 		],
@@ -372,7 +372,7 @@ export const AGTQuestions: Question[] = [
 			},
 			{
 				letter: 'd',
-				text: 'mit Wirkung auf das Wahrnehmungsverm\u00f6gen (Sinnestr\u00fcbungen, Ohnmacht, Sehverm\u00f6gen',
+				text: 'mit Wirkung auf das Wahrnehmungsverm\u00f6gen (Sinnestr\u00fcbungen, Ohnmacht, Sehverm\u00f6gen).',
 				correct: false
 			}
 		],
@@ -439,8 +439,8 @@ export const AGTQuestions: Question[] = [
 			},
 			{
 				letter: 'c',
-				text: 'Sicherheitstrupps (\u201eRettungstrupp\u201c nach UVV',
-				correct: false
+				text: 'Sicherheitstrupps (\u201eRettungstrupp\u201c nach UVV) zu stellen sind.',
+				correct: true
 			},
 			{
 				letter: 'd',
@@ -507,8 +507,8 @@ export const AGTQuestions: Question[] = [
 		answers: [
 			{
 				letter: 'a',
-				text: 'ein Ein-Flaschenger\u00e4t (300 bar',
-				correct: false
+				text: 'ein Ein-Flaschenger\u00e4t (300 bar) und einem Schlauchger\u00e4t grunds\u00e4tzlich nicht, zusammen eingesetzt werden d\u00fcrfen.',
+				correct: true
 			},
 			{
 				letter: 'b',
@@ -579,7 +579,7 @@ export const AGTQuestions: Question[] = [
 			}
 		],
 		number: 30,
-		text: 'An einer Einsatzstelle k\u00f6nnen Feuerwehrangeh\u00f6rige (SB) als Atemschutzger\u00e4tetr\u00e4ger eingesetzt werden, wenn'
+		text: 'An einer Einsatzstelle k\u00f6nnen Feuerwehrangeh\u00f6rige (Sb# als Atemschutzger\u00e4tetr\u00e4ger eingesetzt werden, wenn'
 	},
 	{
 		answers: [
@@ -837,18 +837,18 @@ export const AGTQuestions: Question[] = [
 		answers: [
 			{
 				letter: 'a',
-				text: 'muss die Umluft gen\u00fcgend Sauerstoff enthalten (mind. 17 Vol.-%',
-				correct: false
+				text: 'muss die Umluft gen\u00fcgend Sauerstoff enthalten (mind. 17 Vol.-%).',
+				correct: true
 			},
 			{
 				letter: 'b',
-				text: 'darf die Umluft kein Kohlendioxid (CO 2',
+				text: 'darf die Umluft kein Kohlendioxid (CO 2 ) und max. 3 Vol.-% Giftstoffe enthalten.',
 				correct: false
 			},
 			{
 				letter: 'c',
-				text: 'die Umluft darf kein Kohlenmonoxid (CO',
-				correct: false
+				text: 'die Umluft darf kein Kohlenmonoxid (CO) und max. 0,5 Vol.-% Giftstoffe enthalten.',
+				correct: true
 			},
 			{
 				letter: 'd',
@@ -857,7 +857,7 @@ export const AGTQuestions: Question[] = [
 			}
 		],
 		number: 43,
-		text: 'Beim Einsatz eines Filterger\u00e4tes (ABEK 2-P 3)'
+		text: 'Beim Einsatz eines Filterger\u00e4tes (ABEK 2-P c#'
 	},
 	{
 		answers: [
@@ -907,8 +907,8 @@ export const AGTQuestions: Question[] = [
 		answers: [
 			{
 				letter: 'a',
-				text: 'bei starkem Funkenflug (z.B. Trennschneiden',
-				correct: false
+				text: 'bei starkem Funkenflug (z.B. Trennschneiden)',
+				correct: true
 			},
 			{
 				letter: 'b',
@@ -965,8 +965,8 @@ export const AGTQuestions: Question[] = [
 			},
 			{
 				letter: 'c',
-				text: 'zu den Rettungsger\u00e4ten (Fluchtger\u00e4ten',
-				correct: false
+				text: 'zu den Rettungsger\u00e4ten (Fluchtger\u00e4ten).',
+				correct: true
 			},
 			{ letter: 'd', text: 'zu den Filterger\u00e4ten.', correct: true }
 		],
@@ -1169,7 +1169,7 @@ export const AGTQuestions: Question[] = [
 		answers: [
 			{
 				letter: 'a',
-				text: 'erst beim Ausl\u00f6sen der akustischen Warneinrichtung (55 +/- 5 bar',
+				text: 'erst beim Ausl\u00f6sen der akustischen Warneinrichtung (55 +/- 5 bar)',
 				correct: false
 			},
 			{ letter: 'b', text: 'bei 120 bar Restdruck', correct: true },
@@ -1262,8 +1262,8 @@ export const AGTQuestions: Question[] = [
 			},
 			{
 				letter: 'b',
-				text: 'Kopfbehaarung (Bart, Koteletten, Haupthaar',
-				correct: false
+				text: 'Kopfbehaarung (Bart, Koteletten, Haupthaar) den Dichtsitz der Maske verhindert.',
+				correct: true
 			},
 			{
 				letter: 'c',
@@ -1283,22 +1283,22 @@ export const AGTQuestions: Question[] = [
 		answers: [
 			{
 				letter: 'a',
-				text: '\u201eMayday, hier <Funkrufname>, <Standort>, <Lage>, melden - mayday!\u201c',
+				text: '\u201eMayday; hier <Funkrufname>, <Standort>, <Lage>, melden - mayday!\u201c',
 				correct: false
 			},
 			{
 				letter: 'b',
-				text: '\u201eHilfe, Hilfe, hier <Funkrufname>, <Standort>, <Lage> - kommen!\u201c',
+				text: '\u201eHilfe, Hilfe; hier <Funkrufname>, <Standort>, <Lage> - kommen!\u201c',
 				correct: false
 			},
 			{
 				letter: 'c',
-				text: '\u201eBlitz, hier <Funkrufname>, <Standort>, <Lage> - kommen!\u201c',
+				text: '\u201eBlitz; hier <Funkrufname>, <Standort>, <Lage> - kommen!\u201c',
 				correct: false
 			},
 			{
 				letter: 'd',
-				text: '\u201cMayday, mayday, mayday, hier <Funkrufname>, <Standort>, <Lage>, mayday \u2013 kommen!\u201c',
+				text: '\u201cMayday; mayday; mayday; hier <Funkrufname>, <Standort>, <Lage>, mayday \u2013 kommen!\u201c',
 				correct: true
 			}
 		],
@@ -1324,8 +1324,8 @@ export const AGTQuestions: Question[] = [
 			},
 			{
 				letter: 'd',
-				text: 'Der Fl\u00fcssigkeitsverlust der Einsatzkr\u00e4fte ist durch geeignete Getr\u00e4nke (z.B. Apfelschorle',
-				correct: false
+				text: 'Der Fl\u00fcssigkeitsverlust der Einsatzkr\u00e4fte ist durch geeignete Getr\u00e4nke (z.B. Apfelschorle) auszugleichen.',
+				correct: true
 			}
 		],
 		number: 65,
@@ -1340,8 +1340,8 @@ export const AGTQuestions: Question[] = [
 			},
 			{
 				letter: 'b',
-				text: 'eine Dichtprobe der Maske (Handballenprobe',
-				correct: false
+				text: 'eine Dichtprobe der Maske (Handballenprobe) durchf\u00fchren.',
+				correct: true
 			},
 			{
 				letter: 'c',
@@ -1350,8 +1350,8 @@ export const AGTQuestions: Question[] = [
 			},
 			{
 				letter: 'd',
-				text: 'den Lungenautomaten truppweise anschlie\u00dfen und gegenseitig den Sitz der Schutzausr\u00fcstung (z.B. Flammschutzhaube',
-				correct: false
+				text: 'den Lungenautomaten truppweise anschlie\u00dfen und gegenseitig den Sitz der Schutzausr\u00fcstung (z.B. Flammschutzhaube) kontrollieren.',
+				correct: true
 			}
 		],
 		number: 66,
@@ -1397,8 +1397,8 @@ export const AGTQuestions: Question[] = [
 			},
 			{
 				letter: 'c',
-				text: 'bei einer zu starken W\u00e4rmeentwicklung (z.B. sichtbares Abschmelzen von Kunststoffteilen',
-				correct: false
+				text: 'bei einer zu starken W\u00e4rmeentwicklung (z.B. sichtbares Abschmelzen von Kunststoffteilen)',
+				correct: true
 			},
 			{
 				letter: 'd',
@@ -1418,8 +1418,8 @@ export const AGTQuestions: Question[] = [
 			},
 			{
 				letter: 'b',
-				text: 'nach einer direkten Beflammung (z.B. Durchz\u00fcndung',
-				correct: false
+				text: 'nach einer direkten Beflammung (z.B. Durchz\u00fcndung)',
+				correct: true
 			},
 			{
 				letter: 'c',
