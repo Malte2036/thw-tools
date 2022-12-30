@@ -47,7 +47,19 @@
 	</div>
 	<button
 		on:click={() => {
-			revealAnswers ? assignNewQuestion() : (revealAnswers = !revealAnswers);
+			if (revealAnswers) {
+				assignNewQuestion();
+			} else {
+				revealAnswers = !revealAnswers;
+				fetch('/api/quiz/agt/add', {
+					method: 'POST',
+					body: JSON.stringify({
+						questionId: question.number,
+						correct: question.answers.every((answer) => answer.checked == answer.correct)
+					}),
+					headers: { 'content-type': 'application/json' }
+				});
+			}
 		}}
 		class="bg-thw text-white py-2 rounded-lg text-xl font-bold"
 		>{revealAnswers ? 'Nächste Frage' : 'Überprüfen'}</button
