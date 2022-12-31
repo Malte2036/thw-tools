@@ -8,7 +8,7 @@
 
 	let fetching = true;
 
-	$: if (data.question) {
+	$: if (fetching && data.question) {
 		revealAnswers = false;
 		fetching = false;
 	}
@@ -65,7 +65,7 @@
 				}
 			}}
 			class="bg-thw text-white py-2 rounded-lg text-xl font-bold disabled:bg-white disabled:border disabled:border-thw disabled:text-gray-500"
-			disabled={data.question.answers.every((answer) => answer.checked === false)}
+			disabled={!revealAnswers && data.question.answers.every((answer) => answer.checked === false)}
 			>{revealAnswers ? 'Nächste Frage' : 'Überprüfen'}</button
 		>
 	</div>
