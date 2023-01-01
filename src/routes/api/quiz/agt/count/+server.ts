@@ -14,14 +14,28 @@ export type StatisticsData = { questionId: string; correct: boolean };
 export const GET: RequestHandler = async ({}: RequestEvent) => {
 	try {
 		const client = new sdk.Client();
-		const databases = new sdk.Databases(client);
 
 		client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECTID).setKey(APPWRITE_APIKEY);
 
-		// inefficient and limited to 5000 docs
-		const docs = await databases.listDocuments(APPWRITE_DATABASEID_QUIZ, APPWRITE_COLLECTIONID_AGT);
+		const graphql = new sdk.Graphql(client);
 
-		return new Response(String(docs.total), {
+		type ResultData = { data: { databasesListDocuments: { total: number } } };
+
+		// limited to 5000 docs
+		const res = await graphql.query({
+			query: `query {
+				databasesListDocuments(
+					databaseId: "${APPWRITE_DATABASEID_QUIZ}",
+					collectionId: "${APPWRITE_COLLECTIONID_AGT}"
+				) {
+					total
+				}
+			}`
+		});
+
+		const resData = res as ResultData;
+
+		return new Response(String(resData.data.databasesListDocuments.total), {
 			status: 200,
 			headers: {
 				'Cache-Control': 'no-cache'
