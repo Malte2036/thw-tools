@@ -3,6 +3,8 @@ import type { PageLoad } from './$types';
 import { AGTQuestions } from './AGTQuestions';
 import type { Question, QuestionType } from './Question';
 
+export const ssr = false;
+
 export const load = (({ params, depends }) => {
 	const questionType: QuestionType | undefined = params.type;
 
