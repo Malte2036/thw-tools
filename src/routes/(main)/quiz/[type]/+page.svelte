@@ -3,17 +3,18 @@
 	import { invalidate } from '$app/navigation';
 	import type { Question } from './Question';
 	import { onMount } from 'svelte';
+	import type { AnswerdCountData } from './+page';
 
 	export let data: PageData;
 
 	let question: Question;
 	let questionType: string;
-	let answerdCount: number | undefined;
+	let answerdCountData: AnswerdCountData;
 
 	$: question = data.question;
 	$: questionType = data.questionType;
 	$: questionCount = data.questionCount;
-	$: answerdCount = data.answerdCount;
+	$: answerdCountData = data.answerdCountData;
 
 	let revealAnswers = false;
 
@@ -105,8 +106,12 @@
 				>{revealAnswers ? 'Nächste Frage' : 'Überprüfen'}</button
 			>
 
-			{#if answerdCount !== undefined}
-				<div class="text-gray-400">Fragen beantwortet: {answerdCount}</div>
+			{#if answerdCountData.all !== undefined}
+				<div class="flex flex-col text-gray-400">
+					<div>Fragen beantwortet: {answerdCountData.all}</div>
+					<div>Richtig beantwortet: {answerdCountData.correct}</div>
+					<div>Falsch beantwortet: {answerdCountData.all - answerdCountData.correct}</div>
+				</div>
 			{/if}
 		</div>
 	{/if}

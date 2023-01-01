@@ -5,6 +5,11 @@ import type { Question, QuestionType } from './Question';
 
 export const ssr = false;
 
+export type AnswerdCountData = {
+	all: number;
+	correct: number;
+};
+
 export const load = (async ({ params, depends, fetch }) => {
 	const questionType: QuestionType | undefined = params.type;
 
@@ -26,16 +31,15 @@ export const load = (async ({ params, depends, fetch }) => {
 		answers: question.answers.map((question) => ({ ...question, checked: false }))
 	};
 
-	let answerdCount: number | undefined;
+	let answerdCountData: AnswerdCountData | undefined;
 	try {
-		const answerdCountResponse = await fetch('/api/quiz/agt/count');
-		answerdCount = Number(await answerdCountResponse.json());
+		answerdCountData = await (await fetch('/api/quiz/agt/count')).json();
 	} catch (error) {}
 
 	return {
 		question,
 		questionType,
 		questionCount: questionSet.length,
-		answerdCount
+		answerdCountData
 	};
 }) satisfies PageLoad;
