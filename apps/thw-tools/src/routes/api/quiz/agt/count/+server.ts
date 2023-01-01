@@ -13,26 +13,15 @@ export type StatisticsData = { questionId: string; correct: boolean };
 
 export const GET: RequestHandler = async ({}: RequestEvent) => {
 	try {
-		// node-appwrite does not support this at the moment
-		const res = await fetch(
-			'{endpoint}/databases/{databaseId}/collections/{collectionId}/usage'
-				.replace('{endpoint}', APPWRITE_ENDPOINT)
-				.replace('{databaseId}', APPWRITE_DATABASEID_QUIZ)
-				.replace('{collectionId}', APPWRITE_COLLECTIONID_AGT),
-			{
-				method: 'GET',
-				headers: {
-					'X-Appwrite-Project': APPWRITE_PROJECTID,
-					'Content-Type': 'application/json',
-					'X-Appwrite-Key': APPWRITE_APIKEY
-				}
-			}
-		);
-		const documentsStatistics: { value: number; date: string }[] = (await res.json())
-			.documentsCount;
-		const documentsSum = documentsStatistics.reduce((sum, current) => sum + current.value, 0);
+		const client = new sdk.Client();
+		const databases = new sdk.Databases(client);
 
-		return new Response(String(documentsSum), {
+		client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECTID).setKey(APPWRITE_APIKEY);
+
+		// inefficient and limited to 5000 docs
+		const docs = await databases.listDocuments(APPWRITE_DATABASEID_QUIZ, APPWRITE_COLLECTIONID_AGT);
+
+		return new Response(String(docs.total), {
 			status: 200,
 			headers: {
 				'Cache-Control': 'no-cache'
