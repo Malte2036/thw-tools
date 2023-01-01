@@ -15,7 +15,7 @@
 
 	function assignNewQuestion() {
 		fetching = true;
-		invalidate('app:quiz:agt');
+		invalidate('app:quiz');
 	}
 </script>
 
@@ -54,7 +54,7 @@
 					assignNewQuestion();
 				} else {
 					revealAnswers = !revealAnswers;
-					fetch('/api/quiz/agt/add', {
+					fetch(`/api/quiz/${data.questionType}/add`, {
 						method: 'POST',
 						body: JSON.stringify({
 							questionId: data.question.number,

@@ -1,3 +1,5 @@
+export type QuestionType = 'agt';
+
 export type Question = {
 	number: number;
 	text: string;
