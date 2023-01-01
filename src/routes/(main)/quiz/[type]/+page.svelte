@@ -46,7 +46,7 @@
 				{#each question.answers as answer (answer.letter)}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
-						class="text-xl flex flex-row py-1 px-2 gap-2 rounded-md"
+						class="text-xl flex flex-row py-1 px-2 gap-2 rounded-md transition-colors"
 						class:rightAnswer={revealAnswers && answer.correct}
 						class:wrongCheckedAnswer={revealAnswers && answer.correct != answer.checked}
 						on:click={() => (answer.checked = !answer.checked)}
@@ -74,7 +74,7 @@
 						});
 					}
 				}}
-				class="bg-thw text-white py-2 rounded-lg text-xl font-bold disabled:bg-white disabled:border disabled:border-thw disabled:text-gray-500"
+				class="bg-thw text-white py-2 rounded-lg text-xl font-bold border disabled:bg-white disabled:border-thw disabled:text-gray-500 transition-colors duration-75"
 				disabled={!revealAnswers && question.answers.every((answer) => answer.checked === false)}
 				>{revealAnswers ? 'Nächste Frage' : 'Überprüfen'}</button
 			>
