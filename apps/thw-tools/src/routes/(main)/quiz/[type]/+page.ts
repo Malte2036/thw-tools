@@ -35,6 +35,7 @@ export const load = (async ({ params, depends, fetch }) => {
 	return {
 		question,
 		questionType,
+		questionCount: questionSet.length,
 		answerdCount
 	};
 }) satisfies PageLoad;
