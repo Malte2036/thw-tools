@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import type { PageLoad } from './$types';
 import { AGTQuestions } from './AGTQuestions';
 import type { Question, QuestionType } from './Question';
 
@@ -28,4 +28,4 @@ export const load = (({ params, depends }) => {
 		question,
 		questionType
 	};
-}) satisfies PageServerLoad;
+}) satisfies PageLoad;
