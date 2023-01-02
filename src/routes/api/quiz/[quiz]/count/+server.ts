@@ -9,11 +9,16 @@ import {
 	APPWRITE_COLLECTIONID_AGT
 } from '$env/static/private';
 import { json } from '@sveltejs/kit';
+import type { QuestionType } from 'src/routes/(main)/quiz/[type]/Question';
+import { getCollectionIdByQuiz } from '../utils';
 
 export type StatisticsData = { questionId: string; correct: boolean };
 
-export const GET: RequestHandler = async ({}: RequestEvent) => {
+export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 	try {
+		const quiz = params.quiz as QuestionType;
+		let collectionId = getCollectionIdByQuiz(quiz);
+
 		const client = new sdk.Client();
 
 		client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECTID).setKey(APPWRITE_APIKEY);
@@ -28,7 +33,7 @@ export const GET: RequestHandler = async ({}: RequestEvent) => {
 				query: `query {
 				databasesListDocuments(
 					databaseId: "${APPWRITE_DATABASEID_QUIZ}",
-					collectionId: "${APPWRITE_COLLECTIONID_AGT}",
+					collectionId: "${collectionId}",
 					queries: ["equal(\\"correct\\", [${correct}])"]
 				) {
 					total
