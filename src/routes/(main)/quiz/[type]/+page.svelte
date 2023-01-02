@@ -117,6 +117,10 @@
 			<button
 				on:click={() => {
 					if (revealAnswers) {
+						assignNewQuestion();
+					} else {
+						revealAnswers = true;
+
 						if (answerdCountData) {
 							if (completelyRight) {
 								answerdCountData.right++;
@@ -124,9 +128,6 @@
 								answerdCountData.wrong++;
 							}
 						}
-						assignNewQuestion();
-					} else {
-						revealAnswers = !revealAnswers;
 						fetch(`/api/quiz/${questionType}/add`, {
 							method: 'POST',
 							body: JSON.stringify({
