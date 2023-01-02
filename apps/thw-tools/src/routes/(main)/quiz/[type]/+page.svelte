@@ -12,14 +12,18 @@
 
 	export let data: PageData;
 
+	function shuffleQuestion(q: Question) {
+		return {
+			...q,
+			answers: [...shuffle(q.answers)]
+		};
+	}
+
 	let question: Question;
 	let questionType: string;
 	let answerdCountData: AnswerdCountData | undefined;
 
-	$: question = {
-		...data.question,
-		answers: [...shuffle(data.question.answers)]
-	};
+	$: question = shuffleQuestion(data.question);
 	$: questionType = data.questionType;
 	$: questionCount = data.questionCount;
 
@@ -88,7 +92,7 @@
 				{question.text}
 			</h1>
 			<div class="flex flex-col gap-3">
-				{#each question.answers as answer (answer.letter)}
+				{#each question.answers as answer (question.number + answer.letter)}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
 						class="text-xl flex flex-row py-2 px-4 gap-2 bg-gray-100 border shadow-sm rounded-2xl transition-colors"
