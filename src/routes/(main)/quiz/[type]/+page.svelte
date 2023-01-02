@@ -6,8 +6,8 @@
 	import { shuffle } from '$lib/utils';
 
 	type AnswerdCountData = {
-		all: number;
-		correct: number;
+		right: number;
+		wrong: number;
 	};
 
 	export let data: PageData;
@@ -39,9 +39,9 @@
 
 	let fetching = true;
 
-	let completelyCorrect = false;
+	let completelyRight = false;
 
-	$: completelyCorrect = question.answers.every((answer) => answer.checked == answer.correct);
+	$: completelyRight = question.answers.every((answer) => answer.checked == answer.correct);
 
 	$: if (fetching && question) {
 		revealAnswers = false;
@@ -103,7 +103,7 @@
 				{#each question.answers as answer (question.number + answer.letter)}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
-						class="text-xl flex flex-row py-2 px-4 gap-2 bg-gray-100 border shadow-sm rounded-2xl transition-colors"
+						class="text-xl flex flex-row py-2 px-4 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors"
 						class:checked={answer.checked}
 						class:revealAnswerCorrect={revealAnswers && answer.correct}
 						class:revealAnswerWrong={revealAnswers && answer.checked != answer.correct}
@@ -118,9 +118,10 @@
 				on:click={() => {
 					if (revealAnswers) {
 						if (answerdCountData) {
-							answerdCountData.all++;
-							if (completelyCorrect) {
-								answerdCountData.correct++;
+							if (completelyRight) {
+								answerdCountData.right++;
+							} else {
+								answerdCountData.wrong++;
 							}
 						}
 						assignNewQuestion();
@@ -130,7 +131,7 @@
 							method: 'POST',
 							body: JSON.stringify({
 								questionId: question.number,
-								correct: completelyCorrect
+								correct: completelyRight
 							}),
 							headers: { 'content-type': 'application/json' }
 						});
@@ -145,19 +146,19 @@
 				<div>
 					Fragen beantwortet:
 					{#if answerdCountData}
-						{answerdCountData.all}
+						{answerdCountData.right + answerdCountData.wrong}
 					{/if}
 				</div>
 				<div>
 					Richtig beantwortet:
 					{#if answerdCountData}
-						{answerdCountData.correct}
+						{answerdCountData.right}
 					{/if}
 				</div>
 				<div>
 					Falsch beantwortet:
 					{#if answerdCountData}
-						{answerdCountData.all - answerdCountData.correct}
+						{answerdCountData.wrong}
 					{/if}
 				</div>
 			</div>
@@ -167,7 +168,7 @@
 
 <style lang="scss">
 	.checked {
-		@apply bg-thw-200;
+		@apply bg-thw-300;
 	}
 	.revealAnswerCorrect {
 		@apply bg-[#EEE648];
