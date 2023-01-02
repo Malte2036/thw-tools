@@ -9,13 +9,15 @@ import {
 } from '$env/static/private';
 import { json } from '@sveltejs/kit';
 import type { QuestionType } from 'src/routes/(main)/quiz/[type]/Question';
-import { getCollectionIdByQuiz } from '../utils';
+import { getCollectionIdByQuiz } from '../../utils';
 
 export type StatisticsData = { questionId: string; correct: boolean };
 
 export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 	try {
 		const quiz = params.quiz as QuestionType;
+		const questionId = Number(params.questionId);
+
 		let collectionId = getCollectionIdByQuiz(quiz);
 
 		const client = new sdk.Client();
@@ -33,7 +35,7 @@ export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 				databasesListDocuments(
 					databaseId: "${APPWRITE_DATABASEID_QUIZ}",
 					collectionId: "${collectionId}",
-					queries: ["equal(\\"correct\\", [${correct}])"]
+					queries: ["equal(\\"questionId\\", [${questionId}])", "equal(\\"correct\\", [${correct}])"]
 				) {
 					total
 				}

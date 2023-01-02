@@ -22,6 +22,7 @@
 	let question: Question;
 	let questionType: string;
 	let answerdCountData: AnswerdCountData | undefined;
+	let currentQuestionAnswerdCountData: AnswerdCountData | undefined;
 
 	function setQuestion(q: Question) {
 		if (question !== undefined && question.number == q.number) {
@@ -29,6 +30,11 @@
 			return;
 		}
 		question = q;
+
+		currentQuestionAnswerdCountData = undefined;
+		fetch(`/api/quiz/agt/${q.number}/count`).then((res) =>
+			res.json().then((data) => (currentQuestionAnswerdCountData = data))
+		);
 	}
 
 	$: setQuestion(shuffleQuestion(data.question));
@@ -114,6 +120,17 @@
 					</div>
 				{/each}
 			</div>
+			<h3 class="text-base font-normal text-gray-400 min-h-[2rem] mb-1">
+				{#if currentQuestionAnswerdCountData !== undefined}
+					(zu {(
+						(currentQuestionAnswerdCountData.right /
+							(currentQuestionAnswerdCountData.right + currentQuestionAnswerdCountData.wrong)) *
+						100
+					)
+						.toFixed(1)
+						.replace(/\.0+$/, '')}% wurde diese Frage richtig beantwortet)
+				{/if}
+			</h3>
 			<button
 				on:click={() => {
 					if (revealAnswers) {
@@ -124,8 +141,14 @@
 						if (answerdCountData) {
 							if (completelyRight) {
 								answerdCountData.right++;
+								if (currentQuestionAnswerdCountData) {
+									currentQuestionAnswerdCountData.right++;
+								}
 							} else {
 								answerdCountData.wrong++;
+								if (currentQuestionAnswerdCountData) {
+									currentQuestionAnswerdCountData.wrong++;
+								}
 							}
 						}
 						fetch(`/api/quiz/${questionType}/add`, {
