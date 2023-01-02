@@ -22,38 +22,27 @@ export const GET: RequestHandler = async ({}: RequestEvent) => {
 
 		type ResultData = { data: { databasesListDocuments: { total: number } } };
 
-		// limited to 5000 docs
-		const allRes = await graphql.query({
-			query: `query {
+		async function fetchCount(correct: boolean): Promise<number> {
+			// limited to 5000 docs
+			let res: ResultData = await graphql.query({
+				query: `query {
 				databasesListDocuments(
 					databaseId: "${APPWRITE_DATABASEID_QUIZ}",
-					collectionId: "${APPWRITE_COLLECTIONID_AGT}"
+					collectionId: "${APPWRITE_COLLECTIONID_AGT}",
+					queries: ["equal(\\"correct\\", [${correct}])"]
 				) {
 					total
 				}
 			}`
-		});
+			});
 
-		const allResData = allRes as ResultData;
-
-		const correctRes = await graphql.query({
-			query: `query {
-				databasesListDocuments(
-					databaseId: "63af16f75da2583a0544",
-					collectionId: "63af16fd67f0cae4f87b",
-					queries: ["equal(\\"correct\\", [true])"]
-				) {
-					total
-				}
-			}`
-		});
-
-		const correctResData = correctRes as ResultData;
+			return res.data.databasesListDocuments.total;
+		}
 
 		return json(
 			{
-				all: allResData.data.databasesListDocuments.total,
-				correct: correctResData.data.databasesListDocuments.total
+				right: await fetchCount(true),
+				wrong: await fetchCount(false)
 			},
 			{
 				headers: {
