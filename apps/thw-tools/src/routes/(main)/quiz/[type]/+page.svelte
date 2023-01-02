@@ -3,6 +3,7 @@
 	import { invalidate } from '$app/navigation';
 	import type { Question } from './Question';
 	import { onMount } from 'svelte';
+	import { shuffle } from '$lib/utils';
 
 	type AnswerdCountData = {
 		all: number;
@@ -15,7 +16,10 @@
 	let questionType: string;
 	let answerdCountData: AnswerdCountData | undefined;
 
-	$: question = data.question;
+	$: question = {
+		...data.question,
+		answers: [...shuffle(data.question.answers)]
+	};
 	$: questionType = data.questionType;
 	$: questionCount = data.questionCount;
 
