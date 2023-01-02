@@ -76,7 +76,7 @@
 	/>
 </svelte:head>
 
-<div class="m-4">
+<div class="m-4 mt-2">
 	{#if fetching}
 		<div class="text-xl w-full text-center m-8">Nächste Frage wird geladen...</div>
 	{:else}
