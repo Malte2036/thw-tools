@@ -23,7 +23,11 @@
 	let questionType: string;
 	let answerdCountData: AnswerdCountData | undefined;
 
-	$: question = shuffleQuestion(data.question);
+	function setQuestion(q: Question) {
+		question = q;
+	}
+
+	$: setQuestion(shuffleQuestion(data.question));
 	$: questionType = data.questionType;
 	$: questionCount = data.questionCount;
 
