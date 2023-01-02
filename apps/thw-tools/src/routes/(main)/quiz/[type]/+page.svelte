@@ -3,22 +3,29 @@
 	import { invalidate } from '$app/navigation';
 	import type { Question } from './Question';
 	import { onMount } from 'svelte';
-	import type { AnswerdCountData } from './+page';
+
+	type AnswerdCountData = {
+		all: number;
+		correct: number;
+	};
 
 	export let data: PageData;
 
 	let question: Question;
 	let questionType: string;
-	let answerdCountData: AnswerdCountData;
+	let answerdCountData: AnswerdCountData | undefined;
 
 	$: question = data.question;
 	$: questionType = data.questionType;
 	$: questionCount = data.questionCount;
-	$: answerdCountData = data.answerdCountData;
 
 	let revealAnswers = false;
 
 	let fetching = true;
+
+	let completelyCorrect = false;
+
+	$: completelyCorrect = question.answers.every((answer) => answer.checked == answer.correct);
 
 	$: if (fetching && question) {
 		revealAnswers = false;
@@ -44,6 +51,12 @@
 		setTimeout(() => {
 			focusQuestionText();
 		});
+
+		try {
+			fetch('/api/quiz/agt/count').then((res) =>
+				res.json().then((data) => (answerdCountData = data))
+			);
+		} catch (error) {}
 	});
 </script>
 
@@ -88,6 +101,12 @@
 			<button
 				on:click={() => {
 					if (revealAnswers) {
+						if (answerdCountData) {
+							answerdCountData.all++;
+							if (completelyCorrect) {
+								answerdCountData.correct++;
+							}
+						}
 						assignNewQuestion();
 					} else {
 						revealAnswers = !revealAnswers;
@@ -95,7 +114,7 @@
 							method: 'POST',
 							body: JSON.stringify({
 								questionId: question.number,
-								correct: question.answers.every((answer) => answer.checked == answer.correct)
+								correct: completelyCorrect
 							}),
 							headers: { 'content-type': 'application/json' }
 						});
@@ -106,13 +125,26 @@
 				>{revealAnswers ? 'Nächste Frage' : 'Überprüfen'}</button
 			>
 
-			{#if answerdCountData.all !== undefined}
-				<div class="flex flex-col text-gray-400">
-					<div>Fragen beantwortet: {answerdCountData.all}</div>
-					<div>Richtig beantwortet: {answerdCountData.correct}</div>
-					<div>Falsch beantwortet: {answerdCountData.all - answerdCountData.correct}</div>
+			<div class="flex flex-col text-gray-400">
+				<div>
+					Fragen beantwortet:
+					{#if answerdCountData}
+						{answerdCountData.all}
+					{/if}
 				</div>
-			{/if}
+				<div>
+					Richtig beantwortet:
+					{#if answerdCountData}
+						{answerdCountData.correct}
+					{/if}
+				</div>
+				<div>
+					Falsch beantwortet:
+					{#if answerdCountData}
+						{answerdCountData.all - answerdCountData.correct}
+					{/if}
+				</div>
+			</div>
 		</div>
 	{/if}
 </div>
