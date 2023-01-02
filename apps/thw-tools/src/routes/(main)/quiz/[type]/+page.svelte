@@ -24,6 +24,10 @@
 	let answerdCountData: AnswerdCountData | undefined;
 
 	function setQuestion(q: Question) {
+		if (question !== undefined && question.number == q.number) {
+			assignNewQuestion();
+			return;
+		}
 		question = q;
 	}
 
