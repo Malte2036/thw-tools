@@ -4,7 +4,7 @@
 </script>
 
 <div class="flex flex-col gap-4 justify-between min-h-screen">
-	<div>
+	<div class="grow">
 		<slot />
 	</div>
 	<div class="flex flex-row justify-center gap-2 mb-3">
