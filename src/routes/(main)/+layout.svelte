@@ -11,7 +11,7 @@
 	}
 </script>
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-4 min-h-full">
 	<div
 		class="flex flex-row justify-between items-center w-full h-12 border-b-[1px] border-black mt-4 px-4 pb-4"
 	>
@@ -26,5 +26,7 @@
 		</div>
 	</div>
 
-	<slot />
+	<div class="grow">
+		<slot />
+	</div>
 </div>

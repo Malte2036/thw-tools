@@ -94,92 +94,93 @@
 	{#if fetching}
 		<div class="text-xl w-full text-center m-8">Nächste Frage wird geladen...</div>
 	{:else}
-		<div class="flex flex-col gap-4">
-			<h3 class="flex flex-row justify-center text-gray-400 font-bold">
-				{question.number}/{questionCount}
-			</h3>
-			<h1
-				bind:this={questionTextEl}
-				class="text-2xl text-center focus:text-thw outline-none font-bold"
-				tabindex="-1"
-			>
-				{question.text}
-			</h1>
-			<div class="flex flex-col gap-3">
-				{#each question.answers as answer (question.number + answer.letter)}
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<div
-						class="text-xl flex flex-row py-2 px-4 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors"
-						class:checked={answer.checked}
-						class:revealAnswerCorrect={revealAnswers && answer.correct}
-						class:revealAnswerWrong={revealAnswers && answer.checked != answer.correct}
-						on:click={() => (answer.checked = !answer.checked)}
+		<div class="flex flex-col gap-16 justify-between h-full">
+			<div class="flex flex-col gap-4">
+				<div class="flex flex-col gap-2">
+					<h3 class="flex flex-row justify-center text-gray-400 font-bold">
+						{question.number}/{questionCount}
+					</h3>
+					<h1
+						bind:this={questionTextEl}
+						class="text-2xl text-center focus:text-thw outline-none font-bold"
+						tabindex="-1"
 					>
-						<input type="checkbox" aria-label={answer.letter} bind:checked={answer.checked} />
-						<div>{answer.text}</div>
-					</div>
-				{/each}
-			</div>
-			<h3 class="text-base font-normal text-gray-400 min-h-[2rem] mb-1">
-				{#if currentQuestionAnswerdCountData !== undefined}
-					(zu {(
-						(currentQuestionAnswerdCountData.right /
-							(currentQuestionAnswerdCountData.right + currentQuestionAnswerdCountData.wrong)) *
-						100
-					)
-						.toFixed(1)
-						.replace(/\.0+$/, '')}% wurde diese Frage richtig beantwortet)
-				{/if}
-			</h3>
-			<button
-				on:click={() => {
-					if (revealAnswers) {
-						assignNewQuestion();
-					} else {
-						revealAnswers = true;
+						{question.text}
+					</h1>
+				</div>
+				<div class="flex flex-col gap-2">
+					{#each question.answers as answer (question.number + answer.letter)}
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<div
+							class="text-xl flex flex-row p-2 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors"
+							class:checked={answer.checked}
+							class:revealAnswerCorrect={revealAnswers && answer.correct}
+							class:revealAnswerWrong={revealAnswers && answer.checked != answer.correct}
+							on:click={() => (answer.checked = !answer.checked)}
+						>
+							<input type="checkbox" aria-label={answer.letter} bind:checked={answer.checked} />
+							<div>{answer.text}</div>
+						</div>
+					{/each}
+				</div>
+				<button
+					on:click={() => {
+						if (revealAnswers) {
+							assignNewQuestion();
+						} else {
+							revealAnswers = true;
 
-						if (answerdCountData) {
-							if (completelyRight) {
-								answerdCountData.right++;
-								if (currentQuestionAnswerdCountData) {
-									currentQuestionAnswerdCountData.right++;
-								}
-							} else {
-								answerdCountData.wrong++;
-								if (currentQuestionAnswerdCountData) {
-									currentQuestionAnswerdCountData.wrong++;
+							if (answerdCountData) {
+								if (completelyRight) {
+									answerdCountData.right++;
+									if (currentQuestionAnswerdCountData) {
+										currentQuestionAnswerdCountData.right++;
+									}
+								} else {
+									answerdCountData.wrong++;
+									if (currentQuestionAnswerdCountData) {
+										currentQuestionAnswerdCountData.wrong++;
+									}
 								}
 							}
+							fetch(`/api/quiz/${questionType}/add`, {
+								method: 'POST',
+								body: JSON.stringify({
+									questionId: question.number,
+									correct: completelyRight
+								}),
+								headers: { 'content-type': 'application/json' }
+							});
 						}
-						fetch(`/api/quiz/${questionType}/add`, {
-							method: 'POST',
-							body: JSON.stringify({
-								questionId: question.number,
-								correct: completelyRight
-							}),
-							headers: { 'content-type': 'application/json' }
-						});
-					}
-				}}
-				class="m-auto bg-thw text-white py-2 w-3/5 rounded-lg text-xl font-bold border disabled:bg-white disabled:border-thw disabled:text-gray-500 transition-colors duration-75"
-				disabled={!revealAnswers && question.answers.every((answer) => answer.checked === false)}
-				>{revealAnswers ? 'Nächste Frage' : 'Überprüfen'}</button
-			>
-
-			<div class="flex flex-col text-gray-400">
+					}}
+					class="m-auto bg-thw text-white p-2 w-3/5 rounded-lg text-xl font-bold border disabled:bg-white disabled:border-thw disabled:text-gray-500 transition-colors duration-75"
+					disabled={!revealAnswers && question.answers.every((answer) => answer.checked === false)}
+					>{revealAnswers ? 'Nächste Frage' : 'Überprüfen'}</button
+				>
+			</div>
+			<div class="flex flex-col gap-2 text-base font-normal text-gray-400">
+				<h3>
+					(zu {currentQuestionAnswerdCountData === undefined
+						? ''
+						: (
+								(currentQuestionAnswerdCountData.right /
+									(currentQuestionAnswerdCountData.right + currentQuestionAnswerdCountData.wrong)) *
+								100
+						  )
+								.toFixed(1)
+								.replace(/\.0+$/, '')}% wurde diese Frage richtig beantwortet)
+				</h3>
 				<div>
 					Fragen beantwortet:
 					{#if answerdCountData}
 						{answerdCountData.right + answerdCountData.wrong}
 					{/if}
-				</div>
-				<div>
+					<br />
 					Richtig beantwortet:
 					{#if answerdCountData}
 						{answerdCountData.right}
 					{/if}
-				</div>
-				<div>
+					<br />
 					Falsch beantwortet:
 					{#if answerdCountData}
 						{answerdCountData.wrong}
