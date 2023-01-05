@@ -4,6 +4,7 @@
 	import type { Question } from './Question';
 	import { onMount } from 'svelte';
 	import { shuffle } from '$lib/utils';
+	import Button from '$lib/Button.svelte';
 
 	type AnswerdCountData = {
 		right: number;
@@ -112,7 +113,7 @@
 					{#each question.answers as answer (question.number + answer.letter)}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<div
-							class="text-xl flex flex-row p-2 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors"
+							class="text-xl flex flex-row p-2 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors hover:cursor-pointer"
 							class:checked={answer.checked}
 							class:revealAnswerCorrect={revealAnswers && answer.correct}
 							class:revealAnswerWrong={revealAnswers && answer.checked != answer.correct}
@@ -123,40 +124,42 @@
 						</div>
 					{/each}
 				</div>
-				<button
-					on:click={() => {
-						if (revealAnswers) {
-							assignNewQuestion();
-						} else {
-							revealAnswers = true;
+				<div class="mx-auto w-3/5">
+					<Button
+						click={() => {
+							if (revealAnswers) {
+								assignNewQuestion();
+							} else {
+								revealAnswers = true;
 
-							if (answerdCountData) {
-								if (completelyRight) {
-									answerdCountData.right++;
-									if (currentQuestionAnswerdCountData) {
-										currentQuestionAnswerdCountData.right++;
-									}
-								} else {
-									answerdCountData.wrong++;
-									if (currentQuestionAnswerdCountData) {
-										currentQuestionAnswerdCountData.wrong++;
+								if (answerdCountData) {
+									if (completelyRight) {
+										answerdCountData.right++;
+										if (currentQuestionAnswerdCountData) {
+											currentQuestionAnswerdCountData.right++;
+										}
+									} else {
+										answerdCountData.wrong++;
+										if (currentQuestionAnswerdCountData) {
+											currentQuestionAnswerdCountData.wrong++;
+										}
 									}
 								}
+								fetch(`/api/quiz/${questionType}/add`, {
+									method: 'POST',
+									body: JSON.stringify({
+										questionId: question.number,
+										correct: completelyRight
+									}),
+									headers: { 'content-type': 'application/json' }
+								});
 							}
-							fetch(`/api/quiz/${questionType}/add`, {
-								method: 'POST',
-								body: JSON.stringify({
-									questionId: question.number,
-									correct: completelyRight
-								}),
-								headers: { 'content-type': 'application/json' }
-							});
-						}
-					}}
-					class="m-auto bg-thw text-white p-2 w-3/5 rounded-lg text-xl font-bold border disabled:bg-white disabled:border-thw disabled:text-gray-500 transition-colors duration-75"
-					disabled={!revealAnswers && question.answers.every((answer) => answer.checked === false)}
-					>{revealAnswers ? 'Nächste Frage' : 'Überprüfen'}</button
-				>
+						}}
+						disabled={!revealAnswers &&
+							question.answers.every((answer) => answer.checked === false)}
+						>{revealAnswers ? 'Nächste Frage' : 'Überprüfen'}</Button
+					>
+				</div>
 			</div>
 			<div class="flex flex-col gap-2 text-base font-normal text-gray-400">
 				<h3>
