@@ -11,7 +11,6 @@
 			case '/quiz/agt':
 				return 'Atemschutz-Quiz';
 			case '/':
-			case '/impressum':
 				return undefined;
 			default:
 				return 'THW-Tools';
