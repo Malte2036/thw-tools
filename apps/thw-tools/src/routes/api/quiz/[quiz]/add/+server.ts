@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request, params }: RequestEvent) =>
 
 	try {
 		const quiz = params.quiz as QuestionType;
-		let collectionId = getCollectionIdByQuiz(quiz);
+		const collectionId = getCollectionIdByQuiz(quiz);
 
 		const client = new sdk.Client();
 		const databases = new sdk.Databases(client);

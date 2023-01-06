@@ -79,7 +79,9 @@
 			fetch('/api/quiz/agt/count').then((res) =>
 				res.json().then((data) => (answerdCountData = data))
 			);
-		} catch (error) {}
+		} catch (error) {
+			console.warn('Could not add count');
+		}
 	});
 </script>
 
