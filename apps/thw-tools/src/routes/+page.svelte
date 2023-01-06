@@ -17,7 +17,7 @@
 	<div class="flex flex-col gap-8 items-center px-12 w-full max-w-4xl">
 		<img
 			src={logo}
-			class="w-96 max-md:w-64"
+			class="w-96 max-md:w-64 aspect-auto"
 			width="384"
 			height="308.42"
 			alt="THW MehrzweckGerätewagen"
