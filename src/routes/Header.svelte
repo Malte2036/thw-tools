@@ -1,5 +1,6 @@
 <script lang="ts">
 	import LinkButton from '$lib/LinkButton.svelte';
+	import logo from '$lib/icons/thw-mzgw.webp';
 
 	export let title: string;
 </script>
@@ -9,7 +10,7 @@
 >
 	<a href="/" class="flex flex-row gap-2 items-center">
 		<div>
-			<img src="../thw-mzgw.png" class="h-12 w-fit" height="128" alt="THW MehrzweckGerätewagen" />
+			<img src={logo} class="h-12 w-fit" height="59.75" width="48" alt="THW MehrzweckGerätewagen" />
 		</div>
 		<h1 class="text-4xl max-md:text-3xl max-sm:text-2xl font-bold hover:text-thw">{title}</h1>
 	</a>
