@@ -5,8 +5,8 @@ import type { Question, QuestionType } from './Question';
 
 export const ssr = false;
 
-export const load = (async ({ params, depends, fetch }) => {
-	const questionType: QuestionType | undefined = params.type;
+export const load = (async ({ params, depends }) => {
+	const questionType: QuestionType | undefined = params.type as QuestionType;
 
 	let questionSet: Question[] | undefined = undefined;
 	switch (questionType) {

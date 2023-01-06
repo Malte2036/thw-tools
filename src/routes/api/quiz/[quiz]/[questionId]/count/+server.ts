@@ -13,42 +13,46 @@ import { getCollectionIdByQuiz } from '../../utils';
 
 export type StatisticsData = { questionId: string; correct: boolean };
 
+type ResultData = { data: { databasesListDocuments: { total: number } } };
+
+async function fetchCount(
+	quiz: QuestionType,
+	questionId: number,
+	correct: boolean
+): Promise<number> {
+	const collectionId = getCollectionIdByQuiz(quiz);
+
+	const client = new sdk.Client();
+
+	client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECTID).setKey(APPWRITE_APIKEY);
+
+	const graphql = new sdk.Graphql(client);
+
+	// limited to 5000 docs
+	const res: ResultData = await graphql.query({
+		query: `query {
+		databasesListDocuments(
+			databaseId: "${APPWRITE_DATABASEID_QUIZ}",
+			collectionId: "${collectionId}",
+			queries: ["equal(\\"questionId\\", [${questionId}])", "equal(\\"correct\\", [${correct}])"]
+		) {
+			total
+		}
+	}`
+	});
+
+	return res.data.databasesListDocuments.total;
+}
+
 export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 	try {
 		const quiz = params.quiz as QuestionType;
 		const questionId = Number(params.questionId);
 
-		let collectionId = getCollectionIdByQuiz(quiz);
-
-		const client = new sdk.Client();
-
-		client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECTID).setKey(APPWRITE_APIKEY);
-
-		const graphql = new sdk.Graphql(client);
-
-		type ResultData = { data: { databasesListDocuments: { total: number } } };
-
-		async function fetchCount(correct: boolean): Promise<number> {
-			// limited to 5000 docs
-			let res: ResultData = await graphql.query({
-				query: `query {
-				databasesListDocuments(
-					databaseId: "${APPWRITE_DATABASEID_QUIZ}",
-					collectionId: "${collectionId}",
-					queries: ["equal(\\"questionId\\", [${questionId}])", "equal(\\"correct\\", [${correct}])"]
-				) {
-					total
-				}
-			}`
-			});
-
-			return res.data.databasesListDocuments.total;
-		}
-
 		return json(
 			{
-				right: await fetchCount(true),
-				wrong: await fetchCount(false)
+				right: await fetchCount(quiz, questionId, true),
+				wrong: await fetchCount(quiz, questionId, false)
 			},
 			{
 				headers: {
