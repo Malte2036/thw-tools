@@ -126,7 +126,7 @@
 						</div>
 					{/each}
 				</div>
-				<div class="mx-auto w-3/5">
+				<div class="mx-auto w-3/5 max-md:w-4/6">
 					<Button
 						click={() => {
 							if (revealAnswers) {
@@ -159,7 +159,9 @@
 						}}
 						disabled={!revealAnswers &&
 							question.answers.every((answer) => answer.checked === false)}
-						>{revealAnswers ? 'Nächste Frage' : 'Überprüfen'}</Button
+						>{revealAnswers
+							? `${completelyRight ? 'Richtig' : 'Falsch'} - Nächste Frage`
+							: 'Überprüfen'}</Button
 					>
 				</div>
 			</div>
