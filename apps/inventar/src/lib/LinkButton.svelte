@@ -12,6 +12,7 @@
 	target={blank ? '_blank' : undefined}
 	rel={blank ? 'noreffer' : undefined}
 	class="w-full h-full"
+	tabindex="-1"
 >
 	<Button {secondary} {disabled}>
 		<slot />
