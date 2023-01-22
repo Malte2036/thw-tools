@@ -5,7 +5,7 @@
 	import logo from '$lib/icons/thw-mzgw.webp';
 
 	const description =
-		'Ein paar inoffizielle Tools für die Nutzung im THW! Unteranderem, ein AGT-Quiz und eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger.';
+		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem, ein AGT-Quiz und eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger.';
 </script>
 
 <svelte:head>
