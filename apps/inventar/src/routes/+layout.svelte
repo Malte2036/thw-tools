@@ -1,4 +1,25 @@
 <script lang="ts">
+	// setup service worker for pwa support
+	import { onMount } from 'svelte';
+	import { pwaInfo } from 'virtual:pwa-info';
+
+	onMount(async () => {
+		if (pwaInfo) {
+			const { registerSW } = await import('virtual:pwa-register');
+			registerSW({
+				immediate: true,
+				onRegistered(r: any) {
+					console.log(`SW Registered: ${r}`);
+				},
+				onRegisterError(error: any) {
+					console.log('SW registration error', error);
+				}
+			});
+		}
+	});
+
+	$: webManifest = pwaInfo ? pwaInfo.webManifest.linkTag : '';
+
 	import '../app.css';
 	import { page } from '$app/stores';
 	import Header from './Header.svelte';
@@ -17,6 +38,10 @@
 		}
 	}
 </script>
+
+<svelte:head>
+	{@html webManifest}
+</svelte:head>
 
 <div class="flex flex-col gap-4 justify-between min-h-screen">
 	{#if title !== undefined}
