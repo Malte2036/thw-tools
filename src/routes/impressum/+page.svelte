@@ -22,13 +22,30 @@
 			veröffentlicht, sodass ein Impressum nach § 55 RstV ebenfalls nicht erforderlich ist.</span
 		>
 		<span
-			>Außerdem möchten wir darauf hinweisen, dass diese Website anonyme Nutzungsstatistiken
-			sammelt.</span
+			>Außerdem möchte ich darauf hinweisen, dass diese Website anonyme Nutzungsstatistiken sammelt.</span
 		>
 		<span
 			>Für Fragen und Hinweise können Sie mich (Malte Sehmer) über die E-Mail-Adresse
-			<a href="mailto:webmaster@thw-tools.de" class="text-thw underline">webmaster@thw-tools.de</a> erreichen.</span
-		><span
+			<a href="mailto:webmaster@thw-tools.de">webmaster@thw-tools.de</a> erreichen.</span
+		>
+		<span>
+			Der Quellcode der Webseiten <a href="https://thw-tools.de" target="_blank" rel="noreferrer"
+				>thw-tools.de</a
+			>
+			und
+			<a href="https://finnentest.thw-tools.de" target="_blank" rel="noreferrer"
+				>finnentest.thw-tools.de</a
+			>
+			ist auf GitHub unter den Links
+			<a href="https://github.com/Malte2036/thw-tools" target="_blank" rel="noreferrer"
+				>https://github.com/Malte2036/thw-tools</a
+			>
+			und
+			<a href="https://github.com/Malte2036/thw-finnentest" target="_blank" rel="noreferrer"
+				>https://github.com/Malte2036/thw-finnentest</a
+			> einsehbar.</span
+		>
+		<span
 			>Bitte beachten Sie, dass diese Website von Vercel gehostet wird und es möglich ist, dass
 			Vercel Daten sammelt. Bitte lesen Sie die Datenschutzbestimmungen von Vercel, wenn Sie diese
 			Website besuchen.</span
@@ -37,3 +54,9 @@
 
 	<LinkButton url="/" secondary>Zurück</LinkButton>
 </div>
+
+<style>
+	a {
+		@apply text-thw underline;
+	}
+</style>
