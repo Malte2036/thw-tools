@@ -27,13 +27,17 @@
 			{description}
 		</h2>
 		<div class="w-full flex flex-col items-center gap-4 max-w-sm max-md:max-w-[16rem]">
-			<LinkButton url="/quiz/agt">
+			<LinkButton url="/quiz/agt" additionalClass="umami--click--visit-quiz-agt-button">
 				<div class="w-6">
 					<ChartSimpleIcon />
 				</div>
 				<div>AGT-Quiz</div>
 			</LinkButton>
-			<LinkButton url="https://finnentest.thw-tools.de" blank>
+			<LinkButton
+				url="https://finnentest.thw-tools.de"
+				additionalClass="umami--click--visit-finnentest-button"
+				blank
+			>
 				<div class="w-6">
 					<HearthPulseIcon />
 				</div>

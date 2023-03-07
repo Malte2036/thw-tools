@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { PUBLIC_UMAMI_URL, PUBLIC_UMAMI_ID } from '$env/static/public';
+
 	// setup service worker for pwa support
 	import { onMount } from 'svelte';
 	import { pwaInfo } from 'virtual:pwa-info';
@@ -41,6 +43,15 @@
 
 <svelte:head>
 	{@html webManifest}
+
+	{#if PUBLIC_UMAMI_URL.length != 0}
+		<script
+			async
+			defer
+			data-website-id={PUBLIC_UMAMI_ID}
+			src={`${PUBLIC_UMAMI_URL}/umami.js`}
+		></script>
+	{/if}
 </svelte:head>
 
 <div class="flex flex-col gap-4 justify-between min-h-screen">
