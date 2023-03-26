@@ -119,9 +119,11 @@
 				</div>
 				<div class="flex gap-y-2 flex-col md:flex-row w-full items-center">
 					{#if question.image}
-						<div class="flex justify-center h-64 aspect-square m-4">
-							<img alt="Question Image" src={question.image} />
-						</div>
+						<img
+							class="flex justify-center h-64 aspect-square m-4"
+							alt="Question Image"
+							src={question.image}
+						/>
 					{/if}
 					<div class="flex flex-col flex-grow gap-2 w-full">
 						{#each question.answers as answer, i (question.number + i)}
