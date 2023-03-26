@@ -1,5 +1,5 @@
 <script>
-	import LinkButton from '../../lib/LinkButton.svelte';
+	import LinkButton from '$lib/LinkButton.svelte';
 </script>
 
 <svelte:head>
