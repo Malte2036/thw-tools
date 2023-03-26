@@ -112,7 +112,7 @@
 					</h1>
 				</div>
 				<div class="flex flex-col gap-2">
-					{#each question.answers as answer (question.number + answer.letter)}
+					{#each question.answers as answer, i (question.number + i)}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<div
 							class="text-xl flex flex-row p-2 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors hover:cursor-pointer"
@@ -121,7 +121,7 @@
 							class:revealAnswerWrong={revealAnswers && answer.checked != answer.correct}
 							on:click={() => (answer.checked = !answer.checked)}
 						>
-							<input type="checkbox" aria-label={answer.letter} bind:checked={answer.checked} />
+							<input type="checkbox" bind:checked={answer.checked} />
 							<div>{answer.text}</div>
 						</div>
 					{/each}
