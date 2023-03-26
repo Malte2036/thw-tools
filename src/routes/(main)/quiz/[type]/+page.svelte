@@ -117,10 +117,17 @@
 						{question.text}
 					</h1>
 				</div>
-				<div class="flex flex-col gap-2">
-					{#each question.answers as answer, i (question.number + i)}
-						<CheckboxAnswer bind:answer bind:revealAnswers />
-					{/each}
+				<div class="flex gap-y-2 flex-col md:flex-row w-full items-center">
+					{#if question.image}
+						<div class="flex justify-center h-64 aspect-square m-4">
+							<img alt="The project logo" src={question.image} />
+						</div>
+					{/if}
+					<div class="flex flex-col flex-grow gap-2 w-full">
+						{#each question.answers as answer, i (question.number + i)}
+							<CheckboxAnswer bind:answer bind:revealAnswers />
+						{/each}
+					</div>
 				</div>
 				<div class="mx-auto w-3/5 max-md:w-4/6">
 					<AnswerButton
