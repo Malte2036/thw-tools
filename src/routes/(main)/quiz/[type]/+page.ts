@@ -1,8 +1,13 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import { AGTQuestions } from './AGTQuestions';
-import { CBRNQuestions } from './CBRNQuestions';
-import type { Question, QuestionType } from './Question';
+import { AGTQuestions } from '$lib/quiz/question/AGTQuestions';
+import { CBRNQuestions } from '$lib/quiz/question/CBRNQuestions';
+import type { Question, QuestionType } from '$lib/quiz/question/Question';
+
+export type AnswerdCountData = {
+	right: number;
+	wrong: number;
+};
 
 export const ssr = false;
 

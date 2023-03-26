@@ -8,8 +8,8 @@ import {
 	APPWRITE_DATABASEID_QUIZ
 } from '$env/static/private';
 import { json } from '@sveltejs/kit';
-import type { QuestionType } from 'src/routes/(main)/quiz/[type]/Question';
 import { getCollectionIdByQuiz } from '../utils';
+import type { QuestionType } from '$lib/quiz/question/Question';
 
 export type StatisticsData = { questionId: string; correct: boolean };
 type ResultData = { data: { databasesListDocuments: { total: number } } };

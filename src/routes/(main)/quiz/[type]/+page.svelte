@@ -1,15 +1,13 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { invalidate } from '$app/navigation';
-	import type { Question } from './Question';
+	import type { Question, QuestionType } from '$lib/quiz/question/Question';
 	import { onMount } from 'svelte';
 	import { shuffle } from '$lib/utils';
-	import Button from '$lib/Button.svelte';
-
-	type AnswerdCountData = {
-		right: number;
-		wrong: number;
-	};
+	import type { AnswerdCountData } from './+page';
+	import QuestionStatistics from '$lib/quiz/question/QuestionStatistics.svelte';
+	import CheckboxAnswer from '$lib/quiz/answer/CheckboxAnswer.svelte';
+	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
 
 	export let data: PageData;
 
@@ -21,7 +19,7 @@
 	}
 
 	let question: Question;
-	let questionType: string;
+	let questionType: QuestionType;
 	let answerdCountData: AnswerdCountData | undefined;
 	let currentQuestionAnswerdCountData: AnswerdCountData | undefined;
 
@@ -121,100 +119,22 @@
 				</div>
 				<div class="flex flex-col gap-2">
 					{#each question.answers as answer, i (question.number + i)}
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<div
-							class="text-xl flex flex-row p-2 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors hover:cursor-pointer"
-							class:checked={answer.checked}
-							class:revealAnswerCorrect={revealAnswers && answer.correct}
-							class:revealAnswerWrong={revealAnswers && answer.checked != answer.correct}
-							on:click={() => (answer.checked = !answer.checked)}
-						>
-							<input type="checkbox" bind:checked={answer.checked} />
-							<div>{answer.text}</div>
-						</div>
+						<CheckboxAnswer bind:answer bind:revealAnswers />
 					{/each}
 				</div>
 				<div class="mx-auto w-3/5 max-md:w-4/6">
-					<Button
-						click={() => {
-							if (revealAnswers) {
-								assignNewQuestion();
-							} else {
-								revealAnswers = true;
-
-								if (answerdCountData) {
-									if (completelyRight) {
-										answerdCountData.right++;
-										if (currentQuestionAnswerdCountData) {
-											currentQuestionAnswerdCountData.right++;
-										}
-									} else {
-										answerdCountData.wrong++;
-										if (currentQuestionAnswerdCountData) {
-											currentQuestionAnswerdCountData.wrong++;
-										}
-									}
-								}
-								fetch(`/api/quiz/${questionType}/add`, {
-									method: 'POST',
-									body: JSON.stringify({
-										questionId: question.number,
-										correct: completelyRight
-									}),
-									headers: { 'content-type': 'application/json' }
-								});
-							}
-						}}
-						disabled={!revealAnswers &&
-							question.answers.every((answer) => answer.checked === false)}
-						>{revealAnswers
-							? `${completelyRight ? 'Richtig' : 'Falsch'} - Nächste Frage`
-							: 'Überprüfen'}</Button
-					>
+					<AnswerButton
+						bind:question
+						bind:questionType
+						bind:answerdCountData
+						bind:completelyRight
+						bind:currentQuestionAnswerdCountData
+						bind:revealAnswers
+						assignNewQuestion={() => assignNewQuestion()}
+					/>
 				</div>
 			</div>
-			<div class="flex flex-col gap-2 text-base font-normal text-gray-400">
-				<h3>
-					(zu {currentQuestionAnswerdCountData !== undefined &&
-					currentQuestionAnswerdCountData.right + currentQuestionAnswerdCountData.wrong != 0
-						? (
-								(currentQuestionAnswerdCountData.right /
-									(currentQuestionAnswerdCountData.right + currentQuestionAnswerdCountData.wrong)) *
-								100
-						  )
-								.toFixed(1)
-								.replace(/\.0+$/, '')
-						: ''}% wurde diese Frage richtig beantwortet)
-				</h3>
-				<div>
-					Fragen beantwortet:
-					{#if answerdCountData}
-						{answerdCountData.right + answerdCountData.wrong}
-					{/if}
-					<br />
-					Richtig beantwortet:
-					{#if answerdCountData}
-						{answerdCountData.right}
-					{/if}
-					<br />
-					Falsch beantwortet:
-					{#if answerdCountData}
-						{answerdCountData.wrong}
-					{/if}
-				</div>
-			</div>
+			<QuestionStatistics {answerdCountData} {currentQuestionAnswerdCountData} />
 		</div>
 	{/if}
 </div>
-
-<style lang="scss">
-	.checked {
-		@apply bg-thw-300;
-	}
-	.revealAnswerCorrect {
-		@apply bg-[#EEE648];
-	}
-	.revealAnswerWrong {
-		@apply text-red-600 border border-red-600 border-dashed;
-	}
-</style>

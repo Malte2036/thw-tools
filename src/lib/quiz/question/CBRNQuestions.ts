@@ -1,4 +1,4 @@
-import type { Question } from './Question';
+import type { Question } from '$lib/quiz/question/Question';
 
 export const CBRNQuestions: Question[] = [
 	{
