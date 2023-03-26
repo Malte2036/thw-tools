@@ -7,7 +7,6 @@ export type Question = {
 };
 
 export type Answer = {
-	letter: string;
 	text: string;
 	correct: boolean;
 	checked?: boolean;
