@@ -33,13 +33,13 @@
 		question = q;
 
 		currentQuestionAnswerdCountData = undefined;
-		fetch(`/api/quiz/agt/${q.number}/count`).then((res) =>
+		fetch(`/api/quiz/${questionType}/${q.number}/count`).then((res) =>
 			res.json().then((data) => (currentQuestionAnswerdCountData = data))
 		);
 	}
 
-	$: setQuestion(shuffleQuestion(data.question));
 	$: questionType = data.questionType;
+	$: setQuestion(shuffleQuestion(data.question));
 	$: questionCount = data.questionCount;
 
 	let revealAnswers = false;
@@ -76,7 +76,7 @@
 		});
 
 		try {
-			fetch('/api/quiz/agt/count').then((res) =>
+			fetch(`/api/quiz/${questionType}/count`).then((res) =>
 				res.json().then((data) => (answerdCountData = data))
 			);
 		} catch (error) {
@@ -86,11 +86,19 @@
 </script>
 
 <svelte:head>
-	<title>Atemschutz-Quiz</title>
-	<meta
-		name="description"
-		content="Das Online-Theorie-Quiz für Atemschutzgeräteträger des THW und der Feuerwehr bietet dir die Möglichkeit, dein Wissen über den sicheren Umgang mit Atemschutzgeräten zu testen und aufzufrischen. Verbesser deine Kenntnisse und Sicherheit im Einsatz von Atemschutzgeräten."
-	/>
+	{#if questionType == 'agt'}
+		<title>Atemschutz-Quiz</title>
+		<meta
+			name="description"
+			content="Das Online-Theorie-Quiz für Atemschutzgeräteträger des THW und der Feuerwehr bietet dir die Möglichkeit, dein Wissen über den sicheren Umgang mit Atemschutzgeräten zu testen und aufzufrischen. Verbesser deine Kenntnisse und Sicherheit im Einsatz von Atemschutzgeräten."
+		/>
+	{:else}
+		<title>CBRN-Quiz</title>
+		<meta
+			name="description"
+			content="Möchtest du dein Wissen über den sicheren Umgang mit CBRN-Gefahren verbessern? Dann ist unser Online-Theorie-Quiz für CBRN-Schutzkräfte des THW und der Feuerwehr genau das Richtige für dich. Teste dein Wissen und frische es auf, um im Einsatz von CBRN-Gefahren noch sicherer zu agieren."
+		/>
+	{/if}
 </svelte:head>
 
 <div class="m-4 mt-2">
@@ -167,15 +175,16 @@
 			</div>
 			<div class="flex flex-col gap-2 text-base font-normal text-gray-400">
 				<h3>
-					(zu {currentQuestionAnswerdCountData === undefined
-						? ''
-						: (
+					(zu {currentQuestionAnswerdCountData !== undefined &&
+					currentQuestionAnswerdCountData.right + currentQuestionAnswerdCountData.wrong != 0
+						? (
 								(currentQuestionAnswerdCountData.right /
 									(currentQuestionAnswerdCountData.right + currentQuestionAnswerdCountData.wrong)) *
 								100
 						  )
 								.toFixed(1)
-								.replace(/\.0+$/, '')}% wurde diese Frage richtig beantwortet)
+								.replace(/\.0+$/, '')
+						: ''}% wurde diese Frage richtig beantwortet)
 				</h3>
 				<div>
 					Fragen beantwortet:

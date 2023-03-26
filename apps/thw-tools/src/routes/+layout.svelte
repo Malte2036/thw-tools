@@ -35,6 +35,8 @@
 		switch (path) {
 			case '/quiz/agt':
 				return 'Atemschutz-Quiz';
+			case '/quiz/cbrn':
+				return 'CBRN-Quiz';
 			case '/':
 				return undefined;
 			default:

@@ -33,6 +33,12 @@
 				</div>
 				<div>AGT-Quiz</div>
 			</LinkButton>
+			<LinkButton url="/quiz/cbrn">
+				<div class="w-6">
+					<ChartSimpleIcon />
+				</div>
+				<div>CBRN-Quiz</div>
+			</LinkButton>
 			<LinkButton url="https://finnentest.thw-tools.de" blank>
 				<div class="w-6">
 					<HearthPulseIcon />

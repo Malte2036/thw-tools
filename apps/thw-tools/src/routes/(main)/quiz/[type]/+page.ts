@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import { AGTQuestions } from './AGTQuestions';
+import { CBRNQuestions } from './CBRNQuestions';
 import type { Question, QuestionType } from './Question';
 
 export const ssr = false;
@@ -12,6 +13,9 @@ export const load = (async ({ params, depends }) => {
 	switch (questionType) {
 		case 'agt':
 			questionSet = AGTQuestions;
+			break;
+		case 'cbrn':
+			questionSet = CBRNQuestions;
 			break;
 		default:
 			throw error(404, `QuestionType ${questionType} not found`);

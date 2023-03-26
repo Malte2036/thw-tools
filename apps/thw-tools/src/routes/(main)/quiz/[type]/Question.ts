@@ -1,4 +1,4 @@
-export type QuestionType = 'agt';
+export type QuestionType = 'agt' | 'cbrn';
 
 export type Question = {
 	number: number;
