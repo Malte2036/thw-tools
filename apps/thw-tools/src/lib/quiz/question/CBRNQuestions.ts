@@ -1,5 +1,8 @@
 import type { Question } from '$lib/quiz/question/Question';
 
+import radioaktiv from '$lib/assets/quiz/cbrn/radioaktiv.png';
+import aetzend from '$lib/assets/quiz/cbrn/aetzend.png';
+
 export const CBRNQuestions: Question[] = [
 	{
 		answers: [
@@ -84,5 +87,35 @@ export const CBRNQuestions: Question[] = [
 		],
 		number: 5,
 		text: 'Woran kann ich die Gefährdung, die von einem Gefahrguttransport ausgeht, eindeutig erkennen?'
+	},
+	{
+		answers: [
+			{ text: 'Explosive Stoffe', correct: false },
+			{ text: 'Gase (nicht entzündbar)', correct: false },
+			{ text: 'Entzündbare flüssige Stoffe', correct: false },
+			{ text: 'Entzündend wirkende Stoffe', correct: false },
+			{ text: 'Giftige Stoffe', correct: false },
+			{ text: 'Ansteckungsgefährliche Stoffe', correct: false },
+			{ text: 'Radioaktive Stoffe', correct: true },
+			{ text: 'Ätzende Stoffe', correct: false }
+		],
+		number: 6,
+		text: 'Ordne die folgenden Begriffe der Grafik zu:',
+		image: radioaktiv
+	},
+	{
+		answers: [
+			{ text: 'Explosive Stoffe', correct: false },
+			{ text: 'Gase (nicht entzündbar)', correct: false },
+			{ text: 'Entzündbare flüssige Stoffe', correct: false },
+			{ text: 'Entzündend wirkende Stoffe', correct: false },
+			{ text: 'Giftige Stoffe', correct: false },
+			{ text: 'Ansteckungsgefährliche Stoffe', correct: false },
+			{ text: 'Radioaktive Stoffe', correct: false },
+			{ text: 'Ätzende Stoffe', correct: true }
+		],
+		number: 7,
+		text: 'Ordne die folgenden Begriffe der Grafik zu:',
+		image: aetzend
 	}
 ];

@@ -3,6 +3,7 @@ export type QuestionType = 'agt' | 'cbrn';
 export type Question = {
 	number: number;
 	text: string;
+	image?: string;
 	answers: Answer[];
 };
 
