@@ -32,15 +32,14 @@
 	$: title = getCurrentTitleByPath($page.url.pathname);
 
 	function getCurrentTitleByPath(path: string): string | undefined {
-		switch (path) {
-			case '/quiz/agt':
-				return 'Atemschutz-Quiz';
-			case '/quiz/cbrn':
-				return 'CBRN-Quiz';
-			case '/':
-				return undefined;
-			default:
-				return 'THW-Tools';
+		if (path.startsWith('/quiz/agt')) {
+			return 'Atemschutz-Quiz';
+		} else if (path.startsWith('/quiz/cbrn')) {
+			return 'CBRN-Quiz';
+		} else if (path === '/') {
+			return undefined;
+		} else {
+			return 'THW-Tools';
 		}
 	}
 </script>
