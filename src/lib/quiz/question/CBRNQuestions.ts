@@ -9,6 +9,15 @@ import gasflasche from '$lib/assets/quiz/cbrn/gefahrklassen/gasflasche.png';
 import giftig from '$lib/assets/quiz/cbrn/gefahrklassen/giftig.png';
 import radioaktiv from '$lib/assets/quiz/cbrn/gefahrklassen/radioaktiv.png';
 
+import piktogrammeAetzend from '$lib/assets/quiz/cbrn/gefahrpiktogramme/aetzend.svg';
+import piktogrammeBrandfoerdernd from '$lib/assets/quiz/cbrn/gefahrpiktogramme/brandfoerdernd.svg';
+import piktogrammeEntzuendlich from '$lib/assets/quiz/cbrn/gefahrpiktogramme/entzuendlich.svg';
+import piktogrammeExplosiv from '$lib/assets/quiz/cbrn/gefahrpiktogramme/explosiv.svg';
+import piktogrammeGesundheitsschaedlich from '$lib/assets/quiz/cbrn/gefahrpiktogramme/gesundheitsschaedlich.svg';
+import piktogrammeReizend from '$lib/assets/quiz/cbrn/gefahrpiktogramme/reizend.svg';
+import piktogrammeToxisch from '$lib/assets/quiz/cbrn/gefahrpiktogramme/toxisch.svg';
+import piktogrammeUmwelt from '$lib/assets/quiz/cbrn/gefahrpiktogramme/umwelt.svg';
+
 export const CBRNQuestions: Question[] = [
 	{
 		answers: [
@@ -213,5 +222,125 @@ export const CBRNQuestions: Question[] = [
 		number: 13,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
 		image: aetzend
+	},
+	{
+		answers: [
+			{ text: 'Explosiv', correct: true },
+			{ text: 'Entzündbar', correct: false },
+			{ text: 'Endzündend', correct: false },
+			{ text: 'Ätzwirkung', correct: false },
+			{ text: 'akute Toxizität', correct: false },
+			{ text: 'Gesundheitsgefahren', correct: false },
+			{ text: 'Reizwirkung', correct: false },
+			{ text: 'Gewässergefährdend', correct: false }
+		],
+		number: 14,
+		text: 'Ordne die folgenden Begriffe der Grafik zu:',
+		image: piktogrammeExplosiv
+	},
+	{
+		answers: [
+			{ text: 'Explosiv', correct: false },
+			{ text: 'Entzündbar', correct: true },
+			{ text: 'Endzündend', correct: false },
+			{ text: 'Ätzwirkung', correct: false },
+			{ text: 'akute Toxizität', correct: false },
+			{ text: 'Gesundheitsgefahren', correct: false },
+			{ text: 'Reizwirkung', correct: false },
+			{ text: 'Gewässergefährdend', correct: false }
+		],
+		number: 15,
+		text: 'Ordne die folgenden Begriffe der Grafik zu:',
+		image: piktogrammeEntzuendlich
+	},
+	{
+		answers: [
+			{ text: 'Explosiv', correct: false },
+			{ text: 'Entzündbar', correct: false },
+			{ text: 'Endzündend', correct: true },
+			{ text: 'Ätzwirkung', correct: false },
+			{ text: 'akute Toxizität', correct: false },
+			{ text: 'Gesundheitsgefahren', correct: false },
+			{ text: 'Reizwirkung', correct: false },
+			{ text: 'Gewässergefährdend', correct: false }
+		],
+		number: 16,
+		text: 'Ordne die folgenden Begriffe der Grafik zu:',
+		image: piktogrammeBrandfoerdernd
+	},
+	{
+		answers: [
+			{ text: 'Explosiv', correct: false },
+			{ text: 'Entzündbar', correct: false },
+			{ text: 'Endzündend', correct: false },
+			{ text: 'Ätzwirkung', correct: true },
+			{ text: 'akute Toxizität', correct: false },
+			{ text: 'Gesundheitsgefahren', correct: false },
+			{ text: 'Reizwirkung', correct: false },
+			{ text: 'Gewässergefährdend', correct: false }
+		],
+		number: 17,
+		text: 'Ordne die folgenden Begriffe der Grafik zu:',
+		image: piktogrammeAetzend
+	},
+	{
+		answers: [
+			{ text: 'Explosiv', correct: false },
+			{ text: 'Entzündbar', correct: false },
+			{ text: 'Endzündend', correct: false },
+			{ text: 'Ätzwirkung', correct: false },
+			{ text: 'akute Toxizität', correct: true },
+			{ text: 'Gesundheitsgefahren', correct: false },
+			{ text: 'Reizwirkung', correct: false },
+			{ text: 'Gewässergefährdend', correct: false }
+		],
+		number: 18,
+		text: 'Ordne die folgenden Begriffe der Grafik zu:',
+		image: piktogrammeToxisch
+	},
+	{
+		answers: [
+			{ text: 'Explosiv', correct: false },
+			{ text: 'Entzündbar', correct: false },
+			{ text: 'Endzündend', correct: false },
+			{ text: 'Ätzwirkung', correct: false },
+			{ text: 'akute Toxizität', correct: false },
+			{ text: 'Gesundheitsgefahren', correct: true },
+			{ text: 'Reizwirkung', correct: false },
+			{ text: 'Gewässergefährdend', correct: false }
+		],
+		number: 19,
+		text: 'Ordne die folgenden Begriffe der Grafik zu:',
+		image: piktogrammeGesundheitsschaedlich
+	},
+	{
+		answers: [
+			{ text: 'Explosiv', correct: false },
+			{ text: 'Entzündbar', correct: false },
+			{ text: 'Endzündend', correct: false },
+			{ text: 'Ätzwirkung', correct: false },
+			{ text: 'akute Toxizität', correct: false },
+			{ text: 'Gesundheitsgefahren', correct: false },
+			{ text: 'Reizwirkung', correct: true },
+			{ text: 'Gewässergefährdend', correct: false }
+		],
+		number: 20,
+		text: 'Ordne die folgenden Begriffe der Grafik zu:',
+		image: piktogrammeReizend
+	},
+	{
+		answers: [
+			{ text: 'Explosiv', correct: false },
+			{ text: 'Entzündbar', correct: false },
+			{ text: 'Endzündend', correct: false },
+			{ text: 'Ätzwirkung', correct: false },
+			{ text: 'akute Toxizität', correct: false },
+			{ text: 'Gesundheitsgefahren', correct: false },
+			{ text: 'Reizwirkung', correct: false },
+			{ text: 'Gewässergefährdend', correct: true }
+		],
+		number: 21,
+		text: 'Ordne die folgenden Begriffe der Grafik zu:',
+		image: piktogrammeUmwelt
 	}
 ];
