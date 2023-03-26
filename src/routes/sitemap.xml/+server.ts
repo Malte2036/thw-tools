@@ -18,6 +18,10 @@ export async function GET() {
             <loc>https://thw-tools.de/quiz/agt</loc>
             <priority>0.80</priority>
         </url>
+        <url>
+            <loc>https://thw-tools.de/quiz/cbrn</loc>
+            <priority>0.80</priority>
+        </url>
       </urlset>`.trim(),
 		{
 			headers: {
