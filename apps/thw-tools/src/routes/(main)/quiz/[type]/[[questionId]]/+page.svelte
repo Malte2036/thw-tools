@@ -8,6 +8,7 @@
 	import CheckboxAnswer from '$lib/quiz/answer/CheckboxAnswer.svelte';
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
 	import type { AnswerdCountData } from './+page';
+	import QuestionNumber from '$lib/quiz/QuestionNumber.svelte';
 
 	export let data: PageData;
 
@@ -112,9 +113,7 @@
 		<div class="flex flex-col gap-16 justify-between h-full">
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-col gap-2">
-					<h3 class="flex flex-row justify-center text-gray-400 font-bold">
-						{question.number}/{questionCount}
-					</h3>
+					<QuestionNumber questionNumber={question.number} {questionCount} />
 					<h1
 						bind:this={questionTextEl}
 						class="text-2xl text-center focus:text-thw outline-none font-bold"
