@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { PageData } from '../$types';
-	import { invalidate } from '$app/navigation';
+	import { invalidate, goto } from '$app/navigation';
 	import type { Question, QuestionType } from '$lib/quiz/question/Question';
 	import { onMount } from 'svelte';
 	import { shuffle } from '$lib/utils';
-	import type { AnswerdCountData } from '../+page';
 	import QuestionStatistics from '$lib/quiz/question/QuestionStatistics.svelte';
 	import CheckboxAnswer from '$lib/quiz/answer/CheckboxAnswer.svelte';
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
+	import type { AnswerdCountData } from './+page';
 
 	export let data: PageData;
 
@@ -57,6 +57,12 @@
 
 	function assignNewQuestion() {
 		fetching = true;
+
+		if (data.nextQuestionId !== undefined) {
+			goto(`/quiz/${questionType}/${data.nextQuestionId}`);
+			return;
+		}
+
 		invalidate('app:quiz');
 	}
 
