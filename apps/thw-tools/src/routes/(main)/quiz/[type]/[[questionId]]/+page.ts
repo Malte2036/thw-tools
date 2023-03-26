@@ -28,7 +28,9 @@ export const load = (async ({ params, depends }) => {
 
 	depends('app:quiz');
 
-	const questionNumber = Math.floor(Math.random() * questionSet.length);
+	const questionNumber: number | undefined = params.questionId
+		? Number.parseInt(params.questionId) - 1
+		: Math.floor(Math.random() * questionSet.length);
 	let question = questionSet[questionNumber];
 	question = {
 		...question,
