@@ -52,11 +52,15 @@
 		focusQuestionText();
 	}
 
+	function gotoQuestionNumber(newQuestionNumber: number) {
+		goto(`/quiz/${questionType}/${newQuestionNumber}`);
+	}
+
 	function assignNewQuestion() {
 		fetching = true;
 
 		if (data.nextQuestionId !== undefined) {
-			goto(`/quiz/${questionType}/${data.nextQuestionId}`);
+			gotoQuestionNumber(data.nextQuestionId);
 			return;
 		}
 
@@ -109,7 +113,7 @@
 		<div class="flex flex-col gap-16 justify-between h-full">
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-col gap-2">
-					<QuestionNumber questionNumber={question.number} {questionCount} />
+					<QuestionNumber questionNumber={question.number} {questionCount} {gotoQuestionNumber} />
 					<h1
 						bind:this={questionTextEl}
 						class="text-2xl text-center focus:text-thw outline-none font-bold"
