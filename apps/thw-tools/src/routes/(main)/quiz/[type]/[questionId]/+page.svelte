@@ -66,7 +66,9 @@
 			let nextQuestionId = data.nextQuestionId;
 
 			if (localStorage.getItem('shuffleQuiz') == 'true') {
-				nextQuestionId = Math.floor(Math.random() * data.questionCount) + 1;
+				while (nextQuestionId - 1 === data.question.number) {
+					nextQuestionId = Math.floor(Math.random() * data.questionCount) + 1;
+				}
 			}
 			gotoQuestionNumber(nextQuestionId);
 			return;
