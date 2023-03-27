@@ -6,6 +6,13 @@ const config = {
 	plugins: [
 		sveltekit(),
 		SvelteKitPWA({
+			// add this to cache all the imports
+			workbox: {
+				globPatterns: ['src/**/*']
+			},
+			// add this to cache all the
+			// static assets in the public folder
+			includeAssets: ['src/lib/assets/**/*', 'src/lib/icons/**/*'],
 			manifest: {
 				theme_color: '#120a8f',
 				background_color: 'white',
