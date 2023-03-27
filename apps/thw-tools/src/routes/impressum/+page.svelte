@@ -15,6 +15,16 @@
 			Hilfswerk (THW). Das Logo des THWs, der Zahnkranz, wird ausschließlich zu dekorativen Zwecken
 			auf der Website verwendet.
 		</span>
+		<span>
+			Die Fragen des <span class="italic">AGT-Quiz</span> stammen von der
+			<a
+				href="https://www.nlbk.niedersachsen.de/startseite/service/download/ausbildung_nach_fwdv_2/kreisausbildung/lehrgang_atemschutzgeratetrager/downloadbereich-lehrgang-atemschutzgeraetetraeger-86208.html"
+				target="_blank"
+				rel="noreferrer"
+			>
+				Niedersächsischen Akademie für Brand- und Katastrophenschutz</a
+			>.
+		</span>
 		<span
 			>Diese Seite verfügt über kein Impressum nach deutschem Recht: Ein Impressum gemäß § 5 TMG ist
 			nicht erforderlich, da es sich nicht um einen geschäftsmäßigen Dienst, sondern um eine private
