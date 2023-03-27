@@ -4,14 +4,17 @@
 	export let gotoQuestionNumber: (newQuestionNumber: number) => void;
 
 	function askForQuestionNumber() {
-		const newQuestionNumber = Number.parseInt(
-			prompt('Enter a question number:', String(questionNumber)) ?? ''
-		);
+		const input = prompt('Enter a question number:', String(questionNumber));
+		if (input === null) return;
 
-		gotoQuestionNumber(newQuestionNumber);
+		gotoQuestionNumber(Number.parseInt(input));
 	}
 </script>
 
-<h3 class="flex flex-row justify-center text-gray-400 font-bold" on:click={askForQuestionNumber}>
+<h3
+	class="flex flex-row justify-center text-gray-400 font-bold"
+	on:click={askForQuestionNumber}
+	on:keydown={askForQuestionNumber}
+>
 	{questionNumber}/{questionCount}
 </h3>
