@@ -63,7 +63,12 @@
 		fetching = true;
 
 		if (data.nextQuestionId !== undefined) {
-			gotoQuestionNumber(data.nextQuestionId);
+			let nextQuestionId = data.nextQuestionId;
+
+			if (localStorage.getItem('shuffleQuiz') == 'true') {
+				nextQuestionId = Math.floor(Math.random() * data.questionCount) + 1;
+			}
+			gotoQuestionNumber(nextQuestionId);
 			return;
 		}
 
