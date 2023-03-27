@@ -48,3 +48,8 @@
 		</div>
 	</div>
 </div>
+
+{#each ['agt', 'cbrn'] as questionType}
+	<!-- svelte-ignore a11y-missing-content -->
+	<a href={`/quiz/${questionType}/listing`} />
+{/each}

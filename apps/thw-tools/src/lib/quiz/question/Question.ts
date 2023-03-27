@@ -1,3 +1,7 @@
+import { error } from '@sveltejs/kit';
+import { AGTQuestions } from './AGTQuestions';
+import { CBRNQuestions } from './CBRNQuestions';
+
 export type QuestionType = 'agt' | 'cbrn';
 
 export type Question = {
@@ -12,3 +16,16 @@ export type Answer = {
 	correct: boolean;
 	checked?: boolean;
 };
+
+export function questionTypeToQuestionSet(questionType: QuestionType) {
+	switch (questionType) {
+		case 'agt':
+			return AGTQuestions;
+			break;
+		case 'cbrn':
+			return CBRNQuestions;
+			break;
+		default:
+			throw error(404, `QuestionType ${questionType} not found`);
+	}
+}
