@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import type { PageLoad } from './$types';
+import type { PageServerLoad } from './$types';
 import { questionTypeToQuestionSet, type QuestionType } from '$lib/quiz/question/Question';
 
 export type AnswerdCountData = {
@@ -7,8 +7,7 @@ export type AnswerdCountData = {
 	wrong: number;
 };
 
-export const ssr = false;
-export const prerender = 'auto';
+export const prerender = true;
 
 export const load = (async ({ params, depends }) => {
 	const questionType: QuestionType | undefined = params.type as QuestionType;
@@ -17,16 +16,13 @@ export const load = (async ({ params, depends }) => {
 
 	depends('app:quiz');
 
-	const isRandom = params.questionId === undefined;
-	const questionNumber: number | undefined = isRandom
-		? Math.floor(Math.random() * questionSet.length)
-		: Number.parseInt(params.questionId!) - 1;
+	const questionNumber: number | undefined = Number.parseInt(params.questionId!) - 1;
 
 	let question = questionSet[questionNumber];
 
 	if (question === undefined) {
 		throw error(404, {
-			message: `Id "${questionNumber}" for quiz type "${questionType}" not found!`
+			message: `Id "${params.questionId}" for quiz type "${questionType}" not found!`
 		});
 	}
 
@@ -35,7 +31,7 @@ export const load = (async ({ params, depends }) => {
 		answers: question.answers.map((question) => ({ ...question, checked: false }))
 	};
 
-	const nextQuestionId = isRandom ? undefined : ((questionNumber + 1) % questionSet.length) + 1;
+	const nextQuestionId = ((questionNumber + 1) % questionSet.length) + 1;
 
 	return {
 		question,
@@ -43,4 +39,4 @@ export const load = (async ({ params, depends }) => {
 		questionCount: questionSet.length,
 		nextQuestionId
 	};
-}) satisfies PageLoad;
+}) satisfies PageServerLoad;
