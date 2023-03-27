@@ -10,13 +10,18 @@
 	onMount(async () => {
 		if (pwaInfo) {
 			const { registerSW } = await import('virtual:pwa-register');
-			registerSW({
+			const updateSW = registerSW({
 				immediate: true,
 				onRegistered(r: any) {
 					console.log(`SW Registered: ${r}`);
 				},
 				onRegisterError(error: any) {
 					console.log('SW registration error', error);
+				},
+				onNeedRefresh() {
+					if (confirm('New content available. Reload?')) {
+						updateSW(true);
+					}
 				}
 			});
 		}
