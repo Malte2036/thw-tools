@@ -34,6 +34,13 @@ export const load = (async ({ params, depends }) => {
 		: Number.parseInt(params.questionId!) - 1;
 
 	let question = questionSet[questionNumber];
+
+	if (question === undefined) {
+		throw error(404, {
+			message: `Id "${questionNumber}" for quiz type "${questionType}" not found!`
+		});
+	}
+
 	question = {
 		...question,
 		answers: question.answers.map((question) => ({ ...question, checked: false }))
