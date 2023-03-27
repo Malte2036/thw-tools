@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
-	import type { AnswerdCountData } from '../../routes/(main)/quiz/[type]/+page';
+	import type { AnswerdCountData } from '../../routes/(main)/quiz/[type]/[questionId]/+page.server';
 	import type { Question, QuestionType } from './question/Question';
 
 	export let questionType: QuestionType;

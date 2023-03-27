@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AnswerdCountData } from '../../../routes/(main)/quiz/[type]/+page';
+	import type { AnswerdCountData } from '../../../routes/(main)/quiz/[type]/[questionId]/+page.server';
 
 	export let answerdCountData: AnswerdCountData | undefined;
 	export let currentQuestionAnswerdCountData: AnswerdCountData | undefined;

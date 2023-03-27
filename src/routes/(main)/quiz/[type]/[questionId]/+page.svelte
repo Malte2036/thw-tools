@@ -7,7 +7,7 @@
 	import QuestionStatistics from '$lib/quiz/question/QuestionStatistics.svelte';
 	import CheckboxAnswer from '$lib/quiz/answer/CheckboxAnswer.svelte';
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
-	import type { AnswerdCountData } from './+page';
+	import type { AnswerdCountData } from './+page.server';
 	import QuestionNumber from '$lib/quiz/QuestionNumber.svelte';
 
 	export let data: PageData;
@@ -28,9 +28,12 @@
 		question = q;
 
 		currentQuestionAnswerdCountData = undefined;
-		fetch(`/api/quiz/${questionType}/${q.number}/count`).then((res) =>
-			res.json().then((data) => (currentQuestionAnswerdCountData = data))
-		);
+
+		if (!import.meta.env.SSR) {
+			fetch(`/api/quiz/${questionType}/${q.number}/count`).then((res) =>
+				res.json().then((data) => (currentQuestionAnswerdCountData = data))
+			);
+		}
 	}
 
 	$: questionType = data.questionType;
