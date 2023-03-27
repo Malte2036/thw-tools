@@ -7,27 +7,12 @@
 	import { onMount } from 'svelte';
 	import { pwaInfo } from 'virtual:pwa-info';
 
-	onMount(async () => {
-		if (pwaInfo) {
-			const { registerSW } = await import('virtual:pwa-register');
-			const updateSW = registerSW({
-				immediate: true,
-				onRegistered(r: any) {
-					console.log(`SW Registered: ${r}`);
-				},
-				onRegisterError(error: any) {
-					console.log('SW registration error', error);
-				},
-				onNeedRefresh() {
-					if (confirm('New content available. Reload?')) {
-						updateSW(true);
-					}
-				}
-			});
-		}
-	});
-
 	$: webManifest = pwaInfo ? pwaInfo.webManifest.linkTag : '';
+
+	let ReloadPrompt: any;
+	onMount(async () => {
+		pwaInfo && (ReloadPrompt = (await import('$lib/ReloadPrompt.svelte')).default);
+	});
 
 	import '../app.css';
 	import { page } from '$app/stores';
@@ -52,6 +37,10 @@
 <svelte:head>
 	{@html webManifest}
 </svelte:head>
+
+{#if ReloadPrompt}
+	<svelte:component this={ReloadPrompt} />
+{/if}
 
 <div class="flex flex-col gap-4 justify-between min-h-screen">
 	{#if title !== undefined}
