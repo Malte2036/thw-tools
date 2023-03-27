@@ -1,8 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import { AGTQuestions } from '$lib/quiz/question/AGTQuestions';
-import { CBRNQuestions } from '$lib/quiz/question/CBRNQuestions';
-import type { Question, QuestionType } from '$lib/quiz/question/Question';
+import { questionTypeToQuestionSet, type QuestionType } from '$lib/quiz/question/Question';
 
 export type AnswerdCountData = {
 	right: number;
@@ -10,21 +8,12 @@ export type AnswerdCountData = {
 };
 
 export const ssr = false;
+export const prerender = 'auto';
 
 export const load = (async ({ params, depends }) => {
 	const questionType: QuestionType | undefined = params.type as QuestionType;
 
-	let questionSet: Question[] | undefined = undefined;
-	switch (questionType) {
-		case 'agt':
-			questionSet = AGTQuestions;
-			break;
-		case 'cbrn':
-			questionSet = CBRNQuestions;
-			break;
-		default:
-			throw error(404, `QuestionType ${questionType} not found`);
-	}
+	let questionSet = questionTypeToQuestionSet(questionType);
 
 	depends('app:quiz');
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PageData } from '../$types';
+	import type { PageData } from './$types';
 	import { invalidate, goto } from '$app/navigation';
 	import type { Question, QuestionType } from '$lib/quiz/question/Question';
 	import { onMount } from 'svelte';
