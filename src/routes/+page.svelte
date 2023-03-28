@@ -3,9 +3,10 @@
 	import HearthPulseIcon from '../lib/icons/HearthPulseIcon.svelte';
 	import LinkButton from '../lib/LinkButton.svelte';
 	import logo from '$lib/icons/thw-mzgw.webp';
+	import FlaskVialIcon from '$lib/icons/FlaskVialIcon.svelte';
 
 	const description =
-		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem, ein AGT-Quiz und eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger.';
+		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem, ein AGT-Quiz, CBRN-Quiz und eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger.';
 </script>
 
 <svelte:head>
@@ -35,7 +36,7 @@
 			</LinkButton>
 			<LinkButton url="/quiz/cbrn">
 				<div class="w-6">
-					<ChartSimpleIcon />
+					<FlaskVialIcon />
 				</div>
 				<div>CBRN-Quiz</div>
 			</LinkButton>
