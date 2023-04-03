@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { invalidate, goto } from '$app/navigation';
-	import type { ExtendedQuestion, Question, QuestionType } from '$lib/quiz/question/Question';
+	import { afterNavigate, goto } from '$app/navigation';
+	import type { ExtendedQuestion, QuestionType } from '$lib/quiz/question/Question';
 	import { onMount } from 'svelte';
 	import { randomInt, shuffle } from '$lib/utils';
 	import QuestionStatistics from '$lib/quiz/question/QuestionStatistics.svelte';
@@ -10,6 +10,7 @@
 	import type { AnswerdCountData } from './+page.server';
 	import QuestionNumber from '$lib/quiz/QuestionNumber.svelte';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
+	import type { AfterNavigate } from '@sveltejs/kit';
 
 	export let data: PageData;
 
@@ -67,11 +68,13 @@
 		}
 	}
 
-	onMount(() => {
+	afterNavigate(async (navigation: AfterNavigate) => {
 		setTimeout(() => {
 			focusQuestionText();
 		});
+	});
 
+	onMount(() => {
 		try {
 			fetch(`/api/quiz/${questionType}/count`).then((res) =>
 				res.json().then((data) => (answeredCountData = data))
