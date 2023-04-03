@@ -1,20 +1,24 @@
 <script lang="ts">
-	import type { Answer } from '../question/Question';
-
-	export let answer: Answer;
+	export let answer: string;
+	export let checked: boolean;
+	export let correct: boolean;
 	export let revealAnswers: boolean;
+	export let changeCheckedCallback: (value: boolean) => void;
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
 	class="text-xl flex flex-row p-2 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors hover:cursor-pointer"
-	class:checked={answer.checked}
-	class:revealAnswerCorrect={revealAnswers && answer.correct}
-	class:revealAnswerWrong={revealAnswers && answer.checked != answer.correct}
-	on:click={() => (answer.checked = !answer.checked)}
+	class:checked
+	class:revealAnswerCorrect={revealAnswers && correct}
+	class:revealAnswerWrong={revealAnswers && checked != correct}
+	on:click={() => {
+		changeCheckedCallback(!checked);
+		checked = !checked;
+	}}
 >
-	<input type="checkbox" bind:checked={answer.checked} />
-	<div>{answer.text}</div>
+	<input type="checkbox" bind:checked />
+	<div>{answer}</div>
 </div>
 
 <style lang="scss">

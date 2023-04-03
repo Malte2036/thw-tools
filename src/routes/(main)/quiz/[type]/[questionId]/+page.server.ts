@@ -1,6 +1,10 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { questionTypeToQuestionSet, type QuestionType } from '$lib/quiz/question/Question';
+import {
+	questionTypeToQuestionSet,
+	type ExtendedQuestion,
+	type QuestionType
+} from '$lib/quiz/question/Question';
 
 export type AnswerdCountData = {
 	right: number;
@@ -18,18 +22,13 @@ export const load = (async ({ params, depends }) => {
 
 	const questionNumber: number | undefined = Number.parseInt(params.questionId!) - 1;
 
-	let question = questionSet[questionNumber];
+	let question: ExtendedQuestion = questionSet[questionNumber];
 
 	if (question === undefined) {
 		throw error(404, {
 			message: `Id "${params.questionId}" for quiz type "${questionType}" not found!`
 		});
 	}
-
-	question = {
-		...question,
-		answers: question.answers.map((question) => ({ ...question, checked: false }))
-	};
 
 	const nextQuestionId = ((questionNumber + 1) % questionSet.length) + 1;
 
