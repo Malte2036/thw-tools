@@ -1,48 +1,7 @@
 import type { RequestEvent, RequestHandler } from './$types';
-import sdk from 'node-appwrite';
-
-import {
-	APPWRITE_ENDPOINT,
-	APPWRITE_PROJECTID,
-	APPWRITE_APIKEY,
-	APPWRITE_DATABASEID_QUIZ
-} from '$env/static/private';
 import { json } from '@sveltejs/kit';
-import { getCollectionIdByQuiz } from '../../utils';
 import type { QuestionType } from '$lib/quiz/question/Question';
-
-export type StatisticsData = { questionId: string; correct: boolean };
-
-type ResultData = { data: { databasesListDocuments: { total: number } } };
-
-async function fetchCount(
-	quiz: QuestionType,
-	questionId: number,
-	correct: boolean
-): Promise<number> {
-	const collectionId = getCollectionIdByQuiz(quiz);
-
-	const client = new sdk.Client();
-
-	client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECTID).setKey(APPWRITE_APIKEY);
-
-	const graphql = new sdk.Graphql(client);
-
-	// limited to 5000 docs
-	const res: ResultData = await graphql.query({
-		query: `query {
-		databasesListDocuments(
-			databaseId: "${APPWRITE_DATABASEID_QUIZ}",
-			collectionId: "${collectionId}",
-			queries: ["equal(\\"questionId\\", [${questionId}])", "equal(\\"correct\\", [${correct}])"]
-		) {
-			total
-		}
-	}`
-	});
-
-	return res.data.databasesListDocuments.total;
-}
+import { getCorrectCount } from '$lib/Database';
 
 export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 	try {
@@ -51,8 +10,8 @@ export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 
 		return json(
 			{
-				right: await fetchCount(quiz, questionId, true),
-				wrong: await fetchCount(quiz, questionId, false)
+				right: await getCorrectCount(quiz, true, questionId),
+				wrong: await getCorrectCount(quiz, false, questionId)
 			},
 			{
 				headers: {
