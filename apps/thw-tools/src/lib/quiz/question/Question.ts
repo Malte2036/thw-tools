@@ -8,22 +8,36 @@ export type Question = {
 	number: number;
 	text: string;
 	image?: string;
-	answers: Answer[];
+	correctIndizies: number[];
 };
 
-export type Answer = {
-	text: string;
-	correct: boolean;
-	checked?: boolean;
+export type JSONQuestion = Question & {
+	answers: string[];
 };
 
-export function questionTypeToQuestionSet(questionType: QuestionType): Question[] {
+export type ExtendedQuestion = Question & {
+	answers: Map<number, string>;
+	checkedIndizies: number[];
+};
+
+export function questionTypeToQuestionSet(questionType: QuestionType): ExtendedQuestion[] {
+	var set: JSONQuestion[] = [];
 	switch (questionType) {
 		case 'agt':
-			return AGTQuestions;
+			set = AGTQuestions;
+			break;
 		case 'cbrn':
-			return CBRNQuestions;
+			set = CBRNQuestions;
+			break;
 		default:
 			throw error(404, `QuestionType ${questionType} not found`);
 	}
+	return set.map((q: JSONQuestion) => ({
+		...q,
+		answers: q.answers.reduce((map: Map<number, string>, answer: string, index: number) => {
+			map.set(index, answer);
+			return map;
+		}, new Map<number, string>()),
+		checkedIndizies: []
+	}));
 }

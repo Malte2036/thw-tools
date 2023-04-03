@@ -1,1274 +1,704 @@
-import type { Question } from '$lib/quiz/question/Question';
+import type { JSONQuestion } from './Question';
 
-export const AGTQuestions: Question[] = [
+export const AGTQuestions: JSONQuestion[] = [
 	{
-		answers: [
-			{ text: 'Mund', correct: true },
-			{ text: 'Nase', correct: true },
-			{ text: 'Lungenbl\u00e4schen', correct: false },
-			{ text: 'Bronchien', correct: false }
-		],
+		answers: ['Mund', 'Nase', 'Lungenbläschen', 'Bronchien'],
 		number: 1,
-		text: 'Den oberen Atemwegen werden zugeordnet:'
+		text: 'Den oberen Atemwegen werden zugeordnet:',
+		correctIndizies: [0, 1]
 	},
 	{
 		answers: [
-			{
-				text: 'das Heben der Rippen und Spannen des Zwerchfells.',
-				correct: true
-			},
-			{ text: 'das Einziehen des Bauches.', correct: false },
-			{
-				text: 'das Ausdehnen der Bronchien.',
-				correct: false
-			},
-			{ text: 'das Weiten der Wangen.', correct: false }
+			'das Heben der Rippen und Spannen des Zwerchfells.',
+			'das Einziehen des Bauches.',
+			'das Ausdehnen der Bronchien.',
+			'das Weiten der Wangen.'
 		],
 		number: 2,
-		text: 'Der f\u00fcr die Einatmung notwendige Unterdruck im Brustraum wird erzeugt durch'
+		text: 'Der für die Einatmung notwendige Unterdruck im Brustraum wird erzeugt durch',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{
-				text: 'Mund, Nase, Rachen, Lunge, Alveolen',
-				correct: false
-			},
-			{
-				text: 'Luftr\u00f6hre, Bronchiolen, Bronchien, linker und rechter Lungenfl\u00fcgel',
-				correct: false
-			},
-			{ text: 'Mund, Nase, Rachenraum', correct: false },
-			{ text: 'Kehlkopf, Bronchien, Lunge', correct: true }
+			'Mund, Nase, Rachen, Lunge, Alveolen',
+			'Luftröhre, Bronchiolen, Bronchien, linker und rechter Lungenflügel',
+			'Mund, Nase, Rachenraum',
+			'Kehlkopf, Bronchien, Lunge'
 		],
 		number: 3,
-		text: 'Die unteren Atemwege des Menschen setzen sich zusammen aus:'
+		text: 'Die unteren Atemwege des Menschen setzen sich zusammen aus:',
+		correctIndizies: [3]
 	},
 	{
-		answers: [
-			{ text: 'Bronchien', correct: false },
-			{ text: 'Luftr\u00f6hre', correct: false },
-			{ text: 'Alveolen', correct: true },
-			{ text: 'Venen', correct: false }
-		],
+		answers: ['Bronchien', 'Luftröhre', 'Alveolen', 'Venen'],
 		number: 4,
-		text: 'Der Gasaustausch, als Teil des Atemvorgangs, findet statt in den'
+		text: 'Der Gasaustausch, als Teil des Atemvorgangs, findet statt in den',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{
-				text: 'der Austausch von Sauerstoff und Kohlendioxid in den Lungenbl\u00e4schen',
-				correct: true
-			},
-			{
-				text: 'die Zuf\u00fchrung von Sauerstoff in die K\u00f6rperzellen',
-				correct: false
-			},
-			{ text: 'die Ein- und Ausatmung', correct: false },
-			{
-				text: 'der Ersatz von Kohlenmonoxid (CO) durch Kohlendioxid (CO 2 )',
-				correct: false
-			}
+			'der Austausch von Sauerstoff und Kohlendioxid in den Lungenbläschen',
+			'die Zuführung von Sauerstoff in die Körperzellen',
+			'die Ein- und Ausatmung',
+			'der Ersatz von Kohlenmonoxid (CO) durch Kohlendioxid (CO 2 )'
 		],
 		number: 5,
-		text: 'Unter "Gasaustausch" ist zu verstehen:'
+		text: 'Unter "Gasaustausch" ist zu verstehen:',
+		correctIndizies: [0]
 	},
 	{
-		answers: [
-			{ text: 'ca. 15 Vol.-%.', correct: false },
-			{ text: 'ca. 17 Vol.-%.', correct: false },
-			{ text: 'ca. 21 Vol.-%.', correct: true },
-			{ text: 'ca. 23 Vol.-%.', correct: false }
-		],
+		answers: ['ca. 15 Vol.-%.', 'ca. 17 Vol.-%.', 'ca. 21 Vol.-%.', 'ca. 23 Vol.-%.'],
 		number: 6,
-		text: 'In der normalen Einatemluft liegt die Sauerstoffkonzentration bei'
+		text: 'In der normalen Einatemluft liegt die Sauerstoffkonzentration bei',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{
-				text: '78 % Stickstoff, ca. 4 % Kohlendioxid, 17 % Sauerstoff, Rest Edelgase',
-				correct: false
-			},
-			{
-				text: '78 % Stickstoff, 0,04 % Kohlendioxid, 21 % Sauerstoff, Rest Edelgase',
-				correct: true
-			},
-			{
-				text: '78 % Stickstoff, ca. 4 % Edelgase, 17 % Sauerstoff, Rest Kohlenmonoxid',
-				correct: false
-			},
-			{
-				text: '78 % Stickstoff, ca. 1 % Kohlendioxid, 21 % Edelgase, Rest Sauerstoff',
-				correct: false
-			}
+			'78 % Stickstoff, ca. 4 % Kohlendioxid, 17 % Sauerstoff, Rest Edelgase',
+			'78 % Stickstoff, 0,04 % Kohlendioxid, 21 % Sauerstoff, Rest Edelgase',
+			'78 % Stickstoff, ca. 4 % Edelgase, 17 % Sauerstoff, Rest Kohlenmonoxid',
+			'78 % Stickstoff, ca. 1 % Kohlendioxid, 21 % Edelgase, Rest Sauerstoff'
 		],
 		number: 7,
-		text: 'Die Einatemluft besteht aus:'
+		text: 'Die Einatemluft besteht aus:',
+		correctIndizies: [1]
 	},
 	{
 		answers: [
-			{
-				text: '20 % Sauerstoff, 78 % Stickstoff, 2 % Wasserdampf',
-				correct: false
-			},
-			{
-				text: '21 % Sauerstoff, 79 % Stickstoff',
-				correct: false
-			},
-			{
-				text: '21 % Sauerstoff, 0,96 % Edelgase, 0,04 % Kohlendioxid, 78 % Stickstoff',
-				correct: true
-			},
-			{
-				text: '17 % Sauerstoff, 0,96 % Edelgase, 4,04 % Kohlenmonoxid, 78 % Stickstoff',
-				correct: false
-			}
+			'20 % Sauerstoff, 78 % Stickstoff, 2 % Wasserdampf',
+			'21 % Sauerstoff, 79 % Stickstoff',
+			'21 % Sauerstoff, 0,96 % Edelgase, 0,04 % Kohlendioxid, 78 % Stickstoff',
+			'17 % Sauerstoff, 0,96 % Edelgase, 4,04 % Kohlenmonoxid, 78 % Stickstoff'
 		],
 		number: 8,
-		text: 'Die atmosph\u00e4rische Luft setzt sich zusammen:'
+		text: 'Die atmosphärische Luft setzt sich zusammen:',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{
-				text: '78 % Stickstoff, 4,04 % Kohlendioxid, 17 % Sauerstoff, Rest Edelgase',
-				correct: true
-			},
-			{
-				text: '78 % Stickstoff, 0,04 % Kohlendioxid, 21 % Sauerstoff, Rest Edelgase',
-				correct: false
-			},
-			{
-				text: '78 % Stickstoff, ca. 4 % Edelgase, 17 % Sauerstoff, Rest Kohlendioxid',
-				correct: false
-			},
-			{
-				text: '78 % Stickstoff, 4 % Kohlenoxid (CO), 17 % Sauerstoff, Rest Kohlendioxid',
-				correct: false
-			}
+			'78 % Stickstoff, 4,04 % Kohlendioxid, 17 % Sauerstoff, Rest Edelgase',
+			'78 % Stickstoff, 0,04 % Kohlendioxid, 21 % Sauerstoff, Rest Edelgase',
+			'78 % Stickstoff, ca. 4 % Edelgase, 17 % Sauerstoff, Rest Kohlendioxid',
+			'78 % Stickstoff, 4 % Kohlenoxid (CO), 17 % Sauerstoff, Rest Kohlendioxid'
 		],
 		number: 9,
-		text: 'Die Ausatemluft besteht aus:'
+		text: 'Die Ausatemluft besteht aus:',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{ text: 'das Blutplasma', correct: false },
-			{
-				text: 'die wei\u00dfen Blutk\u00f6rperchen',
-				correct: false
-			},
-			{
-				text: 'das H\u00e4moglobin der roten Blutk\u00f6rperchen',
-				correct: true
-			},
-			{ text: 'die Blutpl\u00e4ttchen', correct: false }
+			'das Blutplasma',
+			'die weißen Blutkörperchen',
+			'das Hämoglobin der roten Blutkörperchen',
+			'die Blutplättchen'
 		],
 		number: 10,
-		text: 'F\u00fcr den Sauerstofftransport im Blut ist zust\u00e4ndig:'
+		text: 'Für den Sauerstofftransport im Blut ist zuständig:',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{
-				text: 'dem K\u00f6rper Kohlendioxid zuf\u00fchren:',
-				correct: false
-			},
-			{
-				text: 'das in den Zellen beim Stoffwechsel entstehende Kohlendioxid an die Umgebung abf\u00fchren.',
-				correct: true
-			},
-			{
-				text: 'den K\u00f6rperzellen lebenswichtigen Sauerstoff zuf\u00fchren.',
-				correct: true
-			},
-			{
-				text: 'den K\u00f6rper zu entschlacken.',
-				correct: false
-			}
+			'dem Körper Kohlendioxid zuführen:',
+			'das in den Zellen beim Stoffwechsel entstehende Kohlendioxid an die Umgebung abführen.',
+			'den Körperzellen lebenswichtigen Sauerstoff zuführen.',
+			'den Körper zu entschlacken.'
 		],
 		number: 11,
-		text: 'Die Atmung hat die Funktion'
+		text: 'Die Atmung hat die Funktion',
+		correctIndizies: [1, 2]
 	},
 	{
-		answers: [
-			{ text: '40 - 50 l/min.', correct: true },
-			{ text: '60 - 80 l/min.', correct: false },
-			{ text: '20 - 30 l/min.', correct: false },
-			{ text: '15 - 35 l/min.', correct: false }
-		],
+		answers: ['40 - 50 l/min.', '60 - 80 l/min.', '20 - 30 l/min.', '15 - 35 l/min.'],
 		number: 12,
-		text: 'Der Luftverbrauch betr\u00e4gt bei mittelschwerer Arbeit etwa'
+		text: 'Der Luftverbrauch beträgt bei mittelschwerer Arbeit etwa',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{ text: 'ca. 2 - 3 Liter Luft', correct: true },
-			{ text: 'ca. 3 - 5 Liter Luft', correct: false },
-			{ text: 'ca. 5 - 10 Liter Luft', correct: false },
-			{ text: 'ca. 7 - 9 Liter Luft', correct: false }
+			'ca. 2 - 3 Liter Luft',
+			'ca. 3 - 5 Liter Luft',
+			'ca. 5 - 10 Liter Luft',
+			'ca. 7 - 9 Liter Luft'
 		],
 		number: 13,
-		text: 'Bei mittelschwerer Arbeit werden pro Atemzug eingeatmet:'
+		text: 'Bei mittelschwerer Arbeit werden pro Atemzug eingeatmet:',
+		correctIndizies: [0]
 	},
 	{
-		answers: [
-			{ text: '5 \u2013 10 Atemz\u00fcge', correct: false },
-			{ text: '10 \u2013 15 Atemz\u00fcge', correct: false },
-			{ text: '15 \u2013 20 Atemz\u00fcge', correct: true },
-			{ text: '25 \u2013 30 Atemz\u00fcge', correct: false }
-		],
+		answers: ['5 – 10 Atemzüge', '10 – 15 Atemzüge', '15 – 20 Atemzüge', '25 – 30 Atemzüge'],
 		number: 14,
-		text: 'Die Anzahl der Atemz\u00fcge bei mittelschwerer Arbeit pro Minute betr\u00e4gt:'
+		text: 'Die Anzahl der Atemzüge bei mittelschwerer Arbeit pro Minute beträgt:',
+		correctIndizies: [2]
 	},
 	{
-		answers: [
-			{ text: '20 l/min', correct: false },
-			{ text: '80 l/min', correct: false },
-			{ text: '50 l/min', correct: true },
-			{ text: '60 l/min', correct: false }
-		],
+		answers: ['20 l/min', '80 l/min', '50 l/min', '60 l/min'],
 		number: 15,
-		text: 'Der mittlere Atemluftverbrauch eines unter PA arbeitenden Menschen mit w\u00e4rmeisolierender Schutzkleidung betr\u00e4gt:'
+		text: 'Der mittlere Atemluftverbrauch eines unter PA arbeitenden Menschen mit wärmeisolierender Schutzkleidung beträgt:',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{ text: 'Isolierger\u00e4t.', correct: true },
-			{
-				text: 'Beh\u00e4lterger\u00e4t mit Sauerstoff.',
-				correct: false
-			},
-			{
-				text: 'Flaschenger\u00e4t mit Filter.',
-				correct: false
-			},
-			{
-				text: 'umluftabh\u00e4ngiges Atemschutzger\u00e4t.',
-				correct: false
-			}
+			'Isoliergerät.',
+			'Behältergerät mit Sauerstoff.',
+			'Flaschengerät mit Filter.',
+			'umluftabhängiges Atemschutzgerät.'
 		],
 		number: 16,
-		text: 'Der Pressluftatmer ist ein'
+		text: 'Der Pressluftatmer ist ein',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{ text: 'im festen Aggregatzustand', correct: true },
-			{ text: 'dampff\u00f6rmig', correct: true },
-			{ text: 'gasf\u00f6rmig', correct: true },
-			{
-				text: 'zum Teil auch in sichtbarer Form',
-				correct: true
-			}
+			'im festen Aggregatzustand',
+			'dampfförmig',
+			'gasförmig',
+			'zum Teil auch in sichtbarer Form'
 		],
 		number: 17,
-		text: 'Atemgifte k\u00f6nnen auftreten:'
+		text: 'Atemgifte können auftreten:',
+		correctIndizies: [0, 1, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'das Vorhandensein von Schwebstoffen, Gasen und D\u00e4mpfen',
-				correct: false
-			},
-			{
-				text: 'die Wirkung von Chlorgas auf die Atemorgane',
-				correct: false
-			},
-			{
-				text: 'Stoffe, die mit der Atmung in den K\u00f6rper gelangen und dort sch\u00e4digend wirken',
-				correct: true
-			},
-			{
-				text: 'das Vorhandensein von gesundheitssch\u00e4dlichen Fremdstoffen in der Umgebungsatmosph\u00e4re',
-				correct: false
-			}
+			'das Vorhandensein von Schwebstoffen, Gasen und Dämpfen',
+			'die Wirkung von Chlorgas auf die Atemorgane',
+			'Stoffe, die mit der Atmung in den Körper gelangen und dort schädigend wirken',
+			'das Vorhandensein von gesundheitsschädlichen Fremdstoffen in der Umgebungsatmosphäre'
 		],
 		number: 18,
-		text: 'Unter dem Begriff Atemgifte ist/sind zu verstehen:'
+		text: 'Unter dem Begriff Atemgifte ist/sind zu verstehen:',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{
-				text: 'Verschlei\u00df des Knochenmarkes',
-				correct: false
-			},
-			{ text: 'Beschleunigung der Atmung', correct: true },
-			{ text: 'Reiz- und \u00c4tzwirkung', correct: true },
-			{
-				text: 'Blockierung des Sauerstofftransportes',
-				correct: true
-			}
+			'Verschleiß des Knochenmarkes',
+			'Beschleunigung der Atmung',
+			'Reiz- und Ätzwirkung',
+			'Blockierung des Sauerstofftransportes'
 		],
 		number: 19,
-		text: 'Atemgifte k\u00f6nnen auf den menschlichen K\u00f6rper folgende Wirkungen haben:'
+		text: 'Atemgifte können auf den menschlichen Körper folgende Wirkungen haben:',
+		correctIndizies: [1, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'durch eine Geruchs- und Geschmacksprobe',
-				correct: false
-			},
-			{
-				text: 'durch schimmernde Luftschichten',
-				correct: false
-			},
-			{
-				text: 'nur durch geeignete Messtechnik',
-				correct: true
-			},
-			{
-				text: 'durch Einschr\u00e4nkung der k\u00f6rperlichen und geistigen Leistungsf\u00e4higkeit',
-				correct: false
-			}
+			'durch eine Geruchs- und Geschmacksprobe',
+			'durch schimmernde Luftschichten',
+			'nur durch geeignete Messtechnik',
+			'durch Einschränkung der körperlichen und geistigen Leistungsfähigkeit'
 		],
 		number: 20,
-		text: 'Sauerstoffmangel kann an Einsatzstellen ausreichend sicher wahrgenommen werden:'
+		text: 'Sauerstoffmangel kann an Einsatzstellen ausreichend sicher wahrgenommen werden:',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{
-				text: 'mit Reiz- und \u00c4tzwirkung.',
-				correct: false
-			},
-			{ text: 'mit erstickender Wirkung.', correct: false },
-			{
-				text: 'mit Wirkung auf Blut, Nerven und Zellen.',
-				correct: true
-			},
-			{
-				text: 'mit Wirkung auf das Wahrnehmungsverm\u00f6gen (Sinnestr\u00fcbungen, Ohnmacht, Sehverm\u00f6gen).',
-				correct: false
-			}
+			'mit Reiz- und Ätzwirkung.',
+			'mit erstickender Wirkung.',
+			'mit Wirkung auf Blut, Nerven und Zellen.',
+			'mit Wirkung auf das Wahrnehmungsvermögen (Sinnestrübungen, Ohnmacht, Sehvermögen).'
 		],
 		number: 21,
-		text: '\u201eBenzind\u00e4mpfe\u201c sind definitionsgem\u00e4\u00df zuzuordnen den Atemgiften mit'
+		text: '„Benzindämpfe“ sind definitionsgemäß zuzuordnen den Atemgiften mit',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{
-				text: 'bei der Zersetzung aller Pflanzenschutzmittel',
-				correct: false
-			},
-			{
-				text: 'bei Br\u00e4nden von anorganischem Material z.B. Glasfasern',
-				correct: false
-			},
-			{ text: 'bei Gasbr\u00e4nden', correct: false },
-			{
-				text: 'bei der Zersetzung von D\u00fcngemitteln mit Stickstoffanteil',
-				correct: true
-			}
+			'bei der Zersetzung aller Pflanzenschutzmittel',
+			'bei Bränden von anorganischem Material z.B. Glasfasern',
+			'bei Gasbränden',
+			'bei der Zersetzung von Düngemitteln mit Stickstoffanteil'
 		],
 		number: 22,
-		text: 'Mit dem Auftreten gr\u00f6\u00dferer Mengen nitroser Gase ist zu rechnen:'
+		text: 'Mit dem Auftreten größerer Mengen nitroser Gase ist zu rechnen:',
+		correctIndizies: [3]
 	},
 	{
-		answers: [
-			{ text: '16 - 50 Jahren.', correct: false },
-			{ text: '18 - 50 Jahren.', correct: false },
-			{ text: '18 - 67 Jahren.', correct: true },
-			{ text: '18 - 55 Jahren.', correct: false }
-		],
+		answers: ['16 - 50 Jahren.', '18 - 50 Jahren.', '18 - 67 Jahren.', '18 - 55 Jahren.'],
 		number: 23,
-		text: 'Die zul\u00e4ssige Altersspanne f\u00fcr Tr\u00e4ger umluftabh\u00e4ngiger Atemschutzger\u00e4te bei der Feuerwehr liegt zwischen'
+		text: 'Die zulässige Altersspanne für Träger umluftabhängiger Atemschutzgeräte bei der Feuerwehr liegt zwischen',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{ text: 'j\u00e4hrlich', correct: false },
-			{
-				text: 'in Abst\u00e4nden von 3 Jahren',
-				correct: true
-			},
-			{ text: 'alle 2 Jahre', correct: false },
-			{
-				text: 'ggf. in k\u00fcrzeren Abst\u00e4nden nach Ermessen des erm\u00e4chtigten Arztes',
-				correct: true
-			}
+			'jährlich',
+			'in Abständen von 3 Jahren',
+			'alle 2 Jahre',
+			'ggf. in kürzeren Abständen nach Ermessen des ermächtigten Arztes'
 		],
 		number: 24,
-		text: '\u00c4rztliche Untersuchungen f\u00fcr Atemschutzger\u00e4tetr\u00e4ger (bis zum 50. Lebensjahr) m\u00fcssen durchgef\u00fchrt werden:'
+		text: 'Ärztliche Untersuchungen für Atemschutzgeräteträger (bis zum 50. Lebensjahr) müssen durchgeführt werden:',
+		correctIndizies: [1, 3]
 	},
 	{
 		answers: [
-			{ text: 'truppweise vorzugehen ist.', correct: true },
-			{
-				text: 'grunds\u00e4tzlich immer alle verf\u00fcgbaren Ger\u00e4tetr\u00e4ger einzusetzen sind.',
-				correct: false
-			},
-			{
-				text: 'Sicherheitstrupps (\u201eRettungstrupp\u201c nach UVV) zu stellen sind.',
-				correct: true
-			},
-			{
-				text: 'eine Atemschutz\u00fcberwachung nur beim Vorgehen in Geb\u00e4ude erforderlich ist.',
-				correct: false
-			}
+			'truppweise vorzugehen ist.',
+			'grundsätzlich immer alle verfügbaren Geräteträger einzusetzen sind.',
+			'Sicherheitstrupps („Rettungstrupp“ nach UVV) zu stellen sind.',
+			'eine Atemschutzüberwachung nur beim Vorgehen in Gebäude erforderlich ist.'
 		],
 		number: 25,
-		text: 'Die Unfallverh\u00fctungsvorschriften der Feuerwehren schreiben vor, dass'
+		text: 'Die Unfallverhütungsvorschriften der Feuerwehren schreiben vor, dass',
+		correctIndizies: [0, 2]
 	},
 	{
 		answers: [
-			{
-				text: 'ist das Manometer zu kontrollieren und weiter zu arbeiten.',
-				correct: false
-			},
-			{
-				text: 'hat der betreffende Atemschutzger\u00e4tetr\u00e4ger sofort den R\u00fcckweg anzutreten.',
-				correct: false
-			},
-			{
-				text: 'tritt der Trupp geschlossen den R\u00fcckzug an.',
-				correct: true
-			},
-			{
-				text: 'ist unverz\u00fcglichen die Feuerwehreinsatzleitstelle zu informieren.',
-				correct: false
-			}
+			'ist das Manometer zu kontrollieren und weiter zu arbeiten.',
+			'hat der betreffende Atemschutzgeräteträger sofort den Rückweg anzutreten.',
+			'tritt der Trupp geschlossen den Rückzug an.',
+			'ist unverzüglichen die Feuerwehreinsatzleitstelle zu informieren.'
 		],
 		number: 26,
-		text: 'Beim Ansprechen der Warneinrichtung an einem Atemschutzger\u00e4t'
+		text: 'Beim Ansprechen der Warneinrichtung an einem Atemschutzgerät',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{
-				text: 'je nach Lage Pressluftatmer und Filterger\u00e4te kombiniert eingesetzt werden.',
-				correct: false
-			},
-			{
-				text: 'nach der UVV-Feuerwehren nur PA und SSG kombiniert eingesetzt werden.',
-				correct: false
-			},
-			{
-				text: 'nur Ger\u00e4te mit gleichen Gebrauchsmerkmalen eingesetzt werden.',
-				correct: true
-			},
-			{
-				text: 'nur Ger\u00e4te des gleichen Herstellers eingesetzt werden.',
-				correct: false
-			}
+			'je nach Lage Pressluftatmer und Filtergeräte kombiniert eingesetzt werden.',
+			'nach der UVV-Feuerwehren nur PA und SSG kombiniert eingesetzt werden.',
+			'nur Geräte mit gleichen Gebrauchsmerkmalen eingesetzt werden.',
+			'nur Geräte des gleichen Herstellers eingesetzt werden.'
 		],
 		number: 27,
-		text: 'Wenn ein Trupp unter Atemschutz vorgeht, d\u00fcrfen'
+		text: 'Wenn ein Trupp unter Atemschutz vorgeht, dürfen',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{
-				text: 'ein Ein-Flaschenger\u00e4t (300 bar) und einem Schlauchger\u00e4t grunds\u00e4tzlich nicht, zusammen eingesetzt werden d\u00fcrfen.',
-				correct: true
-			},
-			{
-				text: 'auch Ger\u00e4te verschiedener Hersteller in einem Trupp zusammen eingesetzt werden d\u00fcrfen.',
-				correct: true
-			},
-			{
-				text: 'Filterger\u00e4te und Pressluftatmer nicht zusammen eingesetzt werden d\u00fcrfen.',
-				correct: true
-			},
-			{
-				text: 'grunds\u00e4tzlich nur Atemfilter mit gleicher Schutzwirkung und gleichem R\u00fcckhalteverm\u00f6gen eingesetzt werden d\u00fcrfen.',
-				correct: true
-			}
+			'ein Ein-Flaschengerät (300 bar) und einem Schlauchgerät grundsätzlich nicht, zusammen eingesetzt werden dürfen.',
+			'auch Geräte verschiedener Hersteller in einem Trupp zusammen eingesetzt werden dürfen.',
+			'Filtergeräte und Pressluftatmer nicht zusammen eingesetzt werden dürfen.',
+			'grundsätzlich nur Atemfilter mit gleicher Schutzwirkung und gleichem Rückhaltevermögen eingesetzt werden dürfen.'
 		],
 		number: 28,
-		text: 'Unter dem Einsatzgrundsatz "Gleiche Typen einer Ger\u00e4teart sind zu verwenden!" ist zu verstehen, dass'
+		text: 'Unter dem Einsatzgrundsatz "Gleiche Typen einer Geräteart sind zu verwenden!" ist zu verstehen, dass',
+		correctIndizies: [0, 1, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'das Notieren der Namen der eingesetzten Ger\u00e4tetr\u00e4ger, der Flaschendr\u00fccke, der Einsatzzeiten und der Ger\u00e4tenummern',
-				correct: true
-			},
-			{
-				text: 'das Feststellen der Anzahl der vorhandenen PA',
-				correct: false
-			},
-			{
-				text: 'die Feststellung des Herstellungsjahres der Atemschutzmasken',
-				correct: false
-			},
-			{
-				text: 'das \u00dcberpr\u00fcfen des Typenschildes des verwendeten Atemschutzger\u00e4tes',
-				correct: false
-			}
+			'das Notieren der Namen der eingesetzten Geräteträger, der Flaschendrücke, der Einsatzzeiten und der Gerätenummern',
+			'das Feststellen der Anzahl der vorhandenen PA',
+			'die Feststellung des Herstellungsjahres der Atemschutzmasken',
+			'das Überprüfen des Typenschildes des verwendeten Atemschutzgerätes'
 		],
 		number: 29,
-		text: 'Zu der Atemschutz\u00fcberwachung geh\u00f6rt unter anderem:'
+		text: 'Zu der Atemschutzüberwachung gehört unter anderem:',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{
-				text: 'sie k\u00f6rperlich gesund sind, mindestens 18 Jahre alt sind, seit 5 Jahren der Feuerwehr angeh\u00f6ren und die Einsatzkurzpr\u00fcfung des PA beherrschen.',
-				correct: false
-			},
-			{
-				text: 'wenn sie erfolgreich den Truppf\u00fchrerlehrgang absolviert haben.',
-				correct: false
-			},
-			{
-				text: 'wenn sie nicht unter 18 Jahre alt sind, \u00e4rztlich untersucht, als Atemschutzger\u00e4tetr\u00e4ger ausgebildet sind und die erforderlichen Nachweise erbracht haben.',
-				correct: true
-			},
-			{
-				text: 'sie momentan k\u00f6rperlich fit sind und eine Unterweisung durch andere Atemschutz- ger\u00e4tetr\u00e4ger erhalten haben.',
-				correct: false
-			}
+			'sie körperlich gesund sind, mindestens 18 Jahre alt sind, seit 5 Jahren der Feuerwehr angehören und die Einsatzkurzprüfung des PA beherrschen.',
+			'wenn sie erfolgreich den Truppführerlehrgang absolviert haben.',
+			'wenn sie nicht unter 18 Jahre alt sind, ärztlich untersucht, als Atemschutzgeräteträger ausgebildet sind und die erforderlichen Nachweise erbracht haben.',
+			'sie momentan körperlich fit sind und eine Unterweisung durch andere Atemschutz- geräteträger erhalten haben.'
 		],
 		number: 30,
-		text: 'An einer Einsatzstelle k\u00f6nnen Feuerwehrangeh\u00f6rige (SB) als Atemschutzger\u00e4tetr\u00e4ger eingesetzt werden, wenn'
+		text: 'An einer Einsatzstelle können Feuerwehrangehörige (SB) als Atemschutzgeräteträger eingesetzt werden, wenn',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{
-				text: 'Flaschenf\u00fclldruckkontrolle, Niederdruckpr\u00fcfung, Funktionspr\u00fcfung des LA, Kontrolle des Ansprechdrucks der Restdruckwarneinrichtung',
-				correct: false
-			},
-			{
-				text: 'Sichtpr\u00fcfung, Flaschenf\u00fclldruckkontrolle, Hochdruckdichtpr\u00fcfung, Funktionspr\u00fcfung des LA, Kontrolle des Ansprechdrucks der Restdruckwarneinrichtung',
-				correct: true
-			},
-			{
-				text: 'Sichtpr\u00fcfung, Flaschenf\u00fclldruckkontrolle, LA - Pr\u00fcfung, Pr\u00fcfen der Warneinrichtung',
-				correct: false
-			},
-			{
-				text: 'Sichtpr\u00fcfung, Druckpr\u00fcfung, Dichtpr\u00fcfung, LA \u2013 Pr\u00fcfung, Notsignalpr\u00fcfung',
-				correct: false
-			}
+			'Flaschenfülldruckkontrolle, Niederdruckprüfung, Funktionsprüfung des LA, Kontrolle des Ansprechdrucks der Restdruckwarneinrichtung',
+			'Sichtprüfung, Flaschenfülldruckkontrolle, Hochdruckdichtprüfung, Funktionsprüfung des LA, Kontrolle des Ansprechdrucks der Restdruckwarneinrichtung',
+			'Sichtprüfung, Flaschenfülldruckkontrolle, LA - Prüfung, Prüfen der Warneinrichtung',
+			'Sichtprüfung, Druckprüfung, Dichtprüfung, LA – Prüfung, Notsignalprüfung'
 		],
 		number: 31,
-		text: 'Die Einsatzkurzpr\u00fcfung besteht aus:'
+		text: 'Die Einsatzkurzprüfung besteht aus:',
+		correctIndizies: [1]
 	},
 	{
 		answers: [
-			{
-				text: 'f\u00fcr Notf\u00e4lle in Bereitschaft stehen.',
-				correct: true
-			},
-			{
-				text: 'f\u00fcr die Brandbek\u00e4mpfung ein zweites Rohr vornehmen.',
-				correct: false
-			},
-			{
-				text: 'grunds\u00e4tzlich als erster Trupp Geb\u00e4ude nach vermissten Personen abzusuchen.',
-				correct: false
-			},
-			{
-				text: 'die Einsatzstellensicherung durchzuf\u00fchren.',
-				correct: false
-			}
+			'für Notfälle in Bereitschaft stehen.',
+			'für die Brandbekämpfung ein zweites Rohr vornehmen.',
+			'grundsätzlich als erster Trupp Gebäude nach vermissten Personen abzusuchen.',
+			'die Einsatzstellensicherung durchzuführen.'
 		],
 		number: 32,
-		text: 'Ein Sicherheitstrupp hat beim Atemschutzeinsatz die Aufgabe'
+		text: 'Ein Sicherheitstrupp hat beim Atemschutzeinsatz die Aufgabe',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{
-				text: 'wenn der Sauerstoffgehalt der Atemluft 17 Vol.-% unterschreitet.',
-				correct: true
-			},
-			{
-				text: 'wenn Kohlenmonoxid zu erwarten ist.',
-				correct: true
-			},
-			{
-				text: 'wenn die zu erwartenden Atemgifte nicht eingesch\u00e4tzt werden k\u00f6nnen.',
-				correct: true
-			},
-			{
-				text: 'wenn der Gruppenf\u00fchrer dieses anordnet.',
-				correct: true
-			}
+			'wenn der Sauerstoffgehalt der Atemluft 17 Vol.-% unterschreitet.',
+			'wenn Kohlenmonoxid zu erwarten ist.',
+			'wenn die zu erwartenden Atemgifte nicht eingeschätzt werden können.',
+			'wenn der Gruppenführer dieses anordnet.'
 		],
 		number: 33,
-		text: 'An Einsatzstellen muss umluftunabh\u00e4ngiger Atemschutz eingesetzt werden,'
+		text: 'An Einsatzstellen muss umluftunabhängiger Atemschutz eingesetzt werden,',
+		correctIndizies: [0, 1, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'mindestens einen Truppf\u00fchrer und einen Truppmitglied',
-				correct: true
-			},
-			{
-				text: 'mindestens einen Truppf\u00fchrer und drei Truppmitglieder',
-				correct: false
-			},
-			{
-				text: 'mindestens den Truppf\u00fchrer',
-				correct: false
-			},
-			{
-				text: 'den Truppf\u00fchrer und weitere Truppmitglieder im Ermessen des Truppf\u00fchrers',
-				correct: false
-			}
+			'mindestens einen Truppführer und einen Truppmitglied',
+			'mindestens einen Truppführer und drei Truppmitglieder',
+			'mindestens den Truppführer',
+			'den Truppführer und weitere Truppmitglieder im Ermessen des Truppführers'
 		],
 		number: 34,
-		text: 'Ein Atemschutztrupp umfasst im Regelfall:'
+		text: 'Ein Atemschutztrupp umfasst im Regelfall:',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{ text: 'ein Schlauchhalter.', correct: false },
-			{ text: 'eine Feuerwehrleine.', correct: true },
-			{
-				text: 'ein Handsprechfunkger\u00e4t.',
-				correct: false
-			},
-			{ text: 'die Schlauchleitung.', correct: true }
+			'ein Schlauchhalter.',
+			'eine Feuerwehrleine.',
+			'ein Handsprechfunkgerät.',
+			'die Schlauchleitung.'
 		],
 		number: 35,
-		text: 'Die ausreichende Sicherung ist f\u00fcr einen Atemschutztrupp ist'
+		text: 'Die ausreichende Sicherung ist für einen Atemschutztrupp ist',
+		correctIndizies: [1, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'einer Belastungs\u00fcbung in einer anerkannten Atemschutz\u00fcbungsstrecke',
-				correct: true
-			},
-			{
-				text: 'an einer realistische \u00dcbung unter Einsatzbedingungen',
-				correct: true
-			},
-			{
-				text: 'an einer theoretische Unterweisung',
-				correct: true
-			},
-			{
-				text: 'an Aus- und Fortbildungsma\u00dfnahmen im Ermessen des Ger\u00e4tewartes',
-				correct: false
-			}
+			'einer Belastungsübung in einer anerkannten Atemschutzübungsstrecke',
+			'an einer realistische Übung unter Einsatzbedingungen',
+			'an einer theoretische Unterweisung',
+			'an Aus- und Fortbildungsmaßnahmen im Ermessen des Gerätewartes'
 		],
 		number: 36,
-		text: 'Ein Atemschutzger\u00e4tetr\u00e4ger hat im Rahmen der laufenden Ausbildung teilzunehmen an:'
+		text: 'Ein Atemschutzgeräteträger hat im Rahmen der laufenden Ausbildung teilzunehmen an:',
+		correctIndizies: [0, 1, 2]
 	},
 	{
 		answers: [
-			{
-				text: 'die G 26.3 Untersuchung vor Beginn der Ausbildung erforderlich ist.',
-				correct: true
-			},
-			{
-				text: 'die G 26.3 Untersuchung ab dem 50. Lebensjahr j\u00e4hrlich wiederholt werden muss.',
-				correct: true
-			},
-			{
-				text: 'die G 26.2 Untersuchung f\u00fcr das Tragen von Filterger\u00e4ten mit Kombinationsfilter, erforderlich ist.',
-				correct: true
-			},
-			{
-				text: 'die G 26.3 Untersuchung ausschlie\u00dflich im Ermessen des zust\u00e4ndigen Arztes erfolgt.',
-				correct: false
-			}
+			'die G 26.3 Untersuchung vor Beginn der Ausbildung erforderlich ist.',
+			'die G 26.3 Untersuchung ab dem 50. Lebensjahr jährlich wiederholt werden muss.',
+			'die G 26.2 Untersuchung für das Tragen von Filtergeräten mit Kombinationsfilter, erforderlich ist.',
+			'die G 26.3 Untersuchung ausschließlich im Ermessen des zuständigen Arztes erfolgt.'
 		],
 		number: 37,
-		text: 'Richtig ist die Behauptung, dass'
+		text: 'Richtig ist die Behauptung, dass',
+		correctIndizies: [0, 1, 2]
 	},
 	{
-		answers: [
-			{ text: 'der Umluft.', correct: false },
-			{ text: 'dem Ort.', correct: false },
-			{ text: 'der Zeit.', correct: true },
-			{ text: 'dem Wetter.', correct: false }
-		],
+		answers: ['der Umluft.', 'dem Ort.', 'der Zeit.', 'dem Wetter.'],
 		number: 38,
-		text: 'Der Pressluftatmer ist abh\u00e4ngig von'
+		text: 'Der Pressluftatmer ist abhängig von',
+		correctIndizies: [2]
 	},
 	{
-		answers: [
-			{ text: 'Regenerationsger\u00e4te.', correct: true },
-			{ text: 'Filterger\u00e4te.', correct: false },
-			{ text: 'Pressluftatmer.', correct: true },
-			{ text: 'Schlauchger\u00e4te.', correct: true }
-		],
+		answers: ['Regenerationsgeräte.', 'Filtergeräte.', 'Pressluftatmer.', 'Schlauchgeräte.'],
 		number: 39,
-		text: 'Umluftunabh\u00e4ngig sind'
+		text: 'Umluftunabhängig sind',
+		correctIndizies: [0, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'dem Maskenk\u00f6rper, der Warneinrichtung, der B\u00e4nderung.',
-				correct: false
-			},
-			{
-				text: 'dem Atemanschluss und dem Atemfilter.',
-				correct: true
-			},
-			{
-				text: 'der Atemschutzmaske und dem Lungenautomaten.',
-				correct: false
-			},
-			{
-				text: 'der Atemschutzmaske, dem Atemfilter und einer Druckluftflasche.',
-				correct: false
-			}
+			'dem Maskenkörper, der Warneinrichtung, der Bänderung.',
+			'dem Atemanschluss und dem Atemfilter.',
+			'der Atemschutzmaske und dem Lungenautomaten.',
+			'der Atemschutzmaske, dem Atemfilter und einer Druckluftflasche.'
 		],
 		number: 40,
-		text: 'Ein Filterger\u00e4t besteht aus'
+		text: 'Ein Filtergerät besteht aus',
+		correctIndizies: [1]
 	},
 	{
-		answers: [
-			{ text: 'Einwegmaske.', correct: false },
-			{ text: 'Zweiwegmaske.', correct: true },
-			{
-				text: 'ventillose Atemschutzmaske.',
-				correct: false
-			},
-			{ text: 'Mundst\u00fcckgarnitur.', correct: false }
-		],
+		answers: ['Einwegmaske.', 'Zweiwegmaske.', 'ventillose Atemschutzmaske.', 'Mundstückgarnitur.'],
 		number: 41,
-		text: 'Als Atemanschluss an einem Pressluftatmer verwendet man eine'
+		text: 'Als Atemanschluss an einem Pressluftatmer verwendet man eine',
+		correctIndizies: [1]
 	},
 	{
 		answers: [
-			{ text: 'betr\u00e4gt 2 Jahre.', correct: false },
-			{
-				text: 'betr\u00e4gt mindestens 4 Jahre.',
-				correct: true
-			},
-			{
-				text: 'ist aus der Herstellerangabe ersichtlich.',
-				correct: true
-			},
-			{
-				text: 'ist abh\u00e4ngig von den Lagerbedingungen.',
-				correct: false
-			}
+			'beträgt 2 Jahre.',
+			'beträgt mindestens 4 Jahre.',
+			'ist aus der Herstellerangabe ersichtlich.',
+			'ist abhängig von den Lagerbedingungen.'
 		],
 		number: 42,
-		text: 'Die Lagerzeit des fabrikverschlossenen Atemfilters'
+		text: 'Die Lagerzeit des fabrikverschlossenen Atemfilters',
+		correctIndizies: [1, 2]
 	},
 	{
 		answers: [
-			{
-				text: 'muss die Umluft gen\u00fcgend Sauerstoff enthalten (mind. 17 Vol.-%).',
-				correct: true
-			},
-			{
-				text: 'darf die Umluft kein Kohlendioxid (CO 2 ) und max. 3 Vol.-% Giftstoffe enthalten.',
-				correct: false
-			},
-			{
-				text: 'die Umluft darf kein Kohlenmonoxid (CO) und max. 0,5 Vol.-% Giftstoffe enthalten.',
-				correct: true
-			},
-			{
-				text: 'muss der Gruppenf\u00fchrer den Einsatz von Filterger\u00e4ten angeordnet haben.',
-				correct: true
-			}
+			'muss die Umluft genügend Sauerstoff enthalten (mind. 17 Vol.-%).',
+			'darf die Umluft kein Kohlendioxid (CO 2 ) und max. 3 Vol.-% Giftstoffe enthalten.',
+			'die Umluft darf kein Kohlenmonoxid (CO) und max. 0,5 Vol.-% Giftstoffe enthalten.',
+			'muss der Gruppenführer den Einsatz von Filtergeräten angeordnet haben.'
 		],
 		number: 43,
-		text: 'Beim Einsatz eines Filterger\u00e4tes (ABEK 2-P 3)'
+		text: 'Beim Einsatz eines Filtergerätes (ABEK 2-P 3)',
+		correctIndizies: [0, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'ein niedriges R\u00fcckhalteverm\u00f6gen.',
-				correct: false
-			},
-			{
-				text: 'ein mittleres R\u00fcckhalteverm\u00f6gen.',
-				correct: false
-			},
-			{
-				text: 'ein hohes R\u00fcckhalteverm\u00f6gen.',
-				correct: true
-			},
-			{
-				text: 'ein maximales R\u00fcckhalteverm\u00f6gen von 300 Gramm Partikel.',
-				correct: false
-			}
+			'ein niedriges Rückhaltevermögen.',
+			'ein mittleres Rückhaltevermögen.',
+			'ein hohes Rückhaltevermögen.',
+			'ein maximales Rückhaltevermögen von 300 Gramm Partikel.'
 		],
 		number: 44,
-		text: 'Bei Gas- und Kombinationsfilter steht die Partikelfilterklasse P 3 f\u00fcr'
+		text: 'Bei Gas- und Kombinationsfilter steht die Partikelfilterklasse P 3 für',
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{
-				text: 'von der Umgebungsatmosph\u00e4re und von der Zeit.',
-				correct: true
-			},
-			{
-				text: 'nur von der Umgebungsatmosph\u00e4re.',
-				correct: false
-			},
-			{ text: 'nur von der Zeit.', correct: false },
-			{ text: 'vom Ort.', correct: false }
+			'von der Umgebungsatmosphäre und von der Zeit.',
+			'nur von der Umgebungsatmosphäre.',
+			'nur von der Zeit.',
+			'vom Ort.'
 		],
 		number: 45,
-		text: 'Ein Filterger\u00e4t ist abh\u00e4ngig'
+		text: 'Ein Filtergerät ist abhängig',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{
-				text: 'bei starkem Funkenflug (z.B. Trennschneiden)',
-				correct: true
-			},
-			{
-				text: 'bei kleinen Mengen ausgelaufener rechtsdrehender Milchs\u00e4ure',
-				correct: false
-			},
-			{
-				text: 'bei starker Flocken- oder Staubbildung',
-				correct: true
-			},
-			{ text: 'im Zweifelsfall', correct: true }
+			'bei starkem Funkenflug (z.B. Trennschneiden)',
+			'bei kleinen Mengen ausgelaufener rechtsdrehender Milchsäure',
+			'bei starker Flocken- oder Staubbildung',
+			'im Zweifelsfall'
 		],
 		number: 46,
-		text: 'Filterger\u00e4te d\u00fcrfen nicht verwendet werden:'
+		text: 'Filtergeräte dürfen nicht verwendet werden:',
+		correctIndizies: [0, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'bei Aufr\u00e4umarbeiten im Freien und in verqualmten R\u00e4umen',
-				correct: false
-			},
-			{
-				text: 'bei Arbeiten in Kellern, Brunnen und Sch\u00e4chten',
-				correct: false
-			},
-			{
-				text: 'bei Wald- und Heidebr\u00e4nden',
-				correct: true
-			},
-			{
-				text: 'im unter Beachtung der Einsatzgrenzen und im Ermessen des Einsatzleiters',
-				correct: true
-			}
+			'bei Aufräumarbeiten im Freien und in verqualmten Räumen',
+			'bei Arbeiten in Kellern, Brunnen und Schächten',
+			'bei Wald- und Heidebränden',
+			'im unter Beachtung der Einsatzgrenzen und im Ermessen des Einsatzleiters'
 		],
 		number: 47,
-		text: 'Filterger\u00e4te d\u00fcrfen eingesetzt werden:'
+		text: 'Filtergeräte dürfen eingesetzt werden:',
+		correctIndizies: [2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'zu den umluftabh\u00e4ngigen Atemschutzger\u00e4ten.',
-				correct: true
-			},
-			{
-				text: 'zu den umluftunabh\u00e4ngigen Atemschutzger\u00e4ten.',
-				correct: false
-			},
-			{
-				text: 'zu den Rettungsger\u00e4ten (Fluchtger\u00e4ten).',
-				correct: true
-			},
-			{ text: 'zu den Filterger\u00e4ten.', correct: true }
+			'zu den umluftabhängigen Atemschutzgeräten.',
+			'zu den umluftunabhängigen Atemschutzgeräten.',
+			'zu den Rettungsgeräten (Fluchtgeräten).',
+			'zu den Filtergeräten.'
 		],
 		number: 48,
-		text: 'Brandfluchthauben geh\u00f6ren'
+		text: 'Brandfluchthauben gehören',
+		correctIndizies: [0, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'Beh\u00e4lterger\u00e4t mit Druckluft.',
-				correct: true
-			},
-			{
-				text: 'Beh\u00e4lterger\u00e4t mit Sauerstoff.',
-				correct: false
-			},
-			{ text: 'Flaschenger\u00e4t.', correct: false },
-			{
-				text: 'umluftunabh\u00e4ngiges Atemschutzger\u00e4t.',
-				correct: true
-			}
+			'Behältergerät mit Druckluft.',
+			'Behältergerät mit Sauerstoff.',
+			'Flaschengerät.',
+			'umluftunabhängiges Atemschutzgerät.'
 		],
 		number: 49,
-		text: 'Der Pressluftatmer ist ein'
+		text: 'Der Pressluftatmer ist ein',
+		correctIndizies: [0, 3]
 	},
 	{
-		answers: [
-			{ text: 'Lungenautomaten', correct: false },
-			{ text: 'Druckminderer', correct: true },
-			{ text: 'Ventilgeh\u00e4use', correct: false },
-			{ text: 'Flaschenventil', correct: false }
-		],
+		answers: ['Lungenautomaten', 'Druckminderer', 'Ventilgehäuse', 'Flaschenventil'],
 		number: 50,
-		text: 'Die aus den Druckluftflaschen str\u00f6mende Luft wird zuerst entspannt in einem:'
+		text: 'Die aus den Druckluftflaschen strömende Luft wird zuerst entspannt in einem:',
+		correctIndizies: [1]
 	},
 	{
 		answers: [
-			{
-				text: 'Riemen, Sauerstoffflasche, Druckkasten, Lungenautomat, Signal, Druckmesser',
-				correct: false
-			},
-			{
-				text: 'Traggestell, Atemluftflasche, Druckminderer, Lungenautomat, Manometer, Warneinrichtung',
-				correct: true
-			},
-			{
-				text: 'Atemschutzmaske, Flasche, R\u00fcckzugsignal, Atemluftpatrone, Ventile, Manometer',
-				correct: false
-			},
-			{
-				text: 'Druckluftbremser, Riemen, Sauerstoffflasche, Druckkasten, Lungenautomat, Signal, Druckmesser',
-				correct: false
-			}
+			'Riemen, Sauerstoffflasche, Druckkasten, Lungenautomat, Signal, Druckmesser',
+			'Traggestell, Atemluftflasche, Druckminderer, Lungenautomat, Manometer, Warneinrichtung',
+			'Atemschutzmaske, Flasche, Rückzugsignal, Atemluftpatrone, Ventile, Manometer',
+			'Druckluftbremser, Riemen, Sauerstoffflasche, Druckkasten, Lungenautomat, Signal, Druckmesser'
 		],
 		number: 51,
-		text: 'Die Hauptbestandteile eines Pressluftatmers sind:'
+		text: 'Die Hauptbestandteile eines Pressluftatmers sind:',
+		correctIndizies: [1]
 	},
 	{
 		answers: [
-			{
-				text: 'Aufgrund der entstehenden Druckdifferenz vor und hinter der Membran beim, Einatemvorgang wird das Kipphebelventil ge\u00f6ffnet. Atemluft str\u00f6mt nun in den Lungenautomaten ein. Ist das Einatmen beendet, findet ein Druckausgleich statt. Das Kipphebelventil schlie\u00dft mittels Federkraft.',
-				correct: true
-			},
-			{
-				text: 'Durch den am Kipphebelventil anstehenden Druck wird beim Einatmen Luft in den Lungenautomaten eingelassen, beim Ausatmen entsteht ein \u00dcberdruck, durch den die Membran das Ventil schlie\u00dft.',
-				correct: false
-			},
-			{
-				text: 'Der Atemschutzger\u00e4tetr\u00e4ger bet\u00e4tigt regelm\u00e4\u00dfig den Entl\u00fcftungsknopf, dadurch wird das Kipphebelventil ge\u00f6ffnet und Luft str\u00f6mt ein. Beim Ausatmen schlie\u00dft das Einatemventil der Atemschutzmaske, somit wird keine Luft verbraucht.',
-				correct: false
-			},
-			{
-				text: 'Str\u00f6mungstechnisch nach dem Injektorprinzip',
-				correct: false
-			}
+			'Aufgrund der entstehenden Druckdifferenz vor und hinter der Membran beim, Einatemvorgang wird das Kipphebelventil geöffnet. Atemluft strömt nun in den Lungenautomaten ein. Ist das Einatmen beendet, findet ein Druckausgleich statt. Das Kipphebelventil schließt mittels Federkraft.',
+			'Durch den am Kipphebelventil anstehenden Druck wird beim Einatmen Luft in den Lungenautomaten eingelassen, beim Ausatmen entsteht ein Überdruck, durch den die Membran das Ventil schließt.',
+			'Der Atemschutzgeräteträger betätigt regelmäßig den Entlüftungsknopf, dadurch wird das Kipphebelventil geöffnet und Luft strömt ein. Beim Ausatmen schließt das Einatemventil der Atemschutzmaske, somit wird keine Luft verbraucht.',
+			'Strömungstechnisch nach dem Injektorprinzip'
 		],
 		number: 52,
-		text: 'Nach welchem Prinzip arbeitet ein Lungenautomat (Membranlungenautomat) eines PA?'
+		text: 'Nach welchem Prinzip arbeitet ein Lungenautomat (Membranlungenautomat) eines PA?',
+		correctIndizies: [0]
 	},
 	{
-		answers: [
-			{ text: '1600 Liter', correct: true },
-			{ text: '1800 Liter', correct: false },
-			{ text: '1400 Liter', correct: false },
-			{ text: '2000 Liter', correct: false }
-		],
+		answers: ['1600 Liter', '1800 Liter', '1400 Liter', '2000 Liter'],
 		number: 53,
-		text: 'Der Atemluftinhalt eines Pressluftatmers betr\u00e4gt mindestens:'
+		text: 'Der Atemluftinhalt eines Pressluftatmers beträgt mindestens:',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{
-				text: 'verl\u00e4sst nur der Tr\u00e4ger des betreffenden PA die Einsatzstelle sofort, da dies, das R\u00fcckzugssignal seines Pressluftatmers ist.',
-				correct: false
-			},
-			{
-				text: 'verl\u00e4sst der Trupp gemeinsam die Einsatzstelle, nachdem der TF sich vom Flaschenf\u00fclldruck \u00fcberzeugt hat.',
-				correct: true
-			},
-			{
-				text: 'hat der Flaschendruck einen bestimmten Wert erreicht.',
-				correct: true
-			},
-			{
-				text: 'muss unverz\u00fcglich die Atemschutz\u00fcberwachung informiert werden.',
-				correct: true
-			}
+			'verlässt nur der Träger des betreffenden PA die Einsatzstelle sofort, da dies, das Rückzugssignal seines Pressluftatmers ist.',
+			'verlässt der Trupp gemeinsam die Einsatzstelle, nachdem der TF sich vom Flaschenfülldruck überzeugt hat.',
+			'hat der Flaschendruck einen bestimmten Wert erreicht.',
+			'muss unverzüglich die Atemschutzüberwachung informiert werden.'
 		],
 		number: 54,
-		text: 'Bei Ert\u00f6nen der Warneinrichtung eines PA'
+		text: 'Bei Ertönen der Warneinrichtung eines PA',
+		correctIndizies: [1, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'gruppenweise, ein F\u00fchrer, acht Mitglieder',
-				correct: false
-			},
-			{
-				text: 'truppweise, mindestens ein F\u00fchrer, ein Mitglied',
-				correct: true
-			},
-			{
-				text: 'einzeln, damit m\u00f6glichst wenige Feuerwehrangeh\u00f6rige gef\u00e4hrdet werden',
-				correct: false
-			},
-			{
-				text: 'nach Weisung des Gruppenf\u00fchrers',
-				correct: true
-			}
+			'gruppenweise, ein Führer, acht Mitglieder',
+			'truppweise, mindestens ein Führer, ein Mitglied',
+			'einzeln, damit möglichst wenige Feuerwehrangehörige gefährdet werden',
+			'nach Weisung des Gruppenführers'
 		],
 		number: 55,
-		text: 'Unter Atemschutzger\u00e4ten ist vorzugehen:'
+		text: 'Unter Atemschutzgeräten ist vorzugehen:',
+		correctIndizies: [1, 3]
 	},
 	{
-		answers: [
-			{ text: '18 Minuten', correct: true },
-			{ text: '12 Minuten', correct: false },
-			{ text: '36 Minuten', correct: false },
-			{ text: '24 Minuten', correct: false }
-		],
+		answers: ['18 Minuten', '12 Minuten', '36 Minuten', '24 Minuten'],
 		number: 56,
-		text: 'Wenn das Manometer eines 1-Flaschen-Ger\u00e4tes (Inhalt: 6 Liter) 150 bar anzeigt, verbleiben bis zur v\u00f6lligen Entleerung bei einem Atemluftverbrauch von 50 l/min):'
+		text: 'Wenn das Manometer eines 1-Flaschen-Gerätes (Inhalt: 6 Liter) 150 bar anzeigt, verbleiben bis zur völligen Entleerung bei einem Atemluftverbrauch von 50 l/min):',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{
-				text: 'die L\u00e4nge des R\u00fcckzugwegs beachten, da hierdurch die Einsatzdauer verringert wird.',
-				correct: true
-			},
-			{
-				text: 'die L\u00e4nge des R\u00fcckzugswege nicht beachten, da ausschlie\u00dflich die Warneinrichtung ma\u00dfgebend ist.',
-				correct: false
-			},
-			{
-				text: 'f\u00fcr den R\u00fcckweg in der Regel die doppelte Atemluftmenge wie f\u00fcr den Hinweg einplanen.',
-				correct: true
-			},
-			{
-				text: 'das Erreichen des Einsatzortes der Atemschutz\u00fcberwachung mitteilen.',
-				correct: true
-			}
+			'die Länge des Rückzugwegs beachten, da hierdurch die Einsatzdauer verringert wird.',
+			'die Länge des Rückzugswege nicht beachten, da ausschließlich die Warneinrichtung maßgebend ist.',
+			'für den Rückweg in der Regel die doppelte Atemluftmenge wie für den Hinweg einplanen.',
+			'das Erreichen des Einsatzortes der Atemschutzüberwachung mitteilen.'
 		],
 		number: 57,
-		text: 'Ein unter Pressluftatmern vorgehender Trupp muss'
+		text: 'Ein unter Pressluftatmern vorgehender Trupp muss',
+		correctIndizies: [0, 2, 3]
 	},
 	{
-		answers: [
-			{ text: '30 l/min', correct: false },
-			{ text: '40 l/min', correct: true },
-			{ text: '50 l/min', correct: false },
-			{ text: '20 l/min', correct: false }
-		],
+		answers: ['30 l/min', '40 l/min', '50 l/min', '20 l/min'],
 		number: 58,
-		text: 'Bei einer Einsatzdauer von 15 Minuten \u00e4ndert sich bei einem 1-Flaschen-Ger\u00e4t (6 Liter Inhalt) der Flaschendruck um 100 bar. Wie war der Luftverbrauch des Atemschutzger\u00e4tetr\u00e4gers in dieser Zeit pro Minute?'
+		text: 'Bei einer Einsatzdauer von 15 Minuten ändert sich bei einem 1-Flaschen-Gerät (6 Liter Inhalt) der Flaschendruck um 100 bar. Wie war der Luftverbrauch des Atemschutzgeräteträgers in dieser Zeit pro Minute?',
+		correctIndizies: [1]
 	},
 	{
 		answers: [
-			{
-				text: 'erst beim Ausl\u00f6sen der akustischen Warneinrichtung (55 +/- 5 bar)',
-				correct: false
-			},
-			{ text: 'bei 120 bar Restdruck', correct: true },
-			{ text: 'bei 80 bar Restdruck', correct: false },
-			{ text: 'bei 155 bar Restdruck', correct: false }
+			'erst beim Auslösen der akustischen Warneinrichtung (55 +/- 5 bar)',
+			'bei 120 bar Restdruck',
+			'bei 80 bar Restdruck',
+			'bei 155 bar Restdruck'
 		],
 		number: 59,
-		text: 'Bei dem Hinweg zur Einsatzstelle hat der Druck um 60 bar abgenommen. Vor Beginn des Einsatzes betrug der Flaschendruck 290 bar. Wann muss der R\u00fcckweg angetreten werden?'
+		text: 'Bei dem Hinweg zur Einsatzstelle hat der Druck um 60 bar abgenommen. Vor Beginn des Einsatzes betrug der Flaschendruck 290 bar. Wann muss der Rückweg angetreten werden?',
+		correctIndizies: [1]
 	},
 	{
 		answers: [
-			{
-				text: 'Name, Zeit, Ger\u00e4tenummer, letzte T\u00dcV-\u00dcberpr\u00fcfung',
-				correct: false
-			},
-			{
-				text: 'Name, Uhrzeit, F\u00fclldruck zu Beginn, nach 1/3 und nach 2/3 der Einsatzzeit, Einsatzort, Einsatzende, evtl. Funkrufname',
-				correct: true
-			},
-			{
-				text: 'Au\u00dfentemperatur, Innentemperatur, Luftfeuchtigkeit, Luftdruck',
-				correct: false
-			},
-			{
-				text: 'K\u00f6rpertemperatur, Atemfrequenz, Schuhgr\u00f6\u00dfe, Geburtsdatum',
-				correct: false
-			}
+			'Name, Zeit, Gerätenummer, letzte TÜV-Überprüfung',
+			'Name, Uhrzeit, Fülldruck zu Beginn, nach 1/3 und nach 2/3 der Einsatzzeit, Einsatzort, Einsatzende, evtl. Funkrufname',
+			'Außentemperatur, Innentemperatur, Luftfeuchtigkeit, Luftdruck',
+			'Körpertemperatur, Atemfrequenz, Schuhgröße, Geburtsdatum'
 		],
 		number: 60,
-		text: 'Im Zuge der Atemschutz\u00fcberwachung werden festgehalten:'
+		text: 'Im Zuge der Atemschutzüberwachung werden festgehalten:',
+		correctIndizies: [1]
 	},
 	{
 		answers: [
-			{
-				text: 'von seiner k\u00f6rperlichen Fitness',
-				correct: true
-			},
-			{ text: 'von der Einsatzbelastung', correct: true },
-			{
-				text: 'von dem Gewicht und der W\u00e4rmeisolation der Schutzausr\u00fcstung',
-				correct: true
-			},
-			{
-				text: 'von der Bauart des Lungenautomaten',
-				correct: false
-			}
+			'von seiner körperlichen Fitness',
+			'von der Einsatzbelastung',
+			'von dem Gewicht und der Wärmeisolation der Schutzausrüstung',
+			'von der Bauart des Lungenautomaten'
 		],
 		number: 61,
-		text: 'Der Luftverbrauch eines Atemschutzger\u00e4tetr\u00e4gers ist abh\u00e4ngig:'
+		text: 'Der Luftverbrauch eines Atemschutzgeräteträgers ist abhängig:',
+		correctIndizies: [0, 1, 2]
 	},
 	{
 		answers: [
-			{
-				text: 'Fluchtger\u00e4te und Rettungsger\u00e4te',
-				correct: false
-			},
-			{
-				text: 'Filterger\u00e4te und Isolierger\u00e4te',
-				correct: true
-			},
-			{
-				text: 'Feuerwehrger\u00e4te und Arbeitsschutzger\u00e4te',
-				correct: false
-			},
-			{
-				text: 'Station\u00e4re und mobile Atemschutzger\u00e4te',
-				correct: false
-			}
+			'Fluchtgeräte und Rettungsgeräte',
+			'Filtergeräte und Isoliergeräte',
+			'Feuerwehrgeräte und Arbeitsschutzgeräte',
+			'Stationäre und mobile Atemschutzgeräte'
 		],
 		number: 62,
-		text: 'In welche zwei Gruppen werden Atemschutzger\u00e4te nach FwDV 7unterteilt?'
+		text: 'In welche zwei Gruppen werden Atemschutzgeräte nach FwDV 7unterteilt?',
+		correctIndizies: [1]
 	},
 	{
 		answers: [
-			{
-				text: 'er im Bereich der Dichtlinie des Atemanschlusses K\u00f6rperschmuck tr\u00e4gt.',
-				correct: true
-			},
-			{
-				text: 'Kopfbehaarung (Bart, Koteletten, Haupthaar) den Dichtsitz der Maske verhindert.',
-				correct: true
-			},
-			{
-				text: 'er Medikamente eingenommen hat, die die k\u00f6rperliche Leistungsf\u00e4higkeit herabsetzen.',
-				correct: true
-			},
-			{
-				text: 'er K\u00f6rperschmuck tr\u00e4gt, der beim An- bzw. Ablegen des Atemanschlusses zu Verletzungen f\u00fchren kann.',
-				correct: true
-			}
+			'er im Bereich der Dichtlinie des Atemanschlusses Körperschmuck trägt.',
+			'Kopfbehaarung (Bart, Koteletten, Haupthaar) den Dichtsitz der Maske verhindert.',
+			'er Medikamente eingenommen hat, die die körperliche Leistungsfähigkeit herabsetzen.',
+			'er Körperschmuck trägt, der beim An- bzw. Ablegen des Atemanschlusses zu Verletzungen führen kann.'
 		],
 		number: 63,
-		text: 'Ein Atemschutzger\u00e4tetr\u00e4ger darf nicht in den Atemschutzeinsatz gehen, wenn'
+		text: 'Ein Atemschutzgeräteträger darf nicht in den Atemschutzeinsatz gehen, wenn',
+		correctIndizies: [0, 1, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: '\u201eMayday; hier <Funkrufname>, <Standort>, <Lage>, melden - mayday!\u201c',
-				correct: false
-			},
-			{
-				text: '\u201eHilfe, Hilfe; hier <Funkrufname>, <Standort>, <Lage> - kommen!\u201c',
-				correct: false
-			},
-			{
-				text: '\u201eBlitz; hier <Funkrufname>, <Standort>, <Lage> - kommen!\u201c',
-				correct: false
-			},
-			{
-				text: '\u201cMayday; mayday; mayday; hier <Funkrufname>, <Standort>, <Lage>, mayday \u2013 kommen!\u201c',
-				correct: true
-			}
+			'„Mayday; hier <Funkrufname>, <Standort>, <Lage>, melden - mayday!“',
+			'„Hilfe, Hilfe; hier <Funkrufname>, <Standort>, <Lage> - kommen!“',
+			'„Blitz; hier <Funkrufname>, <Standort>, <Lage> - kommen!“',
+			'“Mayday; mayday; mayday; hier <Funkrufname>, <Standort>, <Lage>, mayday – kommen!“'
 		],
 		number: 64,
-		text: 'Wie lautet eine korrekte Notfallmeldung?'
+		text: 'Wie lautet eine korrekte Notfallmeldung?',
+		correctIndizies: [3]
 	},
 	{
 		answers: [
-			{
-				text: 'Jeder Atemschutzger\u00e4tetr\u00e4ger ist f\u00fcr seine Sicherheit eigenverantwortlich.',
-				correct: true
-			},
-			{
-				text: 'Atemschutzger\u00e4te sind immer am Verteiler an- und abzulegen.',
-				correct: false
-			},
-			{
-				text: 'Vor dem Einsatz muss eine Einsatzkurzpr\u00fcfung durchgef\u00fchrt werden.',
-				correct: true
-			},
-			{
-				text: 'Der Fl\u00fcssigkeitsverlust der Einsatzkr\u00e4fte ist durch geeignete Getr\u00e4nke (z.B. Apfelschorle) auszugleichen.',
-				correct: true
-			}
+			'Jeder Atemschutzgeräteträger ist für seine Sicherheit eigenverantwortlich.',
+			'Atemschutzgeräte sind immer am Verteiler an- und abzulegen.',
+			'Vor dem Einsatz muss eine Einsatzkurzprüfung durchgeführt werden.',
+			'Der Flüssigkeitsverlust der Einsatzkräfte ist durch geeignete Getränke (z.B. Apfelschorle) auszugleichen.'
 		],
 		number: 65,
-		text: 'Welche allgemeinen Einsatzgrunds\u00e4tze muss ein Atemschutzger\u00e4tetr\u00e4ger beachten?'
+		text: 'Welche allgemeinen Einsatzgrundsätze muss ein Atemschutzgeräteträger beachten?',
+		correctIndizies: [0, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'trinken vermeiden, um nicht \u00fcberm\u00e4\u00dfig zu schwitzen.',
-				correct: false
-			},
-			{
-				text: 'eine Dichtprobe der Maske (Handballenprobe) durchf\u00fchren.',
-				correct: true
-			},
-			{
-				text: 'die Einsatzkurzpr\u00fcfung an ihrem Ger\u00e4t durchf\u00fchren.',
-				correct: true
-			},
-			{
-				text: 'den Lungenautomaten truppweise anschlie\u00dfen und gegenseitig den Sitz der Schutzausr\u00fcstung (z.B. Flammschutzhaube) kontrollieren.',
-				correct: true
-			}
+			'trinken vermeiden, um nicht übermäßig zu schwitzen.',
+			'eine Dichtprobe der Maske (Handballenprobe) durchführen.',
+			'die Einsatzkurzprüfung an ihrem Gerät durchführen.',
+			'den Lungenautomaten truppweise anschließen und gegenseitig den Sitz der Schutzausrüstung (z.B. Flammschutzhaube) kontrollieren.'
 		],
 		number: 66,
-		text: 'Vor dem Atemschutzeinsatz m\u00fcssen Ger\u00e4tetr\u00e4ger'
+		text: 'Vor dem Atemschutzeinsatz müssen Geräteträger',
+		correctIndizies: [1, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'truppweise zusammen bleiben.',
-				correct: true
-			},
-			{
-				text: 'sich gegebenenfalls dicht am Boden halten, da hier die Temperatur geringer und die Sicht besser ist.',
-				correct: true
-			},
-			{
-				text: 'eine st\u00e4ndige Sprechfunkverbindung zur Atemschutz\u00fcberwachung aufrecht erhalten.',
-				correct: true
-			},
-			{
-				text: 'durch eine Feuerwehrleine, ein Leinensystem oder eine Schlauchleitung den R\u00fcckweg sichern.',
-				correct: true
-			}
+			'truppweise zusammen bleiben.',
+			'sich gegebenenfalls dicht am Boden halten, da hier die Temperatur geringer und die Sicht besser ist.',
+			'eine ständige Sprechfunkverbindung zur Atemschutzüberwachung aufrecht erhalten.',
+			'durch eine Feuerwehrleine, ein Leinensystem oder eine Schlauchleitung den Rückweg sichern.'
 		],
 		number: 67,
-		text: 'Gehen Atemschutzger\u00e4tetr\u00e4ger zur Brandbek\u00e4mpfung in den Innenangriff vor, m\u00fcssen sie'
+		text: 'Gehen Atemschutzgeräteträger zur Brandbekämpfung in den Innenangriff vor, müssen sie',
+		correctIndizies: [0, 1, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'bei erkannter akuter Einsturzgefahr',
-				correct: true
-			},
-			{
-				text: 'bei einer erkannten bevorstehenden Durchz\u00fcndung',
-				correct: true
-			},
-			{
-				text: 'bei einer zu starken W\u00e4rmeentwicklung (z.B. sichtbares Abschmelzen von Kunststoffteilen)',
-				correct: true
-			},
-			{
-				text: 'bei einer akuten Gef\u00e4hrdung, die durch den Gruppenf\u00fchrer nicht vorherzusehen war',
-				correct: true
-			}
+			'bei erkannter akuter Einsturzgefahr',
+			'bei einer erkannten bevorstehenden Durchzündung',
+			'bei einer zu starken Wärmeentwicklung (z.B. sichtbares Abschmelzen von Kunststoffteilen)',
+			'bei einer akuten Gefährdung, die durch den Gruppenführer nicht vorherzusehen war'
 		],
 		number: 68,
-		text: 'Wann muss sich ein Atemschutztrupp im Innenangriff selbstst\u00e4ndig in einen sicheren Bereich zur\u00fcckziehen?'
+		text: 'Wann muss sich ein Atemschutztrupp im Innenangriff selbstständig in einen sicheren Bereich zurückziehen?',
+		correctIndizies: [0, 1, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'nach Kontamination mit aggressiven Chemikalien, sowie starkem Ru\u00dfniederschlag',
-				correct: true
-			},
-			{
-				text: 'nach einer direkten Beflammung (z.B. Durchz\u00fcndung)',
-				correct: true
-			},
-			{
-				text: 'nach einem l\u00e4ngeren Aufenthalt in hoch erhitzten R\u00e4umen',
-				correct: true
-			},
-			{
-				text: 'nach einem harten Aufschlag des Druckminderers w\u00e4hrend eines Durchganges in der Atemschutz\u00fcbungsstrecke',
-				correct: true
-			}
+			'nach Kontamination mit aggressiven Chemikalien, sowie starkem Rußniederschlag',
+			'nach einer direkten Beflammung (z.B. Durchzündung)',
+			'nach einem längeren Aufenthalt in hoch erhitzten Räumen',
+			'nach einem harten Aufschlag des Druckminderers während eines Durchganges in der Atemschutzübungsstrecke'
 		],
 		number: 69,
-		text: 'Nach welchen Belastungen muss ein Atemschutzger\u00e4t von einem Atemschutzger\u00e4tewart gesondert \u00fcberpr\u00fcft werden?'
+		text: 'Nach welchen Belastungen muss ein Atemschutzgerät von einem Atemschutzgerätewart gesondert überprüft werden?',
+		correctIndizies: [0, 1, 2, 3]
 	},
 	{
 		answers: [
-			{
-				text: 'Vollst\u00e4ndig bis zum Anschlag und dann eine halbe Umdrehung wieder zur\u00fcck, um die Spannungen aus den Gewindeg\u00e4ngen des Ventils herauszunehmen.',
-				correct: false
-			},
-			{
-				text: 'Eine halbe Umdrehung reicht aus, um den Pressluftatmer schneller einsatzbereit zu bekommen.',
-				correct: false
-			},
-			{
-				text: 'Vollst\u00e4ndig bis zum Anschlag, um ein selbstst\u00e4ndiges Schlie\u00dfen des Flaschenventils zu verhindern.',
-				correct: true
-			},
-			{
-				text: 'Es gibt keine speziellen Vorgaben.',
-				correct: false
-			}
+			'Vollständig bis zum Anschlag und dann eine halbe Umdrehung wieder zurück, um die Spannungen aus den Gewindegängen des Ventils herauszunehmen.',
+			'Eine halbe Umdrehung reicht aus, um den Pressluftatmer schneller einsatzbereit zu bekommen.',
+			'Vollständig bis zum Anschlag, um ein selbstständiges Schließen des Flaschenventils zu verhindern.',
+			'Es gibt keine speziellen Vorgaben.'
 		],
 		number: 70,
-		text: 'Wie weit muss das Flaschenventil der Atemluftflasche aufgedreht werden?'
+		text: 'Wie weit muss das Flaschenventil der Atemluftflasche aufgedreht werden?',
+		correctIndizies: [2]
 	}
 ];

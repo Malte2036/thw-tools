@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { invalidate, goto } from '$app/navigation';
-	import type { Question, QuestionType } from '$lib/quiz/question/Question';
+	import type { ExtendedQuestion, Question, QuestionType } from '$lib/quiz/question/Question';
 	import { onMount } from 'svelte';
 	import { randomInt, shuffle } from '$lib/utils';
 	import QuestionStatistics from '$lib/quiz/question/QuestionStatistics.svelte';
@@ -9,23 +9,19 @@
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
 	import type { AnswerdCountData } from './+page.server';
 	import QuestionNumber from '$lib/quiz/QuestionNumber.svelte';
+	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 
 	export let data: PageData;
 
-	function shuffleQuestion(q: Question) {
-		return {
-			...q,
-			answers: [...shuffle(q.answers)]
-		};
-	}
-
-	let question: Question;
+	let question: ExtendedQuestion;
+	let shuffledAnswers: [number, string][];
 	let questionType: QuestionType;
 	let answerdCountData: AnswerdCountData | undefined;
 	let currentQuestionAnswerdCountData: AnswerdCountData | undefined;
 
-	function setQuestion(q: Question) {
+	function setQuestion(q: ExtendedQuestion) {
 		question = q;
+		shuffledAnswers = shuffle([...question.answers]);
 
 		currentQuestionAnswerdCountData = undefined;
 
@@ -37,7 +33,7 @@
 	}
 
 	$: questionType = data.questionType;
-	$: setQuestion(shuffleQuestion(data.question));
+	$: setQuestion(data.question);
 	$: questionCount = data.questionCount;
 
 	let revealAnswers = false;
@@ -46,7 +42,7 @@
 
 	let completelyRight = false;
 
-	$: completelyRight = question.answers.every((answer) => answer.checked == answer.correct);
+	$: completelyRight = question.correctIndizies == question.checkedIndizies;
 
 	$: if (fetching && question) {
 		revealAnswers = false;
@@ -65,7 +61,7 @@
 		if (data.nextQuestionId !== undefined) {
 			let nextQuestionId = data.nextQuestionId;
 
-			if (localStorage.getItem('shuffleQuiz') == 'true') {
+			if (shuffleQuiz) {
 				while (nextQuestionId - 1 === data.question.number) {
 					nextQuestionId = randomInt(data.questionCount) + 1;
 				}
@@ -141,8 +137,18 @@
 						/>
 					{/if}
 					<div class="flex flex-col flex-grow gap-2 w-full">
-						{#each question.answers as answer, i (question.number + i)}
-							<CheckboxAnswer bind:answer bind:revealAnswers />
+						{#each shuffledAnswers as [index, value]}
+							<CheckboxAnswer
+								bind:answer={value}
+								checked={question.checkedIndizies.includes(index)}
+								correct={question.correctIndizies.includes(index)}
+								bind:revealAnswers
+								changeCheckedCallback={(value) => {
+									question.checkedIndizies = value
+										? [...question.checkedIndizies, index]
+										: question.checkedIndizies.filter((v) => v != index);
+								}}
+							/>
 						{/each}
 					</div>
 				</div>

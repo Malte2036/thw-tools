@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
 	import type { AnswerdCountData } from '../../routes/(main)/quiz/[type]/[questionId]/+page.server';
-	import type { Question, QuestionType } from './question/Question';
+	import type { ExtendedQuestion, QuestionType } from './question/Question';
 
 	export let questionType: QuestionType;
-	export let question: Question;
+	export let question: ExtendedQuestion;
 	export let revealAnswers: boolean;
 	export let completelyRight: boolean;
 	export let assignNewQuestion: () => void;
@@ -42,7 +42,7 @@
 			});
 		}
 	}}
-	disabled={!revealAnswers && question.answers.every((answer) => answer.checked === false)}
+	disabled={!revealAnswers && question.checkedIndizies.length == 0}
 	>{revealAnswers
 		? `${completelyRight ? 'Richtig' : 'Falsch'} - Nächste Frage`
 		: 'Überprüfen'}</Button

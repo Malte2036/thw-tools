@@ -1,4 +1,4 @@
-import type { Question } from '$lib/quiz/question/Question';
+import type { JSONQuestion } from '$lib/quiz/question/Question';
 
 import aetzend from '$lib/assets/quiz/cbrn/gefahrklassen/aetzend.png';
 import ansteckungsgefahr from '$lib/assets/quiz/cbrn/gefahrklassen/ansteckungsgefahr.png';
@@ -18,329 +18,311 @@ import piktogrammeReizend from '$lib/assets/quiz/cbrn/gefahrpiktogramme/reizend.
 import piktogrammeToxisch from '$lib/assets/quiz/cbrn/gefahrpiktogramme/toxisch.svg';
 import piktogrammeUmwelt from '$lib/assets/quiz/cbrn/gefahrpiktogramme/umwelt.svg';
 
-export const CBRNQuestions: Question[] = [
+export const CBRNQuestions: JSONQuestion[] = [
 	{
 		answers: [
-			{
-				text: 'Gefahrgut sind Stoffe und Gegenstände, von denen auf Grund ihrer Natur, ihrer Eigenschaften oder ihres Zustandes im Zusammenhang mit der Beförderung Gefahren ausgehen können.',
-				correct: true
-			},
-			{ text: 'Geld und wertvolle Antiquitäten.', correct: false },
-			{ text: 'Getränke für die Einheiten.', correct: false }
+			'Gefahrgut sind Stoffe und Gegenstände, von denen auf Grund ihrer Natur, ihrer Eigenschaften oder ihres Zustandes im Zusammenhang mit der Beförderung Gefahren ausgehen können.',
+			'Geld und wertvolle Antiquitäten.',
+			'Getränke für die Einheiten.'
 		],
 		number: 1,
-		text: 'Was ist ein Gefahrgut?'
+		text: 'Was ist ein Gefahrgut?',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{
-				text: 'Gefahrstoffe sind Stoffe, Zubereitungen und Erzeugnisse, die bestimmte gefährliche Eigenschaften aufweisen oder von denen chemisch-physikalische Gefahren ausgehen.',
-				correct: true
-			},
-			{
-				text: 'Gefahrstoffe sind Stoffe die nur selten Helfer gefährlich werden können.',
-				correct: false
-			},
-			{
-				text: 'Gefahrstoffe sind Stoffe, für die ein Helfer keine Schutzbekleidung benötigt.',
-				correct: false
-			}
+			'Gefahrstoffe sind Stoffe, Zubereitungen und Erzeugnisse, die bestimmte gefährliche Eigenschaften aufweisen oder von denen chemisch-physikalische Gefahren ausgehen.',
+			'Gefahrstoffe sind Stoffe die nur selten Helfer gefährlich werden können.',
+			'Gefahrstoffe sind Stoffe, für die ein Helfer keine Schutzbekleidung benötigt.'
 		],
 		number: 2,
-		text: 'Was sind Gefahrstoffe?'
+		text: 'Was sind Gefahrstoffe?',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{
-				text: 'Jede Helferin / jeder Helfer im THW.',
-				correct: true
-			},
-			{
-				text: 'Nur die Präsidentin / der Präsident des THW.',
-				correct: false
-			},
-			{
-				text: 'Nur der Auftraggeber.',
-				correct: false
-			}
+			'Jede Helferin / jeder Helfer im THW.',
+			'Nur die Präsidentin / der Präsident des THW.',
+			'Nur der Auftraggeber.'
 		],
 		number: 3,
-		text: 'Wer kann für Vergehen im Umgang mit gefährlichen Stoffen und Gütern zur Verantwortung gezogen werden?'
+		text: 'Wer kann für Vergehen im Umgang mit gefährlichen Stoffen und Gütern zur Verantwortung gezogen werden?',
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{
-				text: 'Möglichst großen Abstand zum Unfallort halten, alle Zündquellen fernhalten (Motor abstellen, Rauchverbot, etc.) und die Strasse sichern (Warnschilder aufstellen), Straßenbenutzer sowie Anwohner warnen.',
-				correct: true
-			},
-			{
-				text: 'Verunfallte wenn möglich aus dem gefährlichen Bereich bringen (Schutzmaßnahmen unbedingt beachten – Eigenschutz!).',
-				correct: true
-			},
-			{
-				text: 'Es müssen keine Schutzmaßnahmen getroffen werden.',
-				correct: false
-			}
+			'Möglichst großen Abstand zum Unfallort halten, alle Zündquellen fernhalten (Motor abstellen, Rauchverbot, etc.) und die Strasse sichern (Warnschilder aufstellen), Straßenbenutzer sowie Anwohner warnen.',
+			'Verunfallte wenn möglich aus dem gefährlichen Bereich bringen (Schutzmaßnahmen unbedingt beachten – Eigenschutz!).',
+			'Es müssen keine Schutzmaßnahmen getroffen werden.'
 		],
 		number: 4,
-		text: 'Was ist bei einem Unfall mit gefährlichen Stoffen und Gütern zu beachten?'
+		text: 'Was ist bei einem Unfall mit gefährlichen Stoffen und Gütern zu beachten?',
+		correctIndizies: [0, 1]
 	},
 	{
 		answers: [
-			{
-				text: 'Kennzeichnung an den Verpackungen.',
-				correct: true
-			},
-			{
-				text: 'Fahrzeugkennzeichnung, mitgeführte Fahrzeugpapiere und Merkblätter.',
-				correct: true
-			},
-			{
-				text: 'Durch Fahrerbefragung.',
-				correct: false
-			}
+			'Kennzeichnung an den Verpackungen.',
+			'Fahrzeugkennzeichnung, mitgeführte Fahrzeugpapiere und Merkblätter.',
+			'Durch Fahrerbefragung.'
 		],
 		number: 5,
-		text: 'Woran kann ich die Gefährdung, die von einem Gefahrguttransport ausgeht, eindeutig erkennen?'
+		text: 'Woran kann ich die Gefährdung, die von einem Gefahrguttransport ausgeht, eindeutig erkennen?',
+		correctIndizies: [0, 1]
 	},
 	{
 		answers: [
-			{ text: 'Explosive Stoffe', correct: true },
-			{ text: 'Gase (nicht entzündbar)', correct: false },
-			{ text: 'Entzündbare flüssige Stoffe', correct: false },
-			{ text: 'Entzündend wirkende Stoffe', correct: false },
-			{ text: 'Giftige Stoffe', correct: false },
-			{ text: 'Ansteckungsgefährliche Stoffe', correct: false },
-			{ text: 'Radioaktive Stoffe', correct: false },
-			{ text: 'Ätzende Stoffe', correct: false }
+			'Explosive Stoffe',
+			'Gase (nicht entzündbar)',
+			'Entzündbare flüssige Stoffe',
+			'Entzündend wirkende Stoffe',
+			'Giftige Stoffe',
+			'Ansteckungsgefährliche Stoffe',
+			'Radioaktive Stoffe',
+			'Ätzende Stoffe'
 		],
 		number: 6,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: explosiv
+		image: explosiv,
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{ text: 'Explosive Stoffe', correct: false },
-			{ text: 'Gase (nicht entzündbar)', correct: true },
-			{ text: 'Entzündbare flüssige Stoffe', correct: false },
-			{ text: 'Entzündend wirkende Stoffe', correct: false },
-			{ text: 'Giftige Stoffe', correct: false },
-			{ text: 'Ansteckungsgefährliche Stoffe', correct: false },
-			{ text: 'Radioaktive Stoffe', correct: false },
-			{ text: 'Ätzende Stoffe', correct: false }
+			'Explosive Stoffe',
+			'Gase (nicht entzündbar)',
+			'Entzündbare flüssige Stoffe',
+			'Entzündend wirkende Stoffe',
+			'Giftige Stoffe',
+			'Ansteckungsgefährliche Stoffe',
+			'Radioaktive Stoffe',
+			'Ätzende Stoffe'
 		],
 		number: 7,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: gasflasche
+		image: gasflasche,
+		correctIndizies: [1]
 	},
 	{
 		answers: [
-			{ text: 'Explosive Stoffe', correct: false },
-			{ text: 'Gase (nicht entzündbar)', correct: false },
-			{ text: 'Entzündbare flüssige Stoffe', correct: true },
-			{ text: 'Entzündend wirkende Stoffe', correct: false },
-			{ text: 'Giftige Stoffe', correct: false },
-			{ text: 'Ansteckungsgefährliche Stoffe', correct: false },
-			{ text: 'Radioaktive Stoffe', correct: false },
-			{ text: 'Ätzende Stoffe', correct: false }
+			'Explosive Stoffe',
+			'Gase (nicht entzündbar)',
+			'Entzündbare flüssige Stoffe',
+			'Entzündend wirkende Stoffe',
+			'Giftige Stoffe',
+			'Ansteckungsgefährliche Stoffe',
+			'Radioaktive Stoffe',
+			'Ätzende Stoffe'
 		],
 		number: 8,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: entzuendbareflussigkeiten
+		image: entzuendbareflussigkeiten,
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{ text: 'Explosive Stoffe', correct: false },
-			{ text: 'Gase (nicht entzündbar)', correct: false },
-			{ text: 'Entzündbare flüssige Stoffe', correct: false },
-			{ text: 'Entzündend wirkende Stoffe', correct: true },
-			{ text: 'Giftige Stoffe', correct: false },
-			{ text: 'Ansteckungsgefährliche Stoffe', correct: false },
-			{ text: 'Radioaktive Stoffe', correct: false },
-			{ text: 'Ätzende Stoffe', correct: false }
+			'Explosive Stoffe',
+			'Gase (nicht entzündbar)',
+			'Entzündbare flüssige Stoffe',
+			'Entzündend wirkende Stoffe',
+			'Giftige Stoffe',
+			'Ansteckungsgefährliche Stoffe',
+			'Radioaktive Stoffe',
+			'Ätzende Stoffe'
 		],
 		number: 9,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: entzuended
+		image: entzuended,
+		correctIndizies: [3]
 	},
 	{
 		answers: [
-			{ text: 'Explosive Stoffe', correct: false },
-			{ text: 'Gase (nicht entzündbar)', correct: false },
-			{ text: 'Entzündbare flüssige Stoffe', correct: false },
-			{ text: 'Entzündend wirkende Stoffe', correct: false },
-			{ text: 'Giftige Stoffe', correct: true },
-			{ text: 'Ansteckungsgefährliche Stoffe', correct: false },
-			{ text: 'Radioaktive Stoffe', correct: false },
-			{ text: 'Ätzende Stoffe', correct: false }
+			'Explosive Stoffe',
+			'Gase (nicht entzündbar)',
+			'Entzündbare flüssige Stoffe',
+			'Entzündend wirkende Stoffe',
+			'Giftige Stoffe',
+			'Ansteckungsgefährliche Stoffe',
+			'Radioaktive Stoffe',
+			'Ätzende Stoffe'
 		],
 		number: 10,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: giftig
+		image: giftig,
+		correctIndizies: [4]
 	},
 	{
 		answers: [
-			{ text: 'Explosive Stoffe', correct: false },
-			{ text: 'Gase (nicht entzündbar)', correct: false },
-			{ text: 'Entzündbare flüssige Stoffe', correct: false },
-			{ text: 'Entzündend wirkende Stoffe', correct: false },
-			{ text: 'Giftige Stoffe', correct: false },
-			{ text: 'Ansteckungsgefährliche Stoffe', correct: true },
-			{ text: 'Radioaktive Stoffe', correct: false },
-			{ text: 'Ätzende Stoffe', correct: false }
+			'Explosive Stoffe',
+			'Gase (nicht entzündbar)',
+			'Entzündbare flüssige Stoffe',
+			'Entzündend wirkende Stoffe',
+			'Giftige Stoffe',
+			'Ansteckungsgefährliche Stoffe',
+			'Radioaktive Stoffe',
+			'Ätzende Stoffe'
 		],
 		number: 11,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: ansteckungsgefahr
+		image: ansteckungsgefahr,
+		correctIndizies: [5]
 	},
 	{
 		answers: [
-			{ text: 'Explosive Stoffe', correct: false },
-			{ text: 'Gase (nicht entzündbar)', correct: false },
-			{ text: 'Entzündbare flüssige Stoffe', correct: false },
-			{ text: 'Entzündend wirkende Stoffe', correct: false },
-			{ text: 'Giftige Stoffe', correct: false },
-			{ text: 'Ansteckungsgefährliche Stoffe', correct: false },
-			{ text: 'Radioaktive Stoffe', correct: true },
-			{ text: 'Ätzende Stoffe', correct: false }
+			'Explosive Stoffe',
+			'Gase (nicht entzündbar)',
+			'Entzündbare flüssige Stoffe',
+			'Entzündend wirkende Stoffe',
+			'Giftige Stoffe',
+			'Ansteckungsgefährliche Stoffe',
+			'Radioaktive Stoffe',
+			'Ätzende Stoffe'
 		],
 		number: 12,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: radioaktiv
+		image: radioaktiv,
+		correctIndizies: [6]
 	},
 	{
 		answers: [
-			{ text: 'Explosive Stoffe', correct: false },
-			{ text: 'Gase (nicht entzündbar)', correct: false },
-			{ text: 'Entzündbare flüssige Stoffe', correct: false },
-			{ text: 'Entzündend wirkende Stoffe', correct: false },
-			{ text: 'Giftige Stoffe', correct: false },
-			{ text: 'Ansteckungsgefährliche Stoffe', correct: false },
-			{ text: 'Radioaktive Stoffe', correct: false },
-			{ text: 'Ätzende Stoffe', correct: true }
+			'Explosive Stoffe',
+			'Gase (nicht entzündbar)',
+			'Entzündbare flüssige Stoffe',
+			'Entzündend wirkende Stoffe',
+			'Giftige Stoffe',
+			'Ansteckungsgefährliche Stoffe',
+			'Radioaktive Stoffe',
+			'Ätzende Stoffe'
 		],
 		number: 13,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: aetzend
+		image: aetzend,
+		correctIndizies: [7]
 	},
 	{
 		answers: [
-			{ text: 'Explosiv', correct: true },
-			{ text: 'Entzündbar', correct: false },
-			{ text: 'Endzündend', correct: false },
-			{ text: 'Ätzwirkung', correct: false },
-			{ text: 'akute Toxizität', correct: false },
-			{ text: 'Gesundheitsgefahren', correct: false },
-			{ text: 'Reizwirkung', correct: false },
-			{ text: 'Gewässergefährdend', correct: false }
+			'Explosiv',
+			'Entzündbar',
+			'Endzündend',
+			'Ätzwirkung',
+			'akute Toxizität',
+			'Gesundheitsgefahren',
+			'Reizwirkung',
+			'Gewässergefährdend'
 		],
 		number: 14,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: piktogrammeExplosiv
+		image: piktogrammeExplosiv,
+		correctIndizies: [0]
 	},
 	{
 		answers: [
-			{ text: 'Explosiv', correct: false },
-			{ text: 'Entzündbar', correct: true },
-			{ text: 'Endzündend', correct: false },
-			{ text: 'Ätzwirkung', correct: false },
-			{ text: 'akute Toxizität', correct: false },
-			{ text: 'Gesundheitsgefahren', correct: false },
-			{ text: 'Reizwirkung', correct: false },
-			{ text: 'Gewässergefährdend', correct: false }
+			'Explosiv',
+			'Entzündbar',
+			'Endzündend',
+			'Ätzwirkung',
+			'akute Toxizität',
+			'Gesundheitsgefahren',
+			'Reizwirkung',
+			'Gewässergefährdend'
 		],
 		number: 15,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: piktogrammeEntzuendlich
+		image: piktogrammeEntzuendlich,
+		correctIndizies: [1]
 	},
 	{
 		answers: [
-			{ text: 'Explosiv', correct: false },
-			{ text: 'Entzündbar', correct: false },
-			{ text: 'Endzündend', correct: true },
-			{ text: 'Ätzwirkung', correct: false },
-			{ text: 'akute Toxizität', correct: false },
-			{ text: 'Gesundheitsgefahren', correct: false },
-			{ text: 'Reizwirkung', correct: false },
-			{ text: 'Gewässergefährdend', correct: false }
+			'Explosiv',
+			'Entzündbar',
+			'Endzündend',
+			'Ätzwirkung',
+			'akute Toxizität',
+			'Gesundheitsgefahren',
+			'Reizwirkung',
+			'Gewässergefährdend'
 		],
 		number: 16,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: piktogrammeBrandfoerdernd
+		image: piktogrammeBrandfoerdernd,
+		correctIndizies: [2]
 	},
 	{
 		answers: [
-			{ text: 'Explosiv', correct: false },
-			{ text: 'Entzündbar', correct: false },
-			{ text: 'Endzündend', correct: false },
-			{ text: 'Ätzwirkung', correct: true },
-			{ text: 'akute Toxizität', correct: false },
-			{ text: 'Gesundheitsgefahren', correct: false },
-			{ text: 'Reizwirkung', correct: false },
-			{ text: 'Gewässergefährdend', correct: false }
+			'Explosiv',
+			'Entzündbar',
+			'Endzündend',
+			'Ätzwirkung',
+			'akute Toxizität',
+			'Gesundheitsgefahren',
+			'Reizwirkung',
+			'Gewässergefährdend'
 		],
 		number: 17,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: piktogrammeAetzend
+		image: piktogrammeAetzend,
+		correctIndizies: [3]
 	},
 	{
 		answers: [
-			{ text: 'Explosiv', correct: false },
-			{ text: 'Entzündbar', correct: false },
-			{ text: 'Endzündend', correct: false },
-			{ text: 'Ätzwirkung', correct: false },
-			{ text: 'akute Toxizität', correct: true },
-			{ text: 'Gesundheitsgefahren', correct: false },
-			{ text: 'Reizwirkung', correct: false },
-			{ text: 'Gewässergefährdend', correct: false }
+			'Explosiv',
+			'Entzündbar',
+			'Endzündend',
+			'Ätzwirkung',
+			'akute Toxizität',
+			'Gesundheitsgefahren',
+			'Reizwirkung',
+			'Gewässergefährdend'
 		],
 		number: 18,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: piktogrammeToxisch
+		image: piktogrammeToxisch,
+		correctIndizies: [4]
 	},
 	{
 		answers: [
-			{ text: 'Explosiv', correct: false },
-			{ text: 'Entzündbar', correct: false },
-			{ text: 'Endzündend', correct: false },
-			{ text: 'Ätzwirkung', correct: false },
-			{ text: 'akute Toxizität', correct: false },
-			{ text: 'Gesundheitsgefahren', correct: true },
-			{ text: 'Reizwirkung', correct: false },
-			{ text: 'Gewässergefährdend', correct: false }
+			'Explosiv',
+			'Entzündbar',
+			'Endzündend',
+			'Ätzwirkung',
+			'akute Toxizität',
+			'Gesundheitsgefahren',
+			'Reizwirkung',
+			'Gewässergefährdend'
 		],
 		number: 19,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: piktogrammeGesundheitsschaedlich
+		image: piktogrammeGesundheitsschaedlich,
+		correctIndizies: [5]
 	},
 	{
 		answers: [
-			{ text: 'Explosiv', correct: false },
-			{ text: 'Entzündbar', correct: false },
-			{ text: 'Endzündend', correct: false },
-			{ text: 'Ätzwirkung', correct: false },
-			{ text: 'akute Toxizität', correct: false },
-			{ text: 'Gesundheitsgefahren', correct: false },
-			{ text: 'Reizwirkung', correct: true },
-			{ text: 'Gewässergefährdend', correct: false }
+			'Explosiv',
+			'Entzündbar',
+			'Endzündend',
+			'Ätzwirkung',
+			'akute Toxizität',
+			'Gesundheitsgefahren',
+			'Reizwirkung',
+			'Gewässergefährdend'
 		],
 		number: 20,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: piktogrammeReizend
+		image: piktogrammeReizend,
+		correctIndizies: [6]
 	},
 	{
 		answers: [
-			{ text: 'Explosiv', correct: false },
-			{ text: 'Entzündbar', correct: false },
-			{ text: 'Endzündend', correct: false },
-			{ text: 'Ätzwirkung', correct: false },
-			{ text: 'akute Toxizität', correct: false },
-			{ text: 'Gesundheitsgefahren', correct: false },
-			{ text: 'Reizwirkung', correct: false },
-			{ text: 'Gewässergefährdend', correct: true }
+			'Explosiv',
+			'Entzündbar',
+			'Endzündend',
+			'Ätzwirkung',
+			'akute Toxizität',
+			'Gesundheitsgefahren',
+			'Reizwirkung',
+			'Gewässergefährdend'
 		],
 		number: 21,
 		text: 'Ordne die folgenden Begriffe der Grafik zu:',
-		image: piktogrammeUmwelt
+		image: piktogrammeUmwelt,
+		correctIndizies: [7]
 	}
 ];
