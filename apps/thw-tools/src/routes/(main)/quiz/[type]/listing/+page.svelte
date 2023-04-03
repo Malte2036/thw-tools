@@ -1,11 +1,14 @@
 <script lang="ts">
 	import LinkButton from '$lib/LinkButton.svelte';
 	import { questionTypeToQuestionSet } from '$lib/quiz/question/Question';
+	import QuizHead from '$lib/quiz/QuizHead.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 	const allQuestions = questionTypeToQuestionSet(data.questionType);
 </script>
+
+<QuizHead questionType={data.questionType} />
 
 <div class="flex flex-col gap-1 m-4 text-xl">
 	{#each allQuestions as question}

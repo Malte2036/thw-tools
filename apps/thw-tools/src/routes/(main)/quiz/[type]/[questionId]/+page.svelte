@@ -11,6 +11,7 @@
 	import QuestionNumber from '$lib/quiz/QuestionNumber.svelte';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import type { AfterNavigate } from '@sveltejs/kit';
+	import QuizHead from '$lib/quiz/QuizHead.svelte';
 
 	export let data: PageData;
 
@@ -85,21 +86,7 @@
 	});
 </script>
 
-<svelte:head>
-	{#if questionType == 'agt'}
-		<title>Atemschutz-Quiz</title>
-		<meta
-			name="description"
-			content="Das Online-Theorie-Quiz für Atemschutzgeräteträger des THW und der Feuerwehr bietet dir die Möglichkeit, dein Wissen über den sicheren Umgang mit Atemschutzgeräten zu testen und aufzufrischen. Verbesser deine Kenntnisse und Sicherheit im Einsatz von Atemschutzgeräten."
-		/>
-	{:else}
-		<title>CBRN-Quiz</title>
-		<meta
-			name="description"
-			content="Möchtest du dein Wissen über den sicheren Umgang mit CBRN-Gefahren verbessern? Dann ist unser Online-Theorie-Quiz für CBRN-Schutzkräfte des THW und der Feuerwehr genau das Richtige für dich. Teste dein Wissen und frische es auf, um im Einsatz von CBRN-Gefahren noch sicherer zu agieren."
-		/>
-	{/if}
-</svelte:head>
+<QuizHead {questionType} />
 
 <div class="m-4 mt-2">
 	<div class="flex flex-col gap-16 justify-between h-full">
