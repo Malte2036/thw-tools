@@ -6,9 +6,8 @@ export const prerender = true;
 
 export const load = (async ({ params }) => {
 	const questionType: QuestionType | undefined = params.type as QuestionType;
-	//const questionSet = questionTypeToQuestionSet(questionType);
 
-	const questionNumber: number = 1; /*Math.floor(Math.random() * questionSet.length) + 1;*/
+	const questionNumber: number = 1;
 
 	const url = `/quiz/${questionType}/${questionNumber}`;
 

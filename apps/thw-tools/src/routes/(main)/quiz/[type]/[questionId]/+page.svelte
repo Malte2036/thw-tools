@@ -3,7 +3,7 @@
 	import { invalidate, goto } from '$app/navigation';
 	import type { Question, QuestionType } from '$lib/quiz/question/Question';
 	import { onMount } from 'svelte';
-	import { shuffle } from '$lib/utils';
+	import { randomInt, shuffle } from '$lib/utils';
 	import QuestionStatistics from '$lib/quiz/question/QuestionStatistics.svelte';
 	import CheckboxAnswer from '$lib/quiz/answer/CheckboxAnswer.svelte';
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
@@ -67,7 +67,7 @@
 
 			if (localStorage.getItem('shuffleQuiz') == 'true') {
 				while (nextQuestionId - 1 === data.question.number) {
-					nextQuestionId = Math.floor(Math.random() * data.questionCount) + 1;
+					nextQuestionId = randomInt(data.questionCount) + 1;
 				}
 			}
 			gotoQuestionNumber(nextQuestionId);

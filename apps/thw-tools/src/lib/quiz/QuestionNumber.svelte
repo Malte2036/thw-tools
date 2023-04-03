@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import ShuffleIcon from '$lib/icons/ShuffleIcon.svelte';
+	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 
 	export let questionNumber: number;
 	export let questionCount: number;
@@ -13,19 +13,9 @@
 		gotoQuestionNumber(Number.parseInt(input));
 	}
 
-	let shuffle: boolean = false;
-
 	function toggleShuffle() {
-		localStorage.setItem('shuffleQuiz', (!shuffle).toString());
-		shuffle = !shuffle;
+		shuffleQuiz.set(!$shuffleQuiz);
 	}
-
-	onMount(() => {
-		if (import.meta.env.SSR === false) {
-			// nur auf dem client
-			shuffle = localStorage.getItem('shuffleQuiz') === 'false' ? false : true;
-		}
-	});
 </script>
 
 <h3 class="flex flex-row justify-center align-middle gap-1 text-gray-400 font-bold">
@@ -34,7 +24,7 @@
 	</div>
 	<div
 		class="w-4 flex justify-center"
-		class:shuffle
+		class:shuffle={$shuffleQuiz}
 		on:click={toggleShuffle}
 		on:keypress={toggleShuffle}
 	>

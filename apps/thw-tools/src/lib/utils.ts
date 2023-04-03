@@ -7,3 +7,7 @@ export const shuffle = (array: any[]) => {
 	}
 	return array;
 };
+
+export function randomInt(max: number): number {
+	return Math.floor(Math.random() * max);
+}

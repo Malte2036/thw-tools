@@ -1,12 +1,32 @@
-<script>
+<script lang="ts">
 	import ChartSimpleIcon from '../lib/icons/ChartSimpleIcon.svelte';
 	import HearthPulseIcon from '../lib/icons/HearthPulseIcon.svelte';
 	import LinkButton from '../lib/LinkButton.svelte';
 	import logo from '$lib/icons/thw-mzgw.webp';
 	import FlaskVialIcon from '$lib/icons/FlaskVialIcon.svelte';
 
+	import type { PageData } from './$types';
+	import type { QuestionType } from '$lib/quiz/question/Question';
+	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
+	import { randomInt } from '$lib/utils';
+
 	const description =
 		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem, ein AGT-Quiz, CBRN-Quiz und eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger.';
+
+	export let data: PageData;
+
+	function randomQuestionId(questionType: QuestionType) {
+		if (!$shuffleQuiz) {
+			return 1;
+		}
+
+		const questionLength = data.questionTypeLength.get(questionType);
+		if (questionLength === undefined) {
+			console.log(`QuestionType ${questionType} not found in questionTypeLength`);
+			return 1;
+		}
+		return randomInt(questionLength) + 1;
+	}
 </script>
 
 <svelte:head>
@@ -28,13 +48,13 @@
 			{description}
 		</h2>
 		<div class="w-full flex flex-col items-center gap-4 max-w-sm max-md:max-w-[16rem]">
-			<LinkButton url="/quiz/agt">
+			<LinkButton url={`/quiz/agt/${randomQuestionId('agt')}`}>
 				<div class="w-6">
 					<ChartSimpleIcon />
 				</div>
 				<div>AGT-Quiz</div>
 			</LinkButton>
-			<LinkButton url="/quiz/cbrn">
+			<LinkButton url={`/quiz/cbrn/${randomQuestionId('cbrn')}`}>
 				<div class="w-6">
 					<FlaskVialIcon />
 				</div>
@@ -51,6 +71,8 @@
 </div>
 
 {#each ['agt', 'cbrn'] as questionType}
+	<!-- svelte-ignore a11y-missing-content -->
+	<a href={`/quiz/${questionType}`} />
 	<!-- svelte-ignore a11y-missing-content -->
 	<a href={`/quiz/${questionType}/listing`} />
 {/each}
