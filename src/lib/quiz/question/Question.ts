@@ -17,14 +17,12 @@ export type Answer = {
 	checked?: boolean;
 };
 
-export function questionTypeToQuestionSet(questionType: QuestionType) {
+export function questionTypeToQuestionSet(questionType: QuestionType): Question[] {
 	switch (questionType) {
 		case 'agt':
 			return AGTQuestions;
-			break;
 		case 'cbrn':
 			return CBRNQuestions;
-			break;
 		default:
 			throw error(404, `QuestionType ${questionType} not found`);
 	}
