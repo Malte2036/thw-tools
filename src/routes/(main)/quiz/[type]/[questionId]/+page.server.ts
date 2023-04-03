@@ -1,10 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import {
-	questionTypeToQuestionSet,
-	type ExtendedQuestion,
-	type QuestionType
-} from '$lib/quiz/question/Question';
+import { databaseQuestionToExtendedQuestion, type QuestionType } from '$lib/quiz/question/Question';
+import { getDatabaseQuestionByNumber, getQuestionCount } from '$lib/Database';
 
 export type AnsweredCountData = {
 	right: number;
@@ -16,11 +13,13 @@ export const prerender = true;
 export const load = (async ({ params, depends }) => {
 	const questionType: QuestionType | undefined = params.type as QuestionType;
 
-	let questionSet = questionTypeToQuestionSet(questionType);
+	const questionNumber = Number.parseInt(params.questionId!);
 
-	const questionNumber: number | undefined = Number.parseInt(params.questionId!) - 1;
-
-	let question: ExtendedQuestion = questionSet[questionNumber];
+	const databaseQuestion = await getDatabaseQuestionByNumber(
+		questionType,
+		Number.parseInt(params.questionId!)
+	);
+	const question = databaseQuestionToExtendedQuestion(databaseQuestion);
 
 	if (question === undefined) {
 		throw error(404, {
@@ -28,12 +27,14 @@ export const load = (async ({ params, depends }) => {
 		});
 	}
 
-	const nextQuestionId = ((questionNumber + 1) % questionSet.length) + 1;
+	const questionCount = await getQuestionCount(questionType);
+
+	const nextQuestionId = (questionNumber + 1) % questionCount;
 
 	return {
 		question,
 		questionType,
-		questionCount: questionSet.length,
+		questionCount,
 		nextQuestionId
 	};
 }) satisfies PageServerLoad;
