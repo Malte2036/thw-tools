@@ -44,7 +44,9 @@
 
 	let completelyRight = false;
 
-	$: completelyRight = question.correctIndizies == question.checkedIndizies;
+	$: completelyRight =
+		JSON.stringify(question.correctIndizies.sort()) ===
+		JSON.stringify(question.checkedIndizies.sort());
 
 	function gotoQuestionNumber(newQuestionNumber: number) {
 		goto(`/quiz/${questionType}/${newQuestionNumber}`);
