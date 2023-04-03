@@ -16,10 +16,12 @@
 	let question: ExtendedQuestion;
 	let shuffledAnswers: [number, string][];
 	let questionType: QuestionType;
-	let answerdCountData: AnswerdCountData | undefined;
+	let answeredCountData: AnswerdCountData | undefined;
 	let currentQuestionAnswerdCountData: AnswerdCountData | undefined;
 
 	function setQuestion(q: ExtendedQuestion) {
+		revealAnswers = false;
+
 		question = q;
 		shuffledAnswers = shuffle([...question.answers]);
 
@@ -38,39 +40,23 @@
 
 	let revealAnswers = false;
 
-	let fetching = true;
-
 	let completelyRight = false;
 
 	$: completelyRight = question.correctIndizies == question.checkedIndizies;
-
-	$: if (fetching && question) {
-		revealAnswers = false;
-		fetching = false;
-
-		focusQuestionText();
-	}
 
 	function gotoQuestionNumber(newQuestionNumber: number) {
 		goto(`/quiz/${questionType}/${newQuestionNumber}`);
 	}
 
-	function assignNewQuestion() {
-		fetching = true;
+	function gotoNextQuestion() {
+		let nextQuestionId = data.nextQuestionId;
 
-		if (data.nextQuestionId !== undefined) {
-			let nextQuestionId = data.nextQuestionId;
-
-			if (shuffleQuiz) {
-				while (nextQuestionId - 1 === data.question.number) {
-					nextQuestionId = randomInt(data.questionCount) + 1;
-				}
+		if (shuffleQuiz) {
+			while (nextQuestionId - 1 === data.question.number) {
+				nextQuestionId = randomInt(data.questionCount) + 1;
 			}
-			gotoQuestionNumber(nextQuestionId);
-			return;
 		}
-
-		invalidate('app:quiz');
+		gotoQuestionNumber(nextQuestionId);
 	}
 
 	let questionTextEl: any;
@@ -88,7 +74,7 @@
 
 		try {
 			fetch(`/api/quiz/${questionType}/count`).then((res) =>
-				res.json().then((data) => (answerdCountData = data))
+				res.json().then((data) => (answeredCountData = data))
 			);
 		} catch (error) {
 			console.warn('Could not add count');
@@ -113,58 +99,54 @@
 </svelte:head>
 
 <div class="m-4 mt-2">
-	{#if fetching}
-		<div class="text-xl w-full text-center m-8">Nächste Frage wird geladen...</div>
-	{:else}
-		<div class="flex flex-col gap-16 justify-between h-full">
-			<div class="flex flex-col gap-4">
-				<div class="flex flex-col gap-2">
-					<QuestionNumber questionNumber={question.number} {questionCount} {gotoQuestionNumber} />
-					<h1
-						bind:this={questionTextEl}
-						class="text-2xl text-center focus:text-thw outline-none font-bold"
-						tabindex="-1"
-					>
-						{question.text}
-					</h1>
-				</div>
-				<div class="flex gap-y-2 flex-col md:flex-row w-full items-center">
-					{#if question.image}
-						<img
-							class="flex justify-center h-64 aspect-square m-4"
-							alt="Question Image"
-							src={question.image}
-						/>
-					{/if}
-					<div class="flex flex-col flex-grow gap-2 w-full">
-						{#each shuffledAnswers as [index, value]}
-							<CheckboxAnswer
-								bind:answer={value}
-								checked={question.checkedIndizies.includes(index)}
-								correct={question.correctIndizies.includes(index)}
-								bind:revealAnswers
-								changeCheckedCallback={(value) => {
-									question.checkedIndizies = value
-										? [...question.checkedIndizies, index]
-										: question.checkedIndizies.filter((v) => v != index);
-								}}
-							/>
-						{/each}
-					</div>
-				</div>
-				<div class="mx-auto w-3/5 max-md:w-4/6">
-					<AnswerButton
-						bind:question
-						bind:questionType
-						bind:answerdCountData
-						bind:completelyRight
-						bind:currentQuestionAnswerdCountData
-						bind:revealAnswers
-						assignNewQuestion={() => assignNewQuestion()}
+	<div class="flex flex-col gap-16 justify-between h-full">
+		<div class="flex flex-col gap-4">
+			<div class="flex flex-col gap-2">
+				<QuestionNumber questionNumber={question.number} {questionCount} {gotoQuestionNumber} />
+				<h1
+					bind:this={questionTextEl}
+					class="text-2xl text-center focus:text-thw outline-none font-bold"
+					tabindex="-1"
+				>
+					{question.text}
+				</h1>
+			</div>
+			<div class="flex gap-y-2 flex-col md:flex-row w-full items-center">
+				{#if question.image}
+					<img
+						class="flex justify-center h-64 aspect-square m-4"
+						alt="Question Image"
+						src={question.image}
 					/>
+				{/if}
+				<div class="flex flex-col flex-grow gap-2 w-full">
+					{#each shuffledAnswers as [index, value]}
+						<CheckboxAnswer
+							bind:answer={value}
+							checked={question.checkedIndizies.includes(index)}
+							correct={question.correctIndizies.includes(index)}
+							bind:revealAnswers
+							changeCheckedCallback={(value) => {
+								question.checkedIndizies = value
+									? [...question.checkedIndizies, index]
+									: question.checkedIndizies.filter((v) => v != index);
+							}}
+						/>
+					{/each}
 				</div>
 			</div>
-			<QuestionStatistics {answerdCountData} {currentQuestionAnswerdCountData} />
+			<div class="mx-auto w-3/5 max-md:w-4/6">
+				<AnswerButton
+					bind:question
+					bind:questionType
+					bind:answerdCountData={answeredCountData}
+					bind:completelyRight
+					bind:currentQuestionAnswerdCountData
+					bind:revealAnswers
+					{gotoNextQuestion}
+				/>
+			</div>
 		</div>
-	{/if}
+		<QuestionStatistics answerdCountData={answeredCountData} {currentQuestionAnswerdCountData} />
+	</div>
 </div>

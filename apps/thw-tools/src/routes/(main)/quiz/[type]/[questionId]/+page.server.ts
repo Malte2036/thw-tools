@@ -18,8 +18,6 @@ export const load = (async ({ params, depends }) => {
 
 	let questionSet = questionTypeToQuestionSet(questionType);
 
-	depends('app:quiz');
-
 	const questionNumber: number | undefined = Number.parseInt(params.questionId!) - 1;
 
 	let question: ExtendedQuestion = questionSet[questionNumber];
