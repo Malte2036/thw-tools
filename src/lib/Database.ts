@@ -5,7 +5,9 @@ import {
 	APPWRITE_PROJECTID,
 	APPWRITE_COLLECTIONID_AGTQUESTIONS,
 	APPWRITE_COLLECTIONID_CBRNQUESTIONS,
-	APPWRITE_DATABASEID_QUIZ
+	APPWRITE_DATABASEID_QUIZ,
+	APPWRITE_COLLECTIONID_AGT,
+	APPWRITE_COLLECTIONID_CBRN
 } from '$env/static/private';
 import type { Question, QuestionType } from './quiz/question/Question';
 
@@ -23,6 +25,18 @@ function getQuestionCollectionId(questionType: QuestionType) {
 
 		default:
 			throw new Error(`No Collection for type ${questionType}`);
+	}
+}
+
+export function getCollectionIdByQuiz(quiz: QuestionType): string {
+	switch (quiz) {
+		case 'agt':
+			return APPWRITE_COLLECTIONID_AGT;
+		case 'cbrn':
+			return APPWRITE_COLLECTIONID_CBRN;
+
+		default:
+			throw new Error(`Quiz type "${quiz}" does not exists!`);
 	}
 }
 
@@ -92,4 +106,55 @@ export async function getQuestionCount(questionType: QuestionType): Promise<numb
 	});
 
 	return res.data.databasesListDocuments.total;
+}
+
+export async function getCorrectCount(
+	quiz: QuestionType,
+	correct: boolean,
+	questionNumber?: number
+): Promise<number> {
+	const collectionId = getCollectionIdByQuiz(quiz);
+
+	const client = new sdk.Client();
+
+	client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECTID).setKey(APPWRITE_APIKEY);
+
+	const graphql = new sdk.Graphql(client);
+
+	type ResultData = { data: { databasesListDocuments: { total: number } } };
+
+	const queries = [`"equal(\\"correct\\", [${correct}])"`];
+
+	if (questionNumber) {
+		queries.push(`"equal(\\"questionId\\", [${questionNumber}])"`);
+	}
+
+	// limited to 5000 docs
+	const res: ResultData = await graphql.query({
+		query: `query {
+		databasesListDocuments(
+			databaseId: "${APPWRITE_DATABASEID_QUIZ}",
+			collectionId: "${collectionId}",
+			queries: [${queries.join(', ')}]
+		) {
+			total
+		}
+	}`
+	});
+
+	return res.data.databasesListDocuments.total;
+}
+
+export type StatisticsData = { questionId: string; correct: boolean };
+
+export async function addCount(quiz: QuestionType, data: StatisticsData) {
+	const collectionId = getCollectionIdByQuiz(quiz);
+
+	const client = new sdk.Client();
+
+	client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECTID).setKey(APPWRITE_APIKEY);
+
+	const databases = new sdk.Databases(client);
+
+	await databases.createDocument(APPWRITE_DATABASEID_QUIZ, collectionId, 'unique()', data);
 }

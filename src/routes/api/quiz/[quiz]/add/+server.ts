@@ -1,30 +1,14 @@
 import type { RequestEvent, RequestHandler } from './$types';
-import sdk from 'node-appwrite';
-
-import {
-	APPWRITE_ENDPOINT,
-	APPWRITE_PROJECTID,
-	APPWRITE_APIKEY,
-	APPWRITE_DATABASEID_QUIZ
-} from '$env/static/private';
-import { getCollectionIdByQuiz } from '../utils';
 import type { QuestionType } from '$lib/quiz/question/Question';
-
-export type StatisticsData = { questionId: string; correct: boolean };
+import { addCount, type StatisticsData } from '$lib/Database';
 
 export const POST: RequestHandler = async ({ request, params }: RequestEvent) => {
 	const body: StatisticsData = await request.json();
 
 	try {
 		const quiz = params.quiz as QuestionType;
-		const collectionId = getCollectionIdByQuiz(quiz);
 
-		const client = new sdk.Client();
-		const databases = new sdk.Databases(client);
-
-		client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECTID).setKey(APPWRITE_APIKEY);
-
-		await databases.createDocument(APPWRITE_DATABASEID_QUIZ, collectionId, 'unique()', body);
+		await addCount(quiz, body);
 	} catch (error) {
 		console.warn(`Could not write agt quiz statistics to appwrite`, error);
 	}
