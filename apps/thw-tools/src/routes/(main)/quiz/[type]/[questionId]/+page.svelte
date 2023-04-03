@@ -7,7 +7,7 @@
 	import QuestionStatistics from '$lib/quiz/question/QuestionStatistics.svelte';
 	import CheckboxAnswer from '$lib/quiz/answer/CheckboxAnswer.svelte';
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
-	import type { AnswerdCountData } from './+page.server';
+	import type { AnsweredCountData } from './+page.server';
 	import QuestionNumber from '$lib/quiz/QuestionNumber.svelte';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import type { AfterNavigate } from '@sveltejs/kit';
@@ -18,8 +18,8 @@
 	let question: ExtendedQuestion;
 	let shuffledAnswers: [number, string][];
 	let questionType: QuestionType;
-	let answeredCountData: AnswerdCountData | undefined;
-	let currentQuestionAnswerdCountData: AnswerdCountData | undefined;
+	let answeredCountData: AnsweredCountData | undefined;
+	let currentQuestionAnsweredCountData: AnsweredCountData | undefined;
 
 	function setQuestion(q: ExtendedQuestion) {
 		revealAnswers = false;
@@ -27,11 +27,11 @@
 		question = q;
 		shuffledAnswers = shuffle([...question.answers]);
 
-		currentQuestionAnswerdCountData = undefined;
+		currentQuestionAnsweredCountData = undefined;
 
 		if (!import.meta.env.SSR) {
 			fetch(`/api/quiz/${questionType}/${q.number}/count`).then((res) =>
-				res.json().then((data) => (currentQuestionAnswerdCountData = data))
+				res.json().then((data) => (currentQuestionAnsweredCountData = data))
 			);
 		}
 	}
@@ -129,14 +129,14 @@
 				<AnswerButton
 					bind:question
 					bind:questionType
-					bind:answerdCountData={answeredCountData}
+					bind:answeredCountData
 					bind:completelyRight
-					bind:currentQuestionAnswerdCountData
+					bind:currentQuestionAnsweredCountData
 					bind:revealAnswers
 					{gotoNextQuestion}
 				/>
 			</div>
 		</div>
-		<QuestionStatistics answerdCountData={answeredCountData} {currentQuestionAnswerdCountData} />
+		<QuestionStatistics {answeredCountData} {currentQuestionAnsweredCountData} />
 	</div>
 </div>

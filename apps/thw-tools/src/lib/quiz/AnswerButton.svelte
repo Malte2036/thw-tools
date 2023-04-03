@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
-	import type { AnswerdCountData } from '../../routes/(main)/quiz/[type]/[questionId]/+page.server';
+	import type { AnsweredCountData } from '../../routes/(main)/quiz/[type]/[questionId]/+page.server';
 	import type { ExtendedQuestion, QuestionType } from './question/Question';
 
 	export let questionType: QuestionType;
@@ -8,8 +8,8 @@
 	export let revealAnswers: boolean;
 	export let completelyRight: boolean;
 	export let gotoNextQuestion: () => void;
-	export let answerdCountData: AnswerdCountData | undefined;
-	export let currentQuestionAnswerdCountData: AnswerdCountData | undefined;
+	export let answeredCountData: AnsweredCountData | undefined;
+	export let currentQuestionAnsweredCountData: AnsweredCountData | undefined;
 </script>
 
 <Button
@@ -19,16 +19,16 @@
 		} else {
 			revealAnswers = true;
 
-			if (answerdCountData) {
+			if (answeredCountData) {
 				if (completelyRight) {
-					answerdCountData.right++;
-					if (currentQuestionAnswerdCountData) {
-						currentQuestionAnswerdCountData.right++;
+					answeredCountData.right++;
+					if (currentQuestionAnsweredCountData) {
+						currentQuestionAnsweredCountData.right++;
 					}
 				} else {
-					answerdCountData.wrong++;
-					if (currentQuestionAnswerdCountData) {
-						currentQuestionAnswerdCountData.wrong++;
+					answeredCountData.wrong++;
+					if (currentQuestionAnsweredCountData) {
+						currentQuestionAnsweredCountData.wrong++;
 					}
 				}
 			}
