@@ -7,7 +7,7 @@
 	export let question: ExtendedQuestion;
 	export let revealAnswers: boolean;
 	export let completelyRight: boolean;
-	export let assignNewQuestion: () => void;
+	export let gotoNextQuestion: () => void;
 	export let answerdCountData: AnswerdCountData | undefined;
 	export let currentQuestionAnswerdCountData: AnswerdCountData | undefined;
 </script>
@@ -15,7 +15,7 @@
 <Button
 	click={() => {
 		if (revealAnswers) {
-			assignNewQuestion();
+			gotoNextQuestion();
 		} else {
 			revealAnswers = true;
 
