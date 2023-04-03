@@ -1,17 +1,17 @@
 <script lang="ts">
-	import type { AnswerdCountData } from '../../../routes/(main)/quiz/[type]/[questionId]/+page.server';
+	import type { AnsweredCountData } from '../../../routes/(main)/quiz/[type]/[questionId]/+page.server';
 
-	export let answerdCountData: AnswerdCountData | undefined;
-	export let currentQuestionAnswerdCountData: AnswerdCountData | undefined;
+	export let answeredCountData: AnsweredCountData | undefined;
+	export let currentQuestionAnsweredCountData: AnsweredCountData | undefined;
 </script>
 
 <div class="flex flex-col gap-2 text-base font-normal text-gray-400">
 	<h3>
-		(zu {currentQuestionAnswerdCountData !== undefined &&
-		currentQuestionAnswerdCountData.right + currentQuestionAnswerdCountData.wrong != 0
+		(zu {currentQuestionAnsweredCountData !== undefined &&
+		currentQuestionAnsweredCountData.right + currentQuestionAnsweredCountData.wrong != 0
 			? (
-					(currentQuestionAnswerdCountData.right /
-						(currentQuestionAnswerdCountData.right + currentQuestionAnswerdCountData.wrong)) *
+					(currentQuestionAnsweredCountData.right /
+						(currentQuestionAnsweredCountData.right + currentQuestionAnsweredCountData.wrong)) *
 					100
 			  )
 					.toFixed(1)
@@ -21,18 +21,18 @@
 
 	<div>
 		Fragen beantwortet:
-		{#if answerdCountData}
-			{answerdCountData.right + answerdCountData.wrong}
+		{#if answeredCountData}
+			{answeredCountData.right + answeredCountData.wrong}
 		{/if}
 		<br />
 		Richtig beantwortet:
-		{#if answerdCountData}
-			{answerdCountData.right}
+		{#if answeredCountData}
+			{answeredCountData.right}
 		{/if}
 		<br />
 		Falsch beantwortet:
-		{#if answerdCountData}
-			{answerdCountData.wrong}
+		{#if answeredCountData}
+			{answeredCountData.wrong}
 		{/if}
 	</div>
 </div>

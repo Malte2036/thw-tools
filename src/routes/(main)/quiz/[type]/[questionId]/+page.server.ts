@@ -6,7 +6,7 @@ import {
 	type QuestionType
 } from '$lib/quiz/question/Question';
 
-export type AnswerdCountData = {
+export type AnsweredCountData = {
 	right: number;
 	wrong: number;
 };
