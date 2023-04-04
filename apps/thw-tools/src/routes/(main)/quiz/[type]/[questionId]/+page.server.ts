@@ -1,7 +1,11 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { databaseQuestionToExtendedQuestion, type QuestionType } from '$lib/quiz/question/Question';
-import { getDatabaseQuestionByNumber, getQuestionCount } from '$lib/Database';
+import {
+	getDatabaseQuestionByNumber,
+	getQuestionCount,
+	type DatabaseQuestion
+} from '$lib/Database';
 
 export type AnsweredCountData = {
 	right: number;
@@ -15,17 +19,24 @@ export const load = (async ({ params, depends }) => {
 
 	const questionNumber = Number.parseInt(params.questionId!);
 
-	const databaseQuestion = await getDatabaseQuestionByNumber(
-		questionType,
-		Number.parseInt(params.questionId!)
-	);
-	const question = databaseQuestionToExtendedQuestion(databaseQuestion);
+	var databaseQuestion: DatabaseQuestion;
 
-	if (question === undefined) {
+	try {
+		databaseQuestion = await getDatabaseQuestionByNumber(
+			questionType,
+			Number.parseInt(params.questionId!)
+		);
+	} catch (err) {
+		const message = `Id "${params.questionId}" for quiz type "${questionType}" not found!`;
+		console.error(message);
+		console.error(err);
+
 		throw error(404, {
-			message: `Id "${params.questionId}" for quiz type "${questionType}" not found!`
+			message
 		});
 	}
+
+	const question = databaseQuestionToExtendedQuestion(databaseQuestion);
 
 	const questionCount = await getQuestionCount(questionType);
 
