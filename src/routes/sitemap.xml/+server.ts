@@ -15,12 +15,20 @@ export async function GET() {
             <priority>1.00</priority>
         </url>
         <url>
-            <loc>https://thw-tools.de/quiz/agt</loc>
+            <loc>https://thw-tools.de/quiz/agt/</loc>
             <priority>0.80</priority>
         </url>
         <url>
-            <loc>https://thw-tools.de/quiz/cbrn</loc>
+            <loc>https://thw-tools.de/quiz/agt/listing/</loc>
+            <priority>0.50</priority>
+        </url>
+        <url>
+            <loc>https://thw-tools.de/quiz/cbrn/</loc>
             <priority>0.80</priority>
+        </url>
+        <url>
+            <loc>https://thw-tools.de/quiz/cbrn/listing/</loc>
+            <priority>0.50</priority>
         </url>
       </urlset>`.trim(),
 		{
