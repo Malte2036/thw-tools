@@ -3,7 +3,6 @@ import type { QuestionType } from '$lib/quiz/question/Question';
 import type { PageServerLoad } from './$types';
 
 export const prerender = true;
-export const trailingSlash = 'never';
 
 export const load = (async ({}) => {
 	const questionTypes: QuestionType[] = ['agt', 'cbrn'];

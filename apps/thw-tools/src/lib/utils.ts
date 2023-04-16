@@ -8,6 +8,7 @@ export const shuffle = (array: any[]) => {
 	return array;
 };
 
+// range: [0; max[
 export function randomInt(max: number): number {
 	return Math.floor(Math.random() * max);
 }
