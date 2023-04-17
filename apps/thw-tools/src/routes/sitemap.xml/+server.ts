@@ -1,4 +1,25 @@
+import { getAllDatabaseQuestions } from '$lib/Database';
+import type { QuestionType } from '$lib/quiz/question/Question';
+
 export async function GET() {
+	const types: QuestionType[] = ['agt', 'cbrn'];
+	const singleQuestionLinks = await Promise.all(
+		types.map(async (t) => {
+			const questions = await getAllDatabaseQuestions(t);
+			return questions
+				.sort((a, b) => a.number - b.number)
+				.map(
+					(q) =>
+						`
+                    <url>
+                        <loc>https://thw-tools.de/quiz/${t}/${q.number}/</loc>
+                        <priority>0.50</priority>
+                    </url>`
+				)
+				.join('');
+		})
+	);
+
 	return new Response(
 		`
       <?xml version="1.0" encoding="UTF-8" ?>
@@ -20,7 +41,7 @@ export async function GET() {
         </url>
         <url>
             <loc>https://thw-tools.de/quiz/agt/listing/</loc>
-            <priority>0.50</priority>
+            <priority>0.25</priority>
         </url>
         <url>
             <loc>https://thw-tools.de/quiz/cbrn/</loc>
@@ -28,8 +49,9 @@ export async function GET() {
         </url>
         <url>
             <loc>https://thw-tools.de/quiz/cbrn/listing/</loc>
-            <priority>0.50</priority>
+            <priority>0.25</priority>
         </url>
+        ${singleQuestionLinks.join('')}
       </urlset>`.trim(),
 		{
 			headers: {
