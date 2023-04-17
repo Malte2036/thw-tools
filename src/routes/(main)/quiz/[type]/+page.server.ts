@@ -9,7 +9,7 @@ export const load = (async ({ params }) => {
 
 	const questionNumber: number = 1;
 
-	const url = `/quiz/${questionType}/${questionNumber}`;
+	const url = `/quiz/${questionType}/${questionNumber}/`;
 
 	throw redirect(307, url);
 }) satisfies PageServerLoad;
