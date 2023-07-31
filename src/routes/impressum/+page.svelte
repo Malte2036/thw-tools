@@ -41,18 +41,24 @@
 		<span>
 			Der Quellcode der Webseiten <a href="https://thw-tools.de" target="_blank" rel="noreferrer"
 				>thw-tools.de</a
-			>
-			und
+			>,
 			<a href="https://finnentest.thw-tools.de" target="_blank" rel="noreferrer"
 				>finnentest.thw-tools.de</a
+			>
+			und
+			<a href="https://elektro.thw-tools.de" target="_blank" rel="noreferrer"
+				>elektro.thw-tools.de</a
 			>
 			ist auf GitHub unter den Links
 			<a href="https://github.com/Malte2036/thw-tools" target="_blank" rel="noreferrer"
 				>https://github.com/Malte2036/thw-tools</a
-			>
-			und
+			>,
 			<a href="https://github.com/Malte2036/thw-finnentest" target="_blank" rel="noreferrer"
 				>https://github.com/Malte2036/thw-finnentest</a
+			>
+			und
+			<a href="https://github.com/Malte2036/thw-elektro" target="_blank" rel="noreferrer"
+				>https://github.com/Malte2036/thw-elektro</a
 			> einsehbar.</span
 		>
 		<span
