@@ -9,6 +9,7 @@
 	import type { QuestionType } from '$lib/quiz/question/Question';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import { randomInt } from '$lib/utils';
+	import BoltIcon from '$lib/icons/BoltIcon.svelte';
 
 	const description =
 		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem, ein AGT-Quiz, CBRN-Quiz und eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger.';
@@ -65,6 +66,12 @@
 					<HearthPulseIcon />
 				</div>
 				<div>Finnentest</div>
+			</LinkButton>
+			<LinkButton url="https://elektro.thw-tools.de" blank>
+				<div class="w-6">
+					<BoltIcon />
+				</div>
+				<div>Elektro Spannungsfall</div>
 			</LinkButton>
 		</div>
 	</div>
