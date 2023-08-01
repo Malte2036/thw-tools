@@ -36,7 +36,8 @@
 		>
 		<span
 			>Für Fragen und Hinweise können Sie mich (Malte Sehmer) über die E-Mail-Adresse
-			<a href="mailto:webmaster@thw-tools.de">webmaster@thw-tools.de</a> erreichen.</span
+			<a href="mailto:webmaster@thw-tools.de">webmaster@thw-tools.de</a> oder über
+			<a href="https://app.thw-messenger.de/thw/app/" target="_blank">Hermine</a> (Malte Sehmer) erreichen</span
 		>
 		<span>
 			Der Quellcode der Webseiten <a href="https://thw-tools.de" target="_blank" rel="noreferrer"
