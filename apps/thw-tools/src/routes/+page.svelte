@@ -12,7 +12,7 @@
 	import BoltIcon from '$lib/icons/BoltIcon.svelte';
 
 	const description =
-		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem, ein AGT-Quiz, CBRN-Quiz und eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger.';
+		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem, ein AGT-Quiz, CBRN-Quiz, eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger und eine interaktive Anwendung zur Berechnung des Elektro Spannungsfalls.';
 
 	export let data: PageData;
 
