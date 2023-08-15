@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
-	import { inject } from '@vercel/analytics';
-	inject({ mode: dev ? 'development' : 'production' });
+	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
 
 	// setup service worker for pwa support
 	import { onMount } from 'svelte';
@@ -36,6 +35,15 @@
 
 <svelte:head>
 	{@html webManifest}
+
+	{#if !dev}
+		<script
+			async
+			defer
+			data-website-id={PUBLIC_UMAMI_WEBSITEID}
+			src={PUBLIC_UMAMI_ENDPOINT}
+		></script>
+	{/if}
 </svelte:head>
 
 {#if ReloadPrompt}
@@ -52,6 +60,12 @@
 	<div class="flex flex-row justify-center gap-2 mb-3">
 		<div>©2023 Malte Sehmer</div>
 		<div class="text-gray-400">|</div>
-		<a href={$page.route.id === '/impressum' ? '/' : '/impressum'} class="underline">Impressum</a>
+		<a
+			data-umami-event={$page.route.id === '/impressum'
+				? 'Open Impressum button'
+				: 'Close Impressum button'}
+			href={$page.route.id === '/impressum' ? '/' : '/impressum'}
+			class="underline">Impressum</a
+		>
 	</div>
 </div>
