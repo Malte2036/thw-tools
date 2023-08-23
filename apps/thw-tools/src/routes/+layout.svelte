@@ -25,6 +25,8 @@
 			return 'Atemschutz-Quiz';
 		} else if (path.startsWith('/quiz/cbrn')) {
 			return 'CBRN-Quiz';
+		} else if (path.startsWith('/cbrn/protective-suite')) {
+			return 'CBRN-Schutzanzug';
 		} else if (path === '/') {
 			return undefined;
 		} else {
