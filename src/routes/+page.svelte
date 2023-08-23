@@ -10,6 +10,7 @@
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import { randomInt } from '$lib/utils';
 	import BoltIcon from '$lib/icons/BoltIcon.svelte';
+	import VestIcon from '$lib/icons/VestIcon.svelte';
 
 	const description =
 		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem, ein AGT-Quiz, CBRN-Quiz, eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger und eine interaktive Anwendung zur Berechnung des Elektro Spannungsfalls.';
@@ -60,6 +61,14 @@
 					<FlaskVialIcon />
 				</div>
 				<div>CBRN-Quiz</div>
+			</LinkButton><LinkButton
+				url={`/cbrn/protective-suite`}
+				dataUmamiEvent={'Open CBRN Protective Suite'}
+			>
+				<div class="w-6">
+					<VestIcon />
+				</div>
+				<div>CBRN-Schutzanzug</div>
 			</LinkButton>
 			<LinkButton url="https://finnentest.thw-tools.de" blank dataUmamiEvent={'Open Finnentest'}>
 				<div class="w-6">
