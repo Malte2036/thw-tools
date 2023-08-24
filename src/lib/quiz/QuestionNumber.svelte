@@ -18,12 +18,12 @@
 	}
 </script>
 
-<h3 class="flex flex-row justify-center align-middle gap-1 text-gray-400 font-bold">
+<h3 class="flex flex-row justify-center align-middle gap-1 text-gray-400 font-bold cursor-pointer">
 	<div on:click={askForQuestionNumber} on:keydown={askForQuestionNumber}>
 		{questionNumber}/{questionCount}
 	</div>
 	<div
-		class="w-4 flex justify-center"
+		class="w-4 flex justify-center cursor-pointer"
 		class:shuffle={$shuffleQuiz}
 		on:click={toggleShuffle}
 		on:keypress={toggleShuffle}
