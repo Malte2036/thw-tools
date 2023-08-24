@@ -1,7 +1,11 @@
 <script lang="ts">
 	import Input from '$lib/Input.svelte';
 	import Table from '$lib/Table.svelte';
-	import { allProtectiveSuites, type ProtectiveSuite } from '$lib/cbrn/ProtectiveSuite';
+	import {
+		allProtectiveSuites,
+		getDescriptionByProtectiveSuite,
+		type ProtectiveSuite
+	} from '$lib/cbrn/ProtectiveSuite';
 	import { allSubstances, type Substance } from '$lib/cbrn/Substance';
 
 	let protectiveSuiteSearchValue = '';
@@ -38,10 +42,13 @@
 
 	{#if filteredProtectiveSuites.length > 0}
 		<Table
-			header={['Anzugnummer']}
-			values={filteredProtectiveSuites.map((value) => [value.name])}
-			onValueClick={(value) =>
-				(selectedProtectiveSuite = allProtectiveSuites.find((v) => v.name === value))}
+			header={['Anzugnummer', 'gasdicht']}
+			values={filteredProtectiveSuites.map((value) => [
+				value.name,
+				value.gasTight !== undefined ? (value.gasTight === true ? 'Ja' : 'Nein') : 'N/A'
+			])}
+			onValueClick={(row) =>
+				(selectedProtectiveSuite = allProtectiveSuites.find((v) => v.name === row[0]))}
 		/>
 
 		{#if !selectedProtectiveSuite}
@@ -55,7 +62,7 @@
 		<div>
 			<h2 class="font-bold text-xl">Schutzanzug {selectedProtectiveSuite.name}</h2>
 			<p class="text-lg">
-				Der Schutzanzug {selectedProtectiveSuite.name} ist ein Schutzanzug der Klasse ?.
+				{getDescriptionByProtectiveSuite(selectedProtectiveSuite)}
 			</p>
 		</div>
 		<Input

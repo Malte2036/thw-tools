@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let header: string[];
 	export let values: string[][];
-	export let onValueClick: ((value: string) => void) | undefined = undefined;
+	export let onValueClick: ((row: string[], index: number) => void) | undefined = undefined;
 
 	let selectedIndex: number | undefined = undefined;
 </script>
@@ -23,7 +23,7 @@
 					<td
 						class="border border-slate-700"
 						class:cursor-pointer={onValueClick}
-						class:hover:bg-thw-900={onValueClick}
+						class:hover:bg-thw-600={onValueClick}
 						class:hover:text-white={onValueClick}
 						class:bg-thw-900={selectedIndex === index}
 						class:text-white={selectedIndex === index}
@@ -31,7 +31,7 @@
 							selectedIndex = index;
 
 							if (onValueClick) {
-								onValueClick(column);
+								onValueClick(row, index);
 							}
 						}}>{column}</td
 					>
