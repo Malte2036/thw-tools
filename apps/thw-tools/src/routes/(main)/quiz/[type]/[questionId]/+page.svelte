@@ -55,7 +55,7 @@
 	function gotoNextQuestion() {
 		let nextQuestionId = data.nextQuestionId;
 
-		if (shuffleQuiz) {
+		if ($shuffleQuiz) {
 			while (nextQuestionId - 1 === data.question.number) {
 				nextQuestionId = randomInt(data.questionCount) + 1;
 			}
