@@ -14,7 +14,7 @@
 	rel={blank ? 'noreffer' : undefined}
 	class="w-full h-full"
 	tabindex="-1"
-	data-umami-event={dataUmamiEvent}
+	on:click={() => (umami ? umami(dataUmamiEvent) : undefined)}
 >
 	<Button {secondary} {disabled}>
 		<slot />
