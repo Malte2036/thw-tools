@@ -3,10 +3,9 @@
 	import Table from '$lib/Table.svelte';
 	import {
 		allProtectiveSuites,
-		getDescriptionByProtectiveSuite,
-		type ProtectiveSuite
+		type ProtectiveSuite,
+		type ProtectiveSuiteData
 	} from '$lib/cbrn/ProtectiveSuite';
-	import { allSubstances, type Substance } from '$lib/cbrn/Substance';
 
 	let protectiveSuiteSearchValue = '';
 	let selectedProtectiveSuite: ProtectiveSuite | undefined = undefined;
@@ -17,20 +16,22 @@
 		}
 	}
 
-	let substanceSearchValue = '';
-
-	let filteredSubstances: Substance[] = [];
-
-	$: filteredSubstances = allSubstances.filter(
-		(value) =>
-			value.name.includes(substanceSearchValue) || value.unNumber.includes(substanceSearchValue)
-	);
-
 	let filteredProtectiveSuites: ProtectiveSuite[] = [];
 
 	$: filteredProtectiveSuites = allProtectiveSuites.filter((value) =>
-		value.name.includes(protectiveSuiteSearchValue)
+		value.name.toLowerCase().includes(protectiveSuiteSearchValue.toLowerCase())
 	);
+
+	let substanceSearchValue = '';
+
+	let filteredSubstances: ProtectiveSuiteData[] = [];
+
+	$: filteredSubstances =
+		selectedProtectiveSuite?.data?.filter(
+			(value) =>
+				value['Chemisches Produkt']?.toLowerCase().includes(substanceSearchValue.toLowerCase()) ||
+				value['CAS-Nr.']?.toLowerCase().includes(substanceSearchValue.toLowerCase())
+		) ?? [];
 </script>
 
 <div class="m-4 flex flex-col gap-2">
@@ -42,11 +43,8 @@
 
 	{#if filteredProtectiveSuites.length > 0}
 		<Table
-			header={['Anzugnummer', 'gasdicht']}
-			values={filteredProtectiveSuites.map((value) => [
-				value.name,
-				value.gasTight !== undefined ? (value.gasTight === true ? 'Ja' : 'Nein') : 'N/A'
-			])}
+			header={['Anzugnummer']}
+			values={filteredProtectiveSuites.map((value) => [value.name])}
 			onValueClick={(row) =>
 				(selectedProtectiveSuite = allProtectiveSuites.find((v) => v.name === row[0]))}
 		/>
@@ -61,28 +59,33 @@
 	{#if selectedProtectiveSuite}
 		<div>
 			<h2 class="font-bold text-xl">Schutzanzug {selectedProtectiveSuite.name}</h2>
-			<p class="text-lg">
-				{getDescriptionByProtectiveSuite(selectedProtectiveSuite)}
-			</p>
 		</div>
 		<Input
 			label="Stoffsuche"
-			placeholder="Name, UN-Nummer"
+			placeholder="Chemisches Produkt, CAS-Nr."
 			bind:inputValue={substanceSearchValue}
 		/>
 
 		{#if filteredSubstances.length > 0}
 			<Table
-				header={['Name', 'UN-Nummer', 'Schutz']}
+				header={[
+					'Chemisches Produkt',
+					'CAS-Nr.',
+					'Permetation ASTM F 109',
+					'Permeation EN ISO 6529 Minuten',
+					'Permeation EN ISO 6529 Klasse'
+				]}
 				values={filteredSubstances.map((value) => [
-					value.name,
-					value.unNumber,
-					selectedProtectiveSuite?.substancesProtection.get(value) ?? 'N/A'
+					value['Chemisches Produkt'] ?? '',
+					value['CAS-Nr.'] ?? '',
+					value['Permetation ASTM F 109']?.toString() ?? '',
+					value['Permeation EN ISO 6529 Minuten']?.toString() ?? '',
+					value['Permeation EN ISO 6529 Klasse']?.toString() ?? ''
 				])}
 			/>
 		{:else}
 			<p class="text-lg">
-				Keine Stoffe mit dem Namen oder der UN-Nummer "{substanceSearchValue}" gefunden.
+				Keine Stoffe mit dem Namen oder der CAS-Nr. "{substanceSearchValue}" gefunden.
 			</p>
 		{/if}
 	{/if}
