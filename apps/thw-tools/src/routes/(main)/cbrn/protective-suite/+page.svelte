@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Input from '$lib/Input.svelte';
 	import Table from '$lib/Table.svelte';
-	import {
-		allProtectiveSuites,
-		type ProtectiveSuite,
-		type ProtectiveSuiteData
-	} from '$lib/cbrn/ProtectiveSuite';
+	import type { ProtectiveSuite, ProtectiveSuiteData } from '$lib/cbrn/ProtectiveSuite';
+
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	let protectiveSuiteSearchValue = '';
 	let selectedProtectiveSuite: ProtectiveSuite | undefined = undefined;
@@ -18,7 +18,7 @@
 
 	let filteredProtectiveSuites: ProtectiveSuite[] = [];
 
-	$: filteredProtectiveSuites = allProtectiveSuites.filter((value) =>
+	$: filteredProtectiveSuites = data.allProtectiveSuites.filter((value) =>
 		value.name.toLowerCase().includes(protectiveSuiteSearchValue.toLowerCase())
 	);
 
@@ -46,7 +46,7 @@
 			header={['Anzugnummer']}
 			values={filteredProtectiveSuites.map((value) => [value.name])}
 			onValueClick={(row) =>
-				(selectedProtectiveSuite = allProtectiveSuites.find((v) => v.name === row[0]))}
+				(selectedProtectiveSuite = data.allProtectiveSuites.find((v) => v.name === row[0]))}
 		/>
 
 		{#if !selectedProtectiveSuite}
