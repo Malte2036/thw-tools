@@ -14,7 +14,7 @@
 	rel={blank ? 'noreffer' : undefined}
 	class="w-full h-full"
 	tabindex="-1"
-	on:click={() => (umami ? umami(dataUmamiEvent) : undefined)}
+	on:click={async () => (umami ? await umami.track(dataUmamiEvent) : undefined)}
 >
 	<Button {secondary} {disabled}>
 		<slot />
