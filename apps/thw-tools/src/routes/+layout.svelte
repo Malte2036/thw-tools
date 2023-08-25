@@ -62,8 +62,8 @@
 		<div class="text-gray-400">|</div>
 		<a
 			data-umami-event={$page.route.id === '/impressum'
-				? 'Open Impressum button'
-				: 'Close Impressum button'}
+				? 'Close Impressum button'
+				: 'Open Impressum button'}
 			href={$page.route.id === '/impressum' ? '/' : '/impressum'}
 			class="underline">Impressum</a
 		>
