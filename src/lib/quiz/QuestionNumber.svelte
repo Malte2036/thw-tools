@@ -23,8 +23,8 @@
 	}
 </script>
 
-<h3 class="flex flex-row justify-center items-center gap-2 text-gray-400 font-bold cursor-pointer">
-	<div on:click={askForQuestionNumber} on:keydown={askForQuestionNumber}>
+<h3 class="flex flex-row justify-center items-center gap-2 text-gray-400 font-bold">
+	<div on:click={askForQuestionNumber} on:keydown={askForQuestionNumber} class="cursor-pointer">
 		{questionNumber}/{questionCount}
 	</div>
 	<Button secondary={!$shuffleQuiz} className="w-min" click={toggleShuffle}>
