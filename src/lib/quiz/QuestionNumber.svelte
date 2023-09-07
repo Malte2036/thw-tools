@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
 	import ShuffleIcon from '$lib/icons/ShuffleIcon.svelte';
+	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 
 	export let questionNumber: number;
@@ -16,6 +17,9 @@
 
 	function toggleShuffle() {
 		shuffleQuiz.set(!$shuffleQuiz);
+		$bannerMessage = $shuffleQuiz
+			? 'Zufällige Reihenfolge für Fragen aktiviert.'
+			: 'Zufällige Reihenfolge für Fragen deaktiviert.';
 	}
 </script>
 
@@ -27,7 +31,7 @@
 		secondary={!$shuffleQuiz}
 		className="w-min"
 		click={toggleShuffle}
-		tooltip="Zufällige Reihenfolge für Fragen"
+		tooltip="Zufällige Reihenfolge für Fragen."
 	>
 		<div class="w-4 flex justify-center cursor-pointer" class:shuffle={!$shuffleQuiz}>
 			<ShuffleIcon />
