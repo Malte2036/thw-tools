@@ -27,12 +27,7 @@
 	<div on:click={askForQuestionNumber} on:keydown={askForQuestionNumber}>
 		{questionNumber}/{questionCount}
 	</div>
-	<Button
-		secondary={!$shuffleQuiz}
-		className="w-min"
-		click={toggleShuffle}
-		tooltip="Zufällige Reihenfolge für Fragen."
-	>
+	<Button secondary={!$shuffleQuiz} className="w-min" click={toggleShuffle}>
 		<div class="w-4 flex justify-center cursor-pointer" class:shuffle={!$shuffleQuiz}>
 			<ShuffleIcon />
 		</div>
