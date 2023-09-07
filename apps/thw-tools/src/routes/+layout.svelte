@@ -55,9 +55,7 @@
 	{#if title !== undefined}
 		<Header {title} />
 	{/if}
-	<div class={`mx-4 ${title == undefined ? 'my-4' : ''}`}>
 		<Banner />
-	</div>
 	<div class="grow">
 		<slot />
 	</div>
