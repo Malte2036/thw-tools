@@ -10,6 +10,9 @@
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import { randomInt } from '$lib/utils';
 	import BoltIcon from '$lib/icons/BoltIcon.svelte';
+	import { onMount } from 'svelte';
+	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
+	import { version } from '$app/environment';
 
 	const description =
 		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem, ein AGT-Quiz, CBRN-Quiz, eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger und eine interaktive Anwendung zur Berechnung des Elektro Spannungsfalls.';
@@ -28,6 +31,30 @@
 		}
 		return randomInt(questionLength) + 1;
 	}
+
+	onMount(() => {
+		const lastVisitBannerVersion = parseInt(
+			window.localStorage.getItem('lastVisitBannerVersion') ?? '0'
+		);
+
+		let currentActiveMessage =
+			'<div>Du hast Ideen für neue Tools, weitere Quizfragen oder Feedback?<br/> Schreib mir gerne über <a href="https://app.thw-messenger.de/thw/app/" target="_blank">Hermine</a> (Malte Sehmer).</div>';
+		const currentActiveMessageVersion = 2;
+
+		if (currentActiveMessageVersion > lastVisitBannerVersion) {
+			if (lastVisitBannerVersion != 0) {
+				$bannerMessage = {
+					message: currentActiveMessage,
+					autoDismiss: {
+						duration: 60 * 1000
+					}
+				};
+				window.localStorage.setItem('lastVisitBannerVersion', String(currentActiveMessageVersion));
+			} else {
+				window.localStorage.setItem('lastVisitBannerVersion', '1');
+			}
+		}
+	});
 </script>
 
 <svelte:head>

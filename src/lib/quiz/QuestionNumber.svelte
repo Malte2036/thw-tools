@@ -21,7 +21,9 @@
 			message: $shuffleQuiz
 				? 'Zufällige Reihenfolge für Fragen aktiviert.'
 				: 'Zufällige Reihenfolge für Fragen deaktiviert.',
-			autoDismiss: true
+			autoDismiss: {
+				duration: 5000
+			}
 		};
 	}
 </script>
