@@ -3,12 +3,15 @@
 	import ShuffleIcon from '$lib/icons/ShuffleIcon.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
+	import { trackEvent } from '$lib/utils';
 
 	export let questionNumber: number;
 	export let questionCount: number;
 	export let gotoQuestionNumber: (newQuestionNumber: number) => void;
 
 	function askForQuestionNumber() {
+		trackEvent('Open Select Question Number');
+
 		const input = prompt('Enter a question number:', String(questionNumber));
 		if (input === null) return;
 
@@ -32,7 +35,12 @@
 	<div on:click={askForQuestionNumber} on:keydown={askForQuestionNumber} class="cursor-pointer">
 		{questionNumber}/{questionCount}
 	</div>
-	<Button secondary={!$shuffleQuiz} className="w-min" click={toggleShuffle}>
+	<Button
+		secondary={!$shuffleQuiz}
+		className="w-min"
+		click={toggleShuffle}
+		dataUmamiEvent="Shuffle Quiz Questions"
+	>
 		<div class="w-4 flex justify-center cursor-pointer" class:shuffle={!$shuffleQuiz}>
 			<ShuffleIcon />
 		</div>

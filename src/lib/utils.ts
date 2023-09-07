@@ -12,3 +12,13 @@ export const shuffle = (array: any[]) => {
 export function randomInt(max: number): number {
 	return Math.floor(Math.random() * max);
 }
+
+export async function trackEvent(dataUmamiEvent: string | undefined) {
+	if (!dataUmamiEvent) return;
+
+	try {
+		await umami.track(dataUmamiEvent);
+	} catch (error) {
+		console.warn(`Failed to track event "${dataUmamiEvent}"`);
+	}
+}
