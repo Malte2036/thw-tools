@@ -16,6 +16,7 @@
 	import '../app.css';
 	import { page } from '$app/stores';
 	import Header from './Header.svelte';
+	import Banner from '$lib/Banner.svelte';
 
 	let title: string | undefined;
 	$: title = getCurrentTitleByPath($page.url.pathname);
@@ -54,6 +55,9 @@
 	{#if title !== undefined}
 		<Header {title} />
 	{/if}
+	<div class={`mx-4 ${title == undefined ? 'my-4' : ''}`}>
+		<Banner />
+	</div>
 	<div class="grow">
 		<slot />
 	</div>
