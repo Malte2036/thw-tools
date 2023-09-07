@@ -19,8 +19,8 @@
 		shuffleQuiz.set(!$shuffleQuiz);
 		$bannerMessage = {
 			message: $shuffleQuiz
-				? 'Zufällige Reihenfolge für Fragen aktiviert.'
-				: 'Zufällige Reihenfolge für Fragen deaktiviert.',
+				? 'Zufällige Reihenfolge des Fragebogens aktiviert.'
+				: 'Zufällige Reihenfolge des Fragebogens deaktiviert.',
 			autoDismiss: {
 				duration: 5000
 			}
