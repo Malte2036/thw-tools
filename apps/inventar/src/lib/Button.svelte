@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { trackEvent } from './utils';
+
 	export let secondary = false;
 	export let disabled = false;
 	export let click: (() => void) | undefined = undefined;
@@ -11,7 +13,7 @@
 	<button
 		on:click={async () => {
 			if (click) click();
-			if (umami) await umami.track(dataUmamiEvent);
+			trackEvent(dataUmamiEvent);
 		}}
 		class={`flex flex-row items-center justify-center gap-2 bg-thw text-white border-thw hover:bg-thw-900 focus:bg-thw-900 w-full p-2 rounded-lg text-xl font-bold border transition-colors duration-75 ${className}`}
 		class:secondary
