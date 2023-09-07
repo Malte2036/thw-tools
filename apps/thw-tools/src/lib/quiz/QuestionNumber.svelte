@@ -17,9 +17,12 @@
 
 	function toggleShuffle() {
 		shuffleQuiz.set(!$shuffleQuiz);
-		$bannerMessage = $shuffleQuiz
-			? 'Zufällige Reihenfolge für Fragen aktiviert.'
-			: 'Zufällige Reihenfolge für Fragen deaktiviert.';
+		$bannerMessage = {
+			message: $shuffleQuiz
+				? 'Zufällige Reihenfolge für Fragen aktiviert.'
+				: 'Zufällige Reihenfolge für Fragen deaktiviert.',
+			autoDismiss: true
+		};
 	}
 </script>
 

@@ -1,3 +1,8 @@
 import { writable } from 'svelte/store';
 
-export const bannerMessage = writable('');
+export type BannerMessage = {
+	message: string;
+	autoDismiss: boolean;
+};
+
+export const bannerMessage = writable<BannerMessage | undefined>();
