@@ -40,7 +40,7 @@ export const load = (async ({ params, depends }) => {
 
 	const questionCount = await getQuestionCount(questionType);
 
-	const nextQuestionId = (questionNumber + 1) % questionCount;
+	const nextQuestionId = (questionNumber % questionCount) + 1;
 
 	return {
 		question,
