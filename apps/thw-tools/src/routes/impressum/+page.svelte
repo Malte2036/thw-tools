@@ -16,6 +16,10 @@
 			auf der Website verwendet.
 		</span>
 		<span>
+			Ich übernehme keine Haftung für die Richtigkeit der Inhalte dieser Website. Die Inhalte werden
+			nach bestem Wissen und Gewissen erstellt. Für Hinweise auf Fehler bin ich dankbar.
+		</span>
+		<span>
 			Die Fragen des <span class="italic">AGT-Quiz</span> stammen von der
 			<a
 				href="https://www.nlbk.niedersachsen.de/startseite/service/download/ausbildung_nach_fwdv_2/kreisausbildung/lehrgang_atemschutzgeratetrager/downloadbereich-lehrgang-atemschutzgeraetetraeger-86208.html"
