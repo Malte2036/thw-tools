@@ -1,18 +1,35 @@
 <script lang="ts">
+	import { trackEvent } from './utils';
+
 	export let secondary = false;
 	export let disabled = false;
 	export let click: (() => void) | undefined = undefined;
+	export let dataUmamiEvent: string | undefined = undefined;
+	export let className: string = '';
+	export let tooltip: string | undefined = undefined;
 </script>
 
-<button
-	on:click={click}
-	class="flex flex-row items-center justify-center gap-2 bg-thw text-white border-thw hover:bg-thw-900 focus:bg-thw-900 w-full p-2 rounded-lg text-xl font-bold border transition-colors duration-75"
-	class:secondary
-	class:disabled
-	{disabled}
->
-	<slot />
-</button>
+<div class="group relative">
+	<button
+		on:click={async () => {
+			if (click) click();
+			trackEvent(dataUmamiEvent);
+		}}
+		class={`flex flex-row items-center justify-center gap-2 bg-thw text-white border-thw hover:bg-thw-900 focus:bg-thw-900 w-full p-2 rounded-lg text-xl font-bold border transition-colors duration-75 ${className}`}
+		class:secondary
+		class:disabled
+		{disabled}
+	>
+		<slot />
+	</button>
+	{#if tooltip}
+		<span
+			class="pointer-events-none absolute bottom-auto left-1/2 transform -translate-x-1/2 w-max opacity-0 transition-opacity group-hover:opacity-100 bg-thw-500 text-white rounded-lg p-1 mt-1"
+		>
+			{tooltip}
+		</span>
+	{/if}
+</div>
 
 <style lang="scss">
 	button {
