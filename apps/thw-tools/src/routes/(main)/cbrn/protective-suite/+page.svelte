@@ -35,6 +35,12 @@
 </script>
 
 <div class="m-4 flex flex-col gap-8">
+	<div class="text-red-500">
+		<p class="font-bold">Disclamer:</p>
+		<p class="italic">Keinerlei Gewähr auf Richtigkeit der angegebenen Daten.</p>
+		<p class="italic">Diese Unterseite ist zurzeit noch unter aktiver Entwicklung!</p>
+	</div>
+
 	<div class="flex flex-col gap-2">
 		<Input
 			label="Anzugsuche"
@@ -90,10 +96,5 @@
 				</p>
 			{/if}
 		{/if}
-	</div>
-
-	<div class="text-red-500">
-		<p class="text-red-500 font-bold">Disclamer:</p>
-		<p class="italic">Keinerlei Gewähr auf Richtigkeit der angegebenen Daten.</p>
 	</div>
 </div>
