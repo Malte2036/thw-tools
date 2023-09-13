@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from './Button.svelte';
+	import { trackEvent } from './utils';
 
 	export let url: string;
 	export let blank = false;
@@ -14,7 +15,7 @@
 	rel={blank ? 'noreffer' : undefined}
 	class="w-full h-full"
 	tabindex="-1"
-	data-umami-event={dataUmamiEvent}
+	on:click={() => trackEvent(dataUmamiEvent)}
 >
 	<Button {secondary} {disabled}>
 		<slot />
