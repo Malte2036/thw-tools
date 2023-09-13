@@ -42,6 +42,7 @@
 			});
 		}
 	}}
+	dataUmamiEvent={`${questionType} quiz question ${revealAnswers ? 'next question' : 'answered'}`}
 	disabled={!revealAnswers && question.checkedIndizies.length == 0}
 	>{revealAnswers
 		? `${completelyRight ? 'Richtig' : 'Falsch'} - Nächste Frage`
