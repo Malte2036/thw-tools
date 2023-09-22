@@ -8,6 +8,9 @@
     "build": "vite build",
     "lint": "eslint src --fix"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "devDependencies": {
     "autoprefixer": "^10.4.12",
     "postcss": "^8.4.18",
