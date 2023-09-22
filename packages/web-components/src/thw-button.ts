@@ -30,6 +30,9 @@ export class THWButton extends LitElement {
 
         width: 100%;
 
+        font-size: 1rem;
+        line-height: 1.5rem;
+
         &.big {
           font-size: 1.25rem;
           line-height: 1.75rem;
