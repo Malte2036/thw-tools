@@ -1,4 +1,6 @@
 <script lang="ts">
+	import "thw-tools-components/src/thw-button";
+
 	import { dev } from '$app/environment';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
 
