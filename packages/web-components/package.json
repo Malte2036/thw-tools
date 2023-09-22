@@ -1,26 +1,21 @@
 {
   "name": "@malte2036/thw-tools-components",
   "version": "0.0.2",
-  "type": "module",
-  "main": "thw-button.js",
-  "module": "thw-button.js",
-  "types": "thw-button.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/malte2036/thw-tools-components.git"
   },
+  "type": "module",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "clean": "rimraf thw-button.{d.ts,d.ts.map,js,js.map} index.{d.ts,d.ts.map,js,js.map} colors.{d.ts,d.ts.map,js,js.map}",
-    "lint": "eslint src --fix"
-  },
-  "devDependencies": {
-    "lit": "^2.4.0",
-    "rimraf": "^5.0.1",
-    "typescript": "^4.8.4"
+    "build": "rm -rf lib && tsc"
   },
   "dependencies": {
-    "@types/node": "^20.6.3"
+    "lit": "^2.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4"
   }
 }

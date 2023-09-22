@@ -7,15 +7,4 @@ dist/
 .history
 *.log
 
-thw-button.d.ts
-thw-button.d.ts.map
-thw-button.js
-thw-button.js.map
-index.d.ts
-index.d.ts.map
-index.js
-index.js.map
-colors.d.ts
-colors.d.ts.map
-colors.js
-colors.js.map
+lib
