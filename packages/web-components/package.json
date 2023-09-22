@@ -1,20 +1,32 @@
 {
   "name": "thw-tools-components",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
+  "main": "thw-button.js",
+  "module": "thw-button.js",
+  "types": "thw-button.d.ts",
   "scripts": {
-    "start": "vite dev --host",
-    "dev": "vite dev --host",
-    "build": "vite build",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf thw-button.{d.ts,d.ts.map,js,js.map} index.{d.ts,d.ts.map,js,js.map} colors.{d.ts,d.ts.map,js,js.map}",
     "lint": "eslint src --fix"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.1",
+    "@rollup/plugin-terser": "^0.4.3",
+    "@web/rollup-plugin-copy": "^0.4.0",
+    "@web/rollup-plugin-html": "^2.0.1",
     "lit": "^2.4.0",
-    "typescript": "^4.8.4",
-    "vite": "^3.1.8"
+    "rimraf": "^5.0.1",
+    "rollup": "^2.79.1",
+    "rollup-plugin-minify-html-literals": "^1.2.6",
+    "rollup-plugin-summary": "^2.0.0",
+    "typescript": "^4.8.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/node": "^20.6.3"
+  }
 }

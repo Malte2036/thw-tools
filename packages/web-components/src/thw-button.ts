@@ -9,7 +9,7 @@ export class THWButton extends LitElement {
 
   @property({ type: String }) size = "normal";
 
-  static styles = [
+  static override styles = [
     css`
       button {
         background-color: ${unsafeCSS(thwColors[1000])};
@@ -66,7 +66,7 @@ export class THWButton extends LitElement {
     `,
   ];
 
-  render() {
+  override render() {
     return html`
       <button ?disabled=${this.disabled} class=${`${this.type} ${this.size}`}>
         <slot></slot>
