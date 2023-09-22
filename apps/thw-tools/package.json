@@ -35,6 +35,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"node-appwrite": "^9.0.0"
+		"lit": "^2.8.0",
+		"node-appwrite": "^9.0.0",
+		"thw-tools-components": "file:../thw-tools-components"
 	}
 }
