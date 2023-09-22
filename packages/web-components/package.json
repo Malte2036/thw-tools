@@ -1,18 +1,19 @@
 {
-  "name": "thw-tools-components",
-  "version": "1.0.0",
+  "name": "@malte2036/thw-tools-components",
+  "version": "0.0.1",
   "type": "module",
   "main": "thw-button.js",
   "module": "thw-button.js",
   "types": "thw-button.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/malte2036/thw-tools-components.git"
+  },
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
     "clean": "rimraf thw-button.{d.ts,d.ts.map,js,js.map} index.{d.ts,d.ts.map,js,js.map} colors.{d.ts,d.ts.map,js,js.map}",
     "lint": "eslint src --fix"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
     "lit": "^2.4.0",

@@ -1,25 +1,20 @@
-name: Publish
+name: Publish package to GitHub Packages
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
         with:
-          node-version: 16
-      - run: npm install
-      - run: npm run build
-      - run: |
-          echo @malte2036:https://npm.pkg.github.com/ > dist/.npmrc
-          echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> dist/.npmrc
+          node-version: "16.x"
+          registry-url: "https://npm.pkg.github.com"
+      - run: npm ci
       - run: npm publish
-        working-directory: ./dist
         env:
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
