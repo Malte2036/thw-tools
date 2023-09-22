@@ -1,6 +1,6 @@
 {
   "name": "@malte2036/thw-tools-components",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "thw-button.js",
   "module": "thw-button.js",
