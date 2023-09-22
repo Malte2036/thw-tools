@@ -1,5 +1,5 @@
 <script lang="ts">
-	import "thw-tools-components/src/thw-button";
+	import 'thw-tools-components/src/index';
 
 	import { dev } from '$app/environment';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
@@ -59,7 +59,7 @@
 	{#if title !== undefined}
 		<Header {title} />
 	{/if}
-		<Banner />
+	<Banner />
 	<div class="grow">
 		<slot />
 	</div>
