@@ -10,12 +10,15 @@
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rm -rf lib && tsc"
+    "start": "web-dev-server",
+    "build": "rm -rf lib && tsc",
+    "build:watch": "rm -rf lib && tsc --watch"
   },
   "dependencies": {
     "lit": "^2.4.0"
   },
   "devDependencies": {
+    "@web/dev-server": "^0.3.1",
     "typescript": "^4.8.4"
   }
 }
