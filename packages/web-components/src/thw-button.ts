@@ -1,20 +1,55 @@
-import { html } from "lit";
+import { LitElement, html, css, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { TailwindElement } from "./shared/tailwind.element";
+import { thwColors, grayColors } from "./colors";
 
 @customElement("thw-button")
-export class THWButton extends TailwindElement("") {
+export class THWButton extends LitElement {
   @property({ type: String }) type = "primary";
   @property({ type: Boolean }) disabled = false;
 
+  static styles = [
+    css`
+      button {
+        background-color: ${unsafeCSS(thwColors[1000])};
+        color: white;
+
+        border-color: ${unsafeCSS(thwColors[1000])};
+
+        border-radius: 0.25rem;
+        border-width: 1px;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+
+        &:hover {
+          background-color: ${unsafeCSS(thwColors[800])};
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+        }
+
+        &.secondary {
+          background-color: white;
+          color: ${unsafeCSS(thwColors[1000])};
+
+          border-color: ${unsafeCSS(thwColors[1000])};
+
+          &:hover {
+            background-color: ${unsafeCSS(thwColors[100])};
+          }
+
+          &:disabled {
+            color: ${unsafeCSS(grayColors[400])};
+            border-color: ${unsafeCSS(grayColors[400])};
+          }
+        }
+      }
+    `,
+  ];
+
   render() {
     return html`
-      <button
-        class="${this.type === "primary"
-          ? "bg-thw text-white hover:bg-thw-800"
-          : "border-2 border-thw bg-white hover:bg-thw-100 text-thw disabled:text-gray-400 disabled:border-gray-400"} rounded-md px-2 py-1"
-        ?disabled=${this.disabled}
-      >
+      <button ?disabled=${this.disabled} class=${this.type}>
         <slot></slot>
       </button>
     `;
