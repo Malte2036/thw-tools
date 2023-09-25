@@ -77,3 +77,9 @@ export class THWButton extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "thw-button": THWButton;
+  }
+}
