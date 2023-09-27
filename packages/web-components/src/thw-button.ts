@@ -2,6 +2,10 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { thwColors, grayColors } from "./colors";
 
+/**
+ * A button component.
+ * @slot - The content of the button.
+ */
 @customElement("thw-button")
 export class THWButton extends LitElement {
   /**
