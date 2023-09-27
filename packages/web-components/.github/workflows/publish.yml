@@ -17,6 +17,7 @@ jobs:
           node-version: "16.x"
           registry-url: "https://npm.pkg.github.com"
       - run: npm ci
+      - run: npx web-component-analyzer analyze src --format vscode --outFile vscode-html-custom-data.json
       - run: npm run build
       - run: npm publish
         env:
