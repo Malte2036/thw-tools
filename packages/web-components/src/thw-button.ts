@@ -4,9 +4,25 @@ import { thwColors, grayColors } from "./colors";
 
 @customElement("thw-button")
 export class THWButton extends LitElement {
+  /**
+   * The type of the button.
+   * @type {"primary" | "secondary"}
+   * @default "primary"
+   */
   @property({ type: String }) type = "primary";
+
+  /**
+   * Whether the button is disabled.
+   * @type {boolean}
+   * @default false
+   */
   @property({ type: Boolean }) disabled = false;
 
+  /**
+   * The size of the button.
+   * @type {"normal" | "big"}
+   * @default "normal"
+   */
   @property({ type: String }) size = "normal";
 
   static override styles = [
