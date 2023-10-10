@@ -8,7 +8,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-	class="text-xl flex flex-row p-2 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors hover:cursor-pointer"
+	class="text-xl flex flex-row items-center p-2 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors hover:cursor-pointer"
 	class:checked
 	class:revealAnswerCorrect={revealAnswers && correct}
 	class:revealAnswerWrong={revealAnswers && checked != correct}
