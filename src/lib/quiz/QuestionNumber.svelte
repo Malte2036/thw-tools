@@ -41,7 +41,7 @@
 		click={toggleShuffle}
 		dataUmamiEvent="Shuffle Quiz Questions"
 	>
-		<div class="w-4 flex justify-center cursor-pointer" class:shuffle={!$shuffleQuiz}>
+		<div class="w-4 h-4 flex justify-center cursor-pointer" class:shuffle={!$shuffleQuiz}>
 			<ShuffleIcon />
 		</div>
 	</Button>
