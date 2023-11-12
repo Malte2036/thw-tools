@@ -22,18 +22,17 @@
 	<div>
 		Fragen beantwortet:
 		{#if answeredCountData}
-			{answeredCountData.right +
-				answeredCountData.wrong}{#if answeredCountData.right === 5000 || answeredCountData.wrong === 5000}+{/if}
+			{answeredCountData.right + answeredCountData.wrong}
 		{/if}
 		<br />
 		Richtig beantwortet:
 		{#if answeredCountData}
-			{answeredCountData.right}{#if answeredCountData.right === 5000}+{/if}
+			{answeredCountData.right}
 		{/if}
 		<br />
 		Falsch beantwortet:
 		{#if answeredCountData}
-			{answeredCountData.wrong}{#if answeredCountData.wrong === 5000}+{/if}
+			{answeredCountData.wrong}
 		{/if}
 	</div>
 </div>
