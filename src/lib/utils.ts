@@ -22,3 +22,5 @@ export async function trackEvent(dataUmamiEvent: string | undefined) {
 		console.warn(`Failed to track event "${dataUmamiEvent}"`);
 	}
 }
+
+export const sumArray = (array: number[]) => array.reduce((a, b) => a + b, 0);
