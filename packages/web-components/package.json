@@ -1,13 +1,13 @@
 {
   "name": "@malte2036/thw-tools-components",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/malte2036/thw-tools-components.git"
   },
   "type": "module",
-  "main": "lib/index.ts",
-  "module": "lib/index.ts",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
   "types": "lib/index.d.ts",
   "scripts": {
     "start": "web-dev-server",
