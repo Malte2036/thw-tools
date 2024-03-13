@@ -36,5 +36,30 @@
         </div>
       </div>
     </div>
+    <div>
+      <h1>THW Dialog</h1>
+      <thw-button id="toggle-dialog-button">Toggle Dialog</thw-button>
+      <thw-dialog id="dialog" header="Test Dialog">
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+          voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem qu
+        </p>
+      </thw-dialog>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get the dialog element
+        const dialog = document.getElementById("dialog");
+
+        // Get the toggle button element
+        const toggleButton = document.getElementById("toggle-dialog-button");
+
+        // Add a click event listener to the toggle button
+        toggleButton.addEventListener("click", function () {
+          // Toggle the visibility of the dialog by adding or removing the 'hidden' attribute
+          dialog.open = !dialog.open;
+        });
+      });
+    </script>
   </body>
 </html>
