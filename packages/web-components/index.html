@@ -10,11 +10,30 @@
   <body>
     <div>
       <h1>THW Button</h1>
-      <div
-        style="display: flex; flex-direction: column; gap: 1rem; width: 20rem"
-      >
-        <thw-button>Primary Button</thw-button>
-        <thw-button type="secondary">Secondary Button</thw-button>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem">
+        <div>
+          <h2>style:</h2>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 1rem;
+              width: 20rem;
+            "
+          >
+            <thw-button>Primary Button</thw-button>
+            <thw-button type="secondary">Secondary Button</thw-button>
+          </div>
+        </div>
+        <div>
+          <h2>size</h2>
+          <div style="display: flex; flex-direction: column; gap: 1rem">
+            <thw-button size="small">Small Button</thw-button>
+            <thw-button size="medium">Medium Button</thw-button>
+            <thw-button size="large">Large Button</thw-button>
+          </div>
+        </div>
       </div>
     </div>
   </body>

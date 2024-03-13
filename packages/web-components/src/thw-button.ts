@@ -7,7 +7,7 @@ import { thwColors, grayColors } from "./colors";
  * @slot - The content of the button.
  * @param {string} type - The type of the button. Can be "primary" or "secondary".
  * @param {boolean} disabled - Whether the button is disabled.
- * @param {string} size - The size of the button. Can be "normal" or "big".
+ * @param {string} size - The size of the button. Can be "small", "medium", or "large".
  */
 @customElement("thw-button")
 export class THWButton extends LitElement {
@@ -27,10 +27,10 @@ export class THWButton extends LitElement {
 
   /**
    * The size of the button.
-   * @type {"normal" | "big"}
-   * @default "normal"
+   * @type {"small"| "medium" | "large"}
+   * @default "medium"
    */
-  @property({ type: String }) size = "normal";
+  @property({ type: String }) size = "medium";
 
   static override styles = [
     css`
@@ -56,7 +56,13 @@ export class THWButton extends LitElement {
         font-size: 1rem;
         line-height: 1.5rem;
 
-        &.big {
+        &.small {
+          font-size: 0.75rem;
+          line-height: 1.25rem;
+          padding: 0.25rem 0.5rem;
+        }
+
+        &.large {
           font-size: 1.25rem;
           line-height: 1.75rem;
         }
