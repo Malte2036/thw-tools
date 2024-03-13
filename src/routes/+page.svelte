@@ -75,18 +75,18 @@
 		<h2 class="w-fit text-2xl max-md:text-lg text-center">
 			{description}
 		</h2>
-		<div class="w-full flex flex-col items-center gap-4 max-w-sm max-md:max-w-[16rem]">
+		<div class="w-full flex flex-col items-center gap-4 max-w-sm max-md:max-w-[18rem]">
 			<LinkButton url={`/quiz/agt/${randomQuestionId('agt')}`} dataUmamiEvent={'Open AGT Quiz'}>
 				<div class="w-6">
 					<ChartSimpleIcon />
 				</div>
-				<div>AGT-Quiz</div>
+				<div class="font-bold">AGT-Quiz</div>
 			</LinkButton>
 			<LinkButton url={`/quiz/cbrn/${randomQuestionId('cbrn')}`} dataUmamiEvent={'Open CBRN Quiz'}>
 				<div class="w-6">
 					<FlaskVialIcon />
 				</div>
-				<div>CBRN-Quiz</div>
+				<div class="font-bold">CBRN-Quiz</div>
 			</LinkButton><LinkButton
 				url={`/cbrn/protective-suite`}
 				dataUmamiEvent={'Open CBRN Protective Suite'}
@@ -94,13 +94,13 @@
 				<div class="w-6">
 					<VestIcon />
 				</div>
-				<div>CBRN-Schutzanzug</div>
+				<div class="font-bold">CBRN-Schutzanzug</div>
 			</LinkButton>
 			<LinkButton url="https://finnentest.thw-tools.de" blank dataUmamiEvent={'Open Finnentest'}>
 				<div class="w-6">
 					<HearthPulseIcon />
 				</div>
-				<div>Finnentest</div>
+				<div class="font-bold">Finnentest</div>
 			</LinkButton>
 			<LinkButton
 				url="https://elektro.thw-tools.de"
@@ -110,7 +110,7 @@
 				<div class="w-6">
 					<BoltIcon />
 				</div>
-				<div>Elektro Spannungsfall</div>
+				<div class="font-bold">Elektro Spannungsfall</div>
 			</LinkButton>
 		</div>
 	</div>

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import 'thw-tools-components/src/index';
+	import '@malte2036/thw-tools-components';
+	
 
 	import { dev } from '$app/environment';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
