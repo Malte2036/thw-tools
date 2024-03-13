@@ -111,7 +111,8 @@ export async function getQuestionCount(questionType: QuestionType): Promise<numb
 export async function getCorrectCount(
 	quiz: QuestionType,
 	correct: boolean,
-	questionNumber?: number
+	questionNumber?: number,
+	after?: Date
 ): Promise<number> {
 	const collectionId = getCollectionIdByQuiz(quiz);
 
@@ -127,6 +128,10 @@ export async function getCorrectCount(
 
 	if (questionNumber) {
 		queries.push(`"equal(\\"questionId\\", [${questionNumber}])"`);
+	}
+
+	if (after) {
+		queries.push(`"greaterThan(\\"$createdAt\\", [${after.toISOString()}}])"`);
 	}
 
 	// limited to 5000 docs
