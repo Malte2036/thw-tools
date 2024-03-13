@@ -5,6 +5,9 @@ import { thwColors, grayColors } from "./colors";
 /**
  * A button component.
  * @slot - The content of the button.
+ * @param {string} type - The type of the button. Can be "primary" or "secondary".
+ * @param {boolean} disabled - Whether the button is disabled.
+ * @param {string} size - The size of the button. Can be "normal" or "big".
  */
 @customElement("thw-button")
 export class THWButton extends LitElement {
