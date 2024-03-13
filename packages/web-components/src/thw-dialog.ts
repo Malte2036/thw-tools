@@ -16,7 +16,7 @@ export class THWDialog extends LitElement {
    */
   @property({ type: String }) title = "Dialog title";
 
-  private open = false;
+  private open = true;
 
   static override styles = [
     css`
