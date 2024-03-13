@@ -7,7 +7,6 @@ import { thwColors } from "./colors";
  * @slot content - The content of the dialog.
  * @slot footer - The footer of the dialog.
  * @param {string} title - The title of the dialog.
- * @param {boolean} open - Whether the dialog is open.
  **/
 @customElement("thw-dialog")
 export class THWDialog extends LitElement {
@@ -17,12 +16,7 @@ export class THWDialog extends LitElement {
    */
   @property({ type: String }) title = "Dialog title";
 
-  /**
-   * Whether the dialog is open.
-   * @type {boolean}
-   * @default false
-   */
-  @property({ type: Boolean }) open = false;
+  private open = false;
 
   static override styles = [
     css`
