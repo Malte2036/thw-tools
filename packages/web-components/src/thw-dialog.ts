@@ -2,10 +2,26 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { thwColors } from "./colors";
 
+/**
+ * A dialog component.
+ * @slot content - The content of the dialog.
+ * @slot footer - The footer of the dialog.
+ * @param {string} title - The title of the dialog.
+ * @param {boolean} open - Whether the dialog is open.
+ **/
 @customElement("thw-dialog")
 export class THWDialog extends LitElement {
-  @property({ type: String }) header = "Dialog Header";
+  /**
+   * The title of the dialog.
+   * @type {string}
+   */
+  @property({ type: String }) title = "Dialog title";
 
+  /**
+   * Whether the dialog is open.
+   * @type {boolean}
+   * @default false
+   */
   @property({ type: Boolean }) open = false;
 
   static override styles = [
@@ -36,12 +52,20 @@ export class THWDialog extends LitElement {
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
             0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
-          .header {
+          .title {
             font-size: 1.5rem;
             line-height: 2rem;
 
             color: ${unsafeCSS(thwColors[1000])};
             font-weight: bold;
+          }
+
+          .footer {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+            justify-content: space-between;
+            width: 100%;
           }
         }
       }
@@ -58,8 +82,11 @@ export class THWDialog extends LitElement {
     return html`
       <div class="outerWrapper">
         <div class="innerWrapper">
-          <div class="header">${this.header}</div>
-          <slot></slot>
+          <div class="title">${this.title}</div>
+
+          <slot name="content" class="content"></slot>
+
+          <slot name="footer" class="footer"></slot>
         </div>
       </div>
     `;

@@ -40,10 +40,17 @@
       <h1>THW Dialog</h1>
       <thw-button id="toggle-dialog-button">Toggle Dialog</thw-button>
       <thw-dialog id="dialog" header="Test Dialog">
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-          voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem qu
-        </p>
+        <div slot="content">
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
+            qu
+          </p>
+        </div>
+        <slot slot="footer">
+          <thw-button type="secondary">Close</thw-button>
+          <thw-button>Okay</thw-button>
+        </slot>
       </thw-dialog>
     </div>
     <script>
