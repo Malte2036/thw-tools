@@ -1,15 +1,12 @@
 {
   "name": "@malte2036/thw-tools-components",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "repository": {
     "type": "git",
     "url": "https://github.com/malte2036/thw-tools-components.git"
   },
   "type": "module",
   "main": "dist/index.js",
-  "exports": {
-    ".": "./dist/index.js"
-  },
   "types": "types/index.d.ts",
   "files": [
     "dist",
@@ -24,8 +21,5 @@
     "lit": "^3.1.2",
     "typescript": "^5.2.2",
     "vite": "^5.1.6"
-  },
-  "dependencies": {
-    "@lit-labs/ssr": "^3.2.2"
   }
 }

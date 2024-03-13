@@ -10,13 +10,12 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": false
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.stories.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
