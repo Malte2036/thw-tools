@@ -35,8 +35,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@malte2036/thw-tools-components": "^0.1.3",
 		"lit": "^2.8.0",
-		"node-appwrite": "^9.0.0",
-		"thw-tools-components": "file:../thw-tools-components"
+		"node-appwrite": "^9.0.0"
 	}
 }
