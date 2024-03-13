@@ -59,7 +59,7 @@ export class THWButton extends LitElement {
         }
 
         &:hover {
-          background-color: ${unsafeCSS(thwColors[800])};
+          background-color: ${unsafeCSS(thwColors[900])};
         }
 
         &:disabled {
