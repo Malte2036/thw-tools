@@ -8,6 +8,7 @@ import { thwColors, grayColors } from "./colors";
  * @param {string} type - The type of the button. Can be "primary" or "secondary".
  * @param {boolean} disabled - Whether the button is disabled.
  * @param {string} size - The size of the button. Can be "small", "medium", or "large".
+ * @param {string} width - The width of the button. Can be "full" or "auto".
  */
 @customElement("thw-button")
 export class THWButton extends LitElement {
@@ -31,6 +32,13 @@ export class THWButton extends LitElement {
    * @default "medium"
    */
   @property({ type: String }) size = "medium";
+
+  /**
+   * Thw width of the button.
+   * @type {"full" | "auto"}
+   * @default "auto"
+   */
+  @property({ type: String }) width = "auto";
 
   static override styles = [
     css`
@@ -94,13 +102,24 @@ export class THWButton extends LitElement {
             border-color: ${unsafeCSS(grayColors[400])};
           }
         }
+
+        &.width-full {
+          width: 100%;
+        }
+
+        &.width-auto {
+          width: auto;
+        }
       }
     `,
   ];
 
   override render() {
     return html`
-      <button ?disabled=${this.disabled} class=${`${this.type} ${this.size}`}>
+      <button
+        ?disabled=${this.disabled}
+        class=${`${this.type} ${this.size} width-${this.width}`}
+      >
         <slot></slot>
       </button>
     `;

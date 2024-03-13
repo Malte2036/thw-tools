@@ -27,6 +27,22 @@
           </div>
         </div>
         <div>
+          <h2>disabled:</h2>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 1rem;
+              width: 20rem;
+            "
+          >
+            <thw-button disabled>Disabled Button</thw-button>
+            <thw-button type="secondary" disabled>
+              Disabled Secondary Button
+            </thw-button>
+          </div>
+        </div>
+        <div>
           <h2>size</h2>
           <div style="display: flex; flex-direction: column; gap: 1rem">
             <thw-button size="small">Small Button</thw-button>
@@ -34,12 +50,18 @@
             <thw-button size="large">Large Button</thw-button>
           </div>
         </div>
+        <div>
+          <h2>width</h2>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <thw-button width="auto">Auto Width Button</thw-button>
+            <thw-button width="full">Full Width Button</thw-button>
+          </div>
       </div>
     </div>
     <div>
       <h1>THW Dialog</h1>
       <thw-button id="toggle-dialog-button">Toggle Dialog</thw-button>
-      <thw-dialog id="dialog" header="Test Dialog">
+      <thw-dialog id="dialog" header="Test Dialog" hidden>
         <div slot="content">
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
@@ -64,7 +86,7 @@
         // Add a click event listener to the toggle button
         toggleButton.addEventListener("click", function () {
           // Toggle the visibility of the dialog by adding or removing the 'hidden' attribute
-          dialog.open = !dialog.open;
+          dialog.hidden = !dialog.hidden;
         });
       });
     </script>
