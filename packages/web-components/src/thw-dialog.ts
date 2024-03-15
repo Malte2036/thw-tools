@@ -15,7 +15,7 @@ export class THWDialog extends LitElement {
    * The title of the dialog.
    * @type {string}
    */
-  @property({ type: String }) title = "Dialog title";
+  @property({ type: String }) title: string = "Dialog title";
 
   /**
    * The function to call when the user clicks outside the dialog.

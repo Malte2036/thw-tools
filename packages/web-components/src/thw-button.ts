@@ -16,21 +16,21 @@ export class THWButton extends LitElement {
    * @type {"primary" | "secondary"}
    * @default "primary"
    */
-  @property({ type: String }) type = "primary";
+  @property({ type: String }) type: "primary" | "secondary" = "primary";
 
   /**
    * Whether the button is disabled.
    * @type {boolean}
    * @default false
    */
-  @property({ type: Boolean }) disabled = false;
+  @property({ type: Boolean }) disabled: boolean = false;
 
   /**
    * The size of the button.
    * @type {"small"| "medium" | "large"}
    * @default "medium"
    */
-  @property({ type: String }) size = "medium";
+  @property({ type: String }) size: "small" | "medium" | "large" = "medium";
 
   static override styles = [
     css`
