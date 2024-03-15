@@ -7,6 +7,7 @@ import { thwColors } from "./colors";
  * @slot content - The content of the dialog.
  * @slot footer - The footer of the dialog.
  * @param {string} title - The title of the dialog.
+ * @param {() => void} onOutsideClick - The function to call when the user clicks outside the dialog.
  **/
 @customElement("thw-dialog")
 export class THWDialog extends LitElement {
@@ -16,7 +17,15 @@ export class THWDialog extends LitElement {
    */
   @property({ type: String }) title = "Dialog title";
 
-  private open = true;
+  /**
+   * The function to call when the user clicks outside the dialog.
+   * @type {() => void}
+   * @default () => {}
+   */
+  @property({
+    attribute: false,
+  })
+  onOutsideClick: () => void = (): void => {};
 
   static override styles = [
     css`
@@ -67,12 +76,6 @@ export class THWDialog extends LitElement {
   ];
 
   render() {
-    console.log(this.open);
-
-    if (!this.open) {
-      return;
-    }
-
     return html`
       <div class="outerWrapper">
         <div class="innerWrapper">
@@ -95,13 +98,9 @@ export class THWDialog extends LitElement {
         event.composedPath().includes(outerWrapper!) &&
         !event.composedPath().includes(innerWrapper!)
       ) {
-        this.close();
+        this.onOutsideClick();
       }
     });
-  }
-
-  close() {
-    this.open = false;
   }
 }
 

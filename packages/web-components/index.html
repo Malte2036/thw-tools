@@ -39,7 +39,7 @@
     <div>
       <h1>THW Dialog</h1>
       <thw-button id="toggle-dialog-button">Toggle Dialog</thw-button>
-      <thw-dialog id="dialog" header="Test Dialog">
+      <thw-dialog id="dialog" header="Test Dialog" hidden>
         <div slot="content">
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
@@ -57,6 +57,10 @@
       document.addEventListener("DOMContentLoaded", function () {
         // Get the dialog element
         const dialog = document.getElementById("dialog");
+        dialog.onOutsideClick = () => {
+          console.log("outside click");
+          dialog.hidden = true;
+        };
 
         // Get the toggle button element
         const toggleButton = document.getElementById("toggle-dialog-button");
@@ -64,7 +68,7 @@
         // Add a click event listener to the toggle button
         toggleButton.addEventListener("click", function () {
           // Toggle the visibility of the dialog by adding or removing the 'hidden' attribute
-          dialog.open = !dialog.open;
+          dialog.hidden = !dialog.hidden;
         });
       });
     </script>
