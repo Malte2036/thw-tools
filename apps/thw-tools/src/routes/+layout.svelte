@@ -21,6 +21,7 @@
 	import Banner from '$lib/Banner.svelte';
 	import Dialog from '$lib/Dialog.svelte';
 	import Button from '$lib/Button.svelte';
+	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 
 	let title: string | undefined;
 	$: title = getCurrentTitleByPath($page.url.pathname);
@@ -40,6 +41,7 @@
 	}
 
 	let showFeedback = false;
+	let showInstallPWAHelp = false;
 </script>
 
 <svelte:head>
@@ -67,7 +69,7 @@
 	<div class="grow">
 		<slot />
 	</div>
-	<div class="flex flex-row justify-center gap-2 mb-3">
+	<div class="flex flex-row justify-center gap-2 mb-3 flex-wrap px-2">
 		<div>©2024 Malte Sehmer</div>
 		<div class="text-gray-400">|</div>
 		<a
@@ -86,6 +88,16 @@
 			data-umami-event="Open Feedback Dialog"
 		>
 			Feedback
+		</div>
+		<div class="text-gray-400">|</div>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div
+			class="underline cursor-pointer"
+			data-umami-event="Open Offline Availability Dialog"
+			on:click={() => (showInstallPWAHelp = true)}
+		>
+			Als App installieren
 		</div>
 	</div>
 
@@ -109,5 +121,9 @@
 				<Button click={() => (showFeedback = false)}>Schließen</Button>
 			</div>
 		</Dialog>
+	{/if}
+
+	{#if showInstallPWAHelp}
+		<InstallPWADialog onClose={() => (showInstallPWAHelp = false)} />
 	{/if}
 </div>
