@@ -2,7 +2,7 @@ import { getAllDatabaseQuestions } from '$lib/Database';
 import type { QuestionType } from '$lib/quiz/question/Question';
 
 export async function GET() {
-	const types: QuestionType[] = ['agt', 'cbrn'];
+	const types: QuestionType[] = ['ga', 'agt', 'cbrn'];
 	const singleQuestionLinks = await Promise.all(
 		types.map(async (t) => {
 			const questions = await getAllDatabaseQuestions(t);
