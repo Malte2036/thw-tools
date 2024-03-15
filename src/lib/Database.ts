@@ -86,7 +86,7 @@ export async function getAllDatabaseQuestions(
 	const res = await databases.listDocuments<DatabaseQuestion>(
 		APPWRITE_DATABASEID_QUIZ,
 		collectionId,
-		[sdk.Query.limit(100)]
+		[sdk.Query.limit(500)]
 	);
 
 	return res.documents;
