@@ -1,6 +1,5 @@
 <script lang="ts">
 	import '@malte2036/thw-tools-components';
-	
 
 	import { dev } from '$app/environment';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
@@ -20,6 +19,8 @@
 	import { page } from '$app/stores';
 	import Header from './Header.svelte';
 	import Banner from '$lib/Banner.svelte';
+	import Dialog from '$lib/Dialog.svelte';
+	import Button from '$lib/Button.svelte';
 
 	let title: string | undefined;
 	$: title = getCurrentTitleByPath($page.url.pathname);
@@ -37,6 +38,8 @@
 			return 'THW-Tools';
 		}
 	}
+
+	let showFeedback = false;
 </script>
 
 <svelte:head>
@@ -65,7 +68,7 @@
 		<slot />
 	</div>
 	<div class="flex flex-row justify-center gap-2 mb-3">
-		<div>©2023 Malte Sehmer</div>
+		<div>©2024 Malte Sehmer</div>
 		<div class="text-gray-400">|</div>
 		<a
 			data-umami-event={$page.route.id === '/impressum'
@@ -74,5 +77,37 @@
 			href={$page.route.id === '/impressum' ? '/' : '/impressum'}
 			class="underline">Impressum</a
 		>
+		<div class="text-gray-400">|</div>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div
+			class="underline cursor-pointer"
+			on:click={() => (showFeedback = true)}
+			data-umami-event="Open Feedback Dialog"
+		>
+			Feedback
+		</div>
 	</div>
+
+	{#if showFeedback}
+		<Dialog title="Feedback">
+			<div slot="content">
+				<div class="flex flex-col gap-2">
+					<div>Du hast Ideen für neue Tools, weitere Quizfragen oder Feedback?</div>
+					<div>
+						Schreib mir gerne eine Direktnachricht in
+						<a
+							data-umami-event="Feedback Dialog Hermine link"
+							href="https://app.thw-messenger.de/thw/app#/contacts/profile/1990855"
+							target="_blank"
+							class="underline text-thw">Hermine</a
+						> (Malte Sehmer).
+					</div>
+				</div>
+			</div>
+			<div slot="footer">
+				<Button click={() => (showFeedback = false)}>Schließen</Button>
+			</div>
+		</Dialog>
+	{/if}
 </div>
