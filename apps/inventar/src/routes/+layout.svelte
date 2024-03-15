@@ -27,7 +27,9 @@
 	$: title = getCurrentTitleByPath($page.url.pathname);
 
 	function getCurrentTitleByPath(path: string): string | undefined {
-		if (path.startsWith('/quiz/agt')) {
+		if (path.startsWith('/quiz/ga')) {
+			return 'Grundausbildungs-Quiz';
+		} else if (path.startsWith('/quiz/agt')) {
 			return 'Atemschutz-Quiz';
 		} else if (path.startsWith('/quiz/cbrn')) {
 			return 'CBRN-Quiz';
