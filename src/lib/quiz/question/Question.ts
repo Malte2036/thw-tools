@@ -1,6 +1,6 @@
 import type { DatabaseQuestion } from '$lib/Database';
 
-export type QuestionType = 'agt' | 'cbrn';
+export type QuestionType = 'ga' | 'agt' | 'cbrn';
 
 export type Question = {
 	number: number;

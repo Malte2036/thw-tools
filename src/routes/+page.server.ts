@@ -5,7 +5,7 @@ import type { PageServerLoad } from './$types';
 export const prerender = true;
 
 export const load = (async ({}) => {
-	const questionTypes: QuestionType[] = ['agt', 'cbrn'];
+	const questionTypes: QuestionType[] = ['ga', 'agt', 'cbrn'];
 
 	const questionTypeLength = new Map();
 
