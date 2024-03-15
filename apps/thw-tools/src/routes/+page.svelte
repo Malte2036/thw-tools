@@ -38,7 +38,7 @@
 		);
 
 		let currentActiveMessage =
-			'<div>Du hast Ideen für neue Tools, weitere Quizfragen oder Feedback?<br/> Schreib mir gerne über <a href="https://app.thw-messenger.de/thw/app/" target="_blank">Hermine</a> (Malte Sehmer).</div>';
+			'<div>Du hast Ideen für neue Tools, weitere Quizfragen oder Feedback?<br/> Schreib mir gerne über <a href="https://app.thw-messenger.de/thw/app#/contacts/profile/1990855" target="_blank">Hermine</a> (Malte Sehmer).</div>';
 		const currentActiveMessageVersion = 2;
 
 		if (currentActiveMessageVersion > lastVisitBannerVersion) {
