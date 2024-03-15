@@ -5,7 +5,13 @@
 </script>
 
 <svelte:head>
-	{#if questionType == 'agt'}
+	{#if questionType == 'ga'}
+		<title>Grundausbildungs-Quiz</title>
+		<meta
+			name="description"
+			content="Das Online-Theorie-Quiz für die Grundausbildung des THW bietet dir die Möglichkeit, dein Wissen über die Grundlagen des THW zu testen und aufzufrischen. Verbesser deine Kenntnisse und Sicherheit im Einsatz des THW."
+		/>
+	{:else if questionType == 'agt'}
 		<title>Atemschutz-Quiz</title>
 		<meta
 			name="description"
