@@ -49,7 +49,7 @@ export class THWDialog extends LitElement {
           flex-direction: column;
           gap: 0.5rem;
           border-radius: 0.375rem;
-          max-width: 28rem;
+          max-width: 32rem;
           max-height: calc(100vh - 4rem);
           background-color: #ffffff;
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
