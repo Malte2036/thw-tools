@@ -37,11 +37,19 @@
 			<br />
 
 			<div>Auf {visibleOS}-Geräten sieht das wie folgt aus:</div>
-			<img
-				src={`/help/${visibleOS.toLowerCase()}-install-pwa.gif`}
-				class="w-64 max-md:w-48 aspect-auto mx-auto border-2 border-thw-500 rounded-md mt-4"
-				alt={`${visibleOS} Offline Verfügbarkeit`}
-			/>
+			{#if visibleOS === 'iOS'}
+				<img
+					src="/help/ios-install-pwa.gif"
+					class="w-64 max-md:w-48 aspect-auto mx-auto border-2 border-thw-500 rounded-md"
+					alt="iOS Offline Verfügbarkeit"
+				/>
+			{:else}
+				<img
+					src="/help/android-install-pwa.gif"
+					class="w-64 max-md:w-48 aspect-auto mx-auto border-2 border-thw-500 rounded-md"
+					alt="Android Offline Verfügbarkeit"
+				/>
+			{/if}
 		</div>
 		<div class="italic">
 			<div class="font-bold inline-block">Information:</div>
