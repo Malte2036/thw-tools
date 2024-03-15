@@ -3,9 +3,11 @@ import {
 	APPWRITE_APIKEY,
 	APPWRITE_ENDPOINT,
 	APPWRITE_PROJECTID,
+	APPWRITE_COLLECTIONID_GAQUESTIONS,
 	APPWRITE_COLLECTIONID_AGTQUESTIONS,
 	APPWRITE_COLLECTIONID_CBRNQUESTIONS,
 	APPWRITE_DATABASEID_QUIZ,
+	APPWRITE_COLLECTIONID_GA,
 	APPWRITE_COLLECTIONID_AGT,
 	APPWRITE_COLLECTIONID_CBRN
 } from '$env/static/private';
@@ -18,6 +20,8 @@ export type DatabaseQuestion = sdk.Models.Document &
 
 function getQuestionCollectionId(questionType: QuestionType) {
 	switch (questionType) {
+		case 'ga':
+			return APPWRITE_COLLECTIONID_GAQUESTIONS;
 		case 'agt':
 			return APPWRITE_COLLECTIONID_AGTQUESTIONS;
 		case 'cbrn':
@@ -30,6 +34,8 @@ function getQuestionCollectionId(questionType: QuestionType) {
 
 export function getCollectionIdByQuiz(quiz: QuestionType): string {
 	switch (quiz) {
+		case 'ga':
+			return APPWRITE_COLLECTIONID_GA;
 		case 'agt':
 			return APPWRITE_COLLECTIONID_AGT;
 		case 'cbrn':

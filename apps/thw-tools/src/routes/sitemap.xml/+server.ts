@@ -36,6 +36,14 @@ export async function GET() {
             <priority>1.00</priority>
         </url>
         <url>
+            <loc>https://thw-tools.de/quiz/ga/</loc>
+            <priority>0.80</priority>
+        </url>
+        <url>
+            <loc>https://thw-tools.de/quiz/ga/listing/</loc>
+            <priority>0.25</priority>
+        </url>
+        <url>
             <loc>https://thw-tools.de/quiz/agt/</loc>
             <priority>0.80</priority>
         </url>

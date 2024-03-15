@@ -13,9 +13,10 @@
 	import VestIcon from '$lib/icons/VestIcon.svelte';
 	import { onMount } from 'svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
+	import HammerIcon from '$lib/icons/HammerIcon.svelte';
 
 	const description =
-		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem, ein AGT-Quiz, CBRN-Quiz, eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger und eine interaktive Anwendung zur Berechnung des Elektro Spannungsfalls.';
+		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem ein Grundausbildungs-Quiz, ein AGT-Quiz, ein CBRN-Quiz, eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger und eine interaktive Anwendung zur Berechnung des Elektro Spannungsfalls.';
 
 	export let data: PageData;
 
@@ -76,6 +77,12 @@
 			{description}
 		</h2>
 		<div class="w-full flex flex-col items-center gap-4 max-w-sm max-md:max-w-[18rem]">
+			<LinkButton url={`/quiz/ga/${randomQuestionId('ga')}`} dataUmamiEvent={'Open GA Quiz'}>
+				<div class="w-6">
+					<HammerIcon />
+				</div>
+				<div class="font-bold">Grundausbildungs-Quiz</div>
+			</LinkButton>
 			<LinkButton url={`/quiz/agt/${randomQuestionId('agt')}`} dataUmamiEvent={'Open AGT Quiz'}>
 				<div class="w-6">
 					<ChartSimpleIcon />
@@ -116,7 +123,7 @@
 	</div>
 </div>
 
-{#each ['agt', 'cbrn'] as questionType}
+{#each ['ga', 'agt', 'cbrn'] as questionType}
 	<!-- svelte-ignore a11y-missing-content -->
 	<a href={`/quiz/${questionType}`} />
 	<!-- svelte-ignore a11y-missing-content -->
