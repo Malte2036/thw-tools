@@ -1,6 +1,6 @@
 {
   "name": "@malte2036/thw-tools-components",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "repository": {
     "type": "git",
     "url": "https://github.com/malte2036/thw-tools-components.git"
@@ -18,8 +18,10 @@
     "build:watch": "vite build --watch"
   },
   "devDependencies": {
-    "lit": "^3.1.2",
     "typescript": "^5.2.2",
     "vite": "^5.1.6"
+  },
+  "dependencies": {
+    "lit": "^3.1.2"
   }
 }
