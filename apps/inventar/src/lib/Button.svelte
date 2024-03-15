@@ -7,7 +7,7 @@
 	export let dataUmamiEvent: string | undefined = undefined;
 	export let tooltip: string | undefined = undefined;
 
-	export let size: 'big' | 'normal' | 'small' = 'big';
+	export let size: 'small' | 'medium' | 'large' = 'medium';
 </script>
 
 <div class="group relative">
