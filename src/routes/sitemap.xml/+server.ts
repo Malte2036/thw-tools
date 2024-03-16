@@ -13,7 +13,7 @@ export async function GET() {
 						`
                     <url>
                         <loc>https://thw-tools.de/quiz/${t}/${q.number}/</loc>
-                        <priority>0.50</priority>
+                        <priority>0.6</priority>
                     </url>`
 				)
 				.join('');
@@ -37,27 +37,27 @@ export async function GET() {
         </url>
         <url>
             <loc>https://thw-tools.de/quiz/ga/</loc>
-            <priority>0.80</priority>
+            <priority>0.7</priority>
         </url>
         <url>
             <loc>https://thw-tools.de/quiz/ga/listing/</loc>
-            <priority>0.25</priority>
+            <priority>0.8</priority>
         </url>
         <url>
             <loc>https://thw-tools.de/quiz/agt/</loc>
-            <priority>0.80</priority>
+            <priority>0.7</priority>
         </url>
         <url>
             <loc>https://thw-tools.de/quiz/agt/listing/</loc>
-            <priority>0.25</priority>
+            <priority>0.8</priority>
         </url>
         <url>
             <loc>https://thw-tools.de/quiz/cbrn/</loc>
-            <priority>0.80</priority>
+            <priority>0.7</priority>
         </url>
         <url>
             <loc>https://thw-tools.de/quiz/cbrn/listing/</loc>
-            <priority>0.25</priority>
+            <priority>0.8</priority>
         </url>
         ${singleQuestionLinks.join('')}
       </urlset>`.trim(),
