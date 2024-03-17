@@ -15,8 +15,11 @@
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import HammerIcon from '$lib/icons/HammerIcon.svelte';
 
-	const description =
-		'Ein paar inoffizielle Tools für die Nutzung im THW! Unter anderem ein Grundausbildungs-Quiz, ein AGT-Quiz, ein CBRN-Quiz, eine Anwendung zum tracken des Finnentests für Atemschutzgeräteträger und eine interaktive Anwendung zur Berechnung des Elektro Spannungsfalls.';
+	const description = {
+		headline: 'Inoffizielle Tools für THW-Helfer:',
+		subheadline:
+			'Grundausbildungs-Quiz, AGT-Quiz, CBRN-Quiz, Finnentest-Tracker & Spannungsfall-Berechnung.'
+	};
 
 	export let data: PageData;
 
@@ -59,8 +62,8 @@
 </script>
 
 <svelte:head>
-	<title>THW Tools</title>
-	<meta name="description" content={description} />
+	<title>THW Tools: Quiz, Finnentest & mehr!</title>
+	<meta name="description" content={`${description.headline} ${description.subheadline}`} />
 </svelte:head>
 
 <div class="flex flex-col gap-4 mx-auto h-full items-center justify-between mt-16 max-md:mt-8 py-4">
@@ -74,7 +77,12 @@
 		/>
 		<h1 class="w-fit text-5xl max-md:text-4xl font-bold">THW Tools</h1>
 		<h2 class="w-fit text-2xl max-md:text-lg text-center">
-			{description}
+			<span class="font-bold">
+				{description.headline}
+			</span>
+			<span>
+				{description.subheadline}
+			</span>
 		</h2>
 		<div class="w-full flex flex-col items-center gap-4 max-w-sm max-md:max-w-[18rem]">
 			<LinkButton url={`/quiz/ga/${randomQuestionId('ga')}`} dataUmamiEvent={'Open GA Quiz'}>
