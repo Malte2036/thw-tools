@@ -1,27 +1,65 @@
 <script lang="ts">
-	import type { QuestionType } from './question/Question';
+	import type { ExtendedQuestion, QuestionType } from './question/Question';
 
 	export let questionType: QuestionType;
+	export let question: ExtendedQuestion | undefined;
+
+	function getFriendlyType() {
+		switch (questionType) {
+			case 'ga':
+				return 'Grundausbildungs-Quiz';
+			case 'agt':
+				return 'Atemschutz-Quiz';
+			case 'cbrn':
+				return 'CBRN-Quiz';
+			default:
+				return 'Quiz';
+		}
+	}
+
+	function shortenText(text: string, maxLength: number) {
+		if (text.length > maxLength) {
+			return text.substring(0, maxLength - 3) + '...';
+		}
+		return text;
+	}
+
+	function getTitle() {
+		return shortenText(`${getFriendlyType()}${question ? ` - ${question.text}` : ''}`, 60);
+	}
+
+	function getGenericDescription() {
+		switch (questionType) {
+			case 'ga':
+				return 'Das Online-Theorie-Quiz für die Grundausbildung des THW bietet dir die Möglichkeit, dein Wissen über die Grundlagen des THW zu testen und aufzufrischen. Verbesser deine Kenntnisse und Sicherheit im Einsatz des THW.';
+			case 'agt':
+				return 'Das Online-Theorie-Quiz für Atemschutzgeräteträger des THW und der Feuerwehr bietet dir die Möglichkeit, dein Wissen über den sicheren Umgang mit Atemschutzgeräten zu testen und aufzufrischen. Verbesser deine Kenntnisse und Sicherheit im Einsatz von Atemschutzgeräten.';
+			case 'cbrn':
+				return 'Möchtest du dein Wissen über den sicheren Umgang mit CBRN-Gefahren verbessern? Dann ist unser Online-Theorie-Quiz für CBRN-Schutzkräfte des THW und der Feuerwehr genau das Richtige für dich. Teste dein Wissen und frische es auf, um im Einsatz von CBRN-Gefahren noch sicherer zu agieren.';
+			default:
+				return '';
+		}
+	}
+
+	function getDescripton() {
+		return question
+			? `Frage ${question.number} vom ${getFriendlyType()}: ${question.text}: ${Array.from(
+					question.answers.values()
+				)
+					.map((a) => a)
+					.join(', ')}.`
+			: getGenericDescription();
+	}
 </script>
 
 <svelte:head>
-	{#if questionType == 'ga'}
-		<title>Grundausbildungs-Quiz</title>
-		<meta
-			name="description"
-			content="Das Online-Theorie-Quiz für die Grundausbildung des THW bietet dir die Möglichkeit, dein Wissen über die Grundlagen des THW zu testen und aufzufrischen. Verbesser deine Kenntnisse und Sicherheit im Einsatz des THW."
-		/>
-	{:else if questionType == 'agt'}
-		<title>Atemschutz-Quiz</title>
-		<meta
-			name="description"
-			content="Das Online-Theorie-Quiz für Atemschutzgeräteträger des THW und der Feuerwehr bietet dir die Möglichkeit, dein Wissen über den sicheren Umgang mit Atemschutzgeräten zu testen und aufzufrischen. Verbesser deine Kenntnisse und Sicherheit im Einsatz von Atemschutzgeräten."
-		/>
-	{:else}
-		<title>CBRN-Quiz</title>
-		<meta
-			name="description"
-			content="Möchtest du dein Wissen über den sicheren Umgang mit CBRN-Gefahren verbessern? Dann ist unser Online-Theorie-Quiz für CBRN-Schutzkräfte des THW und der Feuerwehr genau das Richtige für dich. Teste dein Wissen und frische es auf, um im Einsatz von CBRN-Gefahren noch sicherer zu agieren."
-		/>
-	{/if}
+	<title>{getTitle()}</title>
+	<meta name="description" content={getDescripton()} />
+	<meta property="og:title" content={getTitle()} />
+	<meta property="og:description" content={getDescripton()} />
+	<meta property="og:type" content="website" />
+	<meta
+		name="keywords"
+		content="THW, Quiz, Online-Quiz, Theorie-Quiz, Grundausbildung, Atemschutz, CBRN, Gefahrenabwehr, Feuerwehr"
+	/>
 </svelte:head>
