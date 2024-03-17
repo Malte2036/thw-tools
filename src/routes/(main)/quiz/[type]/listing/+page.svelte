@@ -6,7 +6,7 @@
 	export let data: PageData;
 </script>
 
-<QuizHead questionType={data.questionType} />
+<QuizHead questionType={data.questionType} question={undefined} />
 
 <div class="flex flex-col gap-1 m-4 text-xl">
 	{#each data.allQuestions.sort((a, b) => a.number - b.number) as question}

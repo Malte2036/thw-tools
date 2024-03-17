@@ -18,7 +18,8 @@
 	const description = {
 		headline: 'Inoffizielle Tools für THW-Helfer:',
 		subheadline:
-			'Grundausbildungs-Quiz, AGT-Quiz, CBRN-Quiz, Finnentest-Tracker & Spannungsfall-Berechnung.'
+			'Grundausbildungs-Quiz, AGT-Quiz, CBRN-Quiz, Finnentest-Tracker & Spannungsfall-Berechnung.',
+		keywords: 'THW, Quiz, Finnentest, Spannungsfall, Elektro, CBRN, AGT, Feuerwehr'
 	};
 
 	export let data: PageData;
@@ -64,6 +65,10 @@
 <svelte:head>
 	<title>THW Tools: Quiz, Finnentest & mehr!</title>
 	<meta name="description" content={`${description.headline} ${description.subheadline}`} />
+	<meta property="og:title" content="THW Tools: Quiz, Finnentest & mehr!" />
+	<meta property="og:description" content={`${description.headline} ${description.subheadline}`} />
+	<meta property="og:type" content="website" />
+	<meta name="keywords" content={description.keywords} />
 </svelte:head>
 
 <div class="flex flex-col gap-4 mx-auto h-full items-center justify-between mt-16 max-md:mt-8 py-4">

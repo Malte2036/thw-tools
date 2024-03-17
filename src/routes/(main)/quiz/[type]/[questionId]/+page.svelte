@@ -88,7 +88,7 @@
 	});
 </script>
 
-<QuizHead {questionType} />
+<QuizHead {questionType} {question} />
 
 <div class="m-4 mt-2">
 	<div class="flex flex-col gap-16 justify-between h-full">
