@@ -18,8 +18,8 @@
 	const description = {
 		headline: 'Inoffizielle Tools für THW-Helfer:',
 		subheadline:
-			'Grundausbildungs-Quiz, AGT-Quiz, CBRN-Quiz, Finnentest-Tracker & Spannungsfall-Berechnung.',
-		keywords: 'THW, Quiz, Finnentest, Spannungsfall, Elektro, CBRN, AGT, Feuerwehr'
+			'Grundausbildungs-Quiz, Atemschutz-Quiz, CBRN-Quiz, Finnentest-Tracker & Spannungsfall-Berechnung.',
+		keywords: 'THW, Quiz, Finnentest, Spannungsfall, Elektro, CBRN, AGT, Atemschutz, Feuerwehr'
 	};
 
 	export let data: PageData;
@@ -100,7 +100,7 @@
 				<div class="w-6">
 					<ChartSimpleIcon />
 				</div>
-				<div class="font-bold">AGT-Quiz</div>
+				<div class="font-bold">Atemschutz-Quiz</div>
 			</LinkButton>
 			<LinkButton url={`/quiz/cbrn/${randomQuestionId('cbrn')}`} dataUmamiEvent={'Open CBRN Quiz'}>
 				<div class="w-6">
