@@ -101,14 +101,15 @@ export async function getQuestionCount(questionType: QuestionType): Promise<numb
 	type ResultData = { data: { databasesListDocuments: { total: number } } };
 
 	const res: ResultData = await graphql.query({
-		query: `query {
-		    databasesListDocuments(
-			    databaseId: "${APPWRITE_DATABASEID_QUIZ}",
-			    collectionId: "${collectionId}",
-		    ) {
-			    total
-		    }
-	    }`
+		query: `query GetDocumentCount($databaseId: String!, $collectionId: String!) {
+			  databasesListDocuments(databaseId: $databaseId, collectionId: $collectionId) {
+				total
+			  }
+			}`,
+		variables: {
+			databaseId: APPWRITE_DATABASEID_QUIZ,
+			collectionId
+		}
 	});
 
 	return res.data.databasesListDocuments.total;
@@ -130,27 +131,28 @@ export async function getCorrectCount(
 
 	type ResultData = { data: { databasesListDocuments: { total: number } } };
 
-	const queries = [`"equal(\\"correct\\", [${correct}])"`];
+	const queries = [sdk.Query.equal('correct', correct)];
 
 	if (questionNumber) {
-		queries.push(`"equal(\\"questionId\\", [${questionNumber}])"`);
+		queries.push(sdk.Query.equal('questionId', questionNumber));
 	}
 
 	if (after) {
-		queries.push(`"greaterThan(\\"$createdAt\\", [${after.toISOString()}}])"`);
+		queries.push(sdk.Query.greaterThan('createdAt', after.toISOString()));
 	}
 
 	// limited to 5000 docs
 	const res: ResultData = await graphql.query({
-		query: `query {
-		databasesListDocuments(
-			databaseId: "${APPWRITE_DATABASEID_QUIZ}",
-			collectionId: "${collectionId}",
-			queries: [${queries.join(', ')}]
-		) {
-			total
+		query: `query GetDocumentCount($databaseId: String!, $collectionId: String!, $queries: [String!]!) {
+			databasesListDocuments(databaseId: $databaseId, collectionId: $collectionId, queries: $queries) {
+			  total
+			}
+		  }`,
+		variables: {
+			databaseId: APPWRITE_DATABASEID_QUIZ,
+			collectionId,
+			queries
 		}
-	}`
 	});
 
 	return res.data.databasesListDocuments.total;
