@@ -1,20 +1,20 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
 import { databaseQuestionToExtendedQuestion, type QuestionType } from '$lib/quiz/question/Question';
 import {
 	getDatabaseQuestionByNumber,
-	getQuestionCount,
-	type DatabaseQuestion
-} from '$lib/Database';
+	type DatabaseQuestion,
+	getQuestionCount
+} from '$lib/database/questions';
+import type { PageLoad } from './$types';
+
+export const ssr = false;
 
 export type AnsweredCountData = {
 	right: number;
 	wrong: number;
 };
 
-export const prerender = true;
-
-export const load = (async ({ params, depends }) => {
+export const load = (async ({ params }) => {
 	const questionType: QuestionType | undefined = params.type as QuestionType;
 
 	const questionNumber = Number.parseInt(params.questionId!);
@@ -48,4 +48,4 @@ export const load = (async ({ params, depends }) => {
 		questionCount,
 		nextQuestionId
 	};
-}) satisfies PageServerLoad;
+}) satisfies PageLoad;

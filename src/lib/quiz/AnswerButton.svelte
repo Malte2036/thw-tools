@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
-	import type { AnsweredCountData } from '../../routes/(main)/quiz/[type]/[questionId]/+page.server';
+	import { addCount } from '$lib/database/questions_metadata';
+	import type { AnsweredCountData } from '../../routes/(main)/quiz/[type]/[questionId]/+page';
 	import type { ExtendedQuestion, QuestionType } from './question/Question';
 
 	export let questionType: QuestionType;
@@ -13,7 +14,7 @@
 </script>
 
 <Button
-	click={() => {
+	click={async () => {
 		if (revealAnswers) {
 			gotoNextQuestion();
 		} else {
@@ -32,13 +33,9 @@
 					}
 				}
 			}
-			fetch(`/api/quiz/${questionType}/add`, {
-				method: 'POST',
-				body: JSON.stringify({
-					questionId: question.number,
-					correct: completelyRight
-				}),
-				headers: { 'content-type': 'application/json' }
+			await addCount(questionType, {
+				correct: completelyRight,
+				questionId: question.number
 			});
 		}
 	}}

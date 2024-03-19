@@ -7,11 +7,12 @@
 	import QuestionStatistics from '$lib/quiz/question/QuestionStatistics.svelte';
 	import CheckboxAnswer from '$lib/quiz/answer/CheckboxAnswer.svelte';
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
-	import type { AnsweredCountData } from './+page.server';
+	import type { AnsweredCountData } from './+page';
 	import QuestionNumber from '$lib/quiz/QuestionNumber.svelte';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import type { AfterNavigate } from '@sveltejs/kit';
 	import QuizHead from '$lib/quiz/QuizHead.svelte';
+	import { getCorrectAndWrongCount, getCorrectCountByType } from '$lib/database/questions_metadata';
 
 	export let data: PageData;
 
@@ -30,9 +31,9 @@
 		currentQuestionAnsweredCountData = undefined;
 
 		if (!import.meta.env.SSR) {
-			fetch(`/api/quiz/${questionType}/${q.number}/count`).then((res) =>
-				res.json().then((data) => (currentQuestionAnsweredCountData = data))
-			);
+			getCorrectAndWrongCount(questionType, q.number).then((data) => {
+				currentQuestionAnsweredCountData = data;
+			});
 		}
 	}
 
@@ -78,13 +79,9 @@
 	});
 
 	onMount(() => {
-		try {
-			fetch(`/api/quiz/${questionType}/count`).then((res) =>
-				res.json().then((data) => (answeredCountData = data))
-			);
-		} catch (error) {
-			console.warn('Could not add count');
-		}
+		getCorrectCountByType(questionType).then((data) => {
+			answeredCountData = data;
+		});
 	});
 </script>
 

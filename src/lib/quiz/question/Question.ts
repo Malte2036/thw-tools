@@ -1,4 +1,4 @@
-import type { DatabaseQuestion } from '$lib/Database';
+import type { DatabaseQuestion } from '$lib/database/questions';
 
 export type QuestionType = 'ga' | 'agt' | 'cbrn';
 

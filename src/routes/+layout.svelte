@@ -44,6 +44,13 @@
 
 	let showFeedback = false;
 	let showInstallPWAHelp = false;
+
+	import { user } from '$lib/shared/stores/user';
+	onMount(async () => {
+		if (!(await user.isAuthenticated())) {
+			await user.createAnonymousSession();
+		}
+	});
 </script>
 
 <svelte:head>

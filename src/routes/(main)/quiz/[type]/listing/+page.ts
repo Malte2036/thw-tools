@@ -1,8 +1,8 @@
-import type { PageServerLoad } from './$types';
 import type { QuestionType } from '$lib/quiz/question/Question';
-import { getAllDatabaseQuestions } from '$lib/Database';
+import { getAllDatabaseQuestions } from '$lib/database/questions';
+import type { PageLoad } from '../$types';
 
-export const prerender = true;
+export const ssr = false;
 
 export const load = (async ({ params }) => {
 	const questionType: QuestionType | undefined = params.type as QuestionType;
@@ -12,4 +12,4 @@ export const load = (async ({ params }) => {
 		questionType,
 		allQuestions
 	};
-}) satisfies PageServerLoad;
+}) satisfies PageLoad;

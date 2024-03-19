@@ -3,6 +3,10 @@
 		{
 			"source": "/stats/:match*",
 			"destination": "https://umami.codelam.de/:match*"
+		},
+		{
+			"source": "/database/:match*",
+			"destination": "https://appwrite.codelam.de/:match*"
 		}
 	]
 }

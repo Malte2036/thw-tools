@@ -1,8 +1,8 @@
-import { getQuestionCount } from '$lib/Database';
+import { getQuestionCount } from '$lib/database/questions';
 import type { QuestionType } from '$lib/quiz/question/Question';
-import type { PageServerLoad } from './$types';
+import type { PageLoad } from './$types';
 
-export const prerender = true;
+export const ssr = false;
 
 export const load = (async ({}) => {
 	const questionTypes: QuestionType[] = ['ga', 'agt', 'cbrn'];
@@ -19,4 +19,4 @@ export const load = (async ({}) => {
 	return {
 		questionTypeLength
 	};
-}) satisfies PageServerLoad;
+}) satisfies PageLoad;

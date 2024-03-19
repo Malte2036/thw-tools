@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AnsweredCountData } from '../../../routes/(main)/quiz/[type]/[questionId]/+page.server';
+	import type { AnsweredCountData } from '../../../routes/(main)/quiz/[type]/[questionId]/+page';
 
 	export let answeredCountData: AnsweredCountData | undefined;
 	export let currentQuestionAnsweredCountData: AnsweredCountData | undefined;
@@ -13,7 +13,7 @@
 					(currentQuestionAnsweredCountData.right /
 						(currentQuestionAnsweredCountData.right + currentQuestionAnsweredCountData.wrong)) *
 					100
-			  )
+				)
 					.toFixed(1)
 					.replace(/\.0+$/, '')
 			: ''}% wurde diese Frage richtig beantwortet)

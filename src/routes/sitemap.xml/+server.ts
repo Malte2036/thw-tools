@@ -1,11 +1,11 @@
-import { getAllDatabaseQuestions } from '$lib/Database';
 import type { QuestionType } from '$lib/quiz/question/Question';
 
 export async function GET() {
 	const types: QuestionType[] = ['ga', 'agt', 'cbrn'];
 	const singleQuestionLinks = await Promise.all(
 		types.map(async (t) => {
-			const questions = await getAllDatabaseQuestions(t);
+			// const questions = await getAllDatabaseQuestions(t);
+			const questions: any[] = [];
 			return questions
 				.sort((a, b) => a.number - b.number)
 				.map(

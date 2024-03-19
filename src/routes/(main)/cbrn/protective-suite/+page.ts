@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 import path from 'path';
-import type { PageServerLoad } from './$types';
 import type { ProtectiveSuite } from '$lib/cbrn/ProtectiveSuite';
+import type { PageLoad } from './$types';
 
-export const prerender = true;
+export const ssr = false;
 
 export const load = (async () => {
 	const staticFolderPath = path.join(process.cwd(), 'static');
@@ -23,4 +23,4 @@ export const load = (async () => {
 	return {
 		allProtectiveSuites: jsonData
 	};
-}) satisfies PageServerLoad;
+}) satisfies PageLoad;
