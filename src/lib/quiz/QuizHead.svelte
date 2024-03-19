@@ -17,15 +17,8 @@
 		}
 	}
 
-	function shortenText(text: string, maxLength: number) {
-		if (text.length > maxLength) {
-			return text.substring(0, maxLength - 3) + '...';
-		}
-		return text;
-	}
-
 	function getTitle() {
-		return shortenText(`${getFriendlyType()}${question ? ` - ${question.text}` : ''}`, 60);
+		return `THW-Tools: ${getFriendlyType()}${question ? ` - Frage ${question.number}` : ''}`;
 	}
 
 	function getGenericDescription() {
