@@ -1,6 +1,5 @@
-import { connectToDatabase } from '$lib/Database';
+import { countQuestionStats } from '$lib/Database';
 import type { QuestionType } from '$lib/model/question';
-import { QuestionStats } from '$lib/model/questionStats';
 import { json } from '@sveltejs/kit';
 import type { RequestEvent, RequestHandler } from './$types';
 
@@ -8,19 +7,10 @@ export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 	try {
 		const quiz = params.quiz as QuestionType;
 
-		await connectToDatabase();
-
 		return json(
-			{
-				right: await QuestionStats.countDocuments({
-					questionType: quiz,
-					correct: true
-				}),
-				wrong: await QuestionStats.countDocuments({
-					questionType: quiz,
-					correct: false
-				})
-			},
+			await countQuestionStats({
+				questionType: quiz
+			}),
 			{
 				headers: {
 					'Cache-Control': 'no-cache'

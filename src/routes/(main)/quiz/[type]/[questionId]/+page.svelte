@@ -28,6 +28,7 @@
 			...q,
 			checkedIndices: []
 		};
+
 		shuffledAnswers = shuffle([...question.answers]);
 
 		currentQuestionAnsweredCountData = undefined;
