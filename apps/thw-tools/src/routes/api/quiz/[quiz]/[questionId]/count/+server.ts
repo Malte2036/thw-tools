@@ -1,29 +1,18 @@
-import { connectToDatabase } from '$lib/Database';
+import { countQuestionStats } from '$lib/Database';
 import type { QuestionType } from '$lib/model/question';
-import { QuestionStats } from '$lib/model/questionStats';
-import type { RequestEvent, RequestHandler } from './$types';
 import { json } from '@sveltejs/kit';
+import type { RequestEvent, RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 	try {
 		const quiz = params.quiz as QuestionType;
 		const questionId = Number(params.questionId);
 
-		await connectToDatabase();
-
 		return json(
-			{
-				right: await QuestionStats.countDocuments({
-					questionType: quiz,
-					questionNumber: questionId,
-					correct: true
-				}),
-				wrong: await QuestionStats.countDocuments({
-					questionType: quiz,
-					questionNumber: questionId,
-					correct: false
-				})
-			},
+			await countQuestionStats({
+				questionType: quiz,
+				questionNumber: questionId
+			}),
 			{
 				headers: {
 					'Cache-Control': 'no-cache'

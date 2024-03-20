@@ -1,23 +1,21 @@
-import type { RequestEvent, RequestHandler } from './$types';
+import { insertQuestionStats } from '$lib/Database';
 import type { QuestionType } from '$lib/model/question';
-import { QuestionStats, type IQuestionStats } from '$lib/model/questionStats';
-import { connectToDatabase } from '$lib/Database';
+import type { RequestEvent, RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request, params }: RequestEvent) => {
-	const body: IQuestionStats = await request.json();
+	const body: {
+		questionNumber: number;
+		correct: boolean;
+	} = await request.json();
 
 	const quiz = params.quiz as QuestionType;
 
-	await connectToDatabase();
-
-	const stats = new QuestionStats({
+	await insertQuestionStats({
 		questionType: quiz,
 		questionNumber: body.questionNumber,
 		correct: body.correct,
 		timestamp: new Date()
 	});
-
-	await stats.save();
 
 	return new Response(null, { status: 200 });
 };
