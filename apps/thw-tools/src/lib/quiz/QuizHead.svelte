@@ -52,6 +52,11 @@
 	<meta property="og:description" content={getDescripton()} />
 	<meta property="og:type" content="website" />
 	<meta
+		property="og:image"
+		content="https://thw-tools.de/_app/immutable/assets/thw-mzgw.24176eee.webp"
+	/>
+	<meta property="og:locale" content="de_DE" />
+	<meta
 		name="keywords"
 		content="THW, Quiz, Online-Quiz, Theorie-Quiz, Grundausbildung, Atemschutz, CBRN, Gefahrenabwehr, Feuerwehr"
 	/>

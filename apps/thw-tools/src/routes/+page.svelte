@@ -68,6 +68,11 @@
 	<meta property="og:title" content="THW Tools: Quiz, Finnentest & mehr!" />
 	<meta property="og:description" content={`${description.headline} ${description.subheadline}`} />
 	<meta property="og:type" content="website" />
+	<meta
+		property="og:image"
+		content="https://thw-tools.de/_app/immutable/assets/thw-mzgw.24176eee.webp"
+	/>
+	<meta property="og:locale" content="de_DE" />
 	<meta name="keywords" content={description.keywords} />
 </svelte:head>
 
