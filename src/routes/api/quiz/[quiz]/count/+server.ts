@@ -29,7 +29,7 @@ export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 			}
 		);
 	} catch (error) {
-		console.warn(`Could not get quiz statistics from appwrite`, error);
+		console.warn(`Could not get quiz statistics from database: ${error}`);
 	}
 
 	return new Response(null, {
