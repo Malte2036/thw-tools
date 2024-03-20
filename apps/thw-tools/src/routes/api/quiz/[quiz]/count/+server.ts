@@ -1,27 +1,25 @@
-import type { RequestEvent, RequestHandler } from './$types';
+import { connectToDatabase } from '$lib/Database';
+import type { QuestionType } from '$lib/model/question';
+import { QuestionStats } from '$lib/model/questionStats';
 import { json } from '@sveltejs/kit';
-import type { QuestionType } from '$lib/quiz/question/Question';
-import { getCorrectCount, getQuestionCount } from '$lib/Database';
-import { sumArray } from '$lib/utils';
+import type { RequestEvent, RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 	try {
 		const quiz = params.quiz as QuestionType;
-		const questionCount = await getQuestionCount(quiz);
-		const allQuestionNumbers = Array.from({ length: questionCount }, (_, i) => i + 1);
 
-		// get correct count for every question
-		const right = sumArray(
-			await Promise.all(allQuestionNumbers.map((n) => getCorrectCount(quiz, true, n)))
-		);
-		const wrong = sumArray(
-			await Promise.all(allQuestionNumbers.map((n) => getCorrectCount(quiz, false, n)))
-		);
+		await connectToDatabase();
 
 		return json(
 			{
-				right,
-				wrong
+				right: await QuestionStats.countDocuments({
+					questionType: quiz,
+					correct: true
+				}),
+				wrong: await QuestionStats.countDocuments({
+					questionType: quiz,
+					correct: false
+				})
 			},
 			{
 				headers: {
@@ -30,7 +28,7 @@ export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 			}
 		);
 	} catch (error) {
-		console.warn(`Could not get quiz statistics from appwrite`, error);
+		console.warn(`Could not get quiz statistics from database: ${error}`);
 	}
 
 	return new Response(null, {

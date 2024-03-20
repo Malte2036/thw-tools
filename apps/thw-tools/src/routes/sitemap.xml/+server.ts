@@ -1,12 +1,15 @@
-import { getAllDatabaseQuestions } from '$lib/Database';
-import type { QuestionType } from '$lib/quiz/question/Question';
+import { connectToDatabase } from '$lib/Database';
+import { Question, QuestionType } from '$lib/model/question';
 
 export async function GET() {
-	const types: QuestionType[] = ['ga', 'agt', 'cbrn'];
+	const types: QuestionType[] = Object.values(QuestionType);
+
+	await connectToDatabase();
+
 	const singleQuestionLinks = await Promise.all(
 		types.map(async (t) => {
-			const questions = await getAllDatabaseQuestions(t);
-			return questions
+			const questionIds = await Question.find({ type: t }).select('number').exec();
+			return questionIds
 				.sort((a, b) => a.number - b.number)
 				.map(
 					(q) =>
