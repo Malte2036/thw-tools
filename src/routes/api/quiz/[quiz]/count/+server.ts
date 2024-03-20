@@ -1,9 +1,8 @@
 import { connectToDatabase } from '$lib/Database';
-import { sumArray } from '$lib/utils';
+import type { QuestionType } from '$lib/model/question';
+import { QuestionStats } from '$lib/model/questionStats';
 import { json } from '@sveltejs/kit';
 import type { RequestEvent, RequestHandler } from './$types';
-import { QuestionStats } from '$lib/model/questionStats';
-import type { QuestionType } from '$lib/model/question';
 
 export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 	try {

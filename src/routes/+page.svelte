@@ -6,7 +6,6 @@
 	import FlaskVialIcon from '$lib/icons/FlaskVialIcon.svelte';
 
 	import type { PageData } from './$types';
-	import type { QuestionType } from '$lib/quiz/question/Question';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import { randomInt } from '$lib/utils';
 	import BoltIcon from '$lib/icons/BoltIcon.svelte';
@@ -14,6 +13,7 @@
 	import { onMount } from 'svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import HammerIcon from '$lib/icons/HammerIcon.svelte';
+	import type { QuestionType } from '$lib/model/question';
 
 	const description = {
 		headline: 'Inoffizielle Tools für THW-Helfer:',
