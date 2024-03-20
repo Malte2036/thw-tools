@@ -1,8 +1,0 @@
-{
-	"name": "admin-tools",
-	"version": "0.0.1",
-	"private": true,
-	"dependencies": {
-		"dotenv": "^16.3.1"
-	}
-}
