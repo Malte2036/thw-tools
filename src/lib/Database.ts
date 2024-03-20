@@ -1,8 +1,8 @@
-import { MONGODB_CONNECTION_STRING } from '$env/static/private';
+import { MONGODB_URI } from '$env/static/private';
 import mongoose from 'mongoose';
 
 export async function connectToDatabase() {
-	await mongoose.connect(MONGODB_CONNECTION_STRING);
+	await mongoose.connect(MONGODB_URI);
 }
 
 /*export type DatabaseQuestion = sdk.Models.Document &
