@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
+	import type { ExtendedQuestion, QuestionType } from '$lib/model/question';
 	import type { AnsweredCountData } from '../../routes/(main)/quiz/[type]/[questionId]/+page.server';
-	import type { ExtendedQuestion, QuestionType } from './question/Question';
 
 	export let questionType: QuestionType;
 	export let question: ExtendedQuestion;
@@ -35,7 +35,8 @@
 			fetch(`/api/quiz/${questionType}/add`, {
 				method: 'POST',
 				body: JSON.stringify({
-					questionId: question.number,
+					type: questionType,
+					questionNumber: question.number,
 					correct: completelyRight
 				}),
 				headers: { 'content-type': 'application/json' }
@@ -43,7 +44,7 @@
 		}
 	}}
 	dataUmamiEvent={`${questionType} quiz question ${revealAnswers ? 'next question' : 'answered'}`}
-	disabled={!revealAnswers && question.checkedIndizies.length == 0}
+	disabled={!revealAnswers && question.checkedIndices.length == 0}
 	>{revealAnswers
 		? `${completelyRight ? 'Richtig' : 'Falsch'} - Nächste Frage`
 		: 'Überprüfen'}</Button

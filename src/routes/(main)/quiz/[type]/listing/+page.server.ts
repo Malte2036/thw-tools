@@ -1,15 +1,17 @@
+import { connectToDatabase } from '$lib/Database';
+import { Question, type QuestionType } from '$lib/model/question';
 import type { PageServerLoad } from './$types';
-import type { QuestionType } from '$lib/quiz/question/Question';
-import { getAllDatabaseQuestions } from '$lib/Database';
 
 export const prerender = true;
 
 export const load = (async ({ params }) => {
 	const questionType: QuestionType | undefined = params.type as QuestionType;
 
-	const allQuestions = await getAllDatabaseQuestions(questionType);
+	await connectToDatabase();
+
+	const allQuestions = await Question.find({ type: questionType }).select('-_id');
 	return {
 		questionType,
-		allQuestions
+		allQuestions: allQuestions.map((q) => q.toObject())
 	};
 }) satisfies PageServerLoad;
