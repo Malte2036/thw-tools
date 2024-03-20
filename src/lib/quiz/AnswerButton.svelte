@@ -35,7 +35,8 @@
 			fetch(`/api/quiz/${questionType}/add`, {
 				method: 'POST',
 				body: JSON.stringify({
-					questionId: question.number,
+					type: questionType,
+					questionNumber: question.number,
 					correct: completelyRight
 				}),
 				headers: { 'content-type': 'application/json' }

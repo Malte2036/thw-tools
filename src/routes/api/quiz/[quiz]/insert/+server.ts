@@ -1,14 +1,12 @@
-import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
-import mongoose from 'mongoose';
-import { MONGODB_CONNECTION_STRING } from '$env/static/private';
+import { connectToDatabase } from '$lib/Database';
 import { Question, QuestionType } from '$lib/model/question';
-import { getAllDatabaseQuestions } from '$lib/Database';
+import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ params }: RequestEvent) => {
 	const t = params.quiz as QuestionType;
-	const allQuestions = await getAllDatabaseQuestions(t);
+	const allQuestions = []; //await getAllDatabaseQuestions(t);
 
-	await mongoose.connect(MONGODB_CONNECTION_STRING);
+	await connectToDatabase();
 
 	await Promise.all(
 		allQuestions.map(async (question) => {

@@ -1,8 +1,6 @@
-import { MONGODB_CONNECTION_STRING } from '$env/static/private';
-import { getQuestionCount } from '$lib/Database';
+import { connectToDatabase } from '$lib/Database';
 import { Question, type QuestionType } from '$lib/model/question';
 import { error } from '@sveltejs/kit';
-import mongoose from 'mongoose';
 import type { PageServerLoad } from './$types';
 
 export type AnsweredCountData = {
@@ -17,7 +15,7 @@ export const load = (async ({ params, depends }) => {
 
 	const questionNumber = Number.parseInt(params.questionId!);
 
-	mongoose.connect(MONGODB_CONNECTION_STRING);
+	await connectToDatabase();
 	const question = await Question.findOne({ type: questionType, number: questionNumber }).select(
 		'-_id'
 	);
@@ -26,7 +24,7 @@ export const load = (async ({ params, depends }) => {
 		throw error(404, 'Question not found');
 	}
 
-	const questionCount = await getQuestionCount(questionType);
+	const questionCount = await Question.countDocuments({ type: questionType });
 
 	const nextQuestionId = (questionNumber % questionCount) + 1;
 

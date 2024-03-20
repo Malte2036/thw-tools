@@ -1,19 +1,11 @@
-import * as sdk from 'node-appwrite';
-import {
-	APPWRITE_APIKEY,
-	APPWRITE_ENDPOINT,
-	APPWRITE_PROJECTID,
-	APPWRITE_COLLECTIONID_GAQUESTIONS,
-	APPWRITE_COLLECTIONID_AGTQUESTIONS,
-	APPWRITE_COLLECTIONID_CBRNQUESTIONS,
-	APPWRITE_DATABASEID_QUIZ,
-	APPWRITE_COLLECTIONID_GA,
-	APPWRITE_COLLECTIONID_AGT,
-	APPWRITE_COLLECTIONID_CBRN
-} from '$env/static/private';
-import type { Question, QuestionType } from './quiz/question/Question';
+import { MONGODB_CONNECTION_STRING } from '$env/static/private';
+import mongoose from 'mongoose';
 
-export type DatabaseQuestion = sdk.Models.Document &
+export async function connectToDatabase() {
+	await mongoose.connect(MONGODB_CONNECTION_STRING);
+}
+
+/*export type DatabaseQuestion = sdk.Models.Document &
 	Question & {
 		answers: string[];
 	};
@@ -171,3 +163,5 @@ export async function addCount(quiz: QuestionType, data: StatisticsData) {
 
 	await databases.createDocument(APPWRITE_DATABASEID_QUIZ, collectionId, 'unique()', data);
 }
+
+*/

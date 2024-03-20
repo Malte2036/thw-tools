@@ -1,10 +1,9 @@
-import { json, type RequestEvent, type RequestHandler } from '@sveltejs/kit';
-import mongoose from 'mongoose';
-import { MONGODB_CONNECTION_STRING } from '$env/static/private';
+import { connectToDatabase } from '$lib/Database';
 import { Question, QuestionType } from '$lib/model/question';
+import { json, type RequestEvent, type RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ params }: RequestEvent) => {
-	await mongoose.connect(MONGODB_CONNECTION_STRING);
+	await connectToDatabase();
 
 	const questionType = params.quiz as QuestionType;
 	const questionId = params.questionId as string;

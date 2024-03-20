@@ -15,7 +15,11 @@ export type IQuestion = {
 	correctIndices: string[];
 };
 
-const questionSchema = new Schema({
+export type ExtendedQuestion = IQuestion & {
+	checkedIndices: string[];
+};
+
+const questionSchema = new Schema<IQuestion>({
 	type: {
 		type: String,
 		validate: {
@@ -33,7 +37,3 @@ const questionSchema = new Schema({
 });
 
 export const Question = model<IQuestion>('Question', questionSchema);
-
-export type ExtendedQuestion = IQuestion & {
-	checkedIndices: string[];
-};
