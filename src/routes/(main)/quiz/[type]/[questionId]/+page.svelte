@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { afterNavigate, goto } from '$app/navigation';
-	import type { ExtendedQuestion, QuestionType } from '$lib/quiz/question/Question';
 	import { onMount } from 'svelte';
 	import { randomInt, shuffle } from '$lib/utils';
 	import QuestionStatistics from '$lib/quiz/question/QuestionStatistics.svelte';
@@ -12,6 +11,7 @@
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import type { AfterNavigate } from '@sveltejs/kit';
 	import QuizHead from '$lib/quiz/QuizHead.svelte';
+	import type { ExtendedQuestion, IQuestion, QuestionType } from '$lib/model/question';
 
 	export let data: PageData;
 
@@ -21,10 +21,14 @@
 	let answeredCountData: AnsweredCountData | undefined;
 	let currentQuestionAnsweredCountData: AnsweredCountData | undefined;
 
-	function setQuestion(q: ExtendedQuestion) {
+	function setQuestion(q: IQuestion) {
 		revealAnswers = false;
 
-		question = q;
+		question = {
+			...q,
+			checkedIndices: []
+		};
+
 		shuffledAnswers = shuffle([...question.answers]);
 
 		currentQuestionAnsweredCountData = undefined;
@@ -45,8 +49,8 @@
 	let completelyRight = false;
 
 	$: completelyRight =
-		JSON.stringify(question.correctIndizies.sort()) ===
-		JSON.stringify(question.checkedIndizies.sort());
+		JSON.stringify(question.correctIndices.sort()) ===
+		JSON.stringify(question.checkedIndices.sort());
 
 	function gotoQuestionNumber(newQuestionNumber: number) {
 		goto(`/quiz/${questionType}/${newQuestionNumber}`);
@@ -115,13 +119,13 @@
 					{#each shuffledAnswers as [index, value]}
 						<CheckboxAnswer
 							bind:answer={value}
-							checked={question.checkedIndizies.includes(index)}
-							correct={question.correctIndizies.includes(index)}
+							checked={question.checkedIndices.includes(index.toString())}
+							correct={question.correctIndices.includes(index.toString())}
 							bind:revealAnswers
 							changeCheckedCallback={(value) => {
-								question.checkedIndizies = value
-									? [...question.checkedIndizies, index]
-									: question.checkedIndizies.filter((v) => v != index);
+								question.checkedIndices = value
+									? [...question.checkedIndices, index.toString()]
+									: question.checkedIndices.filter((v) => v != index.toString());
 							}}
 						/>
 					{/each}

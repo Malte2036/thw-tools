@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ExtendedQuestion, QuestionType } from './question/Question';
+	import type { ExtendedQuestion, QuestionType } from '$lib/model/question';
 
 	export let questionType: QuestionType;
 	export let question: ExtendedQuestion | undefined;
