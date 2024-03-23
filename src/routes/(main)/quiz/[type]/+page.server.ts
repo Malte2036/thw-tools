@@ -1,6 +1,6 @@
-import type { QuestionType } from '$lib/quiz/question/Question';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import type { QuestionType } from '$lib/model/question';
 
 export const prerender = true;
 

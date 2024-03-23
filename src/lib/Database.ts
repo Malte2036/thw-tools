@@ -45,12 +45,20 @@ export async function insertQuestionStats(stats: IQuestionStats) {
 }
 
 export async function countQuestionStats(
-	params: Partial<IQuestionStats>
+	params: Partial<IQuestionStats>,
+	after?: Date
 ): Promise<{ right: number; wrong: number }> {
 	await connectToDatabase();
 
+	const countStats = async (correct: boolean) =>
+		await QuestionStats.countDocuments({
+			...params,
+			correct,
+			...(after ? { timestamp: { $gt: after } } : {})
+		});
+
 	return {
-		right: await QuestionStats.countDocuments({ ...params, correct: true }),
-		wrong: await QuestionStats.countDocuments({ ...params, correct: false })
+		right: await countStats(true),
+		wrong: await countStats(false)
 	};
 }
