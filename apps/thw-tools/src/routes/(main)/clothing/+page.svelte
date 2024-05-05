@@ -18,16 +18,9 @@
 	} from '$lib/clothing/clothing';
 	import type { PageData } from './$types';
 	import Select from '$lib/Select.svelte';
+	import type { ClothingInputValue } from '$lib/clothing/clothingInputStore';
 
 	export let data: PageData;
-
-	// gender, height, chest, waist, hip
-	let genderValue: HumanGender = 'M';
-	let heightValue = '';
-	let chestValue = '';
-	let waistValue = '';
-	let hipValue = '';
-	let insideLegLengthValue = '';
 
 	let calculatedSizes: MatchingClothingSizeTable[];
 	let missingMeasurements: Map<ClothingName, HumanMeasurement[]> = new Map<
@@ -35,38 +28,26 @@
 		HumanMeasurement[]
 	>();
 
-	function calculate(
-		gender: HumanGender,
-		height: number | undefined,
-		chestCircumference: number | undefined,
-		waistCircumference: number | undefined,
-		hipCircumference: number | undefined,
-		insideLegLength: number | undefined
-	) {
+	function calculate(input: ClothingInputValue) {
 		const inputData: Record<HumanMeasurement, number | undefined> = {
-			height,
-			chestCircumference,
-			waistCircumference,
-			hipCircumference,
-			insideLegLength
+			height: input.height.length > 0 ? Number(input.height) : undefined,
+			chestCircumference: input.chest.length > 0 ? Number(input.chest) : undefined,
+			waistCircumference: input.waist.length > 0 ? Number(input.waist) : undefined,
+			hipCircumference: input.hip.length > 0 ? Number(input.hip) : undefined,
+			insideLegLength: input.insideLegLength.length > 0 ? Number(input.insideLegLength) : undefined
 		};
 
 		missingMeasurements = getMissingMeasurements(data.tables, inputData);
 
-		const sizes = calculateMatchingClothingSizeForTables(data.tables, gender, inputData);
+		const sizes = calculateMatchingClothingSizeForTables(data.tables, input.gender, inputData);
 		sizes.sort((a, b) => a.name.localeCompare(b.name));
 
 		calculatedSizes = sizes;
 	}
 
-	$: calculate(
-		genderValue,
-		heightValue ? Number(heightValue) : undefined,
-		chestValue ? Number(chestValue) : undefined,
-		waistValue ? Number(waistValue) : undefined,
-		hipValue ? Number(hipValue) : undefined,
-		insideLegLengthValue ? Number(insideLegLengthValue) : undefined
-	);
+	import { clothingInput } from '$lib/clothing/clothingInputStore';
+
+	$: calculate($clothingInput);
 
 	function sizeToString(
 		humanMeasurement: HumanMeasurement,
@@ -127,35 +108,35 @@
 				{ value: 'M', label: humanGenderToFriendlyString('M') },
 				{ value: 'W', label: humanGenderToFriendlyString('W') }
 			]}
-			bind:selected={genderValue}
+			bind:selected={$clothingInput.gender}
 			label="Geschlecht"
 		/>
 		<Input
-			bind:inputValue={heightValue}
+			bind:inputValue={$clothingInput.height}
 			type="number"
 			label={humanMeasurementToFriendlyName('height')}
 			placeholder={`${humanMeasurementToFriendlyName('height')} in cm`}
 		/>
 		<Input
-			bind:inputValue={chestValue}
+			bind:inputValue={$clothingInput.chest}
 			type="number"
 			label={humanMeasurementToFriendlyName('chestCircumference')}
 			placeholder={`${humanMeasurementToFriendlyName('chestCircumference')} in cm`}
 		/>
 		<Input
-			bind:inputValue={waistValue}
+			bind:inputValue={$clothingInput.waist}
 			type="number"
 			label={humanMeasurementToFriendlyName('waistCircumference')}
 			placeholder={`${humanMeasurementToFriendlyName('waistCircumference')} in cm`}
 		/>
 		<Input
-			bind:inputValue={hipValue}
+			bind:inputValue={$clothingInput.hip}
 			type="number"
 			label={humanMeasurementToFriendlyName('hipCircumference')}
 			placeholder={`${humanMeasurementToFriendlyName('hipCircumference')} in cm`}
 		/>
 		<Input
-			bind:inputValue={insideLegLengthValue}
+			bind:inputValue={$clothingInput.insideLegLength}
 			type="number"
 			label={humanMeasurementToFriendlyName('insideLegLength')}
 			placeholder={`${humanMeasurementToFriendlyName('insideLegLength')} in cm`}
@@ -251,7 +232,7 @@
 							{/if}
 						</div>
 						<div>
-							<LinkButton url={`${size.name}/${size.gender}/`} secondary blank
+							<LinkButton url={`${size.name}/${size.gender}/`} secondary
 								>Maßtabelle ansehen</LinkButton
 							>
 						</div>
