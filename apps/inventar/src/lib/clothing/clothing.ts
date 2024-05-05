@@ -30,6 +30,11 @@ export type HumanMeasurement =
 	| 'hipCircumference'
 	| 'insideLegLength';
 
+export type HumanMeasurementTolerance = {
+	up: number;
+	down: number;
+};
+
 export type HumanGender = 'M' | 'W';
 
 export type ClothingMeasurementImportance = {
@@ -58,6 +63,11 @@ export type ClothingSizesTable = {
 	measurementImportance: ClothingMeasurementImportance[];
 };
 
+export type MatchingClothingSize = {
+	deviation: number;
+	clothingSize: ClothingSizes;
+};
+
 export type MatchingClothingSizeTable = ClothingSizesTable & {
-	matchingClothingSize: ClothingSizes | undefined;
+	matchingClothingSizes: MatchingClothingSize[];
 };

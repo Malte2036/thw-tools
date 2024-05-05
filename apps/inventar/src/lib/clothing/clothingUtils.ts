@@ -5,7 +5,9 @@ import type {
 	MatchingClothingSizeTable,
 	ClothingMeasurementImportance,
 	ClothingName,
-	ClothingType
+	ClothingType,
+	HumanMeasurementTolerance,
+	MatchingClothingSize
 } from './clothing';
 import fs from 'fs/promises';
 import path from 'path';
@@ -17,21 +19,20 @@ export function calculateMatchingClothingSizeForTables(
 ): MatchingClothingSizeTable[] {
 	return tables
 		.filter((t) => t.gender == gender)
-		.map((table) => {
-			const matchingClothingSize = calculateMatchingClothingSizeForTable(table, measurements);
-			return {
-				...table,
-				matchingClothingSize
-			};
-		});
+		.map((table) => ({
+			...table,
+			matchingClothingSizes: calculateMatchingClothingSizeForTable(table, measurements).sort(
+				(a, b) => a.deviation - b.deviation
+			)
+		}));
 }
 
 function calculateMatchingClothingSizeForTable(
 	table: ClothingSizesTable,
 	measurements: Record<HumanMeasurement, number | undefined>
-) {
-	return table.data.find((clothingSize) =>
-		table.measurementImportance.every((importance) => {
+): MatchingClothingSize[] {
+	return table.data.map((clothingSize) => {
+		const derivations = table.measurementImportance.map((importance) => {
 			const measurement = measurements[importance.measurement];
 			const size = clothingSize[importance.measurement];
 			const allowTolerance = importance.allowTolerance;
@@ -40,46 +41,59 @@ function calculateMatchingClothingSizeForTable(
 				console.warn(
 					`Measurement ${importance.measurement} is missing for clothing size ${clothingSize.id} and table ${table.name}`
 				);
-				return false;
+				return 1000;
 			}
 
 			if (size === undefined) {
-				return false;
+				return 0;
 			}
 
-			return isMeasurementInRange(measurement, table.name, size, allowTolerance);
-		})
-	);
+			return measurementMetric(
+				measurement,
+				size,
+				allowTolerance ? getMeasurementTolerance(table.name) : undefined
+			);
+		});
+
+		const sum = derivations.reduce((acc, curr) => acc + curr, 0);
+
+		return {
+			deviation: sum,
+			clothingSize
+		} satisfies MatchingClothingSize;
+	});
 }
 
-export function isMeasurementInRange(
+export function measurementMetric(
 	measurement: number,
-	name: ClothingName,
 	size: { min: number; max: number },
-	allowTolerance: boolean
-) {
-	const tolerance = allowTolerance ? getMeasurementTolerance(name) : 0;
-	const min = size.min * (1 - tolerance);
-	const max = size.max * (1 + tolerance);
-	return measurement >= min && measurement <= max;
-}
+	tolerance?: HumanMeasurementTolerance
+): number {
+	const min = size.min * (1 - (tolerance?.down ?? 0));
+	const max = size.max * (1 + (tolerance?.up ?? 0));
+	if (min <= measurement && max >= measurement) return 0;
 
-export function getMeasurementTolerance(name: ClothingName) {
+	if (min > measurement) return Math.abs(measurement - min);
+	if (max < measurement) return Math.abs(max - measurement);
+
+	throw new Error('This should never happen');
+}
+export function getMeasurementTolerance(name: ClothingName): HumanMeasurementTolerance {
 	switch (name) {
 		case 'DA_O':
 		case 'DA_U':
 		case 'DA_R':
 		case 'TD_O':
 		case 'TD_U':
-			return 0.02;
+			return { up: 0.02, down: 0.02 };
 		case 'TB_O':
 		case 'TB_U':
-			return 0.03;
+			return { up: 0.03, down: 0.03 };
 		default:
 			console.warn(
 				`No tolerance defined for clothing name ${name}, using default tolerance of 0.02`
 			);
-			return 0.02;
+			return { up: 0.02, down: 0.02 };
 	}
 }
 
