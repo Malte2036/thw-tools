@@ -62,7 +62,6 @@
 {#if ReloadPrompt}
 	<svelte:component this={ReloadPrompt} />
 {/if}
-
 <div class="flex flex-col gap-4 justify-between min-h-screen">
 	{#if title !== undefined}
 		<Header {title} />
