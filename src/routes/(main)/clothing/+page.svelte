@@ -247,13 +247,21 @@
 						die Größenberechnung.
 					</li>
 					<li>
+						Die anderen (nicht dickgedruckten) Maße fließen nicht in die Berechnung der Größe ein.
+					</li>
+					<li>
 						Die Angabe "Abweichung" gibt an, wie stark die Maße von den eingegebenen Maßen
 						abweichen. Eine Abweichung von 0 bedeutet, dass die Maße exakt übereinstimmen. Falls die
 						Abweichung größer als 0 ist, kann es sein, dass die Kleidung nicht optimal passt, und
 						man sich für eine "Nachbargröße" entscheiden sollte (siehe Maßtabelle).
 					</li>
 					<li>
-						Die anderen (nicht dickgedruckten) Maße fließen nicht in die Berechnung der Größe ein.
+						Die Berechnung basiert auf der <a
+							href="https://en.wikipedia.org/wiki/Joint_European_standard_for_size_labelling_of_clothes#EN_13402-2:_Primary_and_secondary_dimensions"
+							target="_blank"
+							rel="noreferrer"
+							class="text-thw underline">EN 13402</a
+						>
 					</li>
 				</ul>
 			</div>

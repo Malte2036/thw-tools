@@ -939,12 +939,7 @@
 				"size": 114.0
 			}
 		],
-		"name": "EA_O",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "EA_O"
 	},
 	{
 		"gender": "M",
@@ -1570,12 +1565,7 @@
 				"size": 22.0
 			}
 		],
-		"name": "DA_O",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "DA_O"
 	},
 	{
 		"gender": "M",
@@ -2241,22 +2231,12 @@
 				"size": 56.0
 			}
 		],
-		"name": "TB_O",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "TB_O"
 	},
 	{
 		"gender": "M",
 		"data": [],
-		"name": "DA_R",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "DA_R"
 	},
 	{
 		"gender": "M",
@@ -3198,12 +3178,7 @@
 				"size": 34.0
 			}
 		],
-		"name": "EA_U",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "EA_U"
 	},
 	{
 		"gender": "M",
@@ -3829,12 +3804,7 @@
 				"size": 27.0
 			}
 		],
-		"name": "TD_U",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "TD_U"
 	},
 	{
 		"gender": "M",
@@ -4600,12 +4570,7 @@
 				"size": 31.0
 			}
 		],
-		"name": "TD_O",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "TD_O"
 	},
 	{
 		"gender": "M",
@@ -5231,12 +5196,7 @@
 				"size": 26.0
 			}
 		],
-		"name": "DA_U",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "DA_U"
 	},
 	{
 		"gender": "M",
@@ -6122,12 +6082,7 @@
 				"size": 31.0
 			}
 		],
-		"name": "TB_U",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "TB_U"
 	},
 	{
 		"gender": "W",
@@ -7045,12 +7000,7 @@
 				"size": 64.0
 			}
 		],
-		"name": "EA_O",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "EA_O"
 	},
 	{
 		"gender": "W",
@@ -7716,12 +7666,7 @@
 				"size": 54.0
 			}
 		],
-		"name": "DA_O",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "DA_O"
 	},
 	{
 		"gender": "W",
@@ -8351,12 +8296,7 @@
 				"size": 50.0
 			}
 		],
-		"name": "TB_O",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "TB_O"
 	},
 	{
 		"gender": "W",
@@ -8890,12 +8830,7 @@
 				"size": 100.0
 			}
 		],
-		"name": "DA_R",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "DA_R"
 	},
 	{
 		"gender": "W",
@@ -9813,12 +9748,7 @@
 				"size": 32.0
 			}
 		],
-		"name": "EA_U",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "EA_U"
 	},
 	{
 		"gender": "W",
@@ -10484,12 +10414,7 @@
 				"size": 27.0
 			}
 		],
-		"name": "TD_U",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "TD_U"
 	},
 	{
 		"gender": "W",
@@ -11315,12 +11240,7 @@
 				"size": 25.0
 			}
 		],
-		"name": "TD_O",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "TD_O"
 	},
 	{
 		"gender": "W",
@@ -11986,12 +11906,7 @@
 				"size": 72.0
 			}
 		],
-		"name": "DA_U",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "DA_U"
 	},
 	{
 		"gender": "W",
@@ -12829,11 +12744,6 @@
 				"size": 21.0
 			}
 		],
-		"name": "TB_U",
-		"measurementImportance": [
-			{ "measurement": "height", "allowTolerance": false },
-			{ "measurement": "chestCircumference", "allowTolerance": true },
-			{ "measurement": "waistCircumference", "allowTolerance": true }
-		]
+		"name": "TB_U"
 	}
 ]
