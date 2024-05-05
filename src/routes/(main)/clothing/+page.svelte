@@ -276,4 +276,6 @@
 			<p>No results yet.</p>
 		{/if}
 	</div>
+
+	<img src="/clothing/measurement.png" alt="Größentabelle" class="w-full md:w-1/2 mx-auto" />
 </div>
