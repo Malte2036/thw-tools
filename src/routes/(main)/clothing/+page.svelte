@@ -6,7 +6,6 @@
 		clothingNameToFriendlyName,
 		getMissingMeasurements,
 		humanMeasurementToFriendlyName,
-		getMeasurementTolerance,
 		humanGenderToFriendlyString
 	} from '$lib/clothing/clothingUtils';
 	import type {
