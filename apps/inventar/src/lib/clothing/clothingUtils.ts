@@ -269,16 +269,16 @@ export async function loadClothingSizesTables(): Promise<ClothingSizesTable[]> {
 
 	let data = JSON.parse(fileContent) as any[];
 
-	data = data.map((table) => {
-		const type = clothingNameToClothingType(table.name);
-		return {
-			...table,
-			type,
-			measurementImportance: clothingTypeToClothingMeasurementImportance(type, table.gender)
-		} satisfies ClothingSizesTable;
-	});
-
-	return data.filter((d) => d.data.length > 0);
+	return data
+		.filter((d) => d.data.length > 0)
+		.map((table) => {
+			const type = clothingNameToClothingType(table.name);
+			return {
+				...table,
+				type,
+				measurementImportance: clothingTypeToClothingMeasurementImportance(type, table.gender)
+			} satisfies ClothingSizesTable;
+		});
 }
 
 export function humanGenderToFriendlyString(gender: HumanGender): string {
