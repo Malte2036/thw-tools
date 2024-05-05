@@ -6,6 +6,9 @@ const config = {
 	plugins: [
 		sveltekit(),
 		SvelteKitPWA({
+			workbox: {
+				navigateFallbackDenylist: [/^\/quiz/]
+			},
 			manifest: {
 				theme_color: '#120a8f',
 				background_color: 'white',
