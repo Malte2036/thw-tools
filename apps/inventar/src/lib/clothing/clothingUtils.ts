@@ -52,7 +52,7 @@ function calculateMatchingClothingSizeForTable(
 	);
 }
 
-function isMeasurementInRange(
+export function isMeasurementInRange(
 	measurement: number,
 	name: ClothingName,
 	size: { min: number; max: number },
@@ -107,8 +107,9 @@ export function clothingNameToClothingType(name: ClothingName): ClothingType {
 		case 'EA_O':
 			return 'Jacket';
 		case 'EA_U':
-		case 'DA_U':
 		case 'TB_U':
+		case 'TD_U':
+		case 'DA_U':
 			return 'Trousers';
 		case 'DA_R':
 			return 'Skirt';
@@ -116,7 +117,6 @@ export function clothingNameToClothingType(name: ClothingName): ClothingType {
 		case 'TD_O':
 			return 'Sweater';
 		case 'DA_O':
-		case 'TD_U':
 			return 'Suit';
 		default:
 			throw new Error(`Unknown clothing type ${name}`);
