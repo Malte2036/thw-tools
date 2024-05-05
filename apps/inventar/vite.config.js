@@ -7,7 +7,8 @@ const config = {
 		sveltekit(),
 		SvelteKitPWA({
 			workbox: {
-				navigateFallbackDenylist: [/^\/quiz/]
+				// workaround to disable precaching every page
+				maximumFileSizeToCacheInBytes: 1
 			},
 			manifest: {
 				theme_color: '#120a8f',
