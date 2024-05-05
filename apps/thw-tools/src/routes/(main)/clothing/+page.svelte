@@ -171,10 +171,10 @@
 					<div class="flex flex-col justify-between gap-1 border-2 p-2 border-thw rounded-md">
 						<div>
 							<h2 class="text-xl font-bold">{clothingNameToFriendlyName(size.name)}:</h2>
-							{#if size.matchingClothingSize}
+							{#if size.matchingClothingSizes && size.matchingClothingSizes[0].deviation < 1000}
 								<div class="flex flex-col gap-2">
 									<div>
-										<p>Konfektionsgröße: {size.matchingClothingSize.size}</p>
+										<p>Konfektionsgröße: {size.matchingClothingSizes[0].clothingSize.size}</p>
 										<p
 											class={isNessaryMeasurement('height', size.measurementImportance)
 												? 'font-bold'
@@ -182,7 +182,7 @@
 										>
 											{sizeToString(
 												'height',
-												size.matchingClothingSize,
+												size.matchingClothingSizes[0].clothingSize,
 												size.measurementImportance
 											)}
 										</p>
@@ -193,7 +193,7 @@
 										>
 											{sizeToString(
 												'chestCircumference',
-												size.matchingClothingSize,
+												size.matchingClothingSizes[0].clothingSize,
 												size.measurementImportance
 											)}
 										</p>
@@ -204,7 +204,7 @@
 										>
 											{sizeToString(
 												'waistCircumference',
-												size.matchingClothingSize,
+												size.matchingClothingSizes[0].clothingSize,
 												size.measurementImportance
 											)}
 										</p>
@@ -215,7 +215,7 @@
 										>
 											{sizeToString(
 												'hipCircumference',
-												size.matchingClothingSize,
+												size.matchingClothingSizes[0].clothingSize,
 												size.measurementImportance
 											)}
 										</p>
@@ -226,13 +226,13 @@
 										>
 											{sizeToString(
 												'insideLegLength',
-												size.matchingClothingSize,
+												size.matchingClothingSizes[0].clothingSize,
 												size.measurementImportance
 											)}
 										</p>
 									</div>
 									<div class="italic text-sm">
-										[Toleranzfaktor: {getMeasurementTolerance(size.name)}]
+										[Abweichung: {size.matchingClothingSizes[0].deviation.toFixed(2)}]
 									</div>
 								</div>
 							{:else if missingMeasurements.has(size.name)}
@@ -259,18 +259,23 @@
 					</div>
 				{/each}
 			</div>
-			<div>
-				<div>
-					<span class="font-bold">Info:</span> Die fettgedruckten Maße im Ergebnis eines Kleidungsstücks
-					sind zwingend notwendig für die Größenberechnung.
-				</div>
-				<div>
-					Fettgedruckte Maße ohne die Information "genau" haben je nach Kleidungsstück eine
-					Toleranzfaktor.
-				</div>
-				<div>
-					Die anderen (nicht dickgedruckten) Maße fließen nicht in die Berechnung der Größe ein.
-				</div>
+			<div class="px-8">
+				<span class="font-bold">Info:</span>
+				<ul class="list-disc">
+					<li>
+						Die fettgedruckten Maße im Ergebnis eines Kleidungsstücks sind zwingend notwendig für
+						die Größenberechnung.
+					</li>
+					<li>
+						Die Angabe "Abweichung" gibt an, wie stark die Maße von den eingegebenen Maßen
+						abweichen. Eine Abweichung von 0 bedeutet, dass die Maße exakt übereinstimmen. Falls die
+						Abweichung größer als 0 ist, kann es sein, dass die Kleidung nicht optimal passt, und
+						man sich für eine "Nachbargröße" entscheiden sollte (siehe Maßtabelle).
+					</li>
+					<li>
+						Die anderen (nicht dickgedruckten) Maße fließen nicht in die Berechnung der Größe ein.
+					</li>
+				</ul>
 			</div>
 		{:else}
 			<p>No results yet.</p>
