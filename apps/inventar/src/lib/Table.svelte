@@ -16,7 +16,7 @@
 	</thead>
 	<tbody>
 		{#each values as row, index}
-			<tr>
+			<tr class="hover:bg-thw-700 hover:text-white cursor-pointer">
 				{#each row as column}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 
