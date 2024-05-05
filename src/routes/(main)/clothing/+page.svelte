@@ -252,7 +252,7 @@
 							{/if}
 						</div>
 						<div>
-							<LinkButton url={`${size.name}/${size.gender}/`} secondary
+							<LinkButton url={`${size.name}/${size.gender}/`} secondary blank
 								>Maßtabelle ansehen</LinkButton
 							>
 						</div>
