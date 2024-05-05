@@ -137,6 +137,12 @@
 				</div>
 				<div class="font-bold">Elektro Spannungsfall</div>
 			</LinkButton>
+			<LinkButton url="/clothing" dataUmamiEvent={'Open THW Clothing'}>
+				<div class="w-6">
+					<VestIcon />
+				</div>
+				<div class="font-bold">THW Bekleidungs Rechner</div>
+			</LinkButton>
 		</div>
 	</div>
 </div>
