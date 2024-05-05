@@ -272,3 +272,11 @@
 
 	<img src="/clothing/measurement.png" alt="Größentabelle" class="w-full md:w-1/2 mx-auto" />
 </div>
+
+<div class="hidden">
+	{#each data.tables as table}
+		<a href={`${table.name}/${table.gender}/`}>
+			{table.name}, {table.gender}
+		</a>
+	{/each}
+</div>
