@@ -7,11 +7,13 @@
 		humanGenderToFriendlyString
 	} from '$lib/clothing/clothingUtils';
 	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
 
 	export let data: PageData;
-	let selectedSize: number | undefined = $page.url.searchParams.has('size')
-		? Number($page.url.searchParams.get('size'))
-		: undefined;
+	let selectedSize: number | undefined =
+		browser && $page.url.searchParams.has('size')
+			? Number($page.url.searchParams.get('size'))
+			: undefined;
 
 	function getTableValues() {
 		const table = data.table;
