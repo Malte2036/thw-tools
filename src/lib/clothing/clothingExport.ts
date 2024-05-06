@@ -9,16 +9,24 @@ export function convertClothingResultsToCSV(
 		customNote?: string;
 	}
 ) {
-	const titleKeys = ['Vorname', 'Nachname', 'Notiz', 'Kleidungsstück', 'Konfektionsgröße'];
+	const titleKeys = [
+		'Vorname',
+		'Nachname',
+		'Kleidungsstück',
+		'Konfektionsgröße',
+		'Geschlecht',
+		'Notiz'
+	];
 
 	const data = tables.map((table) => [
 		personalInformation.firstName ?? '',
 		personalInformation.lastName ?? '',
-		personalInformation.customNote ?? '',
 		clothingNameToFriendlyName(table.name),
 		isDeviationAcceptable(table.matchingClothingSizes[0].deviation)
 			? table.matchingClothingSizes[0].clothingSize.size.toString()
-			: ''
+			: '',
+		table.gender,
+		personalInformation.customNote ?? ''
 	]);
 
 	return convertToCSV(titleKeys, data);
