@@ -9,6 +9,7 @@
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
+	import { clothingInput } from '$lib/clothing/clothingInputStore';
 
 	export let data: PageData;
 	let selectedSize: number | undefined =
@@ -44,8 +45,46 @@
 {:else}
 	<div class="p-4 flex flex-col gap-2">
 		<div>
-			<span class="text-2xl font-bold">{clothingNameToFriendlyName(data.table.name)}</span>
+			<span class="text-3xl font-bold">{clothingNameToFriendlyName(data.table.name)}</span>
 			<span>({data.table.type}, {humanGenderToFriendlyString(data.table.gender)})</span>
+		</div>
+
+		<div class="flex flex-col gap-1">
+			{#if $clothingInput.height || $clothingInput.chest || $clothingInput.waist || $clothingInput.hip || $clothingInput.insideLegLength}
+				<div>
+					<span class="font-bold">Deine eingegebenen Maße:</span>
+					{#if $clothingInput.height}
+						<span>{humanMeasurementToFriendlyName('height')}: {$clothingInput.height} cm,</span>
+					{/if}
+					{#if $clothingInput.chest}
+						<span
+							>{humanMeasurementToFriendlyName('chestCircumference')}: {$clothingInput.chest} cm,</span
+						>
+					{/if}
+					{#if $clothingInput.waist}
+						<span
+							>{humanMeasurementToFriendlyName('waistCircumference')}: {$clothingInput.waist} cm,</span
+						>
+					{/if}
+					{#if $clothingInput.hip}
+						<span
+							>{humanMeasurementToFriendlyName('hipCircumference')}: {$clothingInput.hip} cm,</span
+						>
+					{/if}
+					{#if $clothingInput.insideLegLength}
+						<span
+							>{humanMeasurementToFriendlyName('insideLegLength')}: {$clothingInput.insideLegLength}
+							cm,</span
+						>
+					{/if}
+				</div>
+			{/if}
+			{#if selectedSize}
+				<div>
+					<span class="font-bold">Berechnete Konfektionsgröße:</span>
+					<span>{selectedSize}</span>
+				</div>
+			{/if}
 		</div>
 		<Table
 			header={[
