@@ -31,7 +31,7 @@
 	}
 </script>
 
-<ClothingHead />
+<ClothingHead table={data.table} />
 
 {#if !data.table}
 	<p>Table not found</p>
