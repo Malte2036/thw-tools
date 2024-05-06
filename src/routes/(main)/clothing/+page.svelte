@@ -293,8 +293,9 @@
 					</div>
 				{/each}
 			</div>
-			test
+
 			<Button click={showExportDialog}>Als CSV herunterladen</Button>
+
 			<div class="px-8">
 				<span class="font-bold">Info:</span>
 				<ul class="list-disc">
