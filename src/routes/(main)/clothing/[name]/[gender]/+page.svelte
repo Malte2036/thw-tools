@@ -6,9 +6,15 @@
 		clothingNameToFriendlyName,
 		humanGenderToFriendlyString
 	} from '$lib/clothing/clothingUtils';
+	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
 	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
 
 	export let data: PageData;
+	let selectedSize: number | undefined =
+		browser && $page.url.searchParams.has('size')
+			? Number($page.url.searchParams.get('size'))
+			: undefined;
 
 	function getTableValues() {
 		const table = data.table;
@@ -51,6 +57,7 @@
 				humanMeasurementToFriendlyName('insideLegLength')
 			]}
 			values={getTableValues()}
+			selectedIndex={data.table.data.findIndex((value) => value.size === selectedSize)}
 		/>
 	</div>
 {/if}
