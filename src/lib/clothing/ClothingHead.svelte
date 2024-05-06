@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ClothingSizesTable } from './clothing';
-	import { clothingNameToClothingType, clothingNameToFriendlyName } from './clothingUtils';
+	import { clothingNameToFriendlyName } from './clothingUtils';
 
 	export let table: ClothingSizesTable | undefined = undefined;
 	let title = `THW-Tools: ${
