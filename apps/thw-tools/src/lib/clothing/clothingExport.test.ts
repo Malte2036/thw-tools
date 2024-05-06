@@ -6,6 +6,7 @@ describe('convertClothingResultsToCSV', () => {
 	const tables: Partial<MatchingClothingSizeTable>[] = [
 		{
 			name: 'EA_O',
+			gender: 'M',
 			matchingClothingSizes: [
 				{
 					deviation: 0,
@@ -19,6 +20,7 @@ describe('convertClothingResultsToCSV', () => {
 		},
 		{
 			name: 'EA_U',
+			gender: 'M',
 			matchingClothingSizes: [
 				{
 					deviation: 2,
@@ -45,7 +47,7 @@ describe('convertClothingResultsToCSV', () => {
 		);
 
 		expect(csv).toBe(
-			'Vorname,Nachname,Notiz,Kleidungsstück,Konfektionsgröße\nJohn,Doe,My custom note,MEA Jacke,98\nJohn,Doe,My custom note,MEA Hose,46\n'
+			'Vorname,Nachname,Kleidungsstück,Konfektionsgröße,Geschlecht,Notiz\nJohn,Doe,MEA Jacke,98,M,My custom note\nJohn,Doe,MEA Hose,46,M,My custom note\n'
 		);
 	});
 });
