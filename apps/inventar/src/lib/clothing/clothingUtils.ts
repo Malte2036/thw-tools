@@ -38,9 +38,9 @@ function calculateMatchingClothingSizeForTable(
 			const allowTolerance = importance.allowTolerance;
 
 			if (!measurement) {
-				console.warn(
-					`Measurement ${importance.measurement} is missing for clothing size ${clothingSize.id} and table ${table.name}`
-				);
+				// console.warn(
+				// 	`Measurement ${importance.measurement} is missing for clothing size ${clothingSize.id} and table ${table.name}`
+				// );
 				return 1000;
 			}
 
