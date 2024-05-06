@@ -6,6 +6,7 @@
 		clothingNameToFriendlyName,
 		humanGenderToFriendlyString
 	} from '$lib/clothing/clothingUtils';
+	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
 
 	export let data: PageData;
 
@@ -29,6 +30,8 @@
 		]);
 	}
 </script>
+
+<ClothingHead />
 
 {#if !data.table}
 	<p>Table not found</p>
