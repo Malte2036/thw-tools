@@ -1,25 +1,30 @@
 <script lang="ts">
+	import Button from '$lib/Button.svelte';
 	import Input from '$lib/Input.svelte';
 	import LinkButton from '$lib/LinkButton.svelte';
+	import Select from '$lib/Select.svelte';
+	import ClothingExportDialog from '$lib/clothing/ClothingExportDialog.svelte';
+	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
+	import type {
+		ClothingMeasurementImportance,
+		ClothingName,
+		ClothingSizes,
+		HumanMeasurement,
+		MatchingClothingSizeTable
+	} from '$lib/clothing/clothing';
+	import { convertClothingResultsToCSV, exportCSVFile } from '$lib/clothing/clothingExport';
+	import type { ClothingInputValue } from '$lib/clothing/clothingInputStore';
+	import { clothingInput } from '$lib/clothing/clothingInputStore';
 	import {
 		calculateMatchingClothingSizeForTables,
 		clothingNameToFriendlyName,
 		getMissingMeasurements,
-		humanMeasurementToFriendlyName,
 		humanGenderToFriendlyString,
+		humanMeasurementToFriendlyName,
 		isDeviationAcceptable
 	} from '$lib/clothing/clothingUtils';
-	import type {
-		MatchingClothingSizeTable,
-		HumanMeasurement,
-		ClothingMeasurementImportance,
-		HumanGender,
-		ClothingName,
-		ClothingSizes
-	} from '$lib/clothing/clothing';
+	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import type { PageData } from './$types';
-	import Select from '$lib/Select.svelte';
-	import type { ClothingInputValue } from '$lib/clothing/clothingInputStore';
 
 	export let data: PageData;
 
@@ -45,9 +50,6 @@
 
 		calculatedSizes = sizes;
 	}
-
-	import { clothingInput } from '$lib/clothing/clothingInputStore';
-	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
 
 	$: calculate($clothingInput);
 
@@ -105,6 +107,46 @@
 		}
 
 		return link;
+	}
+
+	let isExporting = false;
+
+	function showExportDialog() {
+		isExporting = true;
+	}
+
+	function startExport(
+		firstName: string | undefined,
+		lastName: string | undefined,
+		customNote: string | undefined
+	) {
+		isExporting = false;
+
+		console.log('Exporting CSV');
+
+		firstName = firstName?.trim();
+		lastName = lastName?.trim();
+		customNote = customNote?.trim();
+
+		const csv = convertClothingResultsToCSV(calculatedSizes, {
+			firstName,
+			lastName,
+			customNote
+		});
+
+		let fileName = 'clothing_results';
+		if (firstName) fileName += `_${firstName}`;
+		if (lastName) fileName += `_${lastName}`;
+		fileName += '.csv';
+
+		exportCSVFile(csv, fileName);
+
+		$bannerMessage = {
+			message: 'Die Ergebnisse wurden als CSV-Datei heruntergeladen.',
+			autoDismiss: {
+				duration: 5000
+			}
+		};
 	}
 </script>
 
@@ -251,6 +293,8 @@
 					</div>
 				{/each}
 			</div>
+			test
+			<Button click={showExportDialog}>Als CSV herunterladen</Button>
 			<div class="px-8">
 				<span class="font-bold">Info:</span>
 				<ul class="list-disc">
@@ -292,3 +336,7 @@
 		</a>
 	{/each}
 </div>
+
+{#if isExporting}
+	<ClothingExportDialog onSubmit={startExport} />
+{/if}
