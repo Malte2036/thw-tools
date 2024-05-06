@@ -22,16 +22,6 @@ export async function GET() {
 		})
 	);
 
-	const clothingTables = await loadClothingSizesTables();
-	const clothingLinks = clothingTables.map(
-		(table) =>
-			`
-        <url>
-            <loc>https://thw-tools.de/clothing/${table.name}/${table.gender}/</loc>
-            <priority>0.6</priority>
-        </url>`
-	);
-
 	return new Response(
 		`
       <?xml version="1.0" encoding="UTF-8" ?>
@@ -76,7 +66,6 @@ export async function GET() {
             <priority>0.8</priority>
         </url>
         ${singleQuestionLinks.join('')}
-        ${clothingLinks.join('')}
       </urlset>`.trim(),
 		{
 			headers: {
