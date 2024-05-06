@@ -6,8 +6,12 @@
 		clothingNameToFriendlyName,
 		humanGenderToFriendlyString
 	} from '$lib/clothing/clothingUtils';
+	import { page } from '$app/stores';
 
 	export let data: PageData;
+	let selectedSize: number | undefined = $page.url.searchParams.has('size')
+		? Number($page.url.searchParams.get('size'))
+		: undefined;
 
 	function getTableValues() {
 		const table = data.table;
@@ -48,7 +52,7 @@
 				humanMeasurementToFriendlyName('insideLegLength')
 			]}
 			values={getTableValues()}
-			selectedIndex={data.table.data.findIndex((value) => value.size === data.selectedSize)}
+			selectedIndex={data.table.data.findIndex((value) => value.size === selectedSize)}
 		/>
 	</div>
 {/if}
