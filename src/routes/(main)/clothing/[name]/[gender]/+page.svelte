@@ -8,6 +8,7 @@
 	} from '$lib/clothing/clothingUtils';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
+	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
 
 	export let data: PageData;
 	let selectedSize: number | undefined =
@@ -35,6 +36,8 @@
 		]);
 	}
 </script>
+
+<ClothingHead table={data.table} />
 
 {#if !data.table}
 	<p>Table not found</p>

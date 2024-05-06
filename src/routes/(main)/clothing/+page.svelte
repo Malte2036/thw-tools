@@ -47,6 +47,7 @@
 	}
 
 	import { clothingInput } from '$lib/clothing/clothingInputStore';
+	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
 
 	$: calculate($clothingInput);
 
@@ -106,6 +107,8 @@
 		return link;
 	}
 </script>
+
+<ClothingHead />
 
 <div class="p-4 flex flex-col gap-4">
 	<span class="text-xl"
