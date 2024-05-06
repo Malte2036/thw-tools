@@ -10,6 +10,7 @@
 	import { browser } from '$app/environment';
 	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
 	import { clothingInput } from '$lib/clothing/clothingInputStore';
+	import LinkButton from '$lib/LinkButton.svelte';
 
 	export let data: PageData;
 	let selectedSize: number | undefined =
@@ -86,6 +87,8 @@
 				</div>
 			{/if}
 		</div>
+
+		<LinkButton url="/clothing" secondary>Zum Bekleidungsrechner</LinkButton>
 		<Table
 			header={[
 				'Konfektionsgröße',
