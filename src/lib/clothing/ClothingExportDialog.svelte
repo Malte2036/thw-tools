@@ -31,8 +31,9 @@
 		</div>
 	</div>
 	<div slot="footer">
-		<Button click={() => onSubmit(exportFirstName, exportLastName, exportCustomNote)}
-			>Exportieren</Button
+		<Button
+			click={() => onSubmit(exportFirstName, exportLastName, exportCustomNote)}
+			dataUmamiEvent="Export Clothing Sizes">Exportieren</Button
 		>
 	</div>
 </Dialog>
