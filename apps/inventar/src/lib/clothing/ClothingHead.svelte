@@ -1,7 +1,15 @@
 <script lang="ts">
-	const title = 'THW-Tools: MEA Bekleidungsrechner';
-	const description =
-		'Berechne deine passende Größe für die neue THW MEA-Bekleidung. Gebe deine Körpermaße ein und erhalte deine passende Größe.';
+	import type { ClothingSizesTable } from './clothing';
+	import { clothingNameToClothingType, clothingNameToFriendlyName } from './clothingUtils';
+
+	export let table: ClothingSizesTable | undefined = undefined;
+	let title = `THW-Tools: ${
+		table ? clothingNameToFriendlyName(table.name) + ' - ' : ''
+	}MEA Bekleidungsrechner`;
+
+	const description = `Berechne deine passende Größe für die neue THW MEA-Bekleidung.${
+		table ? ` ${clothingNameToFriendlyName(table.name)}:` : ''
+	} Gebe deine Körpermaße ein und erhalte deine passende Größe.`;
 </script>
 
 <svelte:head>
@@ -17,6 +25,10 @@
 	<meta property="og:locale" content="de_DE" />
 	<meta
 		name="keywords"
-		content="THW, Tools, MEA, Bekleidung, Größe, Rechner, Einsatzanzug, THW-Tools, THW-Tools.de"
+		content={`THW, Tools, MEA, Bekleidung, Größe, Rechner, Einsatzanzug, THW-Tools, THW-Tools.de${
+			table
+				? `, ${table.gender == 'M' ? 'Mann' : 'Frau'},${clothingNameToFriendlyName(table.name)}, ${table.type}`
+				: ''
+		}`}
 	/>
 </svelte:head>
