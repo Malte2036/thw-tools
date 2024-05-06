@@ -6,7 +6,8 @@
 		clothingNameToFriendlyName,
 		getMissingMeasurements,
 		humanMeasurementToFriendlyName,
-		humanGenderToFriendlyString
+		humanGenderToFriendlyString,
+		isDeviationAcceptable
 	} from '$lib/clothing/clothingUtils';
 	import type {
 		MatchingClothingSizeTable,
@@ -94,6 +95,16 @@
 
 		return importance.allowTolerance;
 	}
+
+	function getTableLink(size: MatchingClothingSizeTable): string {
+		let link = `${size.name}/${size.gender}`;
+		const matchingClothingSize = size.matchingClothingSizes[0];
+		if (matchingClothingSize && isDeviationAcceptable(matchingClothingSize.deviation)) {
+			link += `?size=${matchingClothingSize.clothingSize.size}`;
+		}
+
+		return link;
+	}
 </script>
 
 <div class="p-4 flex flex-col gap-4">
@@ -151,7 +162,7 @@
 					<div class="flex flex-col justify-between gap-1 border-2 p-2 border-thw rounded-md">
 						<div>
 							<h2 class="text-xl font-bold">{clothingNameToFriendlyName(size.name)}:</h2>
-							{#if size.matchingClothingSizes && size.matchingClothingSizes[0].deviation < 1000}
+							{#if size.matchingClothingSizes && isDeviationAcceptable(size.matchingClothingSizes[0].deviation)}
 								<div class="flex flex-col gap-2">
 									<div>
 										<p>Konfektionsgröße: {size.matchingClothingSizes[0].clothingSize.size}</p>
@@ -232,9 +243,7 @@
 							{/if}
 						</div>
 						<div>
-							<LinkButton url={`${size.name}/${size.gender}/`} secondary
-								>Maßtabelle ansehen</LinkButton
-							>
+							<LinkButton url={getTableLink(size)} secondary>Maßtabelle ansehen</LinkButton>
 						</div>
 					</div>
 				{/each}

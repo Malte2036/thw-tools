@@ -48,6 +48,7 @@
 				humanMeasurementToFriendlyName('insideLegLength')
 			]}
 			values={getTableValues()}
+			selectedIndex={data.table.data.findIndex((value) => value.size === data.selectedSize)}
 		/>
 	</div>
 {/if}

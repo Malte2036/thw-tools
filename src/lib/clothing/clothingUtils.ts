@@ -289,3 +289,7 @@ export function humanGenderToFriendlyString(gender: HumanGender): string {
 			return 'Weiblich';
 	}
 }
+
+export function isDeviationAcceptable(deviation: number) {
+	return deviation < 1000;
+}

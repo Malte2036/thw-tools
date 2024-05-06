@@ -4,9 +4,12 @@ import type { PageServerLoad } from '../$types';
 
 export const prerender = true;
 
-export const load = (async ({ params }) => {
+export const load = (async ({ params, url }) => {
 	const name = params.name as string;
 	const gender = params.gender as HumanGender;
+	const size: number | undefined = url.searchParams.has('size')
+		? parseInt(url.searchParams.get('size') as string)
+		: undefined;
 
 	const tables = await loadClothingSizesTables();
 
@@ -16,6 +19,7 @@ export const load = (async ({ params }) => {
 	}
 
 	return {
-		table
+		table,
+		selectedSize: size
 	};
 }) satisfies PageServerLoad;

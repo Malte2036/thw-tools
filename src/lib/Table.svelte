@@ -3,7 +3,7 @@
 	export let values: string[][];
 	export let onValueClick: ((row: string[], index: number) => void) | undefined = undefined;
 
-	let selectedIndex: number | undefined = undefined;
+	export let selectedIndex: number | undefined = undefined;
 </script>
 
 <table>
@@ -28,6 +28,8 @@
 						class:bg-thw-900={selectedIndex === index}
 						class:text-white={selectedIndex === index}
 						on:click={() => {
+							if (!onValueClick) return;
+
 							selectedIndex = index;
 
 							if (onValueClick) {
