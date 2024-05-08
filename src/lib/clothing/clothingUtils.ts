@@ -9,6 +9,8 @@ import type {
 	HumanMeasurementTolerance,
 	MatchingClothingSize
 } from './clothing';
+
+import { clothingFriendlyNames, clothingMeasurementImportance, clothingTypeByName, humanMeasurementFriendlyNames } from './clothingConstants'
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -117,145 +119,37 @@ export function getMissingMeasurements(
 }
 
 export function clothingNameToClothingType(name: ClothingName): ClothingType {
-	switch (name) {
-		case 'EA_O':
-			return 'Jacket';
-		case 'EA_U':
-		case 'TB_U':
-		case 'TD_U':
-		case 'DA_U':
-			return 'Trousers';
-		case 'DA_R':
-			return 'Skirt';
-		case 'TB_O':
-		case 'TD_O':
-			return 'Sweater';
-		case 'DA_O':
-			return 'Suit';
-		default:
-			throw new Error(`Unknown clothing type ${name}`);
+	try {
+		return clothingTypeByName[name];
+	} catch (error) {
+		throw new Error(`Unknown clothing type ${name}`);
 	}
 }
 
-export function clothingNameToFriendlyName(name: ClothingName) {
-	switch (name) {
-		case 'EA_O':
-			return 'MEA Jacke';
-		case 'EA_U':
-			return 'MEA Hose';
-		case 'DA_O':
-			return 'Dienstanzugjacke';
-		case 'DA_U':
-			return 'Dienstanzughose';
-		case 'DA_R':
-			return 'Dienstanzugrock';
-		case 'TB_O':
-			return 'Thermojacke';
-		case 'TB_U':
-			return 'Thermohose';
-		case 'TD_O':
-			return 'Cargojacke';
-		case 'TD_U':
-			return 'Cargohose';
-		default:
-			return name;
-	}
+export function clothingNameToFriendlyName(name: ClothingName): string {
+	try {
+		return clothingFriendlyNames[name];
+	} catch (error) {
+		return name;
+	};
 }
 
 export function clothingTypeToClothingMeasurementImportance(
 	type: ClothingType,
 	gender: HumanGender
 ): ClothingMeasurementImportance[] {
-	if (gender == 'W') {
-		// woman
-		switch (type) {
-			case 'Jacket':
-				return [
-					{ measurement: 'chestCircumference', allowTolerance: false },
-					{ measurement: 'height', allowTolerance: true },
-					{ measurement: 'hipCircumference', allowTolerance: true }
-				];
-			case 'Suit':
-				return [
-					{ measurement: 'chestCircumference', allowTolerance: false },
-					{ measurement: 'height', allowTolerance: true },
-					{ measurement: 'hipCircumference', allowTolerance: true }
-				];
-			case 'Trousers':
-				return [
-					{ measurement: 'waistCircumference', allowTolerance: false },
-					{ measurement: 'height', allowTolerance: true },
-					{ measurement: 'hipCircumference', allowTolerance: true },
-					{ measurement: 'insideLegLength', allowTolerance: true }
-				];
-			case 'Skirt':
-				return [
-					{ measurement: 'waistCircumference', allowTolerance: false },
-					{ measurement: 'height', allowTolerance: true },
-					{ measurement: 'hipCircumference', allowTolerance: true }
-				];
-			case 'Sweater':
-				return [
-					{ measurement: 'chestCircumference', allowTolerance: false },
-					{ measurement: 'height', allowTolerance: true }
-				];
-
-			default:
-				console.warn(
-					`No measurement importance defined for clothing type ${type} and gender ${gender}`
-				);
-				return [];
-		}
-	}
-
-	// man
-	switch (type) {
-		case 'Jacket':
-			return [
-				{ measurement: 'chestCircumference', allowTolerance: false },
-				{ measurement: 'height', allowTolerance: true },
-				{ measurement: 'waistCircumference', allowTolerance: true }
-			];
-		case 'Suit':
-			return [
-				{ measurement: 'chestCircumference', allowTolerance: false },
-				{ measurement: 'waistCircumference', allowTolerance: false },
-				{ measurement: 'height', allowTolerance: true },
-				{ measurement: 'insideLegLength', allowTolerance: true }
-			];
-
-		case 'Trousers':
-			return [
-				{ measurement: 'waistCircumference', allowTolerance: false },
-				{ measurement: 'height', allowTolerance: true },
-				{ measurement: 'insideLegLength', allowTolerance: true }
-			];
-		case 'Sweater':
-			return [
-				{ measurement: 'chestCircumference', allowTolerance: false },
-				{ measurement: 'height', allowTolerance: true }
-			];
-
-		default:
-			console.warn(`No measurement importance defined for clothing type ${type}`);
-			return [];
-	}
+	try {
+		return clothingMeasurementImportance[gender][type]
+	} catch (error) {
+		return []
+	};
 }
 
-export function humanMeasurementToFriendlyName(measurement: HumanMeasurement) {
-	switch (measurement) {
-		case 'height':
-			return 'Körpergröße';
-		case 'chestCircumference':
-			return 'Brustumfang';
-		case 'waistCircumference':
-			return 'Taillenumfang';
-		case 'hipCircumference':
-			return 'Hüftumfang';
-		case 'insideLegLength':
-			return 'Beininnenlänge';
-		default:
-			return measurement;
+export function humanMeasurementToFriendlyName(measurement: HumanMeasurement): string {
+	try {
+		return humanMeasurementFriendlyNames[measurement];
+	} catch (error) {
+		return measurement;
 	}
 }
 
