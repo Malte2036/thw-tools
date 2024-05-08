@@ -14,9 +14,9 @@ export const clothingMeasurementImportance: { [K in HumanGender]: { [M in Clothi
         ],
         'Trousers': [
             { measurement: 'waistCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
-            { measurement: 'height', allowTolerance: true },
+            { measurement: 'height', allowTolerance: true, factors: {tooHigh: 3, tooLow: 1} },
             { measurement: 'hipCircumference', allowTolerance: true, factors: {tooHigh: 10, tooLow: 1} },
-            { measurement: 'insideLegLength', allowTolerance: true }
+            { measurement: 'insideLegLength', allowTolerance: true, factors: {tooHigh: 3, tooLow: 1}}
         ],
         'Skirt': [
             { measurement: 'waistCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
@@ -43,8 +43,8 @@ export const clothingMeasurementImportance: { [K in HumanGender]: { [M in Clothi
         ],
         'Trousers': [
             { measurement: 'waistCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
-            { measurement: 'height', allowTolerance: true },
-            { measurement: 'insideLegLength', allowTolerance: true }
+            { measurement: 'height', allowTolerance: true, factors: {tooHigh: 3, tooLow: 1}  },
+            { measurement: 'insideLegLength', allowTolerance: true, factors: {tooHigh: 3, tooLow: 1} }
         ],
         'Sweater': [
             { measurement: 'chestCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
