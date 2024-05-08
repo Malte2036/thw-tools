@@ -1,9 +1,9 @@
 {
   "name": "@malte2036/thw-tools-components",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "repository": {
     "type": "git",
-    "url": "https://github.com/malte2036/thw-tools-components.git"
+    "url": "git+https://github.com/malte2036/thw-tools-components.git"
   },
   "type": "module",
   "main": "dist/index.js",
@@ -23,5 +23,12 @@
   },
   "dependencies": {
     "lit": "^3.1.2"
-  }
+  },
+  "description": "## VSCode editor support",
+  "bugs": {
+    "url": "https://github.com/malte2036/thw-tools-components/issues"
+  },
+  "homepage": "https://github.com/malte2036/thw-tools-components#readme",
+  "author": "Malte Sehmer",
+  "license": "ISC"
 }
