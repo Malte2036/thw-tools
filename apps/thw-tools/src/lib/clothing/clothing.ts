@@ -40,6 +40,10 @@ export type HumanGender = 'M' | 'W';
 export type ClothingMeasurementImportance = {
 	measurement: HumanMeasurement;
 	allowTolerance: boolean;
+	factors?: {
+		tooHigh: number;
+		tooLow: number;
+	}
 };
 
 export type ClothingName =

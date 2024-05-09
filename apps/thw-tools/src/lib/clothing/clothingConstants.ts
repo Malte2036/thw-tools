@@ -6,61 +6,61 @@ import type {
 	HumanMeasurement
 } from './clothing';
 
-export const clothingMeasurementImportance: {
-	[K in HumanGender]: { [M in ClothingType]: ClothingMeasurementImportance[] };
-} = {
-	W: {
-		Jacket: [
-			{ measurement: 'chestCircumference', allowTolerance: false },
-			{ measurement: 'height', allowTolerance: true },
-			{ measurement: 'hipCircumference', allowTolerance: true }
-		],
-		Suit: [
-			{ measurement: 'chestCircumference', allowTolerance: false },
-			{ measurement: 'height', allowTolerance: true },
-			{ measurement: 'hipCircumference', allowTolerance: true }
-		],
-		Trousers: [
-			{ measurement: 'waistCircumference', allowTolerance: false },
-			{ measurement: 'height', allowTolerance: true },
-			{ measurement: 'hipCircumference', allowTolerance: true },
-			{ measurement: 'insideLegLength', allowTolerance: true }
-		],
-		Skirt: [
-			{ measurement: 'waistCircumference', allowTolerance: false },
-			{ measurement: 'height', allowTolerance: true },
-			{ measurement: 'hipCircumference', allowTolerance: true }
-		],
-		Sweater: [
-			{ measurement: 'chestCircumference', allowTolerance: false },
-			{ measurement: 'height', allowTolerance: true }
-		]
-	},
+export const clothingMeasurementImportance: { [K in HumanGender]: { [M in ClothingType]: ClothingMeasurementImportance[] } } = {
+    'W': {
+        'Jacket': [
+            { measurement: 'chestCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
+            { measurement: 'height', allowTolerance: true },
+            { measurement: 'hipCircumference', allowTolerance: true, factors: {tooHigh: 10, tooLow: 1} }
+        ],
+        'Suit': [
+            { measurement: 'chestCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
+            { measurement: 'height', allowTolerance: true },
+            { measurement: 'hipCircumference', allowTolerance: true, factors: {tooHigh: 10, tooLow: 1} }
+        ],
+        'Trousers': [
+            { measurement: 'waistCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
+            { measurement: 'height', allowTolerance: true, factors: {tooHigh: 3, tooLow: 1} },
+            { measurement: 'hipCircumference', allowTolerance: true, factors: {tooHigh: 10, tooLow: 1} },
+            { measurement: 'insideLegLength', allowTolerance: true, factors: {tooHigh: 3, tooLow: 1}}
+        ],
+        'Skirt': [
+            { measurement: 'waistCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
+            { measurement: 'height', allowTolerance: true },
+            { measurement: 'hipCircumference', allowTolerance: true, factors: {tooHigh: 10, tooLow: 1} }
+        ],
+        'Sweater': [
+            { measurement: 'chestCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
+            { measurement: 'height', allowTolerance: true }
+        ]
+    },
 
-	M: {
-		Jacket: [
-			{ measurement: 'chestCircumference', allowTolerance: false },
-			{ measurement: 'height', allowTolerance: true },
-			{ measurement: 'waistCircumference', allowTolerance: true }
-		],
-		Suit: [
-			{ measurement: 'chestCircumference', allowTolerance: false },
-			{ measurement: 'waistCircumference', allowTolerance: false },
-			{ measurement: 'height', allowTolerance: true },
-			{ measurement: 'insideLegLength', allowTolerance: true }
-		],
-		Trousers: [
-			{ measurement: 'waistCircumference', allowTolerance: false },
-			{ measurement: 'height', allowTolerance: true },
-			{ measurement: 'insideLegLength', allowTolerance: true }
-		],
-		Sweater: [
-			{ measurement: 'chestCircumference', allowTolerance: false },
-			{ measurement: 'height', allowTolerance: true }
-		],
-		Skirt: []
-	}
-};
+    'M': {
+        'Jacket': [
+            { measurement: 'chestCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
+            { measurement: 'height', allowTolerance: true },
+            { measurement: 'waistCircumference', allowTolerance: true, factors: {tooHigh: 10, tooLow: 1} }
+        ],
+        'Suit': [
+            { measurement: 'chestCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
+            { measurement: 'waistCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
+            { measurement: 'height', allowTolerance: true },
+            { measurement: 'insideLegLength', allowTolerance: true }
+        ],
+        'Trousers': [
+            { measurement: 'waistCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
+            { measurement: 'height', allowTolerance: true, factors: {tooHigh: 3, tooLow: 1}  },
+            { measurement: 'insideLegLength', allowTolerance: true, factors: {tooHigh: 3, tooLow: 1} }
+        ],
+        'Sweater': [
+            { measurement: 'chestCircumference', allowTolerance: false, factors: {tooHigh: 10, tooLow: 1} },
+            { measurement: 'height', allowTolerance: true }
+        ],
+        'Skirt': []
+
+    }
+
+}
 
 export const clothingFriendlyNames: { [K in ClothingName]: string } = {
 	EA_O: 'MEA Jacke',
