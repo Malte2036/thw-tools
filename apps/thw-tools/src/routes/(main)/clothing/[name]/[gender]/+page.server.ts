@@ -1,11 +1,11 @@
 import { browser } from '$app/environment';
 import type { HumanGender } from '$lib/clothing/clothing';
 import { loadClothingSizesTables } from '$lib/clothing/clothingUtils';
-import type { PageServerLoad } from '../$types';
+import type { PageServerLoad } from './$types';
 
 export const prerender = true;
 
-export const load = (async ({ params, url }) => {
+export const load = (async ({ params }) => {
 	const name = params.name as string;
 	const gender = params.gender as HumanGender;
 

@@ -10,7 +10,12 @@ import type {
 	MatchingClothingSize
 } from './clothing';
 
-import { clothingFriendlyNames, clothingMeasurementImportance, clothingTypeByName, humanMeasurementFriendlyNames } from './clothingConstants'
+import {
+	clothingFriendlyNames,
+	clothingMeasurementImportance,
+	clothingTypeByName,
+	humanMeasurementFriendlyNames
+} from './clothingConstants';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -131,7 +136,7 @@ export function clothingNameToFriendlyName(name: ClothingName): string {
 		return clothingFriendlyNames[name];
 	} catch (error) {
 		return name;
-	};
+	}
 }
 
 export function clothingTypeToClothingMeasurementImportance(
@@ -139,10 +144,10 @@ export function clothingTypeToClothingMeasurementImportance(
 	gender: HumanGender
 ): ClothingMeasurementImportance[] {
 	try {
-		return clothingMeasurementImportance[gender][type]
+		return clothingMeasurementImportance[gender][type];
 	} catch (error) {
-		return []
-	};
+		return [];
+	}
 }
 
 export function humanMeasurementToFriendlyName(measurement: HumanMeasurement): string {

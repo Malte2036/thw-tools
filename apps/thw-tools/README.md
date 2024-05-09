@@ -8,12 +8,12 @@ Unter anderem ein [Grundausbildungs-Quiz](https://thw-tools.de/quiz/ga/), ein [A
 ### Developer guide
 
 Anforderungen:
-* node >= 18
+
+- node >= 18
 
 Installation:
-* repo forken / git clone
-* private github registry konfigurieren [wie hier](https://stackoverflow.com/questions/58919401/installing-packages-from-github-npm-registry-auth-error-401) owner = Malte2036 und Token entsprechend ersetzen
-* npm i
-* cp .env.example .env  
-* npm run dev
 
+- repo forken / git clone
+- npm i
+- cp .env.example .env
+- npm run dev
