@@ -43,6 +43,7 @@ function calculateMatchingClothingSizeForTable(
 			const measurement = measurements[importance.measurement];
 			const size = clothingSize[importance.measurement];
 			const allowTolerance = importance.allowTolerance;
+			const factors = importance.factors ?? {tooHigh: 1, tooLow: 1};
 
 			if (!measurement) {
 				// console.warn(
@@ -58,7 +59,8 @@ function calculateMatchingClothingSizeForTable(
 			return measurementMetric(
 				measurement,
 				size,
-				allowTolerance ? getMeasurementTolerance(table.name) : undefined
+				factors,
+				allowTolerance ? getMeasurementTolerance(table.name) : undefined,
 			);
 		});
 
@@ -74,17 +76,19 @@ function calculateMatchingClothingSizeForTable(
 export function measurementMetric(
 	measurement: number,
 	size: { min: number; max: number },
+	factors: { tooHigh: number; tooLow: number },
 	tolerance?: HumanMeasurementTolerance
 ): number {
 	const min = size.min * (1 - (tolerance?.down ?? 0));
 	const max = size.max * (1 + (tolerance?.up ?? 0));
 	if (min <= measurement && max >= measurement) return 0;
 
-	if (min > measurement) return Math.abs(measurement - min);
-	if (max < measurement) return Math.abs(max - measurement);
+	if (min > measurement) return Math.abs(measurement - min) * factors.tooLow;
+	if (max < measurement) return Math.abs(max - measurement) * factors.tooHigh;
 
 	throw new Error('This should never happen');
 }
+
 export function getMeasurementTolerance(name: ClothingName): HumanMeasurementTolerance {
 	switch (name) {
 		case 'DA_O':

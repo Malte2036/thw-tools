@@ -11,9 +11,10 @@ describe('measurementMetric', () => {
 	test('measurementMetric returns 0 when measurement is within range', () => {
 		const measurement = 184;
 		const size = { min: 180, max: 184 };
+		const factors = { tooHigh: 1, tooLow: 1 };
 		const allowTolerance = { up: 0.02, down: 0.02 };
 
-		const res = measurementMetric(measurement, size, allowTolerance);
+		const res = measurementMetric(measurement, size, factors, allowTolerance);
 
 		expect(res).toBe(0);
 	});
@@ -21,9 +22,11 @@ describe('measurementMetric', () => {
 	test('measurementMetric returns negative number when measurement is below range', () => {
 		const measurement = 170;
 		const size = { min: 180, max: 184 };
+		const factors = { tooHigh: 1, tooLow: 1 };
 		const allowTolerance = { up: 0.02, down: 0.02 };
 
-		const res = measurementMetric(measurement, size, allowTolerance);
+
+		const res = measurementMetric(measurement, size, factors, allowTolerance);
 
 		expect(res).toBeGreaterThan(0);
 	});
@@ -31,9 +34,10 @@ describe('measurementMetric', () => {
 	test('measurementMetric returns positive number when measurement is above range', () => {
 		const measurement = 190;
 		const size = { min: 180, max: 184 };
+		const factors = { tooHigh: 1, tooLow: 1 };
 		const allowTolerance = { up: 0.02, down: 0.02 };
 
-		const res = measurementMetric(measurement, size, allowTolerance);
+		const res = measurementMetric(measurement, size, factors, allowTolerance);
 
 		expect(res).toBeGreaterThan(0);
 	});
@@ -41,8 +45,9 @@ describe('measurementMetric', () => {
 	test('measurementMetric returns 0 when measurement is within range without tolerance', () => {
 		const measurement = 184;
 		const size = { min: 180, max: 184 };
+		const factors = { tooHigh: 1, tooLow: 1 };
 
-		const res = measurementMetric(measurement, size);
+		const res = measurementMetric(measurement, size, factors);
 
 		expect(res).toBe(0);
 	});
@@ -50,8 +55,9 @@ describe('measurementMetric', () => {
 	test('measurementMetric returns negative number when measurement is below range without tolerance', () => {
 		const measurement = 170;
 		const size = { min: 180, max: 184 };
+		const factors = { tooHigh: 1, tooLow: 1 };
 
-		const res = measurementMetric(measurement, size);
+		const res = measurementMetric(measurement, size, factors);
 
 		expect(res).toBeGreaterThan(0);
 	});
@@ -59,10 +65,31 @@ describe('measurementMetric', () => {
 	test('measurementMetric returns positive number when measurement is above range without tolerance', () => {
 		const measurement = 190;
 		const size = { min: 180, max: 184 };
+		const factors = { tooHigh: 1, tooLow: 1 };
 
-		const res = measurementMetric(measurement, size);
+		const res = measurementMetric(measurement, size, factors);
 
 		expect(res).toBeGreaterThan(0);
+	});
+
+	test('measurementMetric returns correctly factored metric when too high', () => {
+		const measurement = 185;
+		const size = { min: 180, max: 184 };
+		const factors = { tooHigh: 10, tooLow: 1 };
+
+		const res = measurementMetric(measurement, size, factors);
+
+		expect(res).toEqual(10);
+	});
+
+	test('measurementMetric returns correctly factored metric when too low', () => {
+		const measurement = 179;
+		const size = { min: 180, max: 184 };
+		const factors = { tooHigh: 1, tooLow: 10 };
+
+		const res = measurementMetric(measurement, size, factors);
+
+		expect(res).toEqual(10);
 	});
 });
 
