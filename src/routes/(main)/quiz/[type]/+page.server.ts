@@ -11,5 +11,5 @@ export const load = (async ({ params }) => {
 
 	const url = `/quiz/${questionType}/${questionNumber}/`;
 
-	throw redirect(307, url);
+	redirect(307, url);
 }) satisfies PageServerLoad;

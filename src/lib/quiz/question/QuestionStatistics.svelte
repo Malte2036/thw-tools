@@ -13,7 +13,7 @@
 					(currentQuestionAnsweredCountData.right /
 						(currentQuestionAnsweredCountData.right + currentQuestionAnsweredCountData.wrong)) *
 					100
-			  )
+				)
 					.toFixed(1)
 					.replace(/\.0+$/, '')
 			: ''}% wurde diese Frage richtig beantwortet)

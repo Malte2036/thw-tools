@@ -18,7 +18,7 @@ export const load = (async ({ params, depends }) => {
 	const question = await findQuestion({ type: questionType, number: questionNumber });
 
 	if (!question) {
-		throw error(404, 'Question not found');
+		error(404, 'Question not found');
 	}
 
 	const questionCount = await countQuestions({ type: questionType });
