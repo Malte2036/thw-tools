@@ -1,5 +1,5 @@
 import { findQuestions } from '$lib/Database';
-import { loadClothingSizesTables } from '$lib/clothing/clothingConstantUtils';
+import { loadClothingSizesTables } from '$lib/clothing/clothingUtils';
 import { QuestionType } from '$lib/model/question';
 
 export async function GET() {
@@ -20,16 +20,6 @@ export async function GET() {
 				)
 				.join('');
 		})
-	);
-
-	const clothingTables = await loadClothingSizesTables();
-	const clothingLinks = clothingTables.map(
-		(table) =>
-			`
-        <url>
-            <loc>https://thw-tools.de/clothing/${table.name}/${table.gender}/</loc>
-            <priority>0.6</priority>
-        </url>`
 	);
 
 	return new Response(
@@ -76,7 +66,6 @@ export async function GET() {
             <priority>0.8</priority>
         </url>
         ${singleQuestionLinks.join('')}
-        ${clothingLinks.join('')}
       </urlset>`.trim(),
 		{
 			headers: {
