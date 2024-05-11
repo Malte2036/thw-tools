@@ -5,7 +5,7 @@
 		humanMeasurementToFriendlyName,
 		clothingNameToFriendlyName,
 		humanGenderToFriendlyString
-	} from '$lib/clothing/clothingUtils';
+	} from '$lib/clothing/clothingConstantUtils';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
