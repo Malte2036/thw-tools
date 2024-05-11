@@ -1,4 +1,4 @@
-import { loadClothingSizesTables } from '$lib/clothing/clothingUtils';
+import { loadClothingSizesTables } from '$lib/clothing/clothingConstantUtils';
 import type { PageServerLoad } from './$types';
 
 export const prerender = true;

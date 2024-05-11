@@ -12,18 +12,19 @@
 		HumanMeasurement,
 		MatchingClothingSizeTable
 	} from '$lib/clothing/clothing';
+	import {
+		clothingNameToFriendlyName,
+		humanGenderToFriendlyString,
+		humanMeasurementToFriendlyName
+	} from '$lib/clothing/clothingConstantUtils';
 	import { convertClothingResultsToCSV, exportCSVFile } from '$lib/clothing/clothingExport';
 	import type { ClothingInputValue } from '$lib/clothing/clothingInputStore';
 	import { clothingInput } from '$lib/clothing/clothingInputStore';
 	import {
 		calculateMatchingClothingSizeForTables,
-		clothingNameToFriendlyName,
 		getMissingMeasurements,
-		humanGenderToFriendlyString,
-		humanMeasurementToFriendlyName,
 		isDeviationAcceptable
 	} from '$lib/clothing/clothingUtils';
-	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import type { PageData } from './$types';
 

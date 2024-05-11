@@ -1,5 +1,6 @@
 import type { MatchingClothingSizeTable } from './clothing';
-import { clothingNameToFriendlyName, isDeviationAcceptable } from './clothingUtils';
+import { isDeviationAcceptable } from './clothingUtils';
+import { clothingNameToFriendlyName } from './clothingConstantUtils';
 
 export function convertClothingResultsToCSV(
 	tables: MatchingClothingSizeTable[],

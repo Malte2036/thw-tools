@@ -1,10 +1,9 @@
 import { describe, expect, test } from 'vitest';
+import { calculateMatchingClothingSizeForTables, measurementMetric } from './clothingUtils';
 import {
-	calculateMatchingClothingSizeForTables,
 	clothingNameToClothingType,
-	clothingTypeToClothingMeasurementImportance,
-	measurementMetric
-} from './clothingUtils';
+	clothingTypeToClothingMeasurementImportance
+} from './clothingConstantUtils';
 import type { ClothingSizes, ClothingSizesTable, HumanGender, HumanMeasurement } from './clothing';
 
 describe('measurementMetric', () => {
@@ -24,7 +23,6 @@ describe('measurementMetric', () => {
 		const size = { min: 180, max: 184 };
 		const factors = { tooHigh: 1, tooLow: 1 };
 		const allowTolerance = { up: 0.02, down: 0.02 };
-
 
 		const res = measurementMetric(measurement, size, factors, allowTolerance);
 

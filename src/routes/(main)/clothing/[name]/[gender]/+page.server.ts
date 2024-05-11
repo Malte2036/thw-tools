@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import type { HumanGender } from '$lib/clothing/clothing';
-import { loadClothingSizesTables } from '$lib/clothing/clothingUtils';
+import { loadClothingSizesTables } from '$lib/clothing/clothingConstantUtils';
 import type { PageServerLoad } from './$types';
 
 export const prerender = true;
