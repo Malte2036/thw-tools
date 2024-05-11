@@ -23,6 +23,7 @@
 		humanMeasurementToFriendlyName,
 		isDeviationAcceptable
 	} from '$lib/clothing/clothingUtils';
+	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import type { PageData } from './$types';
 
@@ -313,12 +314,15 @@
 						man sich für eine "Nachbargröße" entscheiden sollte (siehe Maßtabelle).
 					</li>
 					<li>
-						Die Berechnung basiert auf der <a
+						Die Berechnung basiert grundlegend auf der <a
 							href="https://en.wikipedia.org/wiki/Joint_European_standard_for_size_labelling_of_clothes#EN_13402-2:_Primary_and_secondary_dimensions"
 							target="_blank"
 							rel="noreferrer"
 							class="text-thw underline">EN 13402</a
-						>
+						>. Es wurden jedoch einige Anpassungen vorgenommen, um die Ergebnisse zu optimieren.
+						Beispielsweise sollte die
+						{clothingNameToFriendlyName('EA_U')}, falls es keine passende Größe gibt, eher etwas
+						länger als zu kurz sein.
 					</li>
 				</ul>
 			</div>
