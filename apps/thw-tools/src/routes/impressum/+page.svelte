@@ -68,11 +68,6 @@
 				>https://github.com/Malte2036/thw-elektro</a
 			> einsehbar.</span
 		>
-		<span
-			>Bitte beachten Sie, dass diese Website von Vercel gehostet wird und es möglich ist, dass
-			Vercel Daten sammelt. Bitte lesen Sie die Datenschutzbestimmungen von Vercel, wenn Sie diese
-			Website besuchen.</span
-		>
 	</div>
 
 	<LinkButton url="/" secondary>Zurück</LinkButton>
