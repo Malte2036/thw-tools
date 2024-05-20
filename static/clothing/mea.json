@@ -7861,7 +7861,7 @@
 					"min": 171
 				},
 				"id": 35,
-				"size": 64.0
+				"size": "64 L"
 			},
 			{
 				"chestCircumference": {
@@ -7885,7 +7885,7 @@
 					"min": 164
 				},
 				"id": 34,
-				"size": 64.0
+				"size": "64 N"
 			},
 			{
 				"chestCircumference": {
@@ -11989,7 +11989,7 @@
 					"min": 164
 				},
 				"id": 34,
-				"size": 64.0
+				"size": "64 N"
 			},
 			{
 				"insideLegLength": {
@@ -12085,7 +12085,7 @@
 					"min": 171
 				},
 				"id": 35,
-				"size": 64.0
+				"size": "64 L"
 			},
 			{
 				"insideLegLength": {

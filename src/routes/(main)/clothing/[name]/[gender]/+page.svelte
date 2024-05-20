@@ -13,18 +13,19 @@
 	import LinkButton from '$lib/LinkButton.svelte';
 
 	export let data: PageData;
-	let selectedSize: number | undefined =
+	let selectedSize: string | undefined =
 		browser && $page.url.searchParams.has('size')
-			? Number($page.url.searchParams.get('size'))
+			? $page.url.searchParams.get('size')?.toString()
 			: undefined;
 
 	function getTableValues() {
 		const table = data.table;
 		if (!table) return [];
 
-		table.data.sort((a, b) => a.size - b.size);
+		table.data.sort((a, b) => a.id - b.id);
 
 		return table.data.map((value) => [
+			value.id.toString(),
 			value.size.toString(),
 			value.height ? `${value.height.min} - ${value.height.max}` : '',
 			value.chestCircumference
@@ -91,6 +92,7 @@
 		<LinkButton url="/clothing" secondary>Zum Bekleidungsrechner</LinkButton>
 		<Table
 			header={[
+				'ID',
 				'Konfektionsgröße',
 				humanMeasurementToFriendlyName('height'),
 				humanMeasurementToFriendlyName('chestCircumference'),
