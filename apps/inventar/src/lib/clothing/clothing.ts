@@ -1,6 +1,6 @@
 export type ClothingSizes = {
 	id: number;
-	size: number;
+	size: string;
 	height: {
 		min: number;
 		max: number;
@@ -43,7 +43,7 @@ export type ClothingMeasurementImportance = {
 	factors?: {
 		tooHigh: number;
 		tooLow: number;
-	}
+	};
 };
 
 export type ClothingName =
