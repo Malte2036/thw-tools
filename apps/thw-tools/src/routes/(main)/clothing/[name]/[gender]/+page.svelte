@@ -6,19 +6,22 @@
 		clothingNameToFriendlyName,
 		humanGenderToFriendlyString
 	} from '$lib/clothing/clothingConstantUtils';
-	import { page } from '$app/stores';
-	import { browser } from '$app/environment';
 	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
 	import LinkButton from '$lib/LinkButton.svelte';
 	import ClothingSizesInput from '$lib/clothing/ClothingSizesInput.svelte';
-	import { calculateMatchingClothingSizesForInput } from '$lib/clothing/clothingUtils';
+	import {
+		calculateMatchingClothingSizesForInput,
+		getTableLink
+	} from '$lib/clothing/clothingUtils';
 	import type { ClothingInputValue } from '$lib/clothing/clothingInputStore';
 	import type {
 		ClothingName,
+		HumanGender,
 		HumanMeasurement,
 		MatchingClothingSizeTable
 	} from '$lib/clothing/clothing';
 	import { clothingInput } from '$lib/clothing/clothingInputStore';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
 
@@ -45,6 +48,17 @@
 		if (!matchingSizeTable) return undefined;
 
 		return matchingSizeTable.matchingClothingSizes[0].clothingSize.size;
+	}
+
+	$: $clothingInput.gender &&
+		$clothingInput.gender != data.table.gender &&
+		pushToOtherGender($clothingInput.gender);
+
+	function pushToOtherGender(gender: HumanGender) {
+		const link = getTableLink(data.table.name, gender, true);
+		if (link) {
+			goto(link);
+		}
 	}
 
 	$: calculate($clothingInput);

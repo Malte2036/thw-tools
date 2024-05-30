@@ -11,7 +11,7 @@
 		clothingNameToFriendlyName,
 		humanMeasurementToFriendlyName
 	} from './clothingConstantUtils';
-	import { isDeviationAcceptable } from './clothingUtils';
+	import { getTableLink, isDeviationAcceptable } from './clothingUtils';
 
 	export let size: MatchingClothingSizeTable;
 
@@ -61,16 +61,6 @@
 		if (!importance) return undefined;
 
 		return importance.allowTolerance;
-	}
-
-	function getTableLink(size: MatchingClothingSizeTable): string {
-		let link = `${size.name}/${size.gender}`;
-		const matchingClothingSize = size.matchingClothingSizes[0];
-		if (matchingClothingSize && isDeviationAcceptable(matchingClothingSize.deviation)) {
-			link += `?size=${matchingClothingSize.clothingSize.size}`;
-		}
-
-		return link;
 	}
 </script>
 
@@ -154,6 +144,8 @@
 		{/if}
 	</div>
 	<div>
-		<LinkButton url={getTableLink(size)} secondary>Maßtabelle ansehen</LinkButton>
+		<LinkButton url={getTableLink(size.name, size.gender, true)} secondary
+			>Maßtabelle ansehen</LinkButton
+		>
 	</div>
 </div>
