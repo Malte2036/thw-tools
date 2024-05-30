@@ -11,7 +11,8 @@
 	import ClothingSizesInput from '$lib/clothing/ClothingSizesInput.svelte';
 	import {
 		calculateMatchingClothingSizesForInput,
-		getTableLink
+		getTableLink,
+		isDeviationAcceptable
 	} from '$lib/clothing/clothingUtils';
 	import type { ClothingInputValue } from '$lib/clothing/clothingInputStore';
 	import type {
@@ -22,8 +23,16 @@
 	} from '$lib/clothing/clothing';
 	import { clothingInput } from '$lib/clothing/clothingInputStore';
 	import { goto } from '$app/navigation';
+	import Button from '$lib/Button.svelte';
+	import ClothingResultCard from '$lib/clothing/ClothingResultCard.svelte';
+	import ClothingInfo from '$lib/clothing/ClothingInfo.svelte';
+	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
 
 	export let data: PageData;
+
+	let visibleData: 'table' | 'deviationResults' =
+		$page.url.searchParams.get('visibleData') === 'deviationResults' ? 'deviationResults' : 'table';
 
 	let calculationResult: {
 		sizes: MatchingClothingSizeTable[];
@@ -34,20 +43,26 @@
 	};
 
 	let selectedSize: string | undefined;
+	let matchingSizeTable: MatchingClothingSizeTable | undefined;
 
 	function calculate(input: ClothingInputValue) {
 		calculationResult = calculateMatchingClothingSizesForInput(input, data.tables);
 
+		matchingSizeTable = getMatchingSizeTable();
 		selectedSize = calculateSelectedSize();
 	}
 
+	function getMatchingSizeTable() {
+		return calculationResult?.sizes.find((size) => size.name === data.table.name);
+	}
+
 	function calculateSelectedSize() {
-		let matchingSizeTable: MatchingClothingSizeTable | undefined = calculationResult?.sizes.find(
-			(size) => size.name === data.table.name
-		);
 		if (!matchingSizeTable) return undefined;
 
-		return matchingSizeTable.matchingClothingSizes[0].clothingSize.size;
+		const size = matchingSizeTable.matchingClothingSizes[0];
+		if (!isDeviationAcceptable(size.deviation)) return undefined;
+
+		return size.clothingSize.size;
 	}
 
 	$: $clothingInput.gender &&
@@ -55,7 +70,9 @@
 		pushToOtherGender($clothingInput.gender);
 
 	function pushToOtherGender(gender: HumanGender) {
-		const link = getTableLink(data.table.name, gender, true);
+		if (!browser) return;
+
+		const link = getTableLink(data.table.name, gender, visibleData == 'deviationResults');
 		if (link) {
 			goto(link);
 		}
@@ -91,6 +108,7 @@
 	<p>Table not found</p>
 {:else}
 	<div class="p-4 flex flex-col gap-2">
+		<LinkButton url="/clothing">Zu allen Kleidungsstücken</LinkButton>
 		<div>
 			<span class="text-3xl font-bold">{clothingNameToFriendlyName(data.table.name)}</span>
 			<span>({data.table.type}, {humanGenderToFriendlyString(data.table.gender)})</span>
@@ -98,29 +116,68 @@
 
 		<div class="flex flex-col gap-1">
 			<ClothingSizesInput />
-			{#if selectedSize}
-				<div>
-					<span class="font-bold">Berechnete Konfektionsgröße:</span>
-					<span>{selectedSize}</span>
-				</div>
-			{/if}
+
+			<div>
+				<span class="font-bold">Berechnete Konfektionsgröße:</span>
+				<span>
+					{#if selectedSize}
+						{selectedSize}
+					{:else}
+						Keine passende Größe gefunden
+					{/if}
+				</span>
+			</div>
 		</div>
 
-		<LinkButton url="/clothing" secondary>Zum Bekleidungsrechner</LinkButton>
-		<Table
-			header={[
-				'ID',
-				'Konfektionsgröße',
-				humanMeasurementToFriendlyName('height'),
-				humanMeasurementToFriendlyName('chestCircumference'),
-				humanMeasurementToFriendlyName('waistCircumference'),
-				humanMeasurementToFriendlyName('hipCircumference'),
-				humanMeasurementToFriendlyName('insideLegLength')
-			]}
-			values={getTableValues()}
-			selectedIndex={data.table.data.findIndex(
-				(value) => value.size.toString() === selectedSize?.toString()
-			)}
-		/>
+		<Button
+			secondary
+			click={() => (visibleData = visibleData === 'table' ? 'deviationResults' : 'table')}
+		>
+			{visibleData === 'table'
+				? `Weitere Ergebnisse für "${clothingNameToFriendlyName(data.table.name)}"`
+				: `Maßtabelle für "${clothingNameToFriendlyName(data.table.name)}"`}
+		</Button>
+		{#if visibleData === 'table'}
+			<Table
+				header={[
+					'ID',
+					'Konfektionsgröße',
+					humanMeasurementToFriendlyName('height'),
+					humanMeasurementToFriendlyName('chestCircumference'),
+					humanMeasurementToFriendlyName('waistCircumference'),
+					humanMeasurementToFriendlyName('hipCircumference'),
+					humanMeasurementToFriendlyName('insideLegLength')
+				]}
+				values={getTableValues()}
+				selectedIndex={data.table.data.findIndex(
+					(value) => value.size.toString() === selectedSize?.toString()
+				)}
+			/>
+		{:else}
+			<div class="font-bold">
+				<span>
+					Es wurden folgende Größen für "{clothingNameToFriendlyName(data.table.name)}" gefunden.
+					Die Ergebnisse sind nach der Ergebnisqualität sortiert</span
+				> (Die geringste Abweichung ist am besten, siehe Info unten).
+			</div>
+			<div class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-3 gap-2">
+				{#if matchingSizeTable}
+					{#each matchingSizeTable.matchingClothingSizes as table}
+						{#if isDeviationAcceptable(table.deviation)}
+							<ClothingResultCard
+								clothingSizesTable={matchingSizeTable}
+								matchingClothingSize={table}
+								missingMeasurements={calculationResult.missingMeasurements}
+								showButton={false}
+							/>
+						{/if}
+					{/each}
+				{:else}
+					<p>Keine passenden Ergebnisse gefunden</p>
+				{/if}
+			</div>
+		{/if}
 	</div>
+
+	<ClothingInfo />
 {/if}
