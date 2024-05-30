@@ -2,7 +2,7 @@
 	import Button from './Button.svelte';
 	import { trackEvent } from './utils';
 
-	export let url: string;
+	export let url: string | URL;
 	export let blank = false;
 	export let secondary = false;
 	export let disabled = false;
@@ -10,7 +10,7 @@
 </script>
 
 <a
-	href={url}
+	href={url instanceof URL ? url.href : url}
 	target={blank ? '_blank' : undefined}
 	rel={blank ? 'noreffer' : undefined}
 	class="w-full h-full"
