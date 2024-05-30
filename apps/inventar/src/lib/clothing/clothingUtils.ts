@@ -123,14 +123,18 @@ export function getMissingMeasurements(
 }
 
 export function isDeviationAcceptable(deviation: number) {
-	return deviation < 1000;
+	return deviation < 250;
 }
 
-export function getTableLink(name: String, gender: HumanGender, showTable: boolean): string {
+export function getTableLink(
+	name: String,
+	gender: HumanGender,
+	showDeviationResults: boolean
+): string {
 	let link = `/clothing/${name}/${gender}`;
 
-	if (showTable) {
-		link += `?showTable=true`;
+	if (showDeviationResults) {
+		link += `?visibleData=deviationResults`;
 	}
 
 	return link;

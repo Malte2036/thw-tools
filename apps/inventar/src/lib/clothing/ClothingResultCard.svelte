@@ -4,7 +4,9 @@
 		ClothingMeasurementImportance,
 		ClothingName,
 		ClothingSizes,
+		ClothingSizesTable,
 		HumanMeasurement,
+		MatchingClothingSize,
 		MatchingClothingSizeTable
 	} from './clothing';
 	import {
@@ -13,7 +15,9 @@
 	} from './clothingConstantUtils';
 	import { getTableLink, isDeviationAcceptable } from './clothingUtils';
 
-	export let size: MatchingClothingSizeTable;
+	export let clothingSizesTable: ClothingSizesTable;
+	export let matchingClothingSize: MatchingClothingSize;
+	export let showButton = true;
 
 	export let missingMeasurements: Map<ClothingName, HumanMeasurement[]> = new Map();
 
@@ -66,74 +70,87 @@
 
 <div class="flex flex-col justify-between gap-1 border-2 p-2 border-thw rounded-md">
 	<div>
-		<h2 class="text-xl font-bold">{clothingNameToFriendlyName(size.name)}:</h2>
-		{#if size.matchingClothingSizes && isDeviationAcceptable(size.matchingClothingSizes[0].deviation)}
+		<h2 class="text-xl font-bold">{clothingNameToFriendlyName(clothingSizesTable.name)}:</h2>
+		{#if isDeviationAcceptable(matchingClothingSize.deviation)}
 			<div class="flex flex-col gap-2">
 				<div>
-					<p>Konfektionsgröße: {size.matchingClothingSizes[0].clothingSize.size}</p>
-					<p class={isNessaryMeasurement('height', size.measurementImportance) ? 'font-bold' : ''}>
+					<p>Konfektionsgröße: {matchingClothingSize.clothingSize.size}</p>
+					<p
+						class={isNessaryMeasurement('height', clothingSizesTable.measurementImportance)
+							? 'font-bold'
+							: ''}
+					>
 						{sizeToString(
 							'height',
-							size.matchingClothingSizes[0].clothingSize,
-							size.measurementImportance
+							matchingClothingSize.clothingSize,
+							clothingSizesTable.measurementImportance
 						)}
 					</p>
 					<p
-						class={isNessaryMeasurement('chestCircumference', size.measurementImportance)
+						class={isNessaryMeasurement(
+							'chestCircumference',
+							clothingSizesTable.measurementImportance
+						)
 							? 'font-bold'
 							: ''}
 					>
 						{sizeToString(
 							'chestCircumference',
-							size.matchingClothingSizes[0].clothingSize,
-							size.measurementImportance
+							matchingClothingSize.clothingSize,
+							clothingSizesTable.measurementImportance
 						)}
 					</p>
 					<p
-						class={isNessaryMeasurement('waistCircumference', size.measurementImportance)
+						class={isNessaryMeasurement(
+							'waistCircumference',
+							clothingSizesTable.measurementImportance
+						)
 							? 'font-bold'
 							: ''}
 					>
 						{sizeToString(
 							'waistCircumference',
-							size.matchingClothingSizes[0].clothingSize,
-							size.measurementImportance
+							matchingClothingSize.clothingSize,
+							clothingSizesTable.measurementImportance
 						)}
 					</p>
 					<p
-						class={isNessaryMeasurement('hipCircumference', size.measurementImportance)
+						class={isNessaryMeasurement(
+							'hipCircumference',
+							clothingSizesTable.measurementImportance
+						)
 							? 'font-bold'
 							: ''}
 					>
 						{sizeToString(
 							'hipCircumference',
-							size.matchingClothingSizes[0].clothingSize,
-							size.measurementImportance
+							matchingClothingSize.clothingSize,
+							clothingSizesTable.measurementImportance
 						)}
 					</p>
 					<p
-						class={isNessaryMeasurement('insideLegLength', size.measurementImportance)
+						class={isNessaryMeasurement('insideLegLength', clothingSizesTable.measurementImportance)
 							? 'font-bold'
 							: ''}
 					>
 						{sizeToString(
 							'insideLegLength',
-							size.matchingClothingSizes[0].clothingSize,
-							size.measurementImportance
+							matchingClothingSize.clothingSize,
+							clothingSizesTable.measurementImportance
 						)}
 					</p>
 				</div>
 				<div class="italic text-sm">
-					[Abweichung: {size.matchingClothingSizes[0].deviation.toFixed(2)}]
+					[Abweichung: {matchingClothingSize.deviation.toFixed(2)}]
 				</div>
 			</div>
-		{:else if missingMeasurements.has(size.name)}
+		{:else if missingMeasurements.has(clothingSizesTable.name)}
 			<p class="font-bold text-red-500">Fehlende Maße:</p>
 			<ul>
-				{#each missingMeasurements.get(size.name) ?? [] as missingMeasurement}
+				{#each missingMeasurements.get(clothingSizesTable.name) ?? [] as missingMeasurement}
 					<li>
 						{humanMeasurementToFriendlyName(missingMeasurement)}
-						{#if isToleranceAllowedInMeasurement(missingMeasurement, size.measurementImportance) === false}
+						{#if isToleranceAllowedInMeasurement(missingMeasurement, clothingSizesTable.measurementImportance) === false}
 							(genau)
 						{/if}
 					</li>
@@ -143,9 +160,16 @@
 			<p>No matching sizes found.</p>
 		{/if}
 	</div>
-	<div>
-		<LinkButton url={getTableLink(size.name, size.gender, true)} secondary
-			>Maßtabelle ansehen</LinkButton
-		>
-	</div>
+	{#if showButton}
+		<div class="flex flex-col gap-2">
+			<LinkButton
+				url={getTableLink(clothingSizesTable.name, clothingSizesTable.gender, true)}
+				secondary>Weitere Ergebnisse ansehen</LinkButton
+			>
+			<LinkButton
+				url={getTableLink(clothingSizesTable.name, clothingSizesTable.gender, false)}
+				secondary>Maßtabelle ansehen</LinkButton
+			>
+		</div>
+	{/if}
 </div>
