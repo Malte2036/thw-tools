@@ -9,14 +9,45 @@
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
-	import { clothingInput } from '$lib/clothing/clothingInputStore';
 	import LinkButton from '$lib/LinkButton.svelte';
+	import ClothingSizesInput from '$lib/clothing/ClothingSizesInput.svelte';
+	import { calculateMatchingClothingSizesForInput } from '$lib/clothing/clothingUtils';
+	import type { ClothingInputValue } from '$lib/clothing/clothingInputStore';
+	import type {
+		ClothingName,
+		HumanMeasurement,
+		MatchingClothingSizeTable
+	} from '$lib/clothing/clothing';
+	import { clothingInput } from '$lib/clothing/clothingInputStore';
 
 	export let data: PageData;
-	let selectedSize: string | undefined =
-		browser && $page.url.searchParams.has('size')
-			? $page.url.searchParams.get('size')?.toString()
-			: undefined;
+
+	let calculationResult: {
+		sizes: MatchingClothingSizeTable[];
+		missingMeasurements: Map<ClothingName, HumanMeasurement[]>;
+	} = {
+		sizes: [],
+		missingMeasurements: new Map()
+	};
+
+	let selectedSize: string | undefined;
+
+	function calculate(input: ClothingInputValue) {
+		calculationResult = calculateMatchingClothingSizesForInput(input, data.tables);
+
+		selectedSize = calculateSelectedSize();
+	}
+
+	function calculateSelectedSize() {
+		let matchingSizeTable: MatchingClothingSizeTable | undefined = calculationResult?.sizes.find(
+			(size) => size.name === data.table.name
+		);
+		if (!matchingSizeTable) return undefined;
+
+		return matchingSizeTable.matchingClothingSizes[0].clothingSize.size;
+	}
+
+	$: calculate($clothingInput);
 
 	function getTableValues() {
 		const table = data.table;
@@ -52,35 +83,7 @@
 		</div>
 
 		<div class="flex flex-col gap-1">
-			{#if $clothingInput.height || $clothingInput.chest || $clothingInput.waist || $clothingInput.hip || $clothingInput.insideLegLength}
-				<div>
-					<span class="font-bold">Deine eingegebenen Maße:</span>
-					{#if $clothingInput.height}
-						<span>{humanMeasurementToFriendlyName('height')}: {$clothingInput.height} cm,</span>
-					{/if}
-					{#if $clothingInput.chest}
-						<span
-							>{humanMeasurementToFriendlyName('chestCircumference')}: {$clothingInput.chest} cm,</span
-						>
-					{/if}
-					{#if $clothingInput.waist}
-						<span
-							>{humanMeasurementToFriendlyName('waistCircumference')}: {$clothingInput.waist} cm,</span
-						>
-					{/if}
-					{#if $clothingInput.hip}
-						<span
-							>{humanMeasurementToFriendlyName('hipCircumference')}: {$clothingInput.hip} cm,</span
-						>
-					{/if}
-					{#if $clothingInput.insideLegLength}
-						<span
-							>{humanMeasurementToFriendlyName('insideLegLength')}: {$clothingInput.insideLegLength}
-							cm,</span
-						>
-					{/if}
-				</div>
-			{/if}
+			<ClothingSizesInput />
 			{#if selectedSize}
 				<div>
 					<span class="font-bold">Berechnete Konfektionsgröße:</span>
@@ -101,7 +104,9 @@
 				humanMeasurementToFriendlyName('insideLegLength')
 			]}
 			values={getTableValues()}
-			selectedIndex={data.table.data.findIndex((value) => value.size === selectedSize)}
+			selectedIndex={data.table.data.findIndex(
+				(value) => value.size.toString() === selectedSize?.toString()
+			)}
 		/>
 	</div>
 {/if}

@@ -8,6 +8,30 @@ import type {
 	MatchingClothingSizeTable
 } from './clothing';
 import { getMeasurementTolerance } from './clothingConstantUtils';
+import type { ClothingInputValue } from './clothingInputStore';
+
+export function calculateMatchingClothingSizesForInput(
+	input: ClothingInputValue,
+	tables: ClothingSizesTable[]
+) {
+	const inputData: Record<HumanMeasurement, number | undefined> = {
+		height: input.height.length > 0 ? Number(input.height) : undefined,
+		chestCircumference: input.chest.length > 0 ? Number(input.chest) : undefined,
+		waistCircumference: input.waist.length > 0 ? Number(input.waist) : undefined,
+		hipCircumference: input.hip.length > 0 ? Number(input.hip) : undefined,
+		insideLegLength: input.insideLegLength.length > 0 ? Number(input.insideLegLength) : undefined
+	};
+
+	const missingMeasurements = getMissingMeasurements(tables, inputData);
+
+	const sizes = calculateMatchingClothingSizeForTables(tables, input.gender, inputData);
+	sizes.sort((a, b) => a.name.localeCompare(b.name));
+
+	return {
+		sizes,
+		missingMeasurements
+	};
+}
 
 export function calculateMatchingClothingSizeForTables(
 	tables: ClothingSizesTable[],
