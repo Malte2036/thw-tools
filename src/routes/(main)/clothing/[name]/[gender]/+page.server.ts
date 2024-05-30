@@ -17,6 +17,7 @@ export const load = (async ({ params }) => {
 	}
 
 	return {
-		table
+		table,
+		tables: await loadClothingSizesTables()
 	};
 }) satisfies PageServerLoad;

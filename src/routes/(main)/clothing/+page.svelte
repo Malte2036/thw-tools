@@ -15,34 +15,23 @@
 	import { clothingInput } from '$lib/clothing/clothingInputStore';
 	import {
 		calculateMatchingClothingSizeForTables,
-		getMissingMeasurements
+		calculateMatchingClothingSizesForInput
 	} from '$lib/clothing/clothingUtils';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
-	let calculatedSizes: MatchingClothingSizeTable[];
-	let missingMeasurements: Map<ClothingName, HumanMeasurement[]> = new Map<
-		ClothingName,
-		HumanMeasurement[]
-	>();
+	let calculationResult: {
+		sizes: MatchingClothingSizeTable[];
+		missingMeasurements: Map<ClothingName, HumanMeasurement[]>;
+	} = {
+		sizes: [],
+		missingMeasurements: new Map()
+	};
 
 	function calculate(input: ClothingInputValue) {
-		const inputData: Record<HumanMeasurement, number | undefined> = {
-			height: input.height.length > 0 ? Number(input.height) : undefined,
-			chestCircumference: input.chest.length > 0 ? Number(input.chest) : undefined,
-			waistCircumference: input.waist.length > 0 ? Number(input.waist) : undefined,
-			hipCircumference: input.hip.length > 0 ? Number(input.hip) : undefined,
-			insideLegLength: input.insideLegLength.length > 0 ? Number(input.insideLegLength) : undefined
-		};
-
-		missingMeasurements = getMissingMeasurements(data.tables, inputData);
-
-		const sizes = calculateMatchingClothingSizeForTables(data.tables, input.gender, inputData);
-		sizes.sort((a, b) => a.name.localeCompare(b.name));
-
-		calculatedSizes = sizes;
+		calculationResult = calculateMatchingClothingSizesForInput(input, data.tables);
 	}
 
 	$: calculate($clothingInput);
@@ -66,7 +55,7 @@
 		lastName = lastName?.trim();
 		customNote = customNote?.trim();
 
-		const csv = convertClothingResultsToCSV(calculatedSizes, {
+		const csv = convertClothingResultsToCSV(calculationResult.sizes, {
 			firstName,
 			lastName,
 			customNote
@@ -94,11 +83,11 @@
 	<ClothingSizesInput />
 
 	<div class="flex flex-col gap-2">
-		{#if calculatedSizes}
+		{#if calculationResult.sizes}
 			<div class="font-bold">Es wurden folgende Größen gefunden:</div>
 			<div class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-3 gap-2">
-				{#each calculatedSizes as size (size.name)}
-					<ClothingResultCard {size} {missingMeasurements} />
+				{#each calculationResult.sizes as size (size.name)}
+					<ClothingResultCard {size} missingMeasurements={calculationResult.missingMeasurements} />
 				{/each}
 			</div>
 
