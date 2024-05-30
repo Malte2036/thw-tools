@@ -32,7 +32,9 @@
 	export let data: PageData;
 
 	let visibleData: 'table' | 'deviationResults' =
-		$page.url.searchParams.get('visibleData') === 'deviationResults' ? 'deviationResults' : 'table';
+		browser && $page.url.searchParams.get('visibleData') === 'deviationResults'
+			? 'deviationResults'
+			: 'table';
 
 	let calculationResult: {
 		sizes: MatchingClothingSizeTable[];
