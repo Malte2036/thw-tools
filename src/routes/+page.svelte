@@ -1,19 +1,15 @@
 <script lang="ts">
+	import FlaskVialIcon from '$lib/icons/FlaskVialIcon.svelte';
+	import logo from '$lib/icons/thw-mzgw.webp';
+	import LinkButton from '../lib/LinkButton.svelte';
 	import ChartSimpleIcon from '../lib/icons/ChartSimpleIcon.svelte';
 	import HearthPulseIcon from '../lib/icons/HearthPulseIcon.svelte';
-	import LinkButton from '../lib/LinkButton.svelte';
-	import logo from '$lib/icons/thw-mzgw.webp';
-	import FlaskVialIcon from '$lib/icons/FlaskVialIcon.svelte';
 
-	import type { PageData } from './$types';
-	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
-	import { randomInt } from '$lib/utils';
 	import BoltIcon from '$lib/icons/BoltIcon.svelte';
-	import VestIcon from '$lib/icons/VestIcon.svelte';
-	import { onMount } from 'svelte';
-	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import HammerIcon from '$lib/icons/HammerIcon.svelte';
-	import type { QuestionType } from '$lib/model/question';
+	import VestIcon from '$lib/icons/VestIcon.svelte';
+	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
+	import { onMount } from 'svelte';
 
 	const description = {
 		headline: 'Inoffizielle Tools für THW-Helfer:',
@@ -21,21 +17,6 @@
 			'Grundausbildungs-Quiz, Atemschutz-Quiz, CBRN-Quiz, Finnentest-Tracker & Spannungsfall-Berechnung.',
 		keywords: 'THW, Quiz, Finnentest, Spannungsfall, Elektro, CBRN, AGT, Atemschutz, Feuerwehr'
 	};
-
-	export let data: PageData;
-
-	function randomQuestionId(questionType: QuestionType) {
-		if (!$shuffleQuiz) {
-			return 1;
-		}
-
-		const questionLength = data.questionTypeLength.get(questionType);
-		if (questionLength === undefined) {
-			console.log(`QuestionType ${questionType} not found in questionTypeLength`);
-			return 1;
-		}
-		return randomInt(questionLength) + 1;
-	}
 
 	onMount(() => {
 		const lastVisitBannerVersion = parseInt(
@@ -95,19 +76,19 @@
 			</span>
 		</h2>
 		<div class="w-full flex flex-col items-center gap-4 max-w-sm max-md:max-w-[18rem]">
-			<LinkButton url={`/quiz/ga/${randomQuestionId('ga')}`} dataUmamiEvent={'Open GA Quiz'}>
+			<LinkButton url={`/quiz/ga/listing/`} dataUmamiEvent={'Open GA Quiz'}>
 				<div class="w-6">
 					<HammerIcon />
 				</div>
 				<div class="font-bold">Grundausbildungs-Quiz</div>
 			</LinkButton>
-			<LinkButton url={`/quiz/agt/${randomQuestionId('agt')}`} dataUmamiEvent={'Open AGT Quiz'}>
+			<LinkButton url={`/quiz/agt/listing/`} dataUmamiEvent={'Open AGT Quiz'}>
 				<div class="w-6">
 					<ChartSimpleIcon />
 				</div>
 				<div class="font-bold">Atemschutz-Quiz</div>
 			</LinkButton>
-			<LinkButton url={`/quiz/cbrn/${randomQuestionId('cbrn')}`} dataUmamiEvent={'Open CBRN Quiz'}>
+			<LinkButton url={`/quiz/cbrn/listing/`} dataUmamiEvent={'Open CBRN Quiz'}>
 				<div class="w-6">
 					<FlaskVialIcon />
 				</div>
