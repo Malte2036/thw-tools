@@ -3,7 +3,7 @@
 	import { afterNavigate, goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { randomInt, shuffle } from '$lib/utils';
-	import QuestionStatistics from '$lib/quiz/question/QuestionStatistics.svelte';
+	import QuestionStatisticsForQuestion from '$lib/quiz/question/QuestionStatisticsForQuestion.svelte';
 	import CheckboxAnswer from '$lib/quiz/answer/CheckboxAnswer.svelte';
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
 	import type { AnsweredCountData } from './+page.server';
@@ -143,6 +143,6 @@
 				/>
 			</div>
 		</div>
-		<QuestionStatistics {answeredCountData} {currentQuestionAnsweredCountData} />
+		<QuestionStatisticsForQuestion {answeredCountData} {currentQuestionAnsweredCountData} />
 	</div>
 </div>

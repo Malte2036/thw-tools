@@ -2,9 +2,27 @@
 	import LinkButton from '$lib/LinkButton.svelte';
 	import { QuestionType } from '$lib/model/question';
 	import QuizHead from '$lib/quiz/QuizHead.svelte';
+	import { onMount } from 'svelte';
+	import type { AnsweredCountData } from '../[questionId]/+page.server';
 	import type { PageData } from './$types';
+	import QuestionsStatistics from '$lib/quiz/question/QuestionsStatistics.svelte';
 
 	export let data: PageData;
+
+	let answeredCountData: AnsweredCountData | undefined;
+	let questionType: QuestionType;
+
+	$: questionType = data.questionType;
+
+	onMount(() => {
+		try {
+			fetch(`/api/quiz/${questionType}/count`).then((res) =>
+				res.json().then((data) => (answeredCountData = data))
+			);
+		} catch (error) {
+			console.warn('Could not add count');
+		}
+	});
 
 	function getDescriptionForQuestionType(questionType: QuestionType) {
 		const count = data.allQuestions.length;
@@ -44,4 +62,5 @@
 			</LinkButton>
 		{/each}
 	</div>
+	<QuestionsStatistics {answeredCountData} />
 </div>
