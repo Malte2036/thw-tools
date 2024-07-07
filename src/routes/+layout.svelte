@@ -62,7 +62,7 @@
 {#if ReloadPrompt}
 	<svelte:component this={ReloadPrompt} />
 {/if}
-<div class="flex flex-col gap-4 justify-between min-h-screen">
+<div class="flex flex-col gap-4 justify-between min-h-screen main">
 	{#if title !== undefined}
 		<Header {title} />
 	{/if}
@@ -128,3 +128,10 @@
 		<InstallPWADialog onClose={() => (showInstallPWAHelp = false)} />
 	{/if}
 </div>
+
+<style>
+	.main {
+		margin-top: env(safe-area-inset-top);
+		margin-bottom: env(safe-area-inset-bottom);
+	}
+</style>
