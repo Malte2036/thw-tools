@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LinkButton from '$lib/LinkButton.svelte';
 	import Input from '$lib/Input.svelte';
 	import Select from '$lib/Select.svelte';
 	import { clothingInput } from '$lib/clothing/clothingInputStore';
@@ -53,3 +54,10 @@
 		placeholder={`${humanMeasurementToFriendlyName('insideLegLength')} in cm`}
 	/>
 </div>
+
+<LinkButton
+	secondary
+	dataUmamiEvent="Open Größenrechner Feedback"
+	url="https://forms.gle/oaNePwScz1yMaZMF8"
+	blank>Feedback für die Verbesserung des Größenrechners</LinkButton
+>
