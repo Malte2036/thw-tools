@@ -8,26 +8,29 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { QuestionsStatsCount, QuizStatsService } from './quiz-stats.service';
 import { QuizType } from './schemas/question-stats.schema';
+import {
+  QuestionStatsCount,
+  QuestionStatsService,
+} from './question-stats.service';
 
 @Controller('quiz')
-export class QuizStatsController {
-  constructor(private readonly quizStatsService: QuizStatsService) {}
+export class QuizController {
+  constructor(private readonly questionStatsService: QuestionStatsService) {}
 
   @Get(':questionType/stats/count')
   async getQuestionStatsCountForType(
     @Param('questionType') questionType: QuizType,
-  ): Promise<QuestionsStatsCount> {
-    return this.quizStatsService.getQuestionStatsCountForType(questionType);
+  ): Promise<QuestionStatsCount> {
+    return this.questionStatsService.getQuestionStatsCountForType(questionType);
   }
 
   @Get(':questionType/stats/count/:questionNumber')
   async getQuestionStatsCountForTypeAndNumber(
     @Param('questionType') questionType: QuizType,
     @Param('questionNumber') questionNumber: number,
-  ): Promise<QuestionsStatsCount> {
-    return this.quizStatsService.getQuestionStatsCountForType(
+  ): Promise<QuestionStatsCount> {
+    return this.questionStatsService.getQuestionStatsCountForType(
       questionType,
       questionNumber,
     );
@@ -40,7 +43,7 @@ export class QuizStatsController {
     @Body() data: { correct: boolean },
   ) {
     try {
-      await this.quizStatsService.addQuestionStats(
+      await this.questionStatsService.addQuestionStats(
         questionType,
         questionNumber,
         data.correct,

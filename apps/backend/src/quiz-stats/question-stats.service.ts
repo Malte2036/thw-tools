@@ -3,14 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { QuestionStats, QuizType } from './schemas/question-stats.schema';
 
-export type QuestionsStatsCount = {
+export type QuestionStatsCount = {
   questionType: QuizType;
   right: number;
   wrong: number;
 };
 
 @Injectable()
-export class QuizStatsService {
+export class QuestionStatsService {
   constructor(
     @InjectModel(QuestionStats.name)
     private questionStatsModel: Model<QuestionStats>,
@@ -19,7 +19,7 @@ export class QuizStatsService {
   async getQuestionStatsCountForType(
     questionType: QuizType,
     questionNumber?: number,
-  ): Promise<QuestionsStatsCount> {
+  ): Promise<QuestionStatsCount> {
     const query = {
       questionType,
       ...(questionNumber ? { questionNumber } : {}),

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { QuizStatsService } from './quiz-stats.service';
-import { QuizStatsController } from './quiz-stats.controller';
+import { QuestionStatsService } from './question-stats.service';
+import { QuizController } from './quiz.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   QuestionStats,
@@ -16,7 +16,7 @@ import {
       },
     ]),
   ],
-  providers: [QuizStatsService],
-  controllers: [QuizStatsController],
+  providers: [QuestionStatsService],
+  controllers: [QuizController],
 })
-export class QuizStatsModule {}
+export class QuizModule {}
