@@ -6,17 +6,23 @@ import {
   QuestionStats,
   QuestionStatsSchema,
 } from './schemas/question-stats.schema';
+import { Question, QuestionSchema } from './schemas/question.schema';
+import { QuestionService } from './question.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
+      {
+        name: Question.name,
+        schema: QuestionSchema,
+      },
       {
         name: QuestionStats.name,
         schema: QuestionStatsSchema,
       },
     ]),
   ],
-  providers: [QuestionStatsService],
+  providers: [QuestionService, QuestionStatsService],
   controllers: [QuizController],
 })
 export class QuizModule {}

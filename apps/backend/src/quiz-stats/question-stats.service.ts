@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { QuestionStats, QuizType } from './schemas/question-stats.schema';
+import { QuestionStats } from './schemas/question-stats.schema';
+import { QuizType } from './schemas/question.schema';
 
 export type QuestionStatsCount = {
   questionType: QuizType;

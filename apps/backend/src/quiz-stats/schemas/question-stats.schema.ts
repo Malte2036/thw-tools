@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-
-export type QuizType = 'ga' | 'agt' | 'cbrn';
+import { QuizType } from './question.schema';
 
 export type QuestionStatsDocument = HydratedDocument<QuestionStats>;
 

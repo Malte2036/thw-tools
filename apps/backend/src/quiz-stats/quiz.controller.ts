@@ -8,15 +8,51 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { QuizType } from './schemas/question-stats.schema';
 import {
   QuestionStatsCount,
   QuestionStatsService,
 } from './question-stats.service';
+import { QuizType } from './schemas/question.schema';
+import { QuestionService } from './question.service';
 
 @Controller('quiz')
 export class QuizController {
-  constructor(private readonly questionStatsService: QuestionStatsService) {}
+  constructor(
+    private readonly questionService: QuestionService,
+    private readonly questionStatsService: QuestionStatsService,
+  ) {}
+
+  @Get(':questionType')
+  async getQuestions(@Param('questionType') questionType: QuizType) {
+    const questions = await this.questionService.getQuestions(questionType);
+
+    return questions.map((question) => question.toJSON());
+  }
+
+  @Get(':questionType/count')
+  async getQuestionCount(@Param('questionType') questionType: QuizType) {
+    return this.questionService.getQuestionCount(questionType);
+  }
+
+  @Get(':questionType/:questionNumber')
+  async getQuestion(
+    @Param('questionType') questionType: QuizType,
+    @Param('questionNumber') questionNumber: number,
+  ) {
+    const question = await this.questionService.getQuestion(
+      questionType,
+      questionNumber,
+    );
+
+    if (!question) {
+      Logger.warn(
+        `Question not found for ${questionType} question ${questionNumber}`,
+      );
+      throw new HttpException('Question not found', HttpStatus.NOT_FOUND);
+    }
+
+    return question.toJSON();
+  }
 
   @Get(':questionType/stats/count')
   async getQuestionStatsCountForType(
