@@ -5,8 +5,8 @@ import { QuestionStats, QuizType } from './schemas/question-stats.schema';
 
 export type QuestionsStatsCount = {
   questionType: QuizType;
-  count: number;
-  correct: number;
+  right: number;
+  wrong: number;
 };
 
 @Injectable()
@@ -27,10 +27,13 @@ export class QuizStatsService {
 
     return {
       questionType,
-      count: await this.questionStatsModel.countDocuments(query),
-      correct: await this.questionStatsModel.countDocuments({
+      right: await this.questionStatsModel.countDocuments({
         ...query,
         correct: true,
+      }),
+      wrong: await this.questionStatsModel.countDocuments({
+        ...query,
+        correct: false,
       }),
     };
   }

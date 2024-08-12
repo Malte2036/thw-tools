@@ -33,7 +33,7 @@ export class QuizStatsController {
     );
   }
 
-  @Post(':questionType/stats/:questionNumber')
+  @Post(':questionType/stats/count/:questionNumber')
   async addQuestionStats(
     @Param('questionType') questionType: QuizType,
     @Param('questionNumber') questionNumber: number,
