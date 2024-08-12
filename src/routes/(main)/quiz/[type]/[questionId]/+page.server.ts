@@ -4,6 +4,7 @@ import type { PageServerLoad } from './$types';
 import type { QuestionType } from '$lib/model/question';
 
 export type AnsweredCountData = {
+	questionType: QuestionType;
 	right: number;
 	wrong: number;
 };
