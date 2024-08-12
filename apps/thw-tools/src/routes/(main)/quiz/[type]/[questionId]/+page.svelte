@@ -30,7 +30,7 @@
 			checkedIndices: []
 		};
 
-		shuffledAnswers = shuffle([...question.answers]);
+		shuffledAnswers = shuffle(Array.from(q.answers));
 
 		currentQuestionAnsweredCountData = undefined;
 
@@ -118,13 +118,13 @@
 					{#each shuffledAnswers as [index, value]}
 						<CheckboxAnswer
 							bind:answer={value}
-							checked={question.checkedIndices.includes(index.toString())}
-							correct={question.correctIndices.includes(index.toString())}
+							checked={question.checkedIndices.includes(index)}
+							correct={question.correctIndices.includes(index)}
 							bind:revealAnswers
 							changeCheckedCallback={(value) => {
 								question.checkedIndices = value
-									? [...question.checkedIndices, index.toString()]
-									: question.checkedIndices.filter((v) => v != index.toString());
+									? [...question.checkedIndices, index]
+									: question.checkedIndices.filter((v) => v != index);
 							}}
 						/>
 					{/each}

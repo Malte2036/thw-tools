@@ -1,4 +1,3 @@
-import { Schema, model } from 'mongoose';
 import { QuestionType } from './question';
 
 export type IQuestionStats = {
