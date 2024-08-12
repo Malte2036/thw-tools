@@ -34,4 +34,20 @@ export class QuizStatsService {
       }),
     };
   }
+
+  async addQuestionStats(
+    questionType: QuizType,
+    questionNumber: number,
+    correct: boolean,
+    timestamp: Date,
+  ) {
+    const newQuestionStats = new this.questionStatsModel({
+      questionType,
+      questionNumber,
+      correct,
+      timestamp,
+    });
+
+    return newQuestionStats.save();
+  }
 }
