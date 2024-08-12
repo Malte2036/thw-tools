@@ -6,6 +6,7 @@
 	import type { AnsweredCountData } from '../[questionId]/+page.server';
 	import type { PageData } from './$types';
 	import QuestionsStatistics from '$lib/quiz/question/QuestionsStatistics.svelte';
+	import { getQuestionStatsCountForType } from '$lib/api/api';
 
 	export let data: PageData;
 
@@ -16,9 +17,7 @@
 
 	onMount(() => {
 		try {
-			fetch(`/api/quiz/${questionType}/count`).then((res) =>
-				res.json().then((data) => (answeredCountData = data))
-			);
+			getQuestionStatsCountForType(questionType).then((data) => (answeredCountData = data));
 		} catch (error) {
 			console.warn('Could not add count');
 		}

@@ -1,9 +1,10 @@
-import { countQuestions, findQuestion } from '$lib/Database';
+import { getQuestion, getQuestionCount } from '$lib/api/api';
+import type { QuestionType } from '$lib/model/question';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import type { QuestionType } from '$lib/model/question';
 
 export type AnsweredCountData = {
+	questionType: QuestionType;
 	right: number;
 	wrong: number;
 };
@@ -15,13 +16,13 @@ export const load = (async ({ params, depends }) => {
 
 	const questionNumber = Number.parseInt(params.questionId!);
 
-	const question = await findQuestion({ type: questionType, number: questionNumber });
+	const question = await getQuestion(questionType, questionNumber);
 
 	if (!question) {
 		error(404, 'Question not found');
 	}
 
-	const questionCount = await countQuestions({ type: questionType });
+	const questionCount = await getQuestionCount(questionType);
 
 	const nextQuestionId = (questionNumber % questionCount) + 1;
 

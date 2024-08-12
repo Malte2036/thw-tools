@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { addQuestionStatsCountForType } from '$lib/api/api';
 	import Button from '$lib/Button.svelte';
 	import type { ExtendedQuestion, QuestionType } from '$lib/model/question';
 	import type { AnsweredCountData } from '../../routes/(main)/quiz/[type]/[questionId]/+page.server';
@@ -32,15 +33,7 @@
 					}
 				}
 			}
-			fetch(`/api/quiz/${questionType}/add`, {
-				method: 'POST',
-				body: JSON.stringify({
-					type: questionType,
-					questionNumber: question.number,
-					correct: completelyRight
-				}),
-				headers: { 'content-type': 'application/json' }
-			});
+			addQuestionStatsCountForType(questionType, question.number, completelyRight);
 		}
 	}}
 	dataUmamiEvent={`${questionType} quiz question ${revealAnswers ? 'next question' : 'answered'}`}
