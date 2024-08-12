@@ -49,8 +49,9 @@ function mapResponseQuestion(question: any): IQuestion {
 
 	return {
 		...question,
-		answers
-	};
+		answers,
+		correctIndices: question.correctIndices.map((i: any) => parseInt(i))
+	} satisfies IQuestion;
 }
 
 export async function getQuestion(
