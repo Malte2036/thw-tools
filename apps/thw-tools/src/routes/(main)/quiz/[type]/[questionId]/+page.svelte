@@ -1,17 +1,18 @@
 <script lang="ts">
-	import type { PageData } from './$types';
 	import { afterNavigate, goto } from '$app/navigation';
-	import { onMount } from 'svelte';
-	import { randomInt, shuffle } from '$lib/utils';
-	import QuestionStatisticsForQuestion from '$lib/quiz/question/QuestionStatisticsForQuestion.svelte';
+	import { getQuestionStatsCountForType } from '$lib/api/api';
+	import type { ExtendedQuestion, IQuestion, QuestionType } from '$lib/model/question';
 	import CheckboxAnswer from '$lib/quiz/answer/CheckboxAnswer.svelte';
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
-	import type { AnsweredCountData } from './+page.server';
+	import QuestionStatisticsForQuestion from '$lib/quiz/question/QuestionStatisticsForQuestion.svelte';
 	import QuestionNumber from '$lib/quiz/QuestionNumber.svelte';
-	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
-	import type { AfterNavigate } from '@sveltejs/kit';
 	import QuizHead from '$lib/quiz/QuizHead.svelte';
-	import type { ExtendedQuestion, IQuestion, QuestionType } from '$lib/model/question';
+	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
+	import { randomInt, shuffle } from '$lib/utils';
+	import type { AfterNavigate } from '@sveltejs/kit';
+	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
+	import type { AnsweredCountData } from './+page.server';
 
 	export let data: PageData;
 
@@ -34,8 +35,8 @@
 		currentQuestionAnsweredCountData = undefined;
 
 		if (!import.meta.env.SSR) {
-			fetch(`/api/quiz/${questionType}/${q.number}/count`).then((res) =>
-				res.json().then((data) => (currentQuestionAnsweredCountData = data))
+			getQuestionStatsCountForType(questionType, q.number).then(
+				(data) => (currentQuestionAnsweredCountData = data)
 			);
 		}
 	}
@@ -83,9 +84,7 @@
 
 	onMount(() => {
 		try {
-			fetch(`/api/quiz/${questionType}/count`).then((res) =>
-				res.json().then((data) => (answeredCountData = data))
-			);
+			getQuestionStatsCountForType(questionType).then((data) => (answeredCountData = data));
 		} catch (error) {
 			console.warn('Could not add count');
 		}
