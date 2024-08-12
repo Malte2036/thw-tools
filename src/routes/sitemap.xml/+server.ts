@@ -1,5 +1,4 @@
-import { findQuestions } from '$lib/Database';
-import { loadClothingSizesTables } from '$lib/clothing/clothingUtils';
+import { getQuestions } from '$lib/api/api';
 import { QuestionType } from '$lib/model/question';
 
 export async function GET() {
@@ -7,7 +6,7 @@ export async function GET() {
 
 	const singleQuestionLinks = await Promise.all(
 		types.map(async (t) => {
-			const questionIds = await findQuestions({ type: t }, 'number');
+			const questionIds = await getQuestions(t);
 			return questionIds
 				.sort((a, b) => a.number - b.number)
 				.map(
