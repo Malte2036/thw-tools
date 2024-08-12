@@ -40,6 +40,19 @@ export async function addQuestionStatsCountForType(
 	}
 }
 
+function mapResponseQuestion(question: any): IQuestion {
+	// fix strange answers format
+	const answers: IQuestion['answers'] = new Map();
+	for (const [key, value] of Object.entries(question.answers)) {
+		answers.set(parseInt(key), value as string);
+	}
+
+	return {
+		...question,
+		answers
+	};
+}
+
 export async function getQuestion(
 	questionType: QuestionType,
 	questionId: number
@@ -50,12 +63,7 @@ export async function getQuestion(
 		throw new Error('Failed to fetch question');
 	}
 
-	const json = await res.json();
-
-	return {
-		...json,
-		answers: new Map(Object.entries(json.answers))
-	};
+	return mapResponseQuestion(await res.json());
 }
 
 export async function getQuestions(questionType: QuestionType): Promise<IQuestion[]> {
@@ -66,10 +74,7 @@ export async function getQuestions(questionType: QuestionType): Promise<IQuestio
 	}
 
 	const json = await res.json();
-	return json.map((question: IQuestion) => ({
-		...question,
-		answers: new Map(Object.entries(question.answers))
-	}));
+	return json.map(mapResponseQuestion);
 }
 
 export async function getQuestionCount(questionType: QuestionType): Promise<number> {
