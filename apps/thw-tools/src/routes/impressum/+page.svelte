@@ -59,15 +59,20 @@
 			ist auf GitHub unter den Links
 			<a href="https://github.com/Malte2036/thw-tools" target="_blank" rel="noreferrer"
 				>https://github.com/Malte2036/thw-tools</a
-			>,
+			>
 			<a href="https://github.com/Malte2036/thw-finnentest" target="_blank" rel="noreferrer"
 				>https://github.com/Malte2036/thw-finnentest</a
 			>
 			und
 			<a href="https://github.com/Malte2036/thw-elektro" target="_blank" rel="noreferrer"
 				>https://github.com/Malte2036/thw-elektro</a
-			> einsehbar.</span
-		>
+			>
+			einsehbar. Der Quellcode des Backends ist auf GitHub unter
+
+			<a href="https://github.com/Malte2036/thw-tools-backend" target="_blank" rel="noreferrer"
+				>https://github.com/Malte2036/thw-tools-backend</a
+			> einsehbar.
+		</span>
 	</div>
 
 	<LinkButton url="/" secondary>Zurück</LinkButton>
