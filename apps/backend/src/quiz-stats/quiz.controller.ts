@@ -14,6 +14,7 @@ import {
 } from './question-stats.service';
 import { QuizType } from './schemas/question.schema';
 import { QuestionService } from './question.service';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('quiz')
 export class QuizController {
@@ -72,6 +73,7 @@ export class QuizController {
     );
   }
 
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Post(':questionType/stats/count/:questionNumber')
   async addQuestionStats(
     @Param('questionType') questionType: QuizType,
