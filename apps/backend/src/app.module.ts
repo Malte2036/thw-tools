@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { QuizModule } from './quiz-stats/quiz.module';
 import { AppController } from './app.controller';
 import { APP_GUARD } from '@nestjs/core';
+import { InventarModule } from './inventar/inventar.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { APP_GUARD } from '@nestjs/core';
       },
     ]),
     QuizModule,
+    InventarModule,
   ],
   providers: [
     AppService,
