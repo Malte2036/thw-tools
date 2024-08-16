@@ -30,7 +30,8 @@ export async function createInventarItem(deviceId: string, isUsed?: boolean): Pr
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			deviceId
+			deviceId,
+			isUsed
 		})
 	});
 
