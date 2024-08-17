@@ -20,8 +20,8 @@ export class UserService {
 
     const user = new this.userModel({
       kinde_id: webhookData.data.user.id,
-      first_name: webhookData.data.user.first_name,
-      last_name: webhookData.data.user.last_name,
+      first_name: webhookData.data.user.first_name ?? null,
+      last_name: webhookData.data.user.last_name ?? null,
     });
 
     return user.save();

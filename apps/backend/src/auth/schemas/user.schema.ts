@@ -8,10 +8,10 @@ export class User {
   @Prop({ required: true })
   kinde_id: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   first_name: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   last_name: string;
 }
 
