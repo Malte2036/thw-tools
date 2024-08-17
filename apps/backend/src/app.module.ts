@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
@@ -7,6 +7,8 @@ import { QuizModule } from './quiz-stats/quiz.module';
 import { AppController } from './app.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { InventarModule } from './inventar/inventar.module';
+import { AuthModule } from './auth/auth.module';
+import { AuthMiddleware } from './auth.middleware';
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import { InventarModule } from './inventar/inventar.module';
     ]),
     QuizModule,
     InventarModule,
+    AuthModule,
   ],
   providers: [
     AppService,
@@ -30,4 +33,8 @@ import { InventarModule } from './inventar/inventar.module';
   ],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes('/inventar');
+  }
+}
