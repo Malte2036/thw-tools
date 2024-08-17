@@ -22,12 +22,14 @@
   "dependencies": {
     "@kinde-oss/kinde-node-express": "^1.6.0",
     "@kinde-oss/kinde-typescript-sdk": "^2.9.1",
+    "@kinde/webhooks": "^1.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
     "@nestjs/mongoose": "^10.0.10",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/throttler": "^6.1.1",
+    "body-parser": "^1.20.2",
     "mongoose": "^8.5.2",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
