@@ -49,8 +49,12 @@
 	<div>
 		<div class="font-bold">Inventarliste</div>
 		<Table
-			header={['deviceId', 'ausgeliehen']}
-			values={data.inventarItems.map((item) => [item.deviceId, item.isUsed ? 'Ja' : 'Nein'])}
+			header={['deviceId', 'ausgeliehen', 'zuletzt genutzt von']}
+			values={data.inventarItems.map((item) => [
+				item.deviceId,
+				item.isUsed ? 'Ja' : 'Nein',
+				`${item.lastUsedBy?.firstName ?? ''} ${item.lastUsedBy?.lastName ?? ''}`
+			])}
 			onValueClick={(row) => {
 				console.log(row);
 			}}
