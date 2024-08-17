@@ -8,12 +8,18 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { InventarService } from './inventar.service';
+import { UserService } from 'src/auth/user.service';
 
 @Controller('inventar')
 export class InventarController {
-  constructor(private readonly inventarService: InventarService) {}
+  constructor(
+    private readonly inventarService: InventarService,
+
+    private readonly userService: UserService,
+  ) {}
 
   @Get()
   async getInventar() {
@@ -23,6 +29,7 @@ export class InventarController {
   @Post()
   async createInventarItem(
     @Body() body: { deviceId: string; isUsed: boolean },
+    @Req() req: Request,
   ) {
     const { deviceId, isUsed } = body;
 
@@ -31,7 +38,18 @@ export class InventarController {
       throw new HttpException('Invalid deviceId', HttpStatus.BAD_REQUEST);
     }
 
-    return this.inventarService.createInventarItem(deviceId, isUsed);
+    const accessToken = (req.headers as any).authorization.split(' ')[1];
+    const user = await this.userService.getUserByAccessToken(accessToken);
+    if (!user) {
+      Logger.warn('User not found');
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    return this.inventarService.createInventarItem({
+      deviceId,
+      isUsed,
+      lastUsedBy: user,
+    });
   }
 
   @Put(':deviceId')

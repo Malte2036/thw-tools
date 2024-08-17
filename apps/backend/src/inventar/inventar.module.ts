@@ -6,6 +6,7 @@ import {
   InventarItem,
   InventarItemSchema,
 } from './schemas/inventar-item.schema';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import {
         schema: InventarItemSchema,
       },
     ]),
+    AuthModule,
   ],
   providers: [InventarService],
   controllers: [InventarController],

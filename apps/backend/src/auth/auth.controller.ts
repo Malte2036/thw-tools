@@ -44,6 +44,9 @@ export class AuthController {
 
         // Create a user in the database
         await this.userService.createUserFromKinde(createUserPayload);
+        Logger.log(
+          `User created from webhook. KindeId: ${createUserPayload.data.user.id}`,
+        );
       } else {
         Logger.warn(`Unhandled webhook event type: ${decoded.type}`);
       }

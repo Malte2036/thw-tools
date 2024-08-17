@@ -11,20 +11,25 @@ export class InventarService {
   ) {}
 
   async getInventarItems() {
-    return this.inventarItemModel.find().exec();
+    return this.inventarItemModel.find().populate('lastUsedBy').exec();
   }
 
   async getInventarItemByDeviceId(deviceId: InventarDeviceId) {
-    return this.inventarItemModel.findOne({ deviceId }).exec();
+    return this.inventarItemModel
+      .findOne({ deviceId })
+      .populate('lastUsedBy')
+      .exec();
   }
 
-  async createInventarItem(deviceId: InventarDeviceId, isUsed = false) {
-    if (await this.getInventarItemByDeviceId(deviceId)) {
-      Logger.warn(`Inventar item with deviceId ${deviceId} already exists`);
+  async createInventarItem(data: InventarItem) {
+    if (await this.getInventarItemByDeviceId(data.deviceId)) {
+      Logger.warn(
+        `Inventar item with deviceId ${data.deviceId} already exists`,
+      );
       return;
     }
 
-    const item = new this.inventarItemModel({ deviceId, isUsed });
+    const item = new this.inventarItemModel(data);
     return item.save();
   }
 

@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { User } from 'src/auth/schemas/user.schema';
 
 export type InventarItemDocument = HydratedDocument<InventarItem>;
 
@@ -12,6 +13,9 @@ export class InventarItem {
 
   @Prop({ default: false })
   isUsed: boolean;
+
+  @Prop({ required: false, type: mongoose.Types.ObjectId, ref: User.name })
+  lastUsedBy: User;
 }
 
 export const InventarItemSchema = SchemaFactory.createForClass(InventarItem);
