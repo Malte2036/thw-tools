@@ -5,7 +5,6 @@ import {
 	PUBLIC_KINDE_REDIRECT_URI
 } from '$env/static/public';
 import { createKindeBrowserClient } from '@kinde-oss/kinde-typescript-sdk';
-import { SessionStorageBrowserSessionManager } from './sessionManager';
 
 let _kindeClient: any = null;
 
@@ -20,24 +19,21 @@ export const getKindeClient = () => {
 		logoutRedirectURL: 'http://localhost:5173',
 		redirectURL: PUBLIC_KINDE_REDIRECT_URI
 		// audience: 'https://api.thw-tools.de'
-		// redirectURL: 'https://7a0d-176-198-201-152.ngrok-free.app/auth/callback'
+		// redirectURL: 'https://7a0d-176-198-201-152.ngrok-free.app/auth/callback',
 		// sessionManager: {
-		// 	setSessionItem(itemKey, itemValue) {
+		// 	async setSessionItem(itemKey, itemValue) {
 		// 		console.log('setSessionItem', itemKey, itemValue);
 		// 		localStorage.setItem(itemKey, JSON.stringify(itemValue));
-		// 		return Promise.resolve();
 		// 	},
-		// 	getSessionItem(itemKey) {
+		// 	async getSessionItem(itemKey) {
 		// 		const itemValue = localStorage.getItem(itemKey);
-		// 		return Promise.resolve(itemValue ? JSON.parse(itemValue) : null);
+		// 		return itemValue ? JSON.parse(itemValue) : null;
 		// 	},
-		// 	removeSessionItem(itemKey) {
+		// 	async removeSessionItem(itemKey) {
 		// 		localStorage.removeItem(itemKey);
-		// 		return Promise.resolve();
 		// 	},
-		// 	destroySession() {
+		// 	async destroySession() {
 		// 		console.warn('destroySession not working at the moment');
-		// 		return Promise.resolve();
 		// 	}
 		// }
 	});
