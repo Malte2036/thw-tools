@@ -1,10 +1,10 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import Table from '$lib/Table.svelte';
 	import { createInventarItem, updateInventarItem } from '$lib/api/inventarApi';
 	import QrScanner from '$lib/inventar/QRScanner.svelte';
-	import type { PageData } from './$types';
-	import { invalidateAll } from '$app/navigation';
 	import ScanInventarItemResultDialog from '$lib/inventar/ScanInventarItemResultDialog.svelte';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
 

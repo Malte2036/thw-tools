@@ -1,8 +1,13 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import type { InventarItem } from '$lib/inventar/inventarItem';
+import { getToken } from './authApi';
 
 export async function getInventarItems(): Promise<InventarItem[]> {
-	const res = await fetch(`${PUBLIC_API_URL}/inventar`);
+	const res = await fetch(`${PUBLIC_API_URL}/inventar`, {
+		headers: {
+			Authorization: `Bearer ${getToken()}`
+		}
+	});
 
 	if (!res.ok) {
 		throw new Error('Failed to fetch inventar items');
@@ -12,7 +17,11 @@ export async function getInventarItems(): Promise<InventarItem[]> {
 }
 
 export async function getInventarItem(deviceId: string): Promise<InventarItem> {
-	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}`);
+	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}`, {
+		headers: {
+			Authorization: `Bearer ${getToken()}`
+		}
+	});
 
 	if (!res.ok) {
 		throw new Error('Failed to fetch inventar item');
@@ -27,6 +36,7 @@ export async function createInventarItem(deviceId: string, isUsed?: boolean): Pr
 	const res = await fetch(`${PUBLIC_API_URL}/inventar`, {
 		method: 'POST',
 		headers: {
+			Authorization: `Bearer ${getToken()}`,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
@@ -44,6 +54,7 @@ export async function updateInventarItem(deviceId: string, isUsed: boolean): Pro
 	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}`, {
 		method: 'PUT',
 		headers: {
+			Authorization: `Bearer ${getToken()}`,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
