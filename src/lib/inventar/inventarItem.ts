@@ -22,9 +22,9 @@ export type InventarItemEvent = {
 export function eventTypeToFriendlyString(eventType: InventarItemEventType): string {
 	switch (eventType) {
 		case 'borrowed':
-			return 'ausgeliehen';
+			return 'ausgeliehen ✅';
 		case 'returned':
-			return 'zurückgegeben';
+			return 'zurückgegeben ❌';
 	}
 
 	return eventType;
