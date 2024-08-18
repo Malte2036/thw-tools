@@ -1,13 +1,15 @@
-import { isAuthenticated } from '$lib/api/authApi';
+import { isAuthenticated, login } from '$lib/api/authApi';
 import { getInventarItems } from '$lib/api/inventarApi';
-import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
 export const ssr = false;
 
 export const load = (async () => {
 	if (!isAuthenticated()) {
-		redirect(302, '/auth/callback');
+		await login();
+		return {
+			inventarItems: []
+		};
 	}
 
 	const inventarItems = await getInventarItems();

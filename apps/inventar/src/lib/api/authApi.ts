@@ -41,11 +41,43 @@ export const getKindeClient = () => {
 	return _kindeClient;
 };
 
+const LOCAL_STORAGE_LAST_PATH = 'auth_last_path';
+const LOCAL_STORAGE_ACCESS_TOKEN = 'auth_access_token';
+
+const saveLastPath = () => {
+	if (!browser) {
+		console.warn('saveLastPath: not in browser');
+		return;
+	}
+
+	localStorage.setItem(LOCAL_STORAGE_LAST_PATH, window.location.pathname + window.location.search);
+};
+
+const getLastPath = () => {
+	if (!browser) {
+		console.warn('getLastPath: not in browser');
+		return;
+	}
+
+	return localStorage.getItem(LOCAL_STORAGE_LAST_PATH);
+};
+
+const clearLastPath = () => {
+	if (!browser) {
+		console.warn('clearLastPath: not in browser');
+		return;
+	}
+
+	localStorage.removeItem(LOCAL_STORAGE_LAST_PATH);
+};
+
 export const login = async () => {
 	if (!browser) {
 		console.warn('login: not in browser');
 		return;
 	}
+
+	saveLastPath();
 
 	const url = await getKindeClient().login();
 	window.location.href = url.toString();
@@ -60,7 +92,14 @@ export const handleRedirectToApp = async () => {
 	const url = new URL(window.location.toString());
 	await getKindeClient().handleRedirectToApp(url);
 
-	localStorage.setItem('kinde_access_token', await getKindeClient().getToken());
+	localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN, await getKindeClient().getToken());
+
+	const lastPath = getLastPath();
+	if (lastPath) {
+		console.log('redirecting to', lastPath);
+		window.location.href = lastPath;
+		clearLastPath();
+	}
 };
 
 export const getUser = async () => {
@@ -77,5 +116,5 @@ export const isAuthenticated = () => {
 
 export const getToken = () => {
 	// return await getKindeClient().getToken();
-	return localStorage.getItem('kinde_access_token');
+	return localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN);
 };
