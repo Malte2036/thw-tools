@@ -2,13 +2,18 @@
 	import Input from '$lib/Input.svelte';
 	import Button from '$lib/Button.svelte';
 	import Dialog from '$lib/Dialog.svelte';
-	import { userToFriendlyString, type InventarItem, type InventarItemEvent } from './inventarItem';
+	import {
+		userToFriendlyString,
+		type InventarItem,
+		type InventarItemEvent,
+		type InventarItemEventType
+	} from './inventarItem';
 
 	export let deviceId: string;
 
 	export let lastEvent: InventarItemEvent | undefined;
 
-	export let onSubmit: (isUsed: boolean) => void;
+	export let onSubmit: (eventType: InventarItemEventType) => void;
 
 	const isBorrowed = lastEvent?.type === 'borrowed';
 </script>
@@ -37,7 +42,7 @@
 		</div>
 	</div>
 	<div slot="footer" class="flex flex-row gap-2 w-full justify-between">
-		<Button secondary={!isBorrowed} click={() => onSubmit(false)}>Zurückgeben</Button>
-		<Button secondary={isBorrowed} click={() => onSubmit(true)}>Ausleihen</Button>
+		<Button secondary={!isBorrowed} click={() => onSubmit('returned')}>Zurückgeben</Button>
+		<Button secondary={isBorrowed} click={() => onSubmit('borrowed')}>Ausleihen</Button>
 	</div>
 </Dialog>
