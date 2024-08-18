@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import Table from '$lib/Table.svelte';
-	import { createInventarItem, updateInventarItem } from '$lib/api/inventarApi';
+	import { createInventarItem, createInventarItemEvent } from '$lib/api/inventarApi';
 	import QrScanner from '$lib/inventar/QRScanner.svelte';
 	import ScanInventarItemResultDialog from '$lib/inventar/ScanInventarItemResultDialog.svelte';
+	import type { InventarItemEventType } from '$lib/inventar/inventarItem';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -31,7 +32,7 @@
 		if (scannedDeviceId.alreadExists) {
 			console.log(`InventarItem ${scannedDeviceId.deviceId} already exists. Updating...`);
 
-			await updateInventarItem(scannedDeviceId.deviceId, isUsed);
+			await createInventarItemEvent(scannedDeviceId.deviceId, isUsed);
 		} else {
 			console.log(`InventarItem ${scannedDeviceId.deviceId} does not exist. Creating...`);
 
@@ -41,6 +42,17 @@
 		scannedDeviceId = undefined;
 		invalidateAll();
 	}
+
+	function eventTypeToFriendlyString(eventType: InventarItemEventType): string {
+		switch (eventType) {
+			case 'borrowed':
+				return 'ausgeliehen';
+			case 'returned':
+				return 'zurückgegeben';
+		}
+
+		return eventType;
+	}
 </script>
 
 <div class="flex flex-col gap-2 p-4">
@@ -49,11 +61,12 @@
 	<div>
 		<div class="font-bold">Inventarliste</div>
 		<Table
-			header={['deviceId', 'ausgeliehen', 'zuletzt genutzt von']}
+			header={['deviceId', 'status', 'letzte aktion von', 'letze aktion am']}
 			values={data.inventarItems.map((item) => [
 				item.deviceId,
-				item.isUsed ? 'Ja' : 'Nein',
-				`${item.lastUsedBy?.firstName ?? ''} ${item.lastUsedBy?.lastName ?? ''}`
+				eventTypeToFriendlyString(item.lastEvent.type),
+				`${item.lastEvent.user.firstName ?? ''} ${item.lastEvent.user.lastName ?? ''}`,
+				new Date(item.lastEvent.date).toLocaleString('de-DE')
 			])}
 			onValueClick={(row) => {
 				console.log(row);
@@ -65,7 +78,9 @@
 {#if scannedDeviceId}
 	<ScanInventarItemResultDialog
 		deviceId={scannedDeviceId.deviceId}
-		isUsed={data.inventarItems.find((item) => item.deviceId === scannedDeviceId?.deviceId)?.isUsed}
+		isUsed={data.inventarItems.some(
+			(item) => item.lastEvent.type === 'borrowed' && item.deviceId === scannedDeviceId?.deviceId
+		)}
 		alreadyExists={scannedDeviceId.alreadExists}
 		onSubmit={submit}
 	/>
