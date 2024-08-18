@@ -1,7 +1,5 @@
 <script lang="ts">
-	import LinkButton from '$lib/LinkButton.svelte';
-	import { getKindeClient, getUser, handleRedirectToApp, getToken, login } from '$lib/api/authApi';
-	import Button from '$lib/Button.svelte';
+	import { handleRedirectToApp } from '$lib/api/authApi';
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
@@ -15,32 +13,8 @@
 	});
 </script>
 
-<div class="flex flex-col gap-2">
-	<h1>Callback</h1>
+<div class="flex flex-col gap-2 align-center items-center p-4">
+	<h1 class="text-2xl font-bold">Login</h1>
 
-	<Button
-		click={() => {
-			console.log('login');
-
-			login();
-		}}>Login</Button
-	>
-
-	<Button
-		click={async () => {
-			const user = await getUser();
-			console.log(user);
-			alert(JSON.stringify(user, null, 2));
-		}}>Get User</Button
-	>
-
-	<Button
-		click={async () => {
-			const token = await getToken();
-			console.log(token);
-			alert(JSON.stringify(token, null, 2));
-		}}>Get Kinde Client</Button
-	>
-
-	<LinkButton url="/inventar">Inventar</LinkButton>
+	<div>Der Login wird durchgeführt...</div>
 </div>
