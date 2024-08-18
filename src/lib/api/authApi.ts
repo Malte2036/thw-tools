@@ -60,10 +60,7 @@ export const handleRedirectToApp = async () => {
 	const url = new URL(window.location.toString());
 	await getKindeClient().handleRedirectToApp(url);
 
-	const isAuth = await getKindeClient().isAuthenticated();
-	if (isAuth) {
-		localStorage.setItem('kinde_access_token', await getKindeClient().getToken());
-	}
+	localStorage.setItem('kinde_access_token', await getKindeClient().getToken());
 };
 
 export const getUser = async () => {

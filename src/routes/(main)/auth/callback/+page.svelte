@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LinkButton from '$lib/LinkButton.svelte';
 	import { getKindeClient, getUser, handleRedirectToApp, getToken, login } from '$lib/api/authApi';
 	import Button from '$lib/Button.svelte';
 	import { onMount } from 'svelte';
@@ -14,26 +15,32 @@
 	});
 </script>
 
-<h1>Callback</h1>
+<div class="flex flex-col gap-2">
+	<h1>Callback</h1>
 
-<Button
-	click={() => {
-		console.log('login');
+	<Button
+		click={() => {
+			console.log('login');
 
-		login();
-	}}>Login</Button
->
+			login();
+		}}>Login</Button
+	>
 
-<Button
-	click={async () => {
-		const user = await getUser();
-		console.log(user);
-	}}>Get User</Button
->
+	<Button
+		click={async () => {
+			const user = await getUser();
+			console.log(user);
+			alert(JSON.stringify(user, null, 2));
+		}}>Get User</Button
+	>
 
-<Button
-	click={async () => {
-		const token = await getToken();
-		console.log(token);
-	}}>Get Kinde Client</Button
->
+	<Button
+		click={async () => {
+			const token = await getToken();
+			console.log(token);
+			alert(JSON.stringify(token, null, 2));
+		}}>Get Kinde Client</Button
+	>
+
+	<LinkButton url="/inventar">Inventar</LinkButton>
+</div>
