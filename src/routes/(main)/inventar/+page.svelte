@@ -11,6 +11,7 @@
 		type InventarItemDeviceId,
 		type InventarItemEventType
 	} from '$lib/inventar/inventarItem';
+	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -30,7 +31,7 @@
 		};
 	}
 
-	async function submit(isUsed: boolean) {
+	async function submit(eventType: InventarItemEventType) {
 		if (!scannedDeviceId) {
 			return;
 		}
@@ -38,11 +39,27 @@
 		if (scannedDeviceId.alreadExists) {
 			console.log(`InventarItem ${scannedDeviceId.deviceId} already exists. Updating...`);
 
-			await createInventarItemEvent(scannedDeviceId.deviceId, isUsed);
+			await createInventarItemEvent(scannedDeviceId.deviceId, eventType);
+			$bannerMessage = {
+				message: `Das Gerät mit der ID ${scannedDeviceId.deviceId} wurde erfolgreich ${eventTypeToFriendlyString(
+					eventType
+				)}.`,
+				autoDismiss: {
+					duration: 5 * 1000
+				}
+			};
 		} else {
 			console.log(`InventarItem ${scannedDeviceId.deviceId} does not exist. Creating...`);
 
-			await createInventarItem(scannedDeviceId.deviceId, isUsed);
+			await createInventarItem(scannedDeviceId.deviceId, eventType);
+			$bannerMessage = {
+				message: `Das Gerät mit der ID ${scannedDeviceId.deviceId} wurde erfolgreich angelegt und als ${eventTypeToFriendlyString(
+					eventType
+				)} markiert.`,
+				autoDismiss: {
+					duration: 5 * 1000
+				}
+			};
 		}
 
 		scannedDeviceId = undefined;

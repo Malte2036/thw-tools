@@ -1,5 +1,9 @@
 import { PUBLIC_API_URL } from '$env/static/public';
-import type { InventarItem, InventarItemEvent } from '$lib/inventar/inventarItem';
+import type {
+	InventarItem,
+	InventarItemEvent,
+	InventarItemEventType
+} from '$lib/inventar/inventarItem';
 import { getToken } from './authApi';
 
 export async function getInventarItems(): Promise<InventarItem[]> {
@@ -30,8 +34,11 @@ export async function getInventarItem(deviceId: string): Promise<InventarItem> {
 	return await res.json();
 }
 
-export async function createInventarItem(deviceId: string, isUsed?: boolean): Promise<void> {
-	console.log('createInventarItem', deviceId, isUsed);
+export async function createInventarItem(
+	deviceId: string,
+	eventType: InventarItemEventType
+): Promise<void> {
+	console.log('createInventarItem', deviceId, eventType);
 
 	const res = await fetch(`${PUBLIC_API_URL}/inventar`, {
 		method: 'POST',
@@ -41,7 +48,7 @@ export async function createInventarItem(deviceId: string, isUsed?: boolean): Pr
 		},
 		body: JSON.stringify({
 			deviceId,
-			eventType: isUsed ? 'borrowed' : 'returned'
+			eventType
 		})
 	});
 
@@ -50,7 +57,10 @@ export async function createInventarItem(deviceId: string, isUsed?: boolean): Pr
 	}
 }
 
-export async function createInventarItemEvent(deviceId: string, isUsed: boolean): Promise<void> {
+export async function createInventarItemEvent(
+	deviceId: string,
+	eventType: InventarItemEventType
+): Promise<void> {
 	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}/events`, {
 		method: 'POST',
 		headers: {
@@ -58,7 +68,7 @@ export async function createInventarItemEvent(deviceId: string, isUsed: boolean)
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			eventType: isUsed ? 'borrowed' : 'returned'
+			eventType
 		})
 	});
 
