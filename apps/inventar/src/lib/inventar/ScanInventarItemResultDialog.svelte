@@ -8,9 +8,6 @@
 	export let alreadyExists: boolean;
 
 	export let onSubmit: (isUsed: boolean) => void;
-
-	const showBorrowButton = (alreadyExists && !isUsed) || !alreadyExists;
-	const showReturnButton = (alreadyExists && isUsed) || !alreadyExists;
 </script>
 
 <Dialog title="Du hast ein Gerät gescannt">
@@ -35,12 +32,8 @@
 			</div>
 		</div>
 	</div>
-	<div slot="footer" class="flex flex-row gap-2">
-		{#if showReturnButton}
-			<Button secondary={!alreadyExists} click={() => onSubmit(false)}>Zurückgeben</Button>
-		{/if}
-		{#if showBorrowButton}
-			<Button click={() => onSubmit(true)}>Ausleihen</Button>
-		{/if}
+	<div slot="footer" class="flex flex-row gap-2 w-full justify-between">
+		<Button secondary={!isUsed} click={() => onSubmit(false)}>Zurückgeben</Button>
+		<Button secondary={isUsed} click={() => onSubmit(true)}>Ausleihen</Button>
 	</div>
 </Dialog>
