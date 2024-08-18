@@ -10,8 +10,8 @@ import {
   Req,
 } from '@nestjs/common';
 import { InventarService } from './inventar.service';
-import { UserService } from 'src/auth/user.service';
 import { InventarItemEventType } from './schemas/inventar-item-event.schema';
+import { UserService } from 'src/user/user.service';
 
 @Controller('inventar')
 export class InventarController {

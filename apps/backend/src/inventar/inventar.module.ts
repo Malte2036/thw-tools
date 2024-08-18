@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
-import { InventarService } from './inventar.service';
-import { InventarController } from './inventar.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import {
-  InventarItem,
-  InventarItemSchema,
-} from './schemas/inventar-item.schema';
-import { AuthModule } from 'src/auth/auth.module';
+import { UserModule } from 'src/user/user.module';
+import { InventarController } from './inventar.controller';
+import { InventarService } from './inventar.service';
 import {
   InventarItemEvent,
   InventarItemEventSchema,
 } from './schemas/inventar-item-event.schema';
+import {
+  InventarItem,
+  InventarItemSchema,
+} from './schemas/inventar-item.schema';
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import {
         schema: InventarItemEventSchema,
       },
     ]),
-    AuthModule,
+    UserModule,
   ],
   providers: [InventarService],
   controllers: [InventarController],
