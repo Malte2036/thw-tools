@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import {
 		eventTypeToFriendlyString,
 		userToFriendlyString,
@@ -14,6 +13,8 @@
 	let events: InventarItemEvent[] = [];
 
 	async function loadEvents(deviceId: InventarItemDeviceId) {
+		events = [];
+
 		const data = await getInventarItemEvents(deviceId);
 
 		data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
