@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		eventTypeToEmoji,
 		eventTypeToFriendlyString,
 		userToFriendlyString,
 		type InventarItemDeviceId,
@@ -32,8 +33,9 @@
 			<p>Keine Ereignisse vorhanden.</p>
 		{:else}
 			<Table
-				header={['status', 'aktion von', 'aktion am']}
+				header={['', 'status', 'aktion von', 'aktion am']}
 				values={events.map((event) => [
+					eventTypeToEmoji(event.type),
 					eventTypeToFriendlyString(event.type),
 					userToFriendlyString(event.user),
 					new Date(event.date).toLocaleString('de-DE')

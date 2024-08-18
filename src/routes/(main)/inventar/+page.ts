@@ -13,7 +13,9 @@ export const load = (async () => {
 	}
 
 	const inventarItems = await getInventarItems();
-	console.log('inventarItems', inventarItems);
+	inventarItems.sort(
+		(a, b) => new Date(b.lastEvent.date).getTime() - new Date(a.lastEvent.date).getTime()
+	);
 
 	return {
 		inventarItems
