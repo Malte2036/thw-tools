@@ -1,5 +1,5 @@
 import { PUBLIC_API_URL } from '$env/static/public';
-import type { InventarItem } from '$lib/inventar/inventarItem';
+import type { InventarItem, InventarItemEvent } from '$lib/inventar/inventarItem';
 import { getToken } from './authApi';
 
 export async function getInventarItems(): Promise<InventarItem[]> {
@@ -51,7 +51,7 @@ export async function createInventarItem(deviceId: string, isUsed?: boolean): Pr
 }
 
 export async function createInventarItemEvent(deviceId: string, isUsed: boolean): Promise<void> {
-	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}/event`, {
+	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}/events`, {
 		method: 'POST',
 		headers: {
 			Authorization: `Bearer ${getToken()}`,
@@ -65,4 +65,18 @@ export async function createInventarItemEvent(deviceId: string, isUsed: boolean)
 	if (!res.ok) {
 		throw new Error('Failed to update inventar item');
 	}
+}
+
+export async function getInventarItemEvents(deviceId: string): Promise<InventarItemEvent[]> {
+	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}/events`, {
+		headers: {
+			Authorization: `Bearer ${getToken()}`
+		}
+	});
+
+	if (!res.ok) {
+		throw new Error('Failed to fetch inventar item events');
+	}
+
+	return await res.json();
 }

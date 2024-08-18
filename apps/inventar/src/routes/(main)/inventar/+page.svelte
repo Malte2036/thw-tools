@@ -2,9 +2,14 @@
 	import { invalidateAll } from '$app/navigation';
 	import Table from '$lib/Table.svelte';
 	import { createInventarItem, createInventarItemEvent } from '$lib/api/inventarApi';
+	import InventarItemEventsList from '$lib/inventar/InventarItemEventsList.svelte';
 	import QrScanner from '$lib/inventar/QRScanner.svelte';
 	import ScanInventarItemResultDialog from '$lib/inventar/ScanInventarItemResultDialog.svelte';
-	import type { InventarItemEventType } from '$lib/inventar/inventarItem';
+	import {
+		eventTypeToFriendlyString,
+		type InventarItemDeviceId,
+		type InventarItemEventType
+	} from '$lib/inventar/inventarItem';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -43,16 +48,7 @@
 		invalidateAll();
 	}
 
-	function eventTypeToFriendlyString(eventType: InventarItemEventType): string {
-		switch (eventType) {
-			case 'borrowed':
-				return 'ausgeliehen';
-			case 'returned':
-				return 'zurückgegeben';
-		}
-
-		return eventType;
-	}
+	let selectedDeviceId: InventarItemDeviceId | undefined;
 </script>
 
 <div class="flex flex-col gap-2 p-4">
@@ -70,10 +66,15 @@
 			])}
 			onValueClick={(row) => {
 				console.log(row);
+				selectedDeviceId = row[0];
 			}}
 		></Table>
 	</div>
 </div>
+
+{#if selectedDeviceId}
+	<InventarItemEventsList deviceId={selectedDeviceId} />
+{/if}
 
 {#if scannedDeviceId}
 	<ScanInventarItemResultDialog
