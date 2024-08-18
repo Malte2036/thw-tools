@@ -6,6 +6,7 @@
 	import QrScanner from '$lib/inventar/QRScanner.svelte';
 	import ScanInventarItemResultDialog from '$lib/inventar/ScanInventarItemResultDialog.svelte';
 	import {
+		eventTypeToEmoji,
 		eventTypeToFriendlyString,
 		type InventarItemDeviceId,
 		type InventarItemEventType
@@ -56,10 +57,11 @@
 	<QrScanner {onScan} />
 
 	<div>
-		<div class="font-bold">Inventarliste</div>
+		<div class="font-bold">Inventarliste:</div>
 		<Table
-			header={['deviceId', 'status', 'letzte aktion von', 'letze aktion am']}
+			header={['', 'deviceId', 'status', 'letzte aktion von', 'letze aktion am']}
 			values={data.inventarItems.map((item) => [
+				eventTypeToEmoji(item.lastEvent.type),
 				item.deviceId,
 				eventTypeToFriendlyString(item.lastEvent.type),
 				`${item.lastEvent.user.firstName ?? ''} ${item.lastEvent.user.lastName ?? ''}`,
@@ -67,7 +69,8 @@
 			])}
 			onValueClick={(row) => {
 				console.log(row);
-				selectedDeviceId = row[0];
+				const id = row[1];
+				selectedDeviceId = id === selectedDeviceId ? undefined : id;
 			}}
 		></Table>
 	</div>
