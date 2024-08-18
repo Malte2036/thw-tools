@@ -38,7 +38,7 @@ export class InventarController {
     const organisation =
       await this.organisationService.getPrimaryOrganisationsForUser(user.id);
     if (!organisation) {
-      Logger.warn('Organisation for user not found');
+      Logger.warn(`Organisation for user ${user.id} not found`);
       throw new HttpException(
         'Organisation for user not found',
         HttpStatus.NOT_FOUND,
