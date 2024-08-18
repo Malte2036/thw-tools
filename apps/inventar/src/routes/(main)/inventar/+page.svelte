@@ -45,6 +45,7 @@
 		}
 
 		scannedDeviceId = undefined;
+		selectedDeviceId = undefined;
 		invalidateAll();
 	}
 
