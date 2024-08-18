@@ -5,6 +5,7 @@ import {
 	PUBLIC_KINDE_REDIRECT_URI
 } from '$env/static/public';
 import { createKindeBrowserClient } from '@kinde-oss/kinde-typescript-sdk';
+import { goto } from '$app/navigation';
 
 let _kindeClient: any = null;
 
@@ -49,8 +50,13 @@ const saveLastPath = () => {
 		console.warn('saveLastPath: not in browser');
 		return;
 	}
+	const path = window.location.pathname + window.location.search;
+	if (path.startsWith('/auth')) {
+		clearLastPath();
+		return;
+	}
 
-	localStorage.setItem(LOCAL_STORAGE_LAST_PATH, window.location.pathname + window.location.search);
+	localStorage.setItem(LOCAL_STORAGE_LAST_PATH, path);
 };
 
 const getLastPath = () => {
@@ -69,6 +75,12 @@ const clearLastPath = () => {
 	}
 
 	localStorage.removeItem(LOCAL_STORAGE_LAST_PATH);
+};
+
+export const redirectToLastPathBeforeAuth = () => {
+	const lastPath = getLastPath() ?? '/';
+	clearLastPath();
+	goto(lastPath);
 };
 
 export const login = async () => {
@@ -91,15 +103,11 @@ export const handleRedirectToApp = async () => {
 
 	const url = new URL(window.location.toString());
 	await getKindeClient().handleRedirectToApp(url);
+	console.log('handleRedirectToApp', url);
 
 	localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN, await getKindeClient().getToken());
 
-	const lastPath = getLastPath();
-	if (lastPath) {
-		console.log('redirecting to', lastPath);
-		window.location.href = lastPath;
-		clearLastPath();
-	}
+	redirectToLastPathBeforeAuth();
 };
 
 export const getUser = async () => {
