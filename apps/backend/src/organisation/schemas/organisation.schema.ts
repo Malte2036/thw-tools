@@ -9,7 +9,10 @@ export class Organisation {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true, type: [mongoose.Types.ObjectId], ref: User.name })
+  @Prop({
+    required: true,
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: User.name }],
+  })
   members: User[];
 }
 

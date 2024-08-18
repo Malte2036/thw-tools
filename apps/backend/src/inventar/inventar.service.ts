@@ -5,7 +5,7 @@ import {
   InventarItem,
   InventarItemDocument,
 } from './schemas/inventar-item.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import {
   InventarItemEvent,
   InventarItemEventDocument,
@@ -20,17 +20,16 @@ export class InventarService {
     private inventarItemEventModel: Model<InventarItemEvent>,
   ) {}
 
-  async getInventarItems() {
-    return (
-      this.inventarItemModel
-        .find()
-        // .populate('lastUsedBy')
-        .exec()
-    );
+  async getInventarItems(organisationId: mongoose.Types.ObjectId) {
+    return this.inventarItemModel
+      .find({
+        organisation: organisationId,
+      })
+      .exec();
   }
 
-  async getExpandedInventarItems() {
-    const inventarItems = await this.getInventarItems();
+  async getExpandedInventarItems(organisationId: mongoose.Types.ObjectId) {
+    const inventarItems = await this.getInventarItems(organisationId);
     return Promise.all(
       inventarItems.map(async (item) => {
         const lastEvent = await this.getLastEventForItem(item);
@@ -42,17 +41,27 @@ export class InventarService {
       }),
     );
   }
-  async getInventarItemByDeviceId(deviceId: InventarDeviceId) {
+
+  async getInventarItemByDeviceId(
+    organisationId: mongoose.Types.ObjectId,
+    deviceId: InventarDeviceId,
+  ) {
     return (
       this.inventarItemModel
-        .findOne({ deviceId })
+        .findOne({
+          organisation: organisationId,
+          deviceId,
+        })
         // .populate('lastUsedBy')
         .exec()
     );
   }
 
-  async createInventarItem(data: InventarItem) {
-    if (await this.getInventarItemByDeviceId(data.deviceId)) {
+  async createInventarItem(
+    organisationId: mongoose.Types.ObjectId,
+    data: InventarItem,
+  ) {
+    if (await this.getInventarItemByDeviceId(organisationId, data.deviceId)) {
       Logger.warn(
         `Inventar item with deviceId ${data.deviceId} already exists`,
       );
@@ -67,6 +76,7 @@ export class InventarService {
     const event = new this.inventarItemEventModel(data);
     return event.save();
   }
+
   async getInventarItemEvents(itemDoc: InventarItemDocument) {
     return this.inventarItemEventModel
       .find({ inventarItem: itemDoc._id })

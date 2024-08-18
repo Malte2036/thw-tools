@@ -10,8 +10,8 @@ export class OrganisationService {
     private OrganisationModel: Model<Organisation>,
   ) {}
 
-  async getOrganisationsForUser(userId: string) {
-    return this.OrganisationModel.find({
+  async getPrimaryOrganisationsForUser(userId: string) {
+    return this.OrganisationModel.findOne({
       members: userId,
     });
   }

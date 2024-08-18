@@ -11,6 +11,7 @@ import {
   InventarItem,
   InventarItemSchema,
 } from './schemas/inventar-item.schema';
+import { OrganisationModule } from 'src/organisation/organisation.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import {
       },
     ]),
     UserModule,
+    OrganisationModule,
   ],
   providers: [InventarService],
   controllers: [InventarController],

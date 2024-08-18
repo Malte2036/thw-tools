@@ -10,10 +10,6 @@ import { User, UserSchema } from './schemas/user.schema';
         name: User.name,
         schema: UserSchema,
       },
-      // {
-      //   name: Organisation.name,
-      //   schema: OrganisationSchema,
-      // },
     ]),
   ],
   providers: [UserService],
