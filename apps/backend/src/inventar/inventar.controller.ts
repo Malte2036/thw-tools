@@ -61,7 +61,7 @@ export class InventarController {
     return {};
   }
 
-  @Post(':deviceId/event')
+  @Post(':deviceId/events')
   async createInventarItemEvent(
     @Param('deviceId') deviceId: string,
     @Body() body: { eventType: InventarItemEventType },
@@ -100,5 +100,15 @@ export class InventarController {
     });
 
     return {};
+  }
+
+  @Get(':deviceId/events')
+  async getInventarItemEvents(@Param('deviceId') deviceId: string) {
+    const item = await this.inventarService.getInventarItemByDeviceId(deviceId);
+    if (!item) {
+      throw new HttpException('Inventar item not found', HttpStatus.NOT_FOUND);
+    }
+
+    return this.inventarService.getInventarItemEvents(item);
   }
 }

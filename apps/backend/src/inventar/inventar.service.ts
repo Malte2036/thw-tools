@@ -42,16 +42,6 @@ export class InventarService {
       }),
     );
   }
-  async getLastEventForItem(
-    itemDoc: InventarItemDocument,
-  ): Promise<InventarItemEventDocument | null> {
-    return this.inventarItemEventModel
-      .findOne({ inventarItem: itemDoc._id })
-      .sort({ date: -1 })
-      .populate('user')
-      .exec();
-  }
-
   async getInventarItemByDeviceId(deviceId: InventarDeviceId) {
     return (
       this.inventarItemModel
@@ -76,5 +66,21 @@ export class InventarService {
   async createInventarItemEvent(data: InventarItemEvent) {
     const event = new this.inventarItemEventModel(data);
     return event.save();
+  }
+  async getInventarItemEvents(itemDoc: InventarItemDocument) {
+    return this.inventarItemEventModel
+      .find({ inventarItem: itemDoc._id })
+      .populate('user')
+      .exec();
+  }
+
+  async getLastEventForItem(
+    itemDoc: InventarItemDocument,
+  ): Promise<InventarItemEventDocument | null> {
+    return this.inventarItemEventModel
+      .findOne({ inventarItem: itemDoc._id })
+      .sort({ date: -1 })
+      .populate('user')
+      .exec();
   }
 }
