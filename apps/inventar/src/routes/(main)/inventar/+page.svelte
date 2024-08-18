@@ -83,10 +83,8 @@
 {#if scannedDeviceId}
 	<ScanInventarItemResultDialog
 		deviceId={scannedDeviceId.deviceId}
-		isUsed={data.inventarItems.some(
-			(item) => item.lastEvent.type === 'borrowed' && item.deviceId === scannedDeviceId?.deviceId
-		)}
-		alreadyExists={scannedDeviceId.alreadExists}
+		lastEvent={data.inventarItems.find((item) => item.deviceId === scannedDeviceId?.deviceId)
+			?.lastEvent}
 		onSubmit={submit}
 	/>
 {/if}
