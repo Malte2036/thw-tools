@@ -3,6 +3,7 @@
 	import Table from '$lib/Table.svelte';
 	import { createInventarItem, createInventarItemEvent } from '$lib/api/inventarApi';
 	import InventarItemEventsList from '$lib/inventar/InventarItemEventsList.svelte';
+	import ManuelDeviceIdInput from '$lib/inventar/ManuelDeviceIdInput.svelte';
 	import QrScanner from '$lib/inventar/QRScanner.svelte';
 	import ScanInventarItemResultDialog from '$lib/inventar/ScanInventarItemResultDialog.svelte';
 	import {
@@ -24,7 +25,12 @@
 		| undefined;
 
 	async function onScan(decodedText: string) {
-		console.log(decodedText);
+		if (!decodedText) {
+			return;
+		}
+
+		decodedText = decodedText.trim();
+
 		scannedDeviceId = {
 			deviceId: decodedText,
 			alreadExists: data.inventarItems.some((item) => item.deviceId === decodedText)
@@ -72,6 +78,7 @@
 
 <div class="flex flex-col gap-2 p-4">
 	<QrScanner {onScan} />
+	<ManuelDeviceIdInput {onScan} />
 
 	<div>
 		<div class="font-bold">Inventarliste:</div>
