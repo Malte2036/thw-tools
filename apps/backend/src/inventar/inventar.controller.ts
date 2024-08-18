@@ -59,6 +59,7 @@ export class InventarController {
     body: {
       isUsed: boolean;
     },
+    @Req() req: Request,
   ) {
     Logger.log(
       `Updating inventar item with deviceId ${deviceId} to ${body.isUsed}`,
@@ -71,10 +72,17 @@ export class InventarController {
       throw new HttpException('Invalid isUsed value', HttpStatus.BAD_REQUEST);
     }
 
-    const res = await this.inventarService.updateInventarItem(
-      deviceId,
-      body.isUsed,
-    );
+    const accessToken = (req.headers as any).authorization.split(' ')[1];
+    const user = await this.userService.getUserByAccessToken(accessToken);
+    if (!user) {
+      Logger.warn('User not found');
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const res = await this.inventarService.updateInventarItem(deviceId, {
+      isUsed: body.isUsed,
+      lastUsedBy: user,
+    });
     if (res.matchedCount === 0) {
       throw new HttpException('Inventar item not found', HttpStatus.NOT_FOUND);
     }

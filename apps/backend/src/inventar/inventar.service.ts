@@ -33,7 +33,10 @@ export class InventarService {
     return item.save();
   }
 
-  async updateInventarItem(deviceId: InventarDeviceId, isUsed: boolean) {
-    return this.inventarItemModel.updateOne({ deviceId }, { isUsed });
+  async updateInventarItem(
+    deviceId: InventarDeviceId,
+    data: Partial<InventarItem>,
+  ) {
+    return this.inventarItemModel.updateOne({ deviceId }, data).exec();
   }
 }
