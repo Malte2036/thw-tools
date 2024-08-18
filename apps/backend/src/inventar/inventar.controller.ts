@@ -7,11 +7,11 @@ import {
   Logger,
   Param,
   Post,
-  Put,
   Req,
 } from '@nestjs/common';
 import { InventarService } from './inventar.service';
 import { UserService } from 'src/auth/user.service';
+import { InventarItemEventType } from './schemas/inventar-item-event.schema';
 
 @Controller('inventar')
 export class InventarController {
@@ -23,53 +23,61 @@ export class InventarController {
 
   @Get()
   async getInventar() {
-    return this.inventarService.getInventarItems();
+    return this.inventarService.getExpandedInventarItems();
   }
 
   @Post()
   async createInventarItem(
-    @Body() body: { deviceId: string; isUsed: boolean },
+    @Body() body: { deviceId: string; eventType: InventarItemEventType },
     @Req() req: Request,
   ) {
-    const { deviceId, isUsed } = body;
+    const { deviceId, eventType } = body;
 
-    Logger.log(`Creating inventar item with deviceId ${deviceId} to ${isUsed}`);
-    if (!deviceId) {
-      throw new HttpException('Invalid deviceId', HttpStatus.BAD_REQUEST);
-    }
-
-    const accessToken = (req.headers as any).authorization.split(' ')[1];
-    const user = await this.userService.getUserByAccessToken(accessToken);
-    if (!user) {
-      Logger.warn('User not found');
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-
-    return this.inventarService.createInventarItem({
-      deviceId,
-      isUsed,
-      lastUsedBy: user,
-    });
-  }
-
-  @Put(':deviceId')
-  async updatenventarItem(
-    @Param('deviceId') deviceId: string,
-    @Body()
-    body: {
-      isUsed: boolean;
-    },
-    @Req() req: Request,
-  ) {
     Logger.log(
-      `Updating inventar item with deviceId ${deviceId} to ${body.isUsed}`,
+      `Creating inventar item with deviceId ${deviceId} to ${eventType}`,
     );
     if (!deviceId) {
       throw new HttpException('Invalid deviceId', HttpStatus.BAD_REQUEST);
     }
 
-    if (body.isUsed === undefined) {
-      throw new HttpException('Invalid isUsed value', HttpStatus.BAD_REQUEST);
+    const accessToken = (req.headers as any).authorization.split(' ')[1];
+    const user = await this.userService.getUserByAccessToken(accessToken);
+    if (!user) {
+      Logger.warn('User not found');
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const item = await this.inventarService.createInventarItem({
+      deviceId,
+    });
+
+    await this.inventarService.createInventarItemEvent({
+      date: new Date(),
+      inventarItem: item,
+      user,
+      type: eventType,
+    });
+
+    return {};
+  }
+
+  @Post(':deviceId/event')
+  async createInventarItemEvent(
+    @Param('deviceId') deviceId: string,
+    @Body() body: { eventType: InventarItemEventType },
+    @Req() req: Request,
+  ) {
+    const { eventType } = body;
+
+    Logger.log(
+      `Creating inventar item event with deviceId ${deviceId} to ${eventType}`,
+    );
+    if (!deviceId) {
+      throw new HttpException('Invalid deviceId', HttpStatus.BAD_REQUEST);
+    }
+
+    if (!eventType) {
+      throw new HttpException('Invalid eventType', HttpStatus.BAD_REQUEST);
     }
 
     const accessToken = (req.headers as any).authorization.split(' ')[1];
@@ -79,12 +87,18 @@ export class InventarController {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    const res = await this.inventarService.updateInventarItem(deviceId, {
-      isUsed: body.isUsed,
-      lastUsedBy: user,
-    });
-    if (res.matchedCount === 0) {
+    const item = await this.inventarService.getInventarItemByDeviceId(deviceId);
+    if (!item) {
       throw new HttpException('Inventar item not found', HttpStatus.NOT_FOUND);
     }
+
+    await this.inventarService.createInventarItemEvent({
+      date: new Date(),
+      inventarItem: item,
+      user,
+      type: eventType,
+    });
+
+    return {};
   }
 }

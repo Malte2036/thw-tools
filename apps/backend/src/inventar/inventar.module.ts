@@ -7,6 +7,10 @@ import {
   InventarItemSchema,
 } from './schemas/inventar-item.schema';
 import { AuthModule } from 'src/auth/auth.module';
+import {
+  InventarItemEvent,
+  InventarItemEventSchema,
+} from './schemas/inventar-item-event.schema';
 
 @Module({
   imports: [
@@ -14,6 +18,10 @@ import { AuthModule } from 'src/auth/auth.module';
       {
         name: InventarItem.name,
         schema: InventarItemSchema,
+      },
+      {
+        name: InventarItemEvent.name,
+        schema: InventarItemEventSchema,
       },
     ]),
     AuthModule,
