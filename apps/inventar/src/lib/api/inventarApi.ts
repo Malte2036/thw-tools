@@ -41,7 +41,7 @@ export async function createInventarItem(deviceId: string, isUsed?: boolean): Pr
 		},
 		body: JSON.stringify({
 			deviceId,
-			isUsed
+			eventType: isUsed ? 'borrowed' : 'returned'
 		})
 	});
 
@@ -50,15 +50,15 @@ export async function createInventarItem(deviceId: string, isUsed?: boolean): Pr
 	}
 }
 
-export async function updateInventarItem(deviceId: string, isUsed: boolean): Promise<void> {
-	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}`, {
-		method: 'PUT',
+export async function createInventarItemEvent(deviceId: string, isUsed: boolean): Promise<void> {
+	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}/event`, {
+		method: 'POST',
 		headers: {
 			Authorization: `Bearer ${getToken()}`,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			isUsed
+			eventType: isUsed ? 'borrowed' : 'returned'
 		})
 	});
 

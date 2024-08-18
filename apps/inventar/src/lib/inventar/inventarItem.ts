@@ -6,6 +6,13 @@ type User = {
 
 export type InventarItem = {
 	deviceId: string;
-	isUsed: boolean;
-	lastUsedBy?: User;
+	lastEvent: InventarItemEvent;
+};
+
+export type InventarItemEventType = 'borrowed' | 'returned';
+
+export type InventarItemEvent = {
+	user: User;
+	type: InventarItemEventType;
+	date: Date;
 };
