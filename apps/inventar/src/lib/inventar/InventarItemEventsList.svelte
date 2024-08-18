@@ -32,9 +32,8 @@
 			<p>Keine Ereignisse vorhanden.</p>
 		{:else}
 			<Table
-				header={['deviceId', 'status', 'aktion von', 'aktion am']}
+				header={['status', 'aktion von', 'aktion am']}
 				values={events.map((event) => [
-					deviceId,
 					eventTypeToFriendlyString(event.type),
 					userToFriendlyString(event.user),
 					new Date(event.date).toLocaleString('de-DE')
