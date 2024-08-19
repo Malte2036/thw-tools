@@ -10,6 +10,7 @@
 	import Table from '$lib/Table.svelte';
 
 	export let deviceId: InventarItemDeviceId;
+	export let scrollIntoViewOnDataChange: boolean = false;
 
 	let events: InventarItemEvent[] = [];
 
@@ -20,13 +21,23 @@
 
 		data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 		events = data;
+
+		setTimeout(() => data.length != 0 && scrollIntoViewOnDataChange && scrollIntoView(), 0);
 	}
 
 	$: loadEvents(deviceId);
+
+	const inventarItemEventsListElementId = 'inventar-item-events-list';
+	const scrollIntoView = () => {
+		const element = document.getElementById(inventarItemEventsListElementId);
+		if (element) {
+			element.scrollIntoView({ behavior: 'smooth' });
+		}
+	};
 </script>
 
-<div class="flex flex-col gap-2 p-4">
-	<h1 class="font-bold">Ereignisse für {deviceId}:</h1>
+<div class="flex flex-col gap-2 p-4" id={inventarItemEventsListElementId}>
+	<h1 class="font-bold text-2xl">Ereignisse für {deviceId}:</h1>
 
 	<div class="flex flex-col gap-2">
 		{#if events.length === 0}

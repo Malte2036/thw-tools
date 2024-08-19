@@ -24,3 +24,17 @@ export async function trackEvent(dataUmamiEvent: string | undefined) {
 }
 
 export const sumArray = (array: number[]) => array.reduce((a, b) => a + b, 0);
+
+export const dateToFriendlyString = (date: Date) => {
+	let options: Intl.DateTimeFormatOptions = {
+		day: '2-digit',
+		month: '2-digit',
+		year: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit',
+		hour12: false // 24-hour format
+	};
+
+	let formattedDate = new Intl.DateTimeFormat('de-DE', options).format(date);
+	return `${formattedDate}Uhr`;
+};
