@@ -4,7 +4,14 @@ import type {
 	InventarItemEvent,
 	InventarItemEventType
 } from '$lib/inventar/inventarItem';
-import { getToken } from './authApi';
+import { clearTokenFromLocalStorage, getToken } from './authApi';
+
+const checkIfResposeIsUnauthorized = (res: Response) => {
+	if (res.status === 403) {
+		clearTokenFromLocalStorage();
+		throw new UnauthorizedError();
+	}
+};
 
 export async function getInventarItems(): Promise<InventarItem[]> {
 	const res = await fetch(`${PUBLIC_API_URL}/inventar`, {
@@ -14,6 +21,7 @@ export async function getInventarItems(): Promise<InventarItem[]> {
 	});
 
 	if (!res.ok) {
+		checkIfResposeIsUnauthorized(res);
 		throw new Error('Failed to fetch inventar items');
 	}
 
@@ -28,6 +36,7 @@ export async function getInventarItem(deviceId: string): Promise<InventarItem> {
 	});
 
 	if (!res.ok) {
+		checkIfResposeIsUnauthorized(res);
 		throw new Error('Failed to fetch inventar item');
 	}
 
@@ -53,6 +62,7 @@ export async function createInventarItem(
 	});
 
 	if (!res.ok) {
+		checkIfResposeIsUnauthorized(res);
 		throw new Error('Failed to create inventar item');
 	}
 }
@@ -73,6 +83,7 @@ export async function createInventarItemEvent(
 	});
 
 	if (!res.ok) {
+		checkIfResposeIsUnauthorized(res);
 		throw new Error('Failed to update inventar item');
 	}
 }
@@ -85,6 +96,7 @@ export async function getInventarItemEvents(deviceId: string): Promise<InventarI
 	});
 
 	if (!res.ok) {
+		checkIfResposeIsUnauthorized(res);
 		throw new Error('Failed to fetch inventar item events');
 	}
 
