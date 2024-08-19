@@ -9,6 +9,7 @@
 	import {
 		eventTypeToEmoji,
 		eventTypeToFriendlyString,
+		isSearchStringInInventarItem,
 		type InventarItemDeviceId,
 		type InventarItemEventType
 	} from '$lib/inventar/inventarItem';
@@ -16,6 +17,7 @@
 	import type { PageData } from './$types';
 	import { dateToFriendlyString, searchStringIsInArray } from '$lib/utils';
 	import Input from '$lib/Input.svelte';
+	import InventarItemEventItem from '$lib/inventar/InventarItemEventItem.svelte';
 
 	export let data: PageData;
 
@@ -31,13 +33,7 @@
 
 	$: {
 		filterdInventarItems = data.inventarItems.filter((item) =>
-			searchStringIsInArray(searchedDeviceId.trim(), [
-				item.deviceId,
-				item.lastEvent.user.firstName,
-				item.lastEvent.user.lastName,
-				dateToFriendlyString(new Date(item.lastEvent.date)),
-				eventTypeToFriendlyString(item.lastEvent.type)
-			])
+			isSearchStringInInventarItem(searchedDeviceId, item)
 		);
 	}
 
@@ -107,39 +103,13 @@
 				<p>Keine Geräte vorhanden.</p>
 			{/if}
 			{#each filterdInventarItems as item}
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div
-					class="text-xl flex flex-row items-center p-2 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors hover:cursor-pointer overflow-x-scroll"
-					class:selectedItem={item.deviceId === selectedDeviceId}
-					on:click={() =>
+				<InventarItemEventItem
+					event={item.lastEvent}
+					deviceId={item.deviceId}
+					isSelected={item.deviceId === selectedDeviceId}
+					click={() =>
 						(selectedDeviceId = item.deviceId === selectedDeviceId ? undefined : item.deviceId)}
-				>
-					<div class="text-2xl">{eventTypeToEmoji(item.lastEvent.type)}</div>
-					<div class="flex flex-col gap-0 w-full">
-						<div class="flex flex-row gap-2 justify-between w-full">
-							<div class="text-nowrap">ID: <span class="font-bold">{item.deviceId}</span></div>
-							<div
-								class="rounded-xl text-sm px-2 h-min bg-green-200"
-								class:isBorrowed={item.lastEvent.type === 'borrowed'}
-							>
-								{eventTypeToFriendlyString(item.lastEvent.type)}
-							</div>
-						</div>
-						<div class="flex flex-row gap-2 items-center w-full">
-							<div class="text-sm text-nowrap text-gray-500">
-								<span class="italic">
-									{item.lastEvent.user.firstName ?? ''}
-									{item.lastEvent.user.lastName ?? ''}
-								</span>
-								{' am '}
-								<span>
-									{dateToFriendlyString(new Date(item.lastEvent.date))}
-								</span>
-							</div>
-						</div>
-					</div>
-				</div>
+				/>
 			{/each}
 		</div>
 	</div>
@@ -157,12 +127,3 @@
 		onSubmit={submit}
 	/>
 {/if}
-
-<style lang="scss">
-	.selectedItem {
-		@apply bg-thw-300;
-	}
-	.isBorrowed {
-		@apply bg-red-200;
-	}
-</style>
