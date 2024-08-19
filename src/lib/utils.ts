@@ -38,3 +38,7 @@ export const dateToFriendlyString = (date: Date) => {
 	let formattedDate = new Intl.DateTimeFormat('de-DE', options).format(date);
 	return `${formattedDate}Uhr`;
 };
+
+export const searchStringIsInArray = (searchString: string, array: (string | undefined)[]) => {
+	return array.some((item) => item?.toLowerCase().includes(searchString.toLowerCase()));
+};
