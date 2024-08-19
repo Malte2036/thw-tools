@@ -77,6 +77,33 @@ const clearLastPath = () => {
 	localStorage.removeItem(LOCAL_STORAGE_LAST_PATH);
 };
 
+const getTokenFromLocalStorage = () => {
+	if (!browser) {
+		console.warn('getTokenFromLocalStorage: not in browser');
+		return;
+	}
+
+	return localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN);
+};
+
+const setTokenToLocalStorage = (token: string) => {
+	if (!browser) {
+		console.warn('setTokenToLocalStorage: not in browser');
+		return;
+	}
+
+	localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN, token);
+};
+
+export const clearTokenFromLocalStorage = () => {
+	if (!browser) {
+		console.warn('clearTokenFromLocalStorage: not in browser');
+		return;
+	}
+
+	localStorage.removeItem(LOCAL_STORAGE_ACCESS_TOKEN);
+};
+
 export const redirectToLastPathBeforeAuth = () => {
 	const lastPath = getLastPath() ?? '/';
 	clearLastPath();
@@ -105,7 +132,7 @@ export const handleRedirectToApp = async () => {
 	await getKindeClient().handleRedirectToApp(url);
 	console.log('handleRedirectToApp', url);
 
-	localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN, await getKindeClient().getToken());
+	setTokenToLocalStorage(await getKindeClient().getToken());
 
 	redirectToLastPathBeforeAuth();
 };
@@ -124,5 +151,5 @@ export const isAuthenticated = () => {
 
 export const getToken = () => {
 	// return await getKindeClient().getToken();
-	return localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN);
+	return getTokenFromLocalStorage();
 };
