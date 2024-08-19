@@ -14,7 +14,7 @@
 	} from '$lib/inventar/inventarItem';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import type { PageData } from './$types';
-	import { dateToFriendlyString } from '$lib/utils';
+	import { dateToFriendlyString, searchStringIsInArray } from '$lib/utils';
 	import Input from '$lib/Input.svelte';
 
 	export let data: PageData;
@@ -30,15 +30,15 @@
 	let filterdInventarItems = data.inventarItems;
 
 	$: {
-		filterdInventarItems = data.inventarItems.filter(
-			(item) =>
-				item.deviceId.includes(searchedDeviceId) ||
-				item.lastEvent.user.firstName?.includes(searchedDeviceId) ||
-				item.lastEvent.user.lastName?.includes(searchedDeviceId) ||
-				dateToFriendlyString(new Date(item.lastEvent.date)).includes(searchedDeviceId) ||
-				eventTypeToFriendlyString(item.lastEvent.type).includes(searchedDeviceId)
+		filterdInventarItems = data.inventarItems.filter((item) =>
+			searchStringIsInArray(searchedDeviceId.trim(), [
+				item.deviceId,
+				item.lastEvent.user.firstName,
+				item.lastEvent.user.lastName,
+				dateToFriendlyString(new Date(item.lastEvent.date)),
+				eventTypeToFriendlyString(item.lastEvent.type)
+			])
 		);
-		console.log(searchedDeviceId, filterdInventarItems);
 	}
 
 	async function onScan(decodedText: string) {
@@ -120,7 +120,7 @@
 						<div class="flex flex-row gap-2 justify-between w-full">
 							<div class="text-nowrap">ID: <span class="font-bold">{item.deviceId}</span></div>
 							<div
-								class="rounded-2xl text-sm px-2 py-1 h-min bg-green-200"
+								class="rounded-xl text-sm px-2 h-min bg-green-200"
 								class:isBorrowed={item.lastEvent.type === 'borrowed'}
 							>
 								{eventTypeToFriendlyString(item.lastEvent.type)}
