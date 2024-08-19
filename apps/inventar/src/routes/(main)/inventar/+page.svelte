@@ -15,6 +15,7 @@
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import type { PageData } from './$types';
 	import { dateToFriendlyString } from '$lib/utils';
+	import Input from '$lib/Input.svelte';
 
 	export let data: PageData;
 
@@ -24,6 +25,21 @@
 				alreadExists: boolean;
 		  }
 		| undefined;
+
+	let searchedDeviceId: string = '';
+	let filterdInventarItems = data.inventarItems;
+
+	$: {
+		filterdInventarItems = data.inventarItems.filter(
+			(item) =>
+				item.deviceId.includes(searchedDeviceId) ||
+				item.lastEvent.user.firstName?.includes(searchedDeviceId) ||
+				item.lastEvent.user.lastName?.includes(searchedDeviceId) ||
+				dateToFriendlyString(new Date(item.lastEvent.date)).includes(searchedDeviceId) ||
+				eventTypeToFriendlyString(item.lastEvent.type).includes(searchedDeviceId)
+		);
+		console.log(searchedDeviceId, filterdInventarItems);
+	}
 
 	async function onScan(decodedText: string) {
 		if (!decodedText) {
@@ -85,11 +101,12 @@
 
 	<div class="flex flex-col gap-2">
 		<div class="font-bold text-2xl">Inventarliste:</div>
+		<Input placeholder="Geräte suchen..." bind:inputValue={searchedDeviceId} />
 		<div class="flex flex-col gap-2">
-			{#if data.inventarItems.length === 0}
+			{#if filterdInventarItems.length === 0}
 				<p>Keine Geräte vorhanden.</p>
 			{/if}
-			{#each data.inventarItems as item}
+			{#each filterdInventarItems as item}
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<div
