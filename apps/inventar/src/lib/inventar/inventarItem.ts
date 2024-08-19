@@ -1,3 +1,5 @@
+import { dateToFriendlyString, searchStringIsInArray } from '$lib/utils';
+
 type User = {
 	firstName?: string;
 	lastName?: string;
@@ -59,4 +61,25 @@ export function userToFriendlyString(user: User): string {
 	}
 
 	return 'Unbekannt';
+}
+
+export function isSearchStringInInventarItem(
+	searchString: string,
+	inventarItem: InventarItem
+): boolean {
+	return (
+		searchStringIsInArray(searchString.trim(), [inventarItem.deviceId]) ||
+		isSearchStringInInventarItemEvent(searchString, inventarItem.lastEvent)
+	);
+}
+
+export function isSearchStringInInventarItemEvent(
+	searchString: string,
+	event: InventarItemEvent
+): boolean {
+	return searchStringIsInArray(searchString.trim(), [
+		userToFriendlyString(event.user),
+		dateToFriendlyString(new Date(event.date)),
+		eventTypeToFriendlyString(event.type)
+	]);
 }

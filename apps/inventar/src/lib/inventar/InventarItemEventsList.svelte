@@ -1,21 +1,27 @@
 <script lang="ts">
+	import { getInventarItemEvents } from '$lib/api/inventarApi';
+	import Input from '$lib/Input.svelte';
 	import {
-		eventTypeToEmoji,
-		eventTypeToFriendlyString,
-		userToFriendlyString,
+		isSearchStringInInventarItemEvent,
 		type InventarItemDeviceId,
 		type InventarItemEvent
 	} from './inventarItem';
-	import { getInventarItemEvents } from '$lib/api/inventarApi';
-	import Table from '$lib/Table.svelte';
+	import InventarItemEventItem from './InventarItemEventItem.svelte';
 
 	export let deviceId: InventarItemDeviceId;
 	export let scrollIntoViewOnDataChange: boolean = false;
 
 	let events: InventarItemEvent[] = [];
+	let filteredEvents: InventarItemEvent[] = [];
+
+	let search = '';
+	$: {
+		filteredEvents = events.filter((event) => isSearchStringInInventarItemEvent(search, event));
+	}
 
 	async function loadEvents(deviceId: InventarItemDeviceId) {
 		events = [];
+		search = '';
 
 		const data = await getInventarItemEvents(deviceId);
 
@@ -39,19 +45,15 @@
 <div class="flex flex-col gap-2 p-4" id={inventarItemEventsListElementId}>
 	<h1 class="font-bold text-2xl">Ereignisse für {deviceId}:</h1>
 
+	<Input placeholder="Filtere nach Ereignissen..." bind:inputValue={search} />
+
 	<div class="flex flex-col gap-2">
 		{#if events.length === 0}
 			<p>Keine Ereignisse vorhanden.</p>
 		{:else}
-			<Table
-				header={['', 'status', 'aktion von', 'aktion am']}
-				values={events.map((event) => [
-					eventTypeToEmoji(event.type),
-					eventTypeToFriendlyString(event.type),
-					userToFriendlyString(event.user),
-					new Date(event.date).toLocaleString('de-DE')
-				])}
-			/>
+			{#each filteredEvents as event}
+				<InventarItemEventItem {event} {deviceId} isSelected={false} click={() => {}} />
+			{/each}
 		{/if}
 	</div>
 </div>
