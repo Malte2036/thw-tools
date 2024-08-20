@@ -145,6 +145,18 @@ export const getUser = async () => {
 };
 
 export const isAuthenticated = () => {
+	getKindeClient()
+		.getToken()
+		.then((token) => {
+			console.log('cookie is: ', token);
+		});
+
+	getKindeClient()
+		.getUser()
+		.then((user) => {
+			console.log('user is: ', user);
+		});
+
 	// return await getKindeClient().isAuthenticated();
 	if (getToken()) {
 		return true;
