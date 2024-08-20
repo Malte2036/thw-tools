@@ -132,6 +132,8 @@ export const handleRedirectToApp = async () => {
 	await getKindeClient().handleRedirectToApp(url);
 	console.log('handleRedirectToApp', url);
 
+	await getKindeClient().refreshTokens();
+
 	setTokenToLocalStorage(await getKindeClient().getToken());
 
 	redirectToLastPathBeforeAuth();
