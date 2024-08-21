@@ -88,6 +88,55 @@ export class InventarController {
     return {};
   }
 
+  @Post('events')
+  async bulkCreateInventarItemEvents(
+    @Body() body: { deviceId: string; eventType: InventarItemEventType }[],
+    @Req() req: Request,
+  ) {
+    Logger.log(`Bulk creating inventar item events for ${body.length} items`);
+    if (!body || !Array.isArray(body) || body.length === 0) {
+      throw new HttpException('Invalid body', HttpStatus.BAD_REQUEST);
+    }
+
+    const [user, organisation] = await this.getUserAndOrgFromRequest(req);
+
+    const items = await Promise.all(
+      body.map(async ({ deviceId }) => {
+        let item = await this.inventarService.getInventarItemByDeviceId(
+          organisation._id,
+          deviceId,
+        );
+        if (!item) {
+          Logger.log(
+            `Creating inventar item with deviceId ${deviceId}, as it does not exist`,
+          );
+          item = await this.inventarService.createInventarItem(
+            organisation._id,
+            {
+              deviceId,
+              organisation,
+            },
+          );
+        }
+
+        return item;
+      }),
+    );
+
+    await Promise.all(
+      items.map((item, index) =>
+        this.inventarService.createInventarItemEvent({
+          date: new Date(),
+          inventarItem: item,
+          user,
+          type: body[index].eventType,
+        }),
+      ),
+    );
+
+    return {};
+  }
+
   @Post(':deviceId/events')
   async createInventarItemEvent(
     @Param('deviceId') deviceId: string,
