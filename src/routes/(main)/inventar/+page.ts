@@ -1,11 +1,15 @@
-import { isAuthenticated, login } from '$lib/api/authApi';
+import { getToken, isAuthenticated, login } from '$lib/api/authApi';
 import { getInventarItems } from '$lib/api/inventarApi';
 import type { PageLoad } from './$types';
 
 export const ssr = false;
 
 export const load = (async () => {
-	if (!isAuthenticated()) {
+	console.log(await isAuthenticated());
+
+	if (!(await isAuthenticated())) {
+		console.log('Not authenticated');
+
 		await login();
 		return {
 			inventarItems: []

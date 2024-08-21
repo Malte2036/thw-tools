@@ -4,11 +4,10 @@ import type {
 	InventarItemEvent,
 	InventarItemEventType
 } from '$lib/inventar/inventarItem';
-import { clearTokenFromLocalStorage, getToken } from './authApi';
+import { getToken } from './authApi';
 
 const checkIfResposeIsUnauthorized = (res: Response) => {
 	if (res.status === 403) {
-		clearTokenFromLocalStorage();
 		throw new UnauthorizedError();
 	}
 };
@@ -16,7 +15,7 @@ const checkIfResposeIsUnauthorized = (res: Response) => {
 export async function getInventarItems(): Promise<InventarItem[]> {
 	const res = await fetch(`${PUBLIC_API_URL}/inventar`, {
 		headers: {
-			Authorization: `Bearer ${getToken()}`
+			Authorization: `Bearer ${await getToken()}`
 		}
 	});
 
@@ -31,7 +30,7 @@ export async function getInventarItems(): Promise<InventarItem[]> {
 export async function getInventarItem(deviceId: string): Promise<InventarItem> {
 	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}`, {
 		headers: {
-			Authorization: `Bearer ${getToken()}`
+			Authorization: `Bearer ${await getToken()}`
 		}
 	});
 
@@ -52,7 +51,7 @@ export async function createInventarItem(
 	const res = await fetch(`${PUBLIC_API_URL}/inventar`, {
 		method: 'POST',
 		headers: {
-			Authorization: `Bearer ${getToken()}`,
+			Authorization: `Bearer ${await getToken()}`,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
@@ -74,7 +73,7 @@ export async function createInventarItemEvent(
 	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}/events`, {
 		method: 'POST',
 		headers: {
-			Authorization: `Bearer ${getToken()}`,
+			Authorization: `Bearer ${await getToken()}`,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
@@ -91,7 +90,7 @@ export async function createInventarItemEvent(
 export async function getInventarItemEvents(deviceId: string): Promise<InventarItemEvent[]> {
 	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}/events`, {
 		headers: {
-			Authorization: `Bearer ${getToken()}`
+			Authorization: `Bearer ${await getToken()}`
 		}
 	});
 
