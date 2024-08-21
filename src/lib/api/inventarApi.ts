@@ -1,6 +1,7 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import type {
 	InventarItem,
+	InventarItemDeviceId,
 	InventarItemEvent,
 	InventarItemEventType
 } from '$lib/inventar/inventarItem';
@@ -64,6 +65,24 @@ export async function createInventarItem(
 	if (!res.ok) {
 		checkIfResposeIsUnauthorized(res);
 		throw new Error('Failed to create inventar item');
+	}
+}
+
+export async function bulkCreateInventarItemEvents(
+	data: { deviceId: InventarItemDeviceId; eventType: InventarItemEventType }[]
+): Promise<void> {
+	const res = await fetch(`${PUBLIC_API_URL}/inventar/events`, {
+		method: 'POST',
+		headers: {
+			Authorization: `Bearer ${getToken()}`,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	});
+
+	if (!res.ok) {
+		checkIfResposeIsUnauthorized(res);
+		throw new Error('Failed to bulk create inventar item events');
 	}
 }
 

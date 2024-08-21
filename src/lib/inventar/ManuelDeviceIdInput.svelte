@@ -16,7 +16,6 @@
 			secondary
 			click={() => {
 				onScan(inputValue);
-				visible = false;
 			}}
 		>
 			Eintragen
