@@ -7,6 +7,7 @@
 		type InventarItemDeviceId,
 		type InventarItemEvent
 	} from './inventarItem';
+	import InventarItemEventTypeBadge from './InventarItemEventTypeBadge.svelte';
 
 	export let event: InventarItemEvent;
 	export let deviceId: InventarItemDeviceId;
@@ -25,12 +26,7 @@
 	<div class="flex flex-col gap-0 w-full">
 		<div class="flex flex-row gap-2 justify-between w-full">
 			<div class="text-nowrap">ID: <span class="font-bold">{deviceId}</span></div>
-			<div
-				class="rounded-xl text-sm px-2 h-min bg-green-200"
-				class:isBorrowed={event.type === 'borrowed'}
-			>
-				{eventTypeToFriendlyString(event.type)}
-			</div>
+			<InventarItemEventTypeBadge type={event.type} />
 		</div>
 		<div class="flex flex-row gap-2 items-center w-full">
 			<div class="text-sm text-nowrap text-gray-500">
@@ -50,8 +46,5 @@
 <style lang="scss">
 	.selectedItem {
 		@apply bg-thw-300;
-	}
-	.isBorrowed {
-		@apply bg-red-200;
 	}
 </style>
