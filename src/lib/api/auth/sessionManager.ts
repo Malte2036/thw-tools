@@ -41,10 +41,6 @@ const sessionManager: BSessionManager = {
 	},
 	async removeSessionItemBrowser(key: string) {
 		console.log('removeSessionItemBrowser', key);
-		if (key.startsWith('acwpf-state-key')) {
-			console.log('skip removeSessionItemBrowser', key);
-			return;
-		}
 
 		for (const key in memCache) {
 			delete memCache[key];
