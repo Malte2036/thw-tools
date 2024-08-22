@@ -14,7 +14,7 @@ export async function apiGet<T>(path: string) {
 		const response = await fetch(url, {
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${getToken()}`
+				Authorization: `Bearer ${await getToken()}`
 			}
 		});
 
@@ -38,7 +38,7 @@ export async function apiPost<T>(path: string, body: any) {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${getToken()}`
+				Authorization: `Bearer ${await getToken()}`
 			},
 			body: JSON.stringify(body)
 		});
