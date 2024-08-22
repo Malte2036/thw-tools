@@ -41,7 +41,7 @@
 			<p>Keine Ereignisse vorhanden.</p>
 		{:else}
 			{#each filteredEvents as event}
-				<InventarItemEventItem {event} {deviceId} isSelected={false} click={() => {}} />
+				<InventarItemEventItem {event} {deviceId} isSelected={false} click={() => {}} secondary />
 			{/each}
 		{/if}
 	</div>

@@ -2,8 +2,6 @@
 	import { dateToFriendlyString } from '$lib/utils';
 	import {
 		eventTypeToEmoji,
-		eventTypeToFriendlyString,
-		type InventarItem,
 		type InventarItemDeviceId,
 		type InventarItemEvent
 	} from './inventarItem';
@@ -13,12 +11,15 @@
 	export let deviceId: InventarItemDeviceId;
 	export let isSelected: boolean;
 	export let click: () => void;
+
+	export let secondary: boolean | undefined;
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-	class="text-xl flex flex-row items-center p-2 gap-2 bg-thw-50 border shadow-sm rounded-2xl transition-colors hover:cursor-pointer overflow-x-auto"
+	class="text-xl flex flex-row items-center p-2 gap-2 bg-thw-50 border-thw-500 border-2 shadow-sm rounded-2xl transition-colors hover:cursor-pointer overflow-x-auto"
+	class:secondary
 	class:selectedItem={isSelected}
 	on:click={click}
 >
@@ -46,5 +47,9 @@
 <style lang="scss">
 	.selectedItem {
 		@apply bg-thw-300;
+	}
+
+	.secondary {
+		@apply border-dashed border-thw-300;
 	}
 </style>
