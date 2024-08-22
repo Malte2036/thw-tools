@@ -8,14 +8,39 @@
 	let visible = false;
 
 	let inputValue = '';
+
+	const HYPHEN_INDEX = 4;
+	const HYPHEN = '-';
+	const DEVICE_ID_LENGTH = 11;
+
+	const fixInputValue = (value: string) => {
+		inputValue = value.trimStart();
+
+		if (value.length > HYPHEN_INDEX && value[HYPHEN_INDEX] !== HYPHEN) {
+			console.log(
+				'Adding hyphen to',
+				value,
+				value.slice(0, HYPHEN_INDEX),
+				value.slice(HYPHEN_INDEX)
+			);
+
+			inputValue = value.slice(0, HYPHEN_INDEX) + HYPHEN + value.slice(HYPHEN_INDEX);
+		}
+
+		if (value.length > DEVICE_ID_LENGTH) {
+			inputValue = value.slice(0, DEVICE_ID_LENGTH);
+		}
+	};
 </script>
 
 {#if visible}
 	<div class="flex flex-row gap-4 w-full items-end">
 		<Input
 			bind:inputValue
+			onInput={() => fixInputValue(inputValue)}
 			placeholder="Inventarnummer"
 			label="Inventarnummer des Gerätes"
+			inputmode="numeric"
 			pattern={deviceIdRegex.source}
 		/>
 		<Button
