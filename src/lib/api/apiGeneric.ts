@@ -1,23 +1,8 @@
-/*const res = await fetch(`${PUBLIC_API_URL}/inventar`, {
-		headers: {
-			Authorization: `Bearer ${getToken()}`
-		}
-	});
-
-	if (!res.ok) {
-		checkIfResposeIsUnauthorized(res);
-		throw new Error('Failed to fetch inventar items');
-	}
-
-	return await res.json();
-    */
-
 import { PUBLIC_API_URL } from '$env/static/public';
-import { clearTokenFromLocalStorage, getToken } from './authApi';
+import { getToken } from './authApi';
 
 const checkIfResposeIsUnauthorized = (res: Response) => {
 	if (res.status === 403) {
-		clearTokenFromLocalStorage();
 		throw new UnauthorizedError();
 	}
 };

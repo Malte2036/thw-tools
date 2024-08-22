@@ -6,6 +6,7 @@ import {
 } from '$env/static/public';
 import { createKindeBrowserClient } from '@kinde-oss/kinde-typescript-sdk';
 import { goto } from '$app/navigation';
+import { sessionManager } from './auth/sessionManager';
 
 let _kindeClient: any = null;
 
@@ -18,7 +19,8 @@ export const getKindeClient = () => {
 		authDomain: PUBLIC_KINDE_DOMAIN,
 		clientId: PUBLIC_KINDE_API_CLIENT,
 		logoutRedirectURL: 'http://localhost:5173',
-		redirectURL: PUBLIC_KINDE_REDIRECT_URI
+		redirectURL: PUBLIC_KINDE_REDIRECT_URI,
+		sessionManager: sessionManager
 		// audience: 'https://api.thw-tools.de'
 		// redirectURL: 'https://7a0d-176-198-201-152.ngrok-free.app/auth/callback',
 		// sessionManager: {
@@ -43,7 +45,6 @@ export const getKindeClient = () => {
 };
 
 const LOCAL_STORAGE_LAST_PATH = 'auth_last_path';
-const LOCAL_STORAGE_ACCESS_TOKEN = 'auth_access_token';
 
 const saveLastPath = () => {
 	if (!browser) {
@@ -77,33 +78,6 @@ const clearLastPath = () => {
 	localStorage.removeItem(LOCAL_STORAGE_LAST_PATH);
 };
 
-const getTokenFromLocalStorage = () => {
-	if (!browser) {
-		console.warn('getTokenFromLocalStorage: not in browser');
-		return;
-	}
-
-	return localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN);
-};
-
-const setTokenToLocalStorage = (token: string) => {
-	if (!browser) {
-		console.warn('setTokenToLocalStorage: not in browser');
-		return;
-	}
-
-	localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN, token);
-};
-
-export const clearTokenFromLocalStorage = () => {
-	if (!browser) {
-		console.warn('clearTokenFromLocalStorage: not in browser');
-		return;
-	}
-
-	localStorage.removeItem(LOCAL_STORAGE_ACCESS_TOKEN);
-};
-
 export const redirectToLastPathBeforeAuth = () => {
 	const lastPath = getLastPath() ?? '/';
 	clearLastPath();
@@ -130,28 +104,21 @@ export const handleRedirectToApp = async () => {
 
 	const url = new URL(window.location.toString());
 	await getKindeClient().handleRedirectToApp(url);
-	console.log('handleRedirectToApp', url);
-
-	await getKindeClient().refreshTokens();
-
-	setTokenToLocalStorage(await getKindeClient().getToken());
 
 	redirectToLastPathBeforeAuth();
 };
 
 export const getUser = async () => {
+	console.log('token:', await getToken());
+
 	const user = await getKindeClient().getUser();
 	return user;
 };
 
-export const isAuthenticated = () => {
-	// return await getKindeClient().isAuthenticated();
-	if (getToken()) {
-		return true;
-	}
+export const isAuthenticated = async () => {
+	return await getKindeClient().isAuthenticated();
 };
 
-export const getToken = () => {
-	// return await getKindeClient().getToken();
-	return getTokenFromLocalStorage();
+export const getToken = async () => {
+	return await getKindeClient().getToken();
 };

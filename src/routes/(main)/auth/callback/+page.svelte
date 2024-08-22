@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		getUser,
 		handleRedirectToApp,
 		isAuthenticated,
 		login,
@@ -19,7 +20,7 @@
 	});
 
 	const checkLoginStatus = async () => {
-		if (!isAuthenticated()) {
+		if (!(await isAuthenticated())) {
 			console.log('User is not authenticated');
 			alert('User is not authenticated');
 			login();
@@ -40,5 +41,7 @@
 	</div>
 	<div>
 		<Button secondary click={checkLoginStatus}>Überprüfe Login Status</Button>
+		<Button secondary click={() => getUser().then((user) => console.log(user))}>Get User</Button>
+		<Button secondary click={login}>Login</Button>
 	</div>
 </div>
