@@ -31,7 +31,9 @@ const sessionManager: BSessionManager = {
 		console.log('setSessionItemBrowser', key, value, inCookieList);
 
 		if (inCookieList) {
-			CookieManager.setCookie(key, value as string);
+			CookieManager.setCookie(key, value as string, {
+				path: '/'
+			});
 		} else {
 			memCache[key] = value as string;
 		}
