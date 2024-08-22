@@ -21,6 +21,12 @@ export type InventarItemEvent = {
 	date: string;
 };
 
+export const deviceIdRegex = /^\d{4}-\d{6}$/;
+
+export function validateInventarItemDeviceId(deviceId: string): boolean {
+	return deviceIdRegex.test(deviceId);
+}
+
 export function eventTypeToFriendlyString(eventType: InventarItemEventType): string {
 	switch (eventType) {
 		case 'borrowed':

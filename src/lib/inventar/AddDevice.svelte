@@ -6,6 +6,7 @@
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import {
 		eventTypeToFriendlyString,
+		validateInventarItemDeviceId,
 		type InventarItem,
 		type InventarItemDeviceId,
 		type InventarItemEventType
@@ -26,6 +27,17 @@
 		}
 
 		decodedText = decodedText.trim();
+
+		if (!validateInventarItemDeviceId(decodedText)) {
+			$bannerMessage = {
+				message: `Ungültige Geräte-ID: ${decodedText}`,
+				autoDismiss: {
+					duration: 5 * 1000
+				},
+				type: 'error'
+			};
+			return;
+		}
 
 		if (scannedDeviceIds.some((item) => item.deviceId === decodedText)) {
 			return;
