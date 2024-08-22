@@ -1,20 +1,15 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { bulkCreateInventarItemEvents } from '$lib/api/inventarApi';
+	import Button from '$lib/Button.svelte';
 	import ManuelDeviceIdInput from '$lib/inventar/ManuelDeviceIdInput.svelte';
 	import QrScanner from '$lib/inventar/QRScanner.svelte';
-	import {
-		bulkCreateInventarItemEvents,
-		createInventarItem,
-		createInventarItemEvent
-	} from '$lib/api/inventarApi';
+	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import {
 		eventTypeToFriendlyString,
 		type InventarItem,
 		type InventarItemDeviceId,
 		type InventarItemEventType
 	} from './inventarItem';
-	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
-	import Button from '$lib/Button.svelte';
 	import InventarItemEventTypeBadge from './InventarItemEventTypeBadge.svelte';
 
 	export let inventarItems: InventarItem[];

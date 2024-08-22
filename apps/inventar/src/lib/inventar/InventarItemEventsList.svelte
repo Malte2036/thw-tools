@@ -9,7 +9,6 @@
 	import InventarItemEventItem from './InventarItemEventItem.svelte';
 
 	export let deviceId: InventarItemDeviceId;
-	export let scrollIntoViewOnDataChange: boolean = false;
 
 	let events: InventarItemEvent[] = [];
 	let filteredEvents: InventarItemEvent[] = [];
@@ -27,22 +26,12 @@
 
 		data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 		events = data;
-
-		setTimeout(() => data.length != 0 && scrollIntoViewOnDataChange && scrollIntoView(), 0);
 	}
 
 	$: loadEvents(deviceId);
-
-	const inventarItemEventsListElementId = 'inventar-item-events-list';
-	const scrollIntoView = () => {
-		const element = document.getElementById(inventarItemEventsListElementId);
-		if (element) {
-			element.scrollIntoView({ behavior: 'smooth' });
-		}
-	};
 </script>
 
-<div class="flex flex-col gap-2 p-4" id={inventarItemEventsListElementId}>
+<div class="flex flex-col gap-2">
 	<h1 class="font-bold text-2xl">Ereignisse für {deviceId}:</h1>
 
 	<Input placeholder="Filtere nach Ereignissen..." bind:inputValue={search} />
