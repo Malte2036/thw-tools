@@ -15,29 +15,10 @@ export async function getInventarItem(deviceId: string): Promise<InventarItem> {
 	return await apiGet<InventarItem>(`/inventar/${deviceId}`);
 }
 
-export async function createInventarItem(
-	deviceId: string,
-	eventType: InventarItemEventType
-): Promise<void> {
-	await apiPost<InventarItem>(`/inventar`, {
-		deviceId,
-		eventType
-	});
-}
-
 export async function bulkCreateInventarItemEvents(
 	data: { deviceId: InventarItemDeviceId; eventType: InventarItemEventType }[]
 ): Promise<void> {
 	await apiPost<InventarItemEvent[]>(`/inventar/events`, data);
-}
-
-export async function createInventarItemEvent(
-	deviceId: string,
-	eventType: InventarItemEventType
-): Promise<void> {
-	await apiPost<InventarItemEvent>(`/inventar/${deviceId}/events`, {
-		eventType
-	});
 }
 
 export async function getInventarItemEvents(deviceId: string): Promise<InventarItemEvent[]> {

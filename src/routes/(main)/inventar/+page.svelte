@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import Input from '$lib/Input.svelte';
 	import AddDevice from '$lib/inventar/AddDevice.svelte';
 	import InventarItemEventItem from '$lib/inventar/InventarItemEventItem.svelte';
@@ -20,18 +20,10 @@
 			isSearchStringInInventarItem(searchedDeviceId, item)
 		);
 	}
-
-	let selectedDeviceId: InventarItemDeviceId | undefined;
 </script>
 
 <div class="flex flex-col gap-4 p-4">
-	<AddDevice
-		inventarItems={data.inventarItems}
-		reset={() => {
-			selectedDeviceId = undefined;
-			invalidateAll();
-		}}
-	/>
+	<AddDevice inventarItems={data.inventarItems} reset={invalidateAll} />
 
 	<div class="flex flex-col gap-2">
 		<div class="font-bold text-2xl">Inventarliste:</div>
@@ -44,15 +36,10 @@
 				<InventarItemEventItem
 					event={item.lastEvent}
 					deviceId={item.deviceId}
-					isSelected={item.deviceId === selectedDeviceId}
-					click={() =>
-						(selectedDeviceId = item.deviceId === selectedDeviceId ? undefined : item.deviceId)}
+					isSelected={false}
+					click={() => goto(`/inventar/${item.deviceId}`)}
 				/>
 			{/each}
 		</div>
 	</div>
 </div>
-
-{#if selectedDeviceId}
-	<InventarItemEventsList deviceId={selectedDeviceId} scrollIntoViewOnDataChange={true} />
-{/if}
