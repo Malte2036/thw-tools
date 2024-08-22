@@ -6,14 +6,6 @@ import type {
 	InventarItemEventType
 } from '$lib/inventar/inventarItem';
 import { apiGet, apiPost } from './apiGeneric';
-import { clearTokenFromLocalStorage, getToken } from './authApi';
-
-const checkIfResposeIsUnauthorized = (res: Response) => {
-	if (res.status === 403) {
-		clearTokenFromLocalStorage();
-		throw new UnauthorizedError();
-	}
-};
 
 export async function getInventarItems(): Promise<InventarItem[]> {
 	return await apiGet<InventarItem[]>('/inventar');
@@ -36,19 +28,7 @@ export async function createInventarItem(
 export async function bulkCreateInventarItemEvents(
 	data: { deviceId: InventarItemDeviceId; eventType: InventarItemEventType }[]
 ): Promise<void> {
-	const res = await fetch(`${PUBLIC_API_URL}/inventar/events`, {
-		method: 'POST',
-		headers: {
-			Authorization: `Bearer ${getToken()}`,
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(data)
-	});
-
-	if (!res.ok) {
-		checkIfResposeIsUnauthorized(res);
-		throw new Error('Failed to bulk create inventar item events');
-	}
+	await apiPost<InventarItemEvent[]>(`/inventar/events`, data);
 }
 
 export async function createInventarItemEvent(
