@@ -109,6 +109,8 @@ export const handleRedirectToApp = async () => {
 };
 
 export const getUser = async () => {
+	console.log('token:', await getToken());
+
 	const user = await getKindeClient().getUser();
 	return user;
 };

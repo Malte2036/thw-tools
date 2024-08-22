@@ -19,6 +19,8 @@ const keysInCookie = [
 const memCache: Record<string, string> = {};
 const sessionManager: BSessionManager = {
 	async getSessionItemBrowser(key: string) {
+		console.log('getSessionItemBrowser', key);
+
 		return CookieManager.getCookie(key) || memCache[key];
 	},
 	async getSessionItem(key: string) {
@@ -26,6 +28,7 @@ const sessionManager: BSessionManager = {
 	},
 	async setSessionItemBrowser(key: string, value: unknown) {
 		const inCookieList = keysInCookie.find((k) => key.includes(k));
+		console.log('setSessionItemBrowser', key, value, inCookieList);
 
 		if (inCookieList) {
 			CookieManager.setCookie(key, value as string);
@@ -37,6 +40,12 @@ const sessionManager: BSessionManager = {
 		await this.setSessionItemBrowser(key, value);
 	},
 	async removeSessionItemBrowser(key: string) {
+		console.log('removeSessionItemBrowser', key);
+		if (key.startsWith('acwpf-state-key')) {
+			console.log('skip removeSessionItemBrowser', key);
+			return;
+		}
+
 		for (const key in memCache) {
 			delete memCache[key];
 		}
@@ -46,6 +55,8 @@ const sessionManager: BSessionManager = {
 		await this.removeSessionItemBrowser(key);
 	},
 	async destroySession() {
+		console.warn('destroySession');
+
 		for (const key in memCache) {
 			delete memCache[key];
 		}
