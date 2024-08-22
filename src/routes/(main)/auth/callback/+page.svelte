@@ -42,5 +42,6 @@
 	<div>
 		<Button secondary click={checkLoginStatus}>Überprüfe Login Status</Button>
 		<Button secondary click={() => getUser().then((user) => console.log(user))}>Get User</Button>
+		<Button secondary click={login}>Login</Button>
 	</div>
 </div>
