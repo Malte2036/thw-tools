@@ -12,6 +12,10 @@ import {
   InventarItemSchema,
 } from './schemas/inventar-item.schema';
 import { OrganisationModule } from 'src/organisation/organisation.module';
+import {
+  InventarItemEventBulk,
+  InventarItemEventBulkSchema,
+} from './schemas/inventar-item-event-bulk.schema';
 
 @Module({
   imports: [
@@ -23,6 +27,10 @@ import { OrganisationModule } from 'src/organisation/organisation.module';
       {
         name: InventarItemEvent.name,
         schema: InventarItemEventSchema,
+      },
+      {
+        name: InventarItemEventBulk.name,
+        schema: InventarItemEventBulkSchema,
       },
     ]),
     UserModule,

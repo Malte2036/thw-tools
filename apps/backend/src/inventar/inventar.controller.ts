@@ -54,40 +54,6 @@ export class InventarController {
     return this.inventarService.getExpandedInventarItems(organisation._id);
   }
 
-  @Post()
-  async createInventarItem(
-    @Body() body: { deviceId: string; eventType: InventarItemEventType },
-    @Req() req: Request,
-  ) {
-    const { deviceId, eventType } = body;
-
-    Logger.log(
-      `Creating inventar item with deviceId ${deviceId} to ${eventType}`,
-    );
-    if (!deviceId) {
-      throw new HttpException('Invalid deviceId', HttpStatus.BAD_REQUEST);
-    }
-
-    const [user, organisation] = await this.getUserAndOrgFromRequest(req);
-
-    const item = await this.inventarService.createInventarItem(
-      organisation._id,
-      {
-        deviceId,
-        organisation,
-      },
-    );
-
-    await this.inventarService.createInventarItemEvent({
-      date: new Date(),
-      inventarItem: item,
-      user,
-      type: eventType,
-    });
-
-    return {};
-  }
-
   @Post('events')
   async bulkCreateInventarItemEvents(
     @Body() body: { deviceId: string; eventType: InventarItemEventType }[],
@@ -100,78 +66,12 @@ export class InventarController {
 
     const [user, organisation] = await this.getUserAndOrgFromRequest(req);
 
-    const items = await Promise.all(
-      body.map(async ({ deviceId }) => {
-        let item = await this.inventarService.getInventarItemByDeviceId(
-          organisation._id,
-          deviceId,
-        );
-        if (!item) {
-          Logger.log(
-            `Creating inventar item with deviceId ${deviceId}, as it does not exist`,
-          );
-          item = await this.inventarService.createInventarItem(
-            organisation._id,
-            {
-              deviceId,
-              organisation,
-            },
-          );
-        }
-
-        return item;
-      }),
-    );
-
-    await Promise.all(
-      items.map((item, index) =>
-        this.inventarService.createInventarItemEvent({
-          date: new Date(),
-          inventarItem: item,
-          user,
-          type: body[index].eventType,
-        }),
-      ),
-    );
-
-    return {};
-  }
-
-  @Post(':deviceId/events')
-  async createInventarItemEvent(
-    @Param('deviceId') deviceId: string,
-    @Body() body: { eventType: InventarItemEventType },
-    @Req() req: Request,
-  ) {
-    const { eventType } = body;
-
-    Logger.log(
-      `Creating inventar item event with deviceId ${deviceId} to ${eventType}`,
-    );
-    if (!deviceId) {
-      throw new HttpException('Invalid deviceId', HttpStatus.BAD_REQUEST);
-    }
-
-    if (!eventType) {
-      throw new HttpException('Invalid eventType', HttpStatus.BAD_REQUEST);
-    }
-
-    const [user, organisation] = await this.getUserAndOrgFromRequest(req);
-
-    const item = await this.inventarService.getInventarItemByDeviceId(
-      organisation._id,
-      deviceId,
-    );
-    if (!item) {
-      throw new HttpException('Inventar item not found', HttpStatus.NOT_FOUND);
-    }
-
-    await this.inventarService.createInventarItemEvent({
-      date: new Date(),
-      inventarItem: item,
+    await this.inventarService.bulkCreateInventarItemEvents(
+      body,
       user,
-      type: eventType,
-    });
+      organisation,
+      new Date(),
+    );
 
     return {};
   }
