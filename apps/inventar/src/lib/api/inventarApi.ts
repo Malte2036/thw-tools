@@ -5,6 +5,7 @@ import type {
 	InventarItemEvent,
 	InventarItemEventType
 } from '$lib/inventar/inventarItem';
+import { apiGet, apiPost } from './apiGeneric';
 import { clearTokenFromLocalStorage, getToken } from './authApi';
 
 const checkIfResposeIsUnauthorized = (res: Response) => {
@@ -15,57 +16,21 @@ const checkIfResposeIsUnauthorized = (res: Response) => {
 };
 
 export async function getInventarItems(): Promise<InventarItem[]> {
-	const res = await fetch(`${PUBLIC_API_URL}/inventar`, {
-		headers: {
-			Authorization: `Bearer ${getToken()}`
-		}
-	});
-
-	if (!res.ok) {
-		checkIfResposeIsUnauthorized(res);
-		throw new Error('Failed to fetch inventar items');
-	}
-
-	return await res.json();
+	return await apiGet<InventarItem[]>('/inventar');
 }
 
 export async function getInventarItem(deviceId: string): Promise<InventarItem> {
-	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}`, {
-		headers: {
-			Authorization: `Bearer ${getToken()}`
-		}
-	});
-
-	if (!res.ok) {
-		checkIfResposeIsUnauthorized(res);
-		throw new Error('Failed to fetch inventar item');
-	}
-
-	return await res.json();
+	return await apiGet<InventarItem>(`/inventar/${deviceId}`);
 }
 
 export async function createInventarItem(
 	deviceId: string,
 	eventType: InventarItemEventType
 ): Promise<void> {
-	console.log('createInventarItem', deviceId, eventType);
-
-	const res = await fetch(`${PUBLIC_API_URL}/inventar`, {
-		method: 'POST',
-		headers: {
-			Authorization: `Bearer ${getToken()}`,
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			deviceId,
-			eventType
-		})
+	await apiPost<InventarItem>(`/inventar`, {
+		deviceId,
+		eventType
 	});
-
-	if (!res.ok) {
-		checkIfResposeIsUnauthorized(res);
-		throw new Error('Failed to create inventar item');
-	}
 }
 
 export async function bulkCreateInventarItemEvents(
@@ -90,34 +55,11 @@ export async function createInventarItemEvent(
 	deviceId: string,
 	eventType: InventarItemEventType
 ): Promise<void> {
-	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}/events`, {
-		method: 'POST',
-		headers: {
-			Authorization: `Bearer ${getToken()}`,
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			eventType
-		})
+	await apiPost<InventarItemEvent>(`/inventar/${deviceId}/events`, {
+		eventType
 	});
-
-	if (!res.ok) {
-		checkIfResposeIsUnauthorized(res);
-		throw new Error('Failed to update inventar item');
-	}
 }
 
 export async function getInventarItemEvents(deviceId: string): Promise<InventarItemEvent[]> {
-	const res = await fetch(`${PUBLIC_API_URL}/inventar/${deviceId}/events`, {
-		headers: {
-			Authorization: `Bearer ${getToken()}`
-		}
-	});
-
-	if (!res.ok) {
-		checkIfResposeIsUnauthorized(res);
-		throw new Error('Failed to fetch inventar item events');
-	}
-
-	return await res.json();
+	return await apiGet<InventarItemEvent[]>(`/inventar/${deviceId}/events`);
 }
