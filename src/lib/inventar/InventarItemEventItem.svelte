@@ -12,7 +12,7 @@
 	export let isSelected: boolean;
 	export let click: () => void;
 
-	export let secondary: boolean | undefined;
+	export let secondary: boolean = false;
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
