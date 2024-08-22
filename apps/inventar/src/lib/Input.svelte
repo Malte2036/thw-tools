@@ -7,6 +7,8 @@
 	export let placeholder: string | undefined = undefined;
 
 	export let type: HTMLInputAttributes['type'] = 'text';
+
+	export let pattern: string | undefined = undefined;
 </script>
 
 <div class="flex flex-col gap-1">
@@ -20,5 +22,6 @@
 		{...{ type }}
 		bind:value={inputValue}
 		{placeholder}
+		{pattern}
 	/>
 </div>
