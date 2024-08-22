@@ -20,7 +20,8 @@
 			{ facingMode: 'environment' },
 			{
 				fps: 10,
-				qrbox: { width: 250, height: 250 }
+				qrbox: qrboxFunction,
+				aspectRatio: 1
 			},
 			onScanSuccess,
 			onScanFailure
@@ -40,6 +41,16 @@
 	function onScanFailure(error: any) {
 		// console.warn(`Code scan error = ${error}`);
 	}
+
+	let qrboxFunction = function (viewfinderWidth: number, viewfinderHeight: number) {
+		let minEdgePercentage = 0.7; // 70%
+		let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+		let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
+		return {
+			width: qrboxSize,
+			height: qrboxSize
+		};
+	};
 </script>
 
 <div class="flex flex-col gap-4">
