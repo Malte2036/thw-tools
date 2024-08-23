@@ -1,7 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
-import { InventarItemEvent } from './inventar-item-event.schema';
+import {
+  InventarItemEvent,
+  InventarItemEventType,
+} from './inventar-item-event.schema';
 import { Organisation } from 'src/organisation/schemas/organisation.schema';
 
 export type InventarItemEventBulkDocument =
@@ -19,6 +22,9 @@ export class InventarItemEventBulk {
     ],
   })
   inventarItemEvents: InventarItemEvent[];
+
+  @Prop({ required: true })
+  eventType: InventarItemEventType;
 
   @Prop({ required: true, type: mongoose.Types.ObjectId, ref: User.name })
   user: User;

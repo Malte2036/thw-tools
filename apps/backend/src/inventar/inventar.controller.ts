@@ -54,13 +54,20 @@ export class InventarController {
     return this.inventarService.getExpandedInventarItems(organisation._id);
   }
 
-  @Post('events')
+  @Post('events/bulk')
   async bulkCreateInventarItemEvents(
-    @Body() body: { deviceId: string; eventType: InventarItemEventType }[],
+    @Body() body: { deviceIds: string[]; eventType: InventarItemEventType },
     @Req() req: Request,
   ) {
-    Logger.log(`Bulk creating inventar item events for ${body.length} items`);
-    if (!body || !Array.isArray(body) || body.length === 0) {
+    Logger.log(
+      `Bulk creating inventar item events for ${body.deviceIds.length} items with type ${body.eventType}`,
+    );
+    if (
+      !body ||
+      !Array.isArray(body.deviceIds) ||
+      body.deviceIds.length === 0 ||
+      !body.eventType
+    ) {
       throw new HttpException('Invalid body', HttpStatus.BAD_REQUEST);
     }
 
@@ -92,5 +99,12 @@ export class InventarController {
     }
 
     return this.inventarService.getInventarItemEvents(item);
+  }
+
+  @Get('events/bulk')
+  async getInventarItemEventBulks(@Req() req: Request) {
+    const [, organisation] = await this.getUserAndOrgFromRequest(req);
+
+    return this.inventarService.getInventarItemEventBulks(organisation._id);
   }
 }

@@ -101,13 +101,13 @@ export class InventarService {
   }
 
   async bulkCreateInventarItemEvents(
-    data: { deviceId: string; eventType: InventarItemEventType }[],
+    data: { deviceIds: string[]; eventType: InventarItemEventType },
     user: UserDocument,
     organisation: OrganisationDocument,
     date: Date,
   ): Promise<void> {
     const items = await Promise.all(
-      data.map(async ({ deviceId }) => {
+      data.deviceIds.map(async (deviceId) => {
         let item = await this.getInventarItemByDeviceId(
           organisation._id,
           deviceId,
@@ -127,22 +127,33 @@ export class InventarService {
     );
 
     const events = await Promise.all(
-      items.map((item, index) =>
+      items.map((item) =>
         this.createInventarItemEvent({
           date,
           inventarItem: item,
           user,
-          type: data[index].eventType,
+          type: data.eventType,
         }),
       ),
     );
 
     const bulk = new this.inventarItemEventBulkModel({
       inventarItemEvents: events,
+      eventType: data.eventType,
       user,
       organisation,
       date,
     });
     await bulk.save();
+  }
+
+  async getInventarItemEventBulks(
+    organisationId: mongoose.Types.ObjectId,
+  ): Promise<InventarItemEventBulk[]> {
+    return this.inventarItemEventBulkModel
+      .find({ organisation: organisationId })
+      .populate('inventarItemEvents')
+      .populate('user')
+      .exec();
   }
 }
