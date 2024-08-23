@@ -1,45 +1,36 @@
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation';
-	import Input from '$lib/Input.svelte';
+	import { invalidateAll } from '$app/navigation';
+	import Tabs from '$lib/Tabs.svelte';
 	import AddDevice from '$lib/inventar/AddDevice.svelte';
-	import InventarItemEventItem from '$lib/inventar/InventarItemEventItem.svelte';
-	import InventarItemEventsList from '$lib/inventar/InventarItemEventsList.svelte';
-	import {
-		isSearchStringInInventarItem,
-		type InventarItemDeviceId
-	} from '$lib/inventar/inventarItem';
+	import InventarListTab from '$lib/inventar/InventarListTab.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
-	let searchedDeviceId: string = '';
-	let filterdInventarItems = data.inventarItems;
-
-	$: {
-		filterdInventarItems = data.inventarItems.filter((item) =>
-			isSearchStringInInventarItem(searchedDeviceId, item)
-		);
+	enum Tab {
+		INVENTORY_LIST = 'Inventarliste',
+		BULK_HISTORY = 'Ausleihhistorie'
 	}
+
+	let selectedTab: Tab = Tab.INVENTORY_LIST;
+
+	const onTabSelect = (selected: string) => {
+		selectedTab = selected as Tab;
+	};
 </script>
 
 <div class="flex flex-col gap-4 p-4">
 	<AddDevice inventarItems={data.inventarItems} reset={invalidateAll} />
 
-	<div class="flex flex-col gap-2">
-		<div class="font-bold text-2xl">Inventarliste:</div>
-		<Input placeholder="Geräte suchen..." bind:inputValue={searchedDeviceId} />
-		<div class="flex flex-col gap-2">
-			{#if filterdInventarItems.length === 0}
-				<p>Keine Geräte vorhanden.</p>
-			{/if}
-			{#each filterdInventarItems as item}
-				<InventarItemEventItem
-					event={item.lastEvent}
-					deviceId={item.deviceId}
-					isSelected={false}
-					click={() => goto(`/inventar/${item.deviceId}`)}
-				/>
-			{/each}
-		</div>
+	<div class="flex w-full justify-center">
+		<Tabs items={Object.values(Tab)} onSelect={onTabSelect} />
 	</div>
+
+	{#if selectedTab === Tab.BULK_HISTORY}
+		<div class="font-bold text-2xl">Historie:</div>
+	{/if}
+
+	{#if selectedTab === Tab.INVENTORY_LIST}
+		<InventarListTab items={data.inventarItems} />
+	{/if}
 </div>
