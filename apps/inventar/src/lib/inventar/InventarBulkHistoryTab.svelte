@@ -10,23 +10,16 @@
 	import InventarItemEventBulkItem from './InventarItemEventBulkItem.svelte';
 	import Input from '$lib/Input.svelte';
 
-	export let inventarItems: InventarItem[] = [];
-
-	let bulks: InventarItemEventBulk[] | undefined;
-
-	onMount(() => {
-		getInventarItemEventBulks().then((data) => {
-			bulks = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-		});
-	});
+	export let bulks: InventarItemEventBulk[];
+	export let inventarItems: InventarItem[];
 
 	let searchTerm: string = '';
 	let filteredBulks = bulks;
 
 	$: {
-		filteredBulks = bulks?.filter((item) =>
-			isSearchStringInInventarItemEventBulk(searchTerm, item, [])
-		);
+		filteredBulks = bulks
+			.filter((item) => isSearchStringInInventarItemEventBulk(searchTerm, item, []))
+			.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 	}
 </script>
 

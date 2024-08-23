@@ -28,7 +28,10 @@
 	</div>
 
 	{#if selectedTab === Tab.BULK_HISTORY}
-		<InventarBulkHistoryTab inventarItems={data.inventarItems} />
+		<InventarBulkHistoryTab
+			bulks={data.inventarItemEventBulks}
+			inventarItems={data.inventarItems}
+		/>
 	{/if}
 
 	{#if selectedTab === Tab.INVENTORY_LIST}
