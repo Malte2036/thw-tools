@@ -19,9 +19,8 @@ export class THWTabs extends LitElement {
   /**
    * The callback function when a tab is selected.
    * @type {Function}
-   * @default null
    */
-  @property() onSelect: (value: string) => void = () => {};
+  @property({ attribute: false }) onSelect: (item: string) => void = () => {};
 
   static override styles = [
     css`
@@ -82,12 +81,12 @@ export class THWTabs extends LitElement {
   private selectedItem: string | null = null;
 
   private selectItem(item: string) {
-    console.log("previously selected item:", this.selectedItem);
     this.selectedItem = item;
-    this.onSelect(item);
 
     this.requestUpdate();
-    console.log("Selected item:", item);
+
+    // Call the onSelect callback
+    this.onSelect(item);
   }
 
   connectedCallback() {

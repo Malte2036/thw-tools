@@ -38,7 +38,7 @@
     </div>
     <div>
       <h1>THW Tabs</h1>
-      <thw-tabs items='["Dashboard", "User", "Tab 3"]'></thw-tabs>
+      <thw-tabs id="tabs" items='["Dashboard", "User", "Tab 3"]'></thw-tabs>
     </div>
     <div>
       <h1>THW Dialog</h1>
@@ -47,6 +47,8 @@
         <div slot="content">
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
+            qu Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
             voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
             qu Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
             voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
@@ -84,6 +86,14 @@
           // Toggle the visibility of the dialog by adding or removing the 'hidden' attribute
           dialog.hidden = !dialog.hidden;
         });
+
+        // Get the tabs element
+        const tabs = document.getElementById("tabs");
+
+        // Define the onSelect function
+        tabs.onSelect = (item) => {
+          console.log("Selected tab:", item);
+        };
       });
     </script>
   </body>
