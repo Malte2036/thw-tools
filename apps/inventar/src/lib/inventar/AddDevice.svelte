@@ -67,10 +67,8 @@
 		}
 
 		await bulkCreateInventarItemEvents(
-			scannedDeviceIds.map((scannedDeviceId) => ({
-				deviceId: scannedDeviceId.deviceId,
-				eventType: eventType
-			}))
+			scannedDeviceIds.map((e) => e.deviceId),
+			eventType
 		);
 
 		$bannerMessage = {

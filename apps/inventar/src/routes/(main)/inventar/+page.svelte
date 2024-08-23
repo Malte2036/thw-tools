@@ -2,6 +2,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import Tabs from '$lib/Tabs.svelte';
 	import AddDevice from '$lib/inventar/AddDevice.svelte';
+	import InventarBulkHistoryTab from '$lib/inventar/InventarBulkHistoryTab.svelte';
 	import InventarListTab from '$lib/inventar/InventarListTab.svelte';
 	import type { PageData } from './$types';
 
@@ -27,7 +28,7 @@
 	</div>
 
 	{#if selectedTab === Tab.BULK_HISTORY}
-		<div class="font-bold text-2xl">Historie:</div>
+		<InventarBulkHistoryTab inventarItems={data.inventarItems} />
 	{/if}
 
 	{#if selectedTab === Tab.INVENTORY_LIST}
