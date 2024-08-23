@@ -60,7 +60,7 @@ export class InventarController {
     @Req() req: Request,
   ) {
     Logger.log(
-      `Bulk creating inventar item events for ${body.deviceIds.length} items with type ${body.eventType}`,
+      `Bulk creating inventar item events with type ${body.eventType} for devices ${body.deviceIds.join(',')}`,
     );
     if (
       !body ||
