@@ -1,5 +1,7 @@
 import { dateToFriendlyString, searchStringIsInArray } from '$lib/utils';
 
+type InternalId = string;
+
 type User = {
 	firstName?: string;
 	lastName?: string;
@@ -9,6 +11,7 @@ type User = {
 export type InventarItemDeviceId = string;
 
 export type InventarItem = {
+	_id: InternalId;
 	deviceId: InventarItemDeviceId;
 	lastEvent: InventarItemEvent;
 };
@@ -16,8 +19,18 @@ export type InventarItem = {
 export type InventarItemEventType = 'borrowed' | 'returned';
 
 export type InventarItemEvent = {
+	_id: InternalId;
+	inventarItem: InternalId;
 	user: User;
 	type: InventarItemEventType;
+	date: string;
+};
+
+export type InventarItemEventBulk = {
+	_id: InternalId;
+	inventarItemEvents: InventarItemEvent[];
+	eventType: InventarItemEventType;
+	user: User;
 	date: string;
 };
 
@@ -67,6 +80,19 @@ export function userToFriendlyString(user: User): string {
 	}
 
 	return 'Unbekannt';
+}
+
+export function isSearchStringInInventarItemEventBulk(
+	searchString: string,
+	eventBulk: InventarItemEventBulk,
+	deviceIds: InventarItemDeviceId[]
+): boolean {
+	return searchStringIsInArray(searchString.trim(), [
+		userToFriendlyString(eventBulk.user),
+		dateToFriendlyString(new Date(eventBulk.date)),
+		eventTypeToFriendlyString(eventBulk.eventType),
+		...deviceIds
+	]);
 }
 
 export function isSearchStringInInventarItem(

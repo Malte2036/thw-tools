@@ -3,6 +3,7 @@ import type {
 	InventarItem,
 	InventarItemDeviceId,
 	InventarItemEvent,
+	InventarItemEventBulk,
 	InventarItemEventType
 } from '$lib/inventar/inventarItem';
 import { apiGet, apiPost } from './apiGeneric';
@@ -16,11 +17,16 @@ export async function getInventarItem(deviceId: string): Promise<InventarItem> {
 }
 
 export async function bulkCreateInventarItemEvents(
-	data: { deviceId: InventarItemDeviceId; eventType: InventarItemEventType }[]
+	deviceIds: InventarItemDeviceId[],
+	eventType: InventarItemEventType
 ): Promise<void> {
-	await apiPost<InventarItemEvent[]>(`/inventar/events`, data);
+	await apiPost<InventarItemEvent[]>(`/inventar/events/bulk`, { deviceIds, eventType });
 }
 
 export async function getInventarItemEvents(deviceId: string): Promise<InventarItemEvent[]> {
 	return await apiGet<InventarItemEvent[]>(`/inventar/${deviceId}/events`);
+}
+
+export async function getInventarItemEventBulks(): Promise<InventarItemEventBulk[]> {
+	return await apiGet<InventarItemEventBulk[]>(`/inventar/events/bulk`);
 }
