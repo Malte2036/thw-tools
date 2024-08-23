@@ -5,8 +5,6 @@ import type { PageLoad } from './$types';
 export const ssr = false;
 
 export const load = (async () => {
-	console.log(await isAuthenticated());
-
 	if (!(await isAuthenticated())) {
 		console.log('Not authenticated');
 
