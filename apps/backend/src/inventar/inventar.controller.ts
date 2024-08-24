@@ -15,7 +15,9 @@ import { UserService } from 'src/user/user.service';
 import { OrganisationService } from 'src/organisation/organisation.service';
 import { UserDocument } from 'src/user/schemas/user.schema';
 import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('inventar')
 @Controller('inventar')
 export class InventarController {
   constructor(
@@ -60,7 +62,7 @@ export class InventarController {
     @Req() req: Request,
   ) {
     Logger.log(
-      `Bulk creating inventar item events with type ${body.eventType} for devices ${body.deviceIds.join(',')}`,
+      `Bulk creating inventar item events with type ${body.eventType} for devices ${body.deviceIds.join(', ')}`,
     );
     if (
       !body ||
