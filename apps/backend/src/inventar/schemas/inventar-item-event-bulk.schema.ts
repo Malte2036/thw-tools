@@ -26,6 +26,9 @@ export class InventarItemEventBulk {
   @Prop({ required: true })
   eventType: InventarItemEventType;
 
+  @Prop({ required: false, default: 0 })
+  batteryCount: number;
+
   @Prop({ required: true, type: mongoose.Types.ObjectId, ref: User.name })
   user: User;
 

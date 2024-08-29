@@ -101,7 +101,11 @@ export class InventarService {
   }
 
   async bulkCreateInventarItemEvents(
-    data: { deviceIds: string[]; eventType: InventarItemEventType },
+    data: {
+      deviceIds: string[];
+      batteryCount: number;
+      eventType: InventarItemEventType;
+    },
     user: UserDocument,
     organisation: OrganisationDocument,
     date: Date,
@@ -139,6 +143,7 @@ export class InventarService {
 
     const bulk = new this.inventarItemEventBulkModel({
       inventarItemEvents: events,
+      batteryCount: data.batteryCount,
       eventType: data.eventType,
       user,
       organisation,

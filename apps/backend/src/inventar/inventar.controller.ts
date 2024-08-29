@@ -58,18 +58,25 @@ export class InventarController {
 
   @Post('events/bulk')
   async bulkCreateInventarItemEvents(
-    @Body() body: { deviceIds: string[]; eventType: InventarItemEventType },
+    @Body()
+    body: {
+      deviceIds: string[];
+      batteryCount: number;
+      eventType: InventarItemEventType;
+    },
     @Req() req: Request,
   ) {
     Logger.log(
       `Bulk creating inventar item events with type ${body.eventType} for devices ${body.deviceIds.join(', ')}`,
     );
+
     if (
       !body ||
       !Array.isArray(body.deviceIds) ||
       body.deviceIds.length === 0 ||
       !body.eventType
     ) {
+      Logger.warn('Invalid body', body);
       throw new HttpException('Invalid body', HttpStatus.BAD_REQUEST);
     }
 
