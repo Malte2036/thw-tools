@@ -6,6 +6,7 @@
 	import QrScanner from '$lib/inventar/QRScanner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import {
+		batteryCountToFriendlyString,
 		eventTypeToFriendlyString,
 		validateInventarItemDeviceId,
 		type InventarItem,
@@ -80,9 +81,9 @@
 		$bannerMessage = {
 			message: `${scannedDeviceIds.length} Gerät${
 				scannedDeviceIds.length > 1 ? 'e' : ''
-			} und ${batteryCount} Batterie${
-				batteryCount == 1 ? '' : 'n'
-			} wurden erfolgreich ${eventTypeToFriendlyString(eventType)}.`,
+			} und ${batteryCountToFriendlyString(
+				batteryCount
+			)} wurden erfolgreich ${eventTypeToFriendlyString(eventType)}.`,
 			autoDismiss: {
 				duration: 5 * 1000
 			}

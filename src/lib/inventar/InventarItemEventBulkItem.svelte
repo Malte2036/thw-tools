@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { dateToFriendlyString } from '$lib/utils';
 	import {
+		batteryCountToFriendlyString,
 		eventTypeToEmoji,
 		type InventarItem,
 		type InventarItemDeviceId,
@@ -42,7 +43,7 @@
 		</div>
 		<ul class="pl-3 flex flex-col justify-start w-full text-sm text-gray-500 list-disc">
 			<li>
-				{bulk.batteryCount} Batterie{bulk.batteryCount === 1 ? '' : 'n'}
+				{batteryCountToFriendlyString(bulk.batteryCount)}
 			</li>
 			<li>
 				{bulk.inventarItemEvents
