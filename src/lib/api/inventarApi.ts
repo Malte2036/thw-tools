@@ -18,9 +18,14 @@ export async function getInventarItem(deviceId: string): Promise<InventarItem> {
 
 export async function bulkCreateInventarItemEvents(
 	deviceIds: InventarItemDeviceId[],
+	batteryCount: number,
 	eventType: InventarItemEventType
 ): Promise<void> {
-	await apiPost<InventarItemEvent[]>(`/inventar/events/bulk`, { deviceIds, eventType });
+	await apiPost<InventarItemEvent[]>(`/inventar/events/bulk`, {
+		deviceIds,
+		batteryCount,
+		eventType
+	});
 }
 
 export async function getInventarItemEvents(deviceId: string): Promise<InventarItemEvent[]> {
