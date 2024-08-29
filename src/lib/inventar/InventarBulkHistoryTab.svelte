@@ -16,9 +16,21 @@
 	let searchTerm: string = '';
 	let filteredBulks = bulks;
 
+	const getInventarItems = (bulk: InventarItemEventBulk) => {
+		return inventarItems.filter((item) =>
+			bulk.inventarItemEvents.some((event) => event.inventarItem === item._id)
+		);
+	};
+
 	$: {
 		filteredBulks = bulks
-			.filter((item) => isSearchStringInInventarItemEventBulk(searchTerm, item, []))
+			.filter((item) =>
+				isSearchStringInInventarItemEventBulk(
+					searchTerm,
+					item,
+					getInventarItems(item).map((item) => item.deviceId)
+				)
+			)
 			.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 	}
 </script>
