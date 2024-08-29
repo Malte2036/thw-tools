@@ -83,6 +83,10 @@ export function userToFriendlyString(user: User): string {
 	return 'Unbekannt';
 }
 
+export function batteryCountToFriendlyString(batteryCount: number): string {
+	return `${batteryCount} Batterie${batteryCount === 1 ? '' : 'n'}`;
+}
+
 export function isSearchStringInInventarItemEventBulk(
 	searchString: string,
 	eventBulk: InventarItemEventBulk,
@@ -92,6 +96,7 @@ export function isSearchStringInInventarItemEventBulk(
 		userToFriendlyString(eventBulk.user),
 		dateToFriendlyString(new Date(eventBulk.date)),
 		eventTypeToFriendlyString(eventBulk.eventType),
+		batteryCountToFriendlyString(eventBulk.batteryCount),
 		...deviceIds
 	]);
 }
