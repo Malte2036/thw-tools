@@ -29,6 +29,7 @@ export type InventarItemEvent = {
 export type InventarItemEventBulk = {
 	_id: InternalId;
 	inventarItemEvents: InventarItemEvent[];
+	batteryCount: number;
 	eventType: InventarItemEventType;
 	user: User;
 	date: string;

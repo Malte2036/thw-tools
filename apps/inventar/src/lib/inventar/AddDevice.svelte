@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { bulkCreateInventarItemEvents } from '$lib/api/inventarApi';
 	import Button from '$lib/Button.svelte';
+	import Input from '$lib/Input.svelte';
 	import ManuelDeviceIdInput from '$lib/inventar/ManuelDeviceIdInput.svelte';
 	import QrScanner from '$lib/inventar/QRScanner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
@@ -20,6 +21,8 @@
 		deviceId: InventarItemDeviceId;
 		existingItem?: InventarItem;
 	}[] = [];
+
+	let batteryCountInput: string = '0';
 
 	async function onScan(decodedText: string) {
 		if (!decodedText) {
@@ -66,14 +69,19 @@
 			return;
 		}
 
+		const batteryCount = parseInt(batteryCountInput);
+
 		await bulkCreateInventarItemEvents(
 			scannedDeviceIds.map((e) => e.deviceId),
+			batteryCount,
 			eventType
 		);
 
 		$bannerMessage = {
 			message: `${scannedDeviceIds.length} Gerät${
 				scannedDeviceIds.length > 1 ? 'e' : ''
+			} und ${batteryCount} Batterie${
+				batteryCount == 1 ? '' : 'n'
 			} wurden erfolgreich ${eventTypeToFriendlyString(eventType)}.`,
 			autoDismiss: {
 				duration: 5 * 1000
@@ -102,6 +110,14 @@
 			</div>
 		{/each}
 	</div>
+
+	<Input
+		label="Batterien"
+		type="number"
+		placeholder="Anzahl Batterien"
+		bind:inputValue={batteryCountInput}
+		inputmode="numeric"
+	/>
 
 	<div class="flex gap-2 w-full justify-between">
 		<Button

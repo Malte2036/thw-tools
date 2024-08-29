@@ -40,13 +40,16 @@
 			</div>
 			<InventarItemEventTypeBadge type={bulk.eventType} />
 		</div>
-		<div class="flex flex-row gap-2 items-center w-full">
-			<div class="text-sm text-gray-500">
+		<ul class="pl-3 flex flex-col justify-start w-full text-sm text-gray-500 list-disc">
+			<li>
+				{bulk.batteryCount} Batterie{bulk.batteryCount === 1 ? '' : 'n'}
+			</li>
+			<li>
 				{bulk.inventarItemEvents
 					.map((event) => getInventarItem(event)?.deviceId)
 					.sort()
 					.join(', ')}
-			</div>
-		</div>
+			</li>
+		</ul>
 	</div>
 </div>
