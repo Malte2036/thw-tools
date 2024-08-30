@@ -7,7 +7,7 @@
 	import OrganizationTab from '$lib/inventar/OrganizationTab.svelte';
 	import { page } from '$app/stores';
 	import type { PageData } from './$types';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	export let data: PageData;
 
@@ -18,12 +18,40 @@
 	}
 
 	let selectedTab: Tab = Tab.INVENTORY_LIST;
+	let lastHiddenTime: number | null = null;
+
+	const invalidationThreshold = 2 * 60 * 1000; // 2 minutes
+
+	function handleVisibilityChange() {
+		if (document.hidden && !lastHiddenTime) {
+			lastHiddenTime = Date.now();
+			return;
+		}
+
+		if (!document.hidden && lastHiddenTime) {
+			const timeElapsed = Date.now() - lastHiddenTime;
+			if (timeElapsed > invalidationThreshold) {
+				console.log('Invalidating data due to tab being hidden for too long');
+
+				// Invalidate data if the tab was hidden for too long
+				invalidateAll();
+				lastHiddenTime = null;
+			}
+			return;
+		}
+	}
 
 	onMount(() => {
 		const tab = $page.url.searchParams.get('tab');
 		if (tab) {
 			selectedTab = tab as Tab;
 		}
+
+		document.addEventListener('visibilitychange', handleVisibilityChange);
+	});
+
+	onDestroy(() => {
+		document.removeEventListener('visibilitychange', handleVisibilityChange);
 	});
 
 	const onTabSelect = (selected: string) => {
