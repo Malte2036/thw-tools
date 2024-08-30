@@ -14,6 +14,11 @@ export class Organisation {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: User.name }],
   })
   members: User[];
+
+  @Prop({
+    required: true,
+  })
+  inviteCode: string;
 }
 
 export const OrganisationSchema = SchemaFactory.createForClass(Organisation);

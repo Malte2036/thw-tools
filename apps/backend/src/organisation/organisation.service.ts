@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Organisation } from './schemas/organisation.schema';
 import { Model } from 'mongoose';
+import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class OrganisationService {
@@ -16,11 +17,16 @@ export class OrganisationService {
     }).populate('members');
   }
 
-  async createOrganisation(data: Organisation) {
-    if (data.members.length === 0) {
-      throw new Error('Organisation must have at least one member');
+  async addUserToOrganisation(user: User, inviteCode: string) {
+    const organisation = await this.OrganisationModel.findOne({
+      inviteCode,
+    });
+
+    if (!organisation) {
+      throw new Error('Organisation not found');
     }
 
-    return new this.OrganisationModel(data).save();
+    organisation.members.push(user);
+    await organisation.save();
   }
 }

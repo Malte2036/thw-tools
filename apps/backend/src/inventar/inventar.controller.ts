@@ -26,12 +26,36 @@ export async function getUserAndOrgFromRequest(
   const user = await userService.getUserByAccessToken(accessToken);
   if (!user) {
     Logger.warn('User not found');
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return [null, null];
   }
 
   const organisation = await organisationService.getPrimaryOrganisationsForUser(
     user.id,
   );
+  if (!organisation) {
+    Logger.warn(`Organisation for user ${user.id} not found`);
+    return [user, null];
+  }
+
+  return [user, organisation];
+}
+
+export async function getUserAndOrgFromRequestAndThrow(
+  req: Request,
+  userService: UserService,
+  organisationService: OrganisationService,
+): Promise<[UserDocument, OrganisationDocument]> {
+  const [user, organisation] = await getUserAndOrgFromRequest(
+    req,
+    userService,
+    organisationService,
+  );
+
+  if (!user) {
+    Logger.warn('User not found');
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  }
+
   if (!organisation) {
     Logger.warn(`Organisation for user ${user.id} not found`);
     throw new HttpException(
@@ -55,7 +79,7 @@ export class InventarController {
 
   @Get()
   async getInventar(@Req() req: Request) {
-    const [, organisation] = await getUserAndOrgFromRequest(
+    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
       req,
       this.userService,
       this.organisationService,
@@ -87,7 +111,7 @@ export class InventarController {
       throw new HttpException('Invalid body', HttpStatus.BAD_REQUEST);
     }
 
-    const [user, organisation] = await getUserAndOrgFromRequest(
+    const [user, organisation] = await getUserAndOrgFromRequestAndThrow(
       req,
       this.userService,
       this.organisationService,
@@ -108,7 +132,7 @@ export class InventarController {
     @Param('deviceId') deviceId: string,
     @Req() req: Request,
   ) {
-    const [, organisation] = await getUserAndOrgFromRequest(
+    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
       req,
       this.userService,
       this.organisationService,
@@ -127,7 +151,7 @@ export class InventarController {
 
   @Get('events/bulk')
   async getInventarItemEventBulks(@Req() req: Request) {
-    const [, organisation] = await getUserAndOrgFromRequest(
+    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
       req,
       this.userService,
       this.organisationService,
