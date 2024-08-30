@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { dev } from '$app/environment';
 	import {
 		getUser,
 		handleRedirectToApp,
@@ -39,9 +40,15 @@
 
 		<div>Der Login wird durchgeführt...</div>
 	</div>
-	<div>
-		<Button secondary click={checkLoginStatus}>Überprüfe Login Status</Button>
-		<Button secondary click={() => getUser().then((user) => console.log(user))}>Get User</Button>
-		<Button secondary click={login}>Login</Button>
-	</div>
+	{#if dev}
+		<div class="flex flex-col gap-2">
+			<div class="text-center text-lg">Dev Mode</div>
+			<div>
+				<Button secondary click={checkLoginStatus}>Überprüfe Login Status</Button>
+				<Button secondary click={() => getUser().then((user) => console.log(user))}>Get User</Button
+				>
+				<Button secondary click={login}>Login</Button>
+			</div>
+		</div>
+	{/if}
 </div>
