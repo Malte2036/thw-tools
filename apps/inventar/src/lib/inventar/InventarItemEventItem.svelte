@@ -4,7 +4,7 @@
 		eventTypeToEmoji,
 		type InventarItemDeviceId,
 		type InventarItemEvent
-	} from './inventarItem';
+	} from '../api/inventarItem';
 	import InventarItemEventTypeBadge from './InventarItemEventTypeBadge.svelte';
 
 	export let event: InventarItemEvent;

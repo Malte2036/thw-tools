@@ -8,7 +8,7 @@
 		type InventarItemEvent,
 		type InventarItemEventBulk,
 		type InventarItemEventType
-	} from './inventarItem';
+	} from '../api/inventarItem';
 	import InventarItemEventTypeBadge from './InventarItemEventTypeBadge.svelte';
 
 	export let bulk: InventarItemEventBulk;

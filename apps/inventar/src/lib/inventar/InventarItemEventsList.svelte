@@ -5,7 +5,7 @@
 		isSearchStringInInventarItemEvent,
 		type InventarItemDeviceId,
 		type InventarItemEvent
-	} from './inventarItem';
+	} from '../api/inventarItem';
 	import InventarItemEventItem from './InventarItemEventItem.svelte';
 
 	export let deviceId: InventarItemDeviceId;

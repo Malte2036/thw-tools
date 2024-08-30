@@ -1,9 +1,10 @@
 import { apiGet } from './apiGeneric';
+import type { User } from './inventarItem';
 
 export type Organisation = {
 	_id: string;
 	name: string;
-	members: string[];
+	members: User[];
 };
 
 export async function getOrganisations(): Promise<Organisation[]> {

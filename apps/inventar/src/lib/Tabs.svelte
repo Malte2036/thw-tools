@@ -3,6 +3,7 @@
 
 	export let items: string[];
 	export let onSelect: (selected: string) => void;
+	export let initialSelected: string | undefined = undefined;
 
 	let tabs: HTMLElement;
 
@@ -14,4 +15,4 @@
 	});
 </script>
 
-<thw-tabs bind:this={tabs} {items} />
+<thw-tabs bind:this={tabs} {items} {initialSelected} />

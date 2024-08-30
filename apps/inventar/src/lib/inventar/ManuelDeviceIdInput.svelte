@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
 	import Input from '$lib/Input.svelte';
-	import { deviceIdRegex } from './inventarItem';
+	import { deviceIdRegex } from '../api/inventarItem';
 
 	export let onScan: (decodedText: string) => void;
 

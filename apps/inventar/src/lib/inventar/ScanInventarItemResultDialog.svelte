@@ -7,7 +7,7 @@
 		type InventarItem,
 		type InventarItemEvent,
 		type InventarItemEventType
-	} from './inventarItem';
+	} from '../api/inventarItem';
 
 	export let deviceId: string;
 
