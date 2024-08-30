@@ -84,7 +84,11 @@
 				inventarItems={data.inventarItems}
 			/>
 		{:else if selectedTab === Tab.ORGANIZATION}
-			<OrganizationTab organisation={data.organisation} />
+			<OrganizationTab
+				organisation={data.organisation}
+				inventarItems={data.inventarItems}
+				inventarItemEventBulks={data.inventarItemEventBulks}
+			/>
 		{:else}
 			<InventarListTab items={data.inventarItems} />
 		{/if}
