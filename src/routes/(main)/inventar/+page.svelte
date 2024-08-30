@@ -38,25 +38,34 @@
 	};
 </script>
 
-<div class="flex flex-col gap-4 p-4">
-	<AddDevice inventarItems={data.inventarItems} reset={invalidateAll} />
+{#if data.organisation}
+	<div class="flex flex-col gap-4 p-4">
+		<AddDevice inventarItems={data.inventarItems} reset={invalidateAll} />
 
-	<div class="flex w-full justify-center">
-		<Tabs
-			items={Object.values(Tab)}
-			onSelect={onTabSelect}
-			initialSelected={$page.url.searchParams.get('tab') ?? undefined}
-		/>
+		<div class="flex w-full justify-center">
+			<Tabs
+				items={Object.values(Tab)}
+				onSelect={onTabSelect}
+				initialSelected={$page.url.searchParams.get('tab') ?? undefined}
+			/>
+		</div>
+
+		{#if selectedTab === Tab.BULK_HISTORY}
+			<InventarBulkHistoryTab
+				bulks={data.inventarItemEventBulks}
+				inventarItems={data.inventarItems}
+			/>
+		{:else if selectedTab === Tab.ORGANIZATION}
+			<OrganizationTab organisation={data.organisation} />
+		{:else}
+			<InventarListTab items={data.inventarItems} />
+		{/if}
 	</div>
-
-	{#if selectedTab === Tab.BULK_HISTORY}
-		<InventarBulkHistoryTab
-			bulks={data.inventarItemEventBulks}
-			inventarItems={data.inventarItems}
-		/>
-	{:else if selectedTab === Tab.ORGANIZATION}
-		<OrganizationTab organisation={data.organisation} />
-	{:else}
-		<InventarListTab items={data.inventarItems} />
-	{/if}
-</div>
+{:else}
+	<div class="flex flex-col gap-4 p-4">
+		<div class="text-center text-2xl font-bold">Du bist in keiner Organisation.</div>
+		<div class="text-center text-lg">
+			Lass dich per Einladungslink in eine bestehende Organisation einladen.
+		</div>
+	</div>
+{/if}
