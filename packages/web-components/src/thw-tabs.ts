@@ -6,6 +6,7 @@ import { thwColors, grayColors } from "./colors";
  * A tabs component.
  * @param {string[]} items - The items of the tabs.
  * @param {Function} onSelect - The callback function when a tab is selected.
+ * @param {string | undefined} initialSelected - The initial selected item.
  */
 @customElement("thw-tabs")
 export class THWTabs extends LitElement {
@@ -21,6 +22,12 @@ export class THWTabs extends LitElement {
    * @type {Function}
    */
   @property({ attribute: false }) onSelect: (item: string) => void = () => {};
+
+  /**
+   * The initial selected item.
+   * @type {string | undefined}
+   */
+  @property({ type: String }) initialSelected: string | undefined = undefined;
 
   static override styles = [
     css`
@@ -92,7 +99,10 @@ export class THWTabs extends LitElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this.selectedItem = this.items[0];
+    this.selectedItem =
+      this.initialSelected && this.items.includes(this.initialSelected)
+        ? this.initialSelected
+        : this.items[0];
   }
 }
 
