@@ -1,10 +1,23 @@
 <script lang="ts">
-	import { userToFriendlyString } from '$lib/api/inventarItem';
+	import {
+		userToFriendlyString,
+		type InventarItem,
+		type InventarItemEventBulk
+	} from '$lib/api/inventarItem';
 	import { generateInviteLink, type Organisation } from '$lib/api/organisation';
 	import Button from '$lib/Button.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 
 	export let organisation: Organisation | undefined;
+	export let inventarItems: InventarItem[];
+	export let inventarItemEventBulks: InventarItemEventBulk[];
+
+	function getBorrowedBatteryCount(): number {
+		return inventarItemEventBulks.reduce(
+			(acc, bulk) => acc + (bulk.eventType === 'borrowed' ? 1 : -1) * bulk.batteryCount,
+			0
+		);
+	}
 </script>
 
 {#if !organisation}
@@ -15,6 +28,16 @@
 		<div class="flex flex-col gap-2">
 			<div class="font-bold text-2xl">Organisation:</div>
 			<p>Name: {organisation?.name}</p>
+		</div>
+		<div class="	flex flex-col gap-2">
+			<div class="font-bold text-xl">Inventar:</div>
+			<p>
+				Ausgeliehene Geräte: {inventarItems.filter((item) => item.lastEvent.type === 'borrowed')
+					.length} von {inventarItems.length}
+			</p>
+			<p>
+				Ausgeliehene Batterien: {getBorrowedBatteryCount()}
+			</p>
 		</div>
 		<div class="flex flex-col gap-2">
 			<div class="font-bold text-xl">Mitglieder:</div>
