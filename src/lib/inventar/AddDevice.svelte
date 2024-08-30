@@ -12,7 +12,7 @@
 		type InventarItem,
 		type InventarItemDeviceId,
 		type InventarItemEventType
-	} from './inventarItem';
+	} from '../api/inventarItem';
 	import InventarItemEventTypeBadge from './InventarItemEventTypeBadge.svelte';
 
 	export let inventarItems: InventarItem[];

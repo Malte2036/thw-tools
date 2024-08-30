@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { eventTypeToFriendlyString, type InventarItemEventType } from './inventarItem';
+	import { eventTypeToFriendlyString, type InventarItemEventType } from '../api/inventarItem';
 
 	export let type: InventarItemEventType;
 </script>

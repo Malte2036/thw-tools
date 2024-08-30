@@ -5,7 +5,7 @@
 		isSearchStringInInventarItemEventBulk,
 		type InventarItem,
 		type InventarItemEventBulk
-	} from './inventarItem';
+	} from '../api/inventarItem';
 	import { getInventarItemEventBulks } from '$lib/api/inventarApi';
 	import InventarItemEventBulkItem from './InventarItemEventBulkItem.svelte';
 	import Input from '$lib/Input.svelte';

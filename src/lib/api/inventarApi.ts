@@ -5,7 +5,7 @@ import type {
 	InventarItemEvent,
 	InventarItemEventBulk,
 	InventarItemEventType
-} from '$lib/inventar/inventarItem';
+} from './inventarItem';
 import { apiGet, apiPost } from './apiGeneric';
 
 export async function getInventarItems(): Promise<InventarItem[]> {

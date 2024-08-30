@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Input from '$lib/Input.svelte';
-	import { isSearchStringInInventarItem, type InventarItem } from './inventarItem';
+	import { isSearchStringInInventarItem, type InventarItem } from '../api/inventarItem';
 	import InventarItemEventItem from './InventarItemEventItem.svelte';
 
 	export let items: InventarItem[];
