@@ -63,25 +63,17 @@
 								title: `Einladungslink - ${organisation.name}`,
 								url: generateInviteLink(organisation)
 							});
-
-							$bannerMessage = {
-								message: 'Einladungslink geteilt',
-								autoDismiss: {
-									duration: 5 * 1000
-								},
-								type: 'info'
-							};
 						} catch (error) {
 							console.error('Error sharing link', error);
-
-							$bannerMessage = {
-								message: 'Teilen abgebrochen',
-								autoDismiss: {
-									duration: 5 * 1000
-								},
-								type: 'error'
-							};
 						}
+
+						$bannerMessage = {
+							message: 'Einladungslink geteilt',
+							autoDismiss: {
+								duration: 5 * 1000
+							},
+							type: 'info'
+						};
 					}}
 				>
 					Link teilen
