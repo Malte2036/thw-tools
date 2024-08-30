@@ -17,6 +17,32 @@ import { UserDocument } from 'src/user/schemas/user.schema';
 import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
 import { ApiTags } from '@nestjs/swagger';
 
+export async function getUserAndOrgFromRequest(
+  req: Request,
+  userService: UserService,
+  organisationService: OrganisationService,
+): Promise<[UserDocument, OrganisationDocument]> {
+  const accessToken = (req.headers as any).authorization.split(' ')[1];
+  const user = await userService.getUserByAccessToken(accessToken);
+  if (!user) {
+    Logger.warn('User not found');
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  }
+
+  const organisation = await organisationService.getPrimaryOrganisationsForUser(
+    user.id,
+  );
+  if (!organisation) {
+    Logger.warn(`Organisation for user ${user.id} not found`);
+    throw new HttpException(
+      'Organisation for user not found',
+      HttpStatus.NOT_FOUND,
+    );
+  }
+
+  return [user, organisation];
+}
+
 @ApiTags('inventar')
 @Controller('inventar')
 export class InventarController {
@@ -27,32 +53,13 @@ export class InventarController {
     private readonly organisationService: OrganisationService,
   ) {}
 
-  private async getUserAndOrgFromRequest(
-    req: Request,
-  ): Promise<[UserDocument, OrganisationDocument]> {
-    const accessToken = (req.headers as any).authorization.split(' ')[1];
-    const user = await this.userService.getUserByAccessToken(accessToken);
-    if (!user) {
-      Logger.warn('User not found');
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-
-    const organisation =
-      await this.organisationService.getPrimaryOrganisationsForUser(user.id);
-    if (!organisation) {
-      Logger.warn(`Organisation for user ${user.id} not found`);
-      throw new HttpException(
-        'Organisation for user not found',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    return [user, organisation];
-  }
-
   @Get()
   async getInventar(@Req() req: Request) {
-    const [, organisation] = await this.getUserAndOrgFromRequest(req);
+    const [, organisation] = await getUserAndOrgFromRequest(
+      req,
+      this.userService,
+      this.organisationService,
+    );
     return this.inventarService.getExpandedInventarItems(organisation._id);
   }
 
@@ -80,7 +87,11 @@ export class InventarController {
       throw new HttpException('Invalid body', HttpStatus.BAD_REQUEST);
     }
 
-    const [user, organisation] = await this.getUserAndOrgFromRequest(req);
+    const [user, organisation] = await getUserAndOrgFromRequest(
+      req,
+      this.userService,
+      this.organisationService,
+    );
 
     await this.inventarService.bulkCreateInventarItemEvents(
       body,
@@ -97,7 +108,11 @@ export class InventarController {
     @Param('deviceId') deviceId: string,
     @Req() req: Request,
   ) {
-    const [, organisation] = await this.getUserAndOrgFromRequest(req);
+    const [, organisation] = await getUserAndOrgFromRequest(
+      req,
+      this.userService,
+      this.organisationService,
+    );
 
     const item = await this.inventarService.getInventarItemByDeviceId(
       organisation._id,
@@ -112,7 +127,11 @@ export class InventarController {
 
   @Get('events/bulk')
   async getInventarItemEventBulks(@Req() req: Request) {
-    const [, organisation] = await this.getUserAndOrgFromRequest(req);
+    const [, organisation] = await getUserAndOrgFromRequest(
+      req,
+      this.userService,
+      this.organisationService,
+    );
 
     return this.inventarService.getInventarItemEventBulks(organisation._id);
   }

@@ -39,6 +39,6 @@ import { UserModule } from './user/user.module';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('/inventar');
+    consumer.apply(AuthMiddleware).forRoutes('/inventar', '/organisations');
   }
 }

@@ -13,7 +13,7 @@ export class OrganisationService {
   async getPrimaryOrganisationsForUser(userId: string) {
     return this.OrganisationModel.findOne({
       members: userId,
-    });
+    }).populate('members');
   }
 
   async createOrganisation(data: Organisation) {
