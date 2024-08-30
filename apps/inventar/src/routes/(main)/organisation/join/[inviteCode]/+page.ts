@@ -1,8 +1,5 @@
-import { getToken, isAuthenticated, login } from '$lib/api/authApi';
-import { getInventarItemEventBulks, getInventarItems } from '$lib/api/inventarApi';
-import { userToFriendlyString } from '$lib/api/inventarItem';
-import { getOrganisationForUser, joinOrganisation } from '$lib/api/organisationApi';
-import { redirect } from '@sveltejs/kit';
+import { isAuthenticated, login } from '$lib/api/authApi';
+import { joinOrganisation } from '$lib/api/organisationApi';
 import type { PageLoad } from './$types';
 
 export const ssr = false;
@@ -26,8 +23,6 @@ export const load = (async ({ params: { inviteCode } }) => {
 			organisation
 		};
 	} catch (error) {
-		return {
-			error: true
-		};
+		return {};
 	}
 }) satisfies PageLoad;
