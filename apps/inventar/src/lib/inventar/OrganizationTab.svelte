@@ -31,7 +31,11 @@
 		</div>
 		<div class="flex flex-col gap-2">
 			<div class="font-bold text-xl">Einladungslink:</div>
-			<a class="break-all" href={generateInviteLink(organisation)}>
+			<a
+				class="break-all text-thw underline"
+				href={generateInviteLink(organisation)}
+				target="_blank"
+			>
 				{generateInviteLink(organisation)}
 			</a>
 			<Button
@@ -41,6 +45,7 @@
 						title: `Einladungslink - ${organisation.name}`,
 						url: generateInviteLink(organisation)
 					});
+					navigator.clipboard.writeText(generateInviteLink(organisation));
 
 					$bannerMessage = {
 						message: 'Einladungslink kopiert',
