@@ -38,26 +38,55 @@
 			>
 				{generateInviteLink(organisation)}
 			</a>
-			<Button
-				secondary
-				click={() => {
-					navigator.share({
-						title: `Einladungslink - ${organisation.name}`,
-						url: generateInviteLink(organisation)
-					});
-					navigator.clipboard.writeText(generateInviteLink(organisation));
+			<div class="flex gap-2 w-full">
+				<Button
+					secondary
+					click={() => {
+						navigator.clipboard.writeText(generateInviteLink(organisation));
 
-					$bannerMessage = {
-						message: 'Einladungslink kopiert',
-						autoDismiss: {
-							duration: 5 * 1000
-						},
-						type: 'info'
-					};
-				}}
-			>
-				Einladungslink teilen
-			</Button>
+						bannerMessage.set({
+							message: 'Einladungslink kopiert',
+							autoDismiss: {
+								duration: 5 * 1000
+							},
+							type: 'info'
+						});
+					}}
+				>
+					Link kopieren
+				</Button>
+				<Button
+					secondary
+					click={async () => {
+						try {
+							await navigator.share({
+								title: `Einladungslink - ${organisation.name}`,
+								url: generateInviteLink(organisation)
+							});
+
+							$bannerMessage = {
+								message: 'Einladungslink geteilt',
+								autoDismiss: {
+									duration: 5 * 1000
+								},
+								type: 'info'
+							};
+						} catch (error) {
+							console.error('Error sharing link', error);
+
+							$bannerMessage = {
+								message: 'Teilen abgebrochen',
+								autoDismiss: {
+									duration: 5 * 1000
+								},
+								type: 'error'
+							};
+						}
+					}}
+				>
+					Link teilen
+				</Button>
+			</div>
 		</div>
 	</div>
 {/if}
