@@ -1,11 +1,6 @@
 import { apiGet } from './apiGeneric';
 import type { User } from './inventarItem';
-
-export type Organisation = {
-	_id: string;
-	name: string;
-	members: User[];
-};
+import type { Organisation } from './organisation';
 
 export async function getOrganisations(): Promise<Organisation[]> {
 	return await apiGet<Organisation[]>('/organisations');

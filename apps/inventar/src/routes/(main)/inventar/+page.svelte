@@ -29,7 +29,11 @@
 	const onTabSelect = (selected: string) => {
 		selectedTab = selected as Tab;
 
-		$page.url.searchParams.set('tab', selected);
+		if (selectedTab === Tab.INVENTORY_LIST) {
+			$page.url.searchParams.delete('tab');
+		} else {
+			$page.url.searchParams.set('tab', selected);
+		}
 		goto(`?${$page.url.searchParams.toString()}`);
 	};
 </script>
@@ -50,13 +54,9 @@
 			bulks={data.inventarItemEventBulks}
 			inventarItems={data.inventarItems}
 		/>
-	{/if}
-
-	{#if selectedTab === Tab.INVENTORY_LIST}
-		<InventarListTab items={data.inventarItems} />
-	{/if}
-
-	{#if selectedTab === Tab.ORGANIZATION}
+	{:else if selectedTab === Tab.ORGANIZATION}
 		<OrganizationTab organisation={data.organisation} />
+	{:else}
+		<InventarListTab items={data.inventarItems} />
 	{/if}
 </div>
