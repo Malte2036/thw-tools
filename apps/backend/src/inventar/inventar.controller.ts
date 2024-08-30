@@ -21,7 +21,7 @@ export async function getUserAndOrgFromRequest(
   req: Request,
   userService: UserService,
   organisationService: OrganisationService,
-): Promise<[UserDocument, OrganisationDocument]> {
+): Promise<[UserDocument | null, OrganisationDocument | null]> {
   const accessToken = (req.headers as any).authorization.split(' ')[1];
   const user = await userService.getUserByAccessToken(accessToken);
   if (!user) {
@@ -32,10 +32,6 @@ export async function getUserAndOrgFromRequest(
   const organisation = await organisationService.getPrimaryOrganisationsForUser(
     user.id,
   );
-  if (!organisation) {
-    Logger.warn(`Organisation for user ${user.id} not found`);
-    return [user, null];
-  }
 
   return [user, organisation];
 }
@@ -57,7 +53,6 @@ export async function getUserAndOrgFromRequestAndThrow(
   }
 
   if (!organisation) {
-    Logger.warn(`Organisation for user ${user.id} not found`);
     throw new HttpException(
       'Organisation for user not found',
       HttpStatus.NOT_FOUND,

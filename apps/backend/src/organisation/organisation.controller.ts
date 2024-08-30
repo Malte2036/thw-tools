@@ -47,9 +47,7 @@ export class OrganisationController {
     );
 
     if (organisation) {
-      console.log(user.id);
-
-      Logger.warn('User is already a member of an organisation');
+      Logger.warn(`User ${user.id} is already a member of an organisation`);
       throw new HttpException(
         'User is already a member of an organisation',
         HttpStatus.BAD_REQUEST,
