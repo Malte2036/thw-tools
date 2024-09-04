@@ -157,8 +157,29 @@ export class InventarService {
   ): Promise<InventarItemEventBulk[]> {
     return this.inventarItemEventBulkModel
       .find({ organisation: organisationId })
-      .populate('inventarItemEvents')
+      .populate({
+        path: 'inventarItemEvents',
+        populate: {
+          path: 'inventarItem',
+        },
+      })
       .populate('user')
       .exec();
+  }
+
+  async exportInventarItemEventBulksAsCsv(
+    organisationId: mongoose.Types.ObjectId,
+  ): Promise<string> {
+    const bulks = await this.getInventarItemEventBulks(organisationId);
+
+    let csv = 'date,eventType,batteryCount,user,deviceIds\n';
+
+    for (const bulk of bulks) {
+      csv += `${bulk.date.toISOString()},${bulk.eventType},${bulk.batteryCount},"${bulk.user.firstName} ${bulk.user.lastName} (${bulk.user.email})","${bulk.inventarItemEvents
+        .map((event) => event.inventarItem.deviceId)
+        .join(', ')}"\n`;
+    }
+
+    return csv;
   }
 }

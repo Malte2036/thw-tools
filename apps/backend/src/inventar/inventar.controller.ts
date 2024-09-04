@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   HttpException,
   HttpStatus,
   Logger,
@@ -9,13 +10,13 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { OrganisationService } from 'src/organisation/organisation.service';
+import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
+import { UserDocument } from 'src/user/schemas/user.schema';
+import { UserService } from 'src/user/user.service';
 import { InventarService } from './inventar.service';
 import { InventarItemEventType } from './schemas/inventar-item-event.schema';
-import { UserService } from 'src/user/user.service';
-import { OrganisationService } from 'src/organisation/organisation.service';
-import { UserDocument } from 'src/user/schemas/user.schema';
-import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
-import { ApiTags } from '@nestjs/swagger';
 
 export async function getUserAndOrgFromRequest(
   req: Request,
@@ -153,5 +154,26 @@ export class InventarController {
     );
 
     return this.inventarService.getInventarItemEventBulks(organisation._id);
+  }
+
+  @Get('events/bulk/export')
+  @Header('Content-Type', 'text/csv')
+  @Header(
+    'Content-Disposition',
+    'attachment; filename="inventar_item_events.csv"',
+  )
+  async exportInventarItemEventBulksAsCsv(@Req() req: Request) {
+    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
+      req,
+      this.userService,
+      this.organisationService,
+    );
+
+    const csvData =
+      await this.inventarService.exportInventarItemEventBulksAsCsv(
+        organisation._id,
+      );
+
+    return csvData;
   }
 }
