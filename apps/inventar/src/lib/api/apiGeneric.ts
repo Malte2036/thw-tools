@@ -55,3 +55,24 @@ export async function apiPost<T>(path: string, body: any) {
 		throw error;
 	}
 }
+
+export async function apiGetFile(path: string) {
+	const url = new URL(path, PUBLIC_API_URL);
+	try {
+		const response = await fetch(url, {
+			headers: {
+				Authorization: `Bearer ${await getToken()}`
+			}
+		});
+
+		if (!response.ok) {
+			checkIfResposeIsUnauthorized(response);
+			throw new Error(`Failed to fetch file from ${url}`);
+		}
+
+		return response.blob();
+	} catch (error) {
+		console.error('Error fetching file:', error);
+		throw error;
+	}
+}

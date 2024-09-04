@@ -1,4 +1,4 @@
-import { PUBLIC_API_URL } from '$env/static/public';
+import { apiGet, apiGetFile, apiPost } from './apiGeneric';
 import type {
 	InventarItem,
 	InventarItemDeviceId,
@@ -6,7 +6,6 @@ import type {
 	InventarItemEventBulk,
 	InventarItemEventType
 } from './inventarItem';
-import { apiGet, apiPost } from './apiGeneric';
 
 export async function getInventarItems(): Promise<InventarItem[]> {
 	return await apiGet<InventarItem[]>('/inventar');
@@ -34,4 +33,8 @@ export async function getInventarItemEvents(deviceId: string): Promise<InventarI
 
 export async function getInventarItemEventBulks(): Promise<InventarItemEventBulk[]> {
 	return await apiGet<InventarItemEventBulk[]>(`/inventar/events/bulk`);
+}
+
+export async function exportInventarItemEventBulksAsCsv(): Promise<Blob> {
+	return await apiGetFile(`/inventar/events/bulk/export`);
 }

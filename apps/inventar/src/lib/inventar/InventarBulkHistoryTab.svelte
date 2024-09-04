@@ -1,14 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import Input from '$lib/Input.svelte';
 	import {
-		isSearchStringInInventarItem,
 		isSearchStringInInventarItemEventBulk,
 		type InventarItem,
 		type InventarItemEventBulk
 	} from '../api/inventarItem';
-	import { getInventarItemEventBulks } from '$lib/api/inventarApi';
 	import InventarItemEventBulkItem from './InventarItemEventBulkItem.svelte';
-	import Input from '$lib/Input.svelte';
 
 	export let bulks: InventarItemEventBulk[];
 	export let inventarItems: InventarItem[];
@@ -18,7 +15,7 @@
 
 	const getInventarItems = (bulk: InventarItemEventBulk) => {
 		return inventarItems.filter((item) =>
-			bulk.inventarItemEvents.some((event) => event.inventarItem === item._id)
+			bulk.inventarItemEvents.some((event) => event.inventarItem._id === item._id)
 		);
 	};
 
@@ -45,7 +42,7 @@
 				<div>Keine Historie vorhanden.</div>
 			{:else}
 				{#each filteredBulks as bulk}
-					<InventarItemEventBulkItem {bulk} {inventarItems} />
+					<InventarItemEventBulkItem {bulk} />
 				{/each}
 			{/if}
 		{:else}
