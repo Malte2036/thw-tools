@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { exportInventarItemEventBulksAsCsv } from '$lib/api/inventarApi';
 	import {
 		userToFriendlyString,
 		type InventarItem,
@@ -17,6 +18,16 @@
 			(acc, bulk) => acc + (bulk.eventType === 'borrowed' ? 1 : -1) * bulk.batteryCount,
 			0
 		);
+	}
+
+	async function exportInventarAsCsv() {
+		const blob = await exportInventarItemEventBulksAsCsv();
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = `inventar_${organisation?.name.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString()}.csv`;
+		a.click();
+		URL.revokeObjectURL(url);
 	}
 </script>
 
@@ -103,5 +114,13 @@
 				</Button>
 			</div>
 		</div>
+		<div class="flex flex-col gap-2">
+			<div class="font-bold text-xl">Exportieren:</div>
+			<Button
+			click={exportInventarAsCsv}
+			>
+				Exportiere Inventar als CSV
+			</Button>
+			</div>
 	</div>
 {/if}

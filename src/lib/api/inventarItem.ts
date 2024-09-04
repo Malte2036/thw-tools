@@ -20,7 +20,7 @@ export type InventarItemEventType = 'borrowed' | 'returned';
 
 export type InventarItemEvent = {
 	_id: InternalId;
-	inventarItem: InternalId;
+	inventarItem: InventarItem;
 	user: User;
 	type: InventarItemEventType;
 	date: string;

@@ -3,20 +3,11 @@
 	import {
 		batteryCountToFriendlyString,
 		eventTypeToEmoji,
-		type InventarItem,
-		type InventarItemDeviceId,
-		type InventarItemEvent,
-		type InventarItemEventBulk,
-		type InventarItemEventType
+		type InventarItemEventBulk
 	} from '../api/inventarItem';
 	import InventarItemEventTypeBadge from './InventarItemEventTypeBadge.svelte';
 
 	export let bulk: InventarItemEventBulk;
-	export let inventarItems: InventarItem[];
-
-	const getInventarItem = (event: InventarItemEvent): InventarItem | undefined => {
-		return inventarItems.find((item) => item._id === event.inventarItem);
-	};
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -47,7 +38,7 @@
 			</li>
 			<li>
 				{bulk.inventarItemEvents
-					.map((event) => getInventarItem(event)?.deviceId)
+					.map((event) => event.inventarItem.deviceId)
 					.sort()
 					.join(', ')}
 			</li>
