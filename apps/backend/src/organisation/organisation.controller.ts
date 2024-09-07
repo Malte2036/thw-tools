@@ -63,4 +63,37 @@ export class OrganisationController {
       user.id,
     );
   }
+
+  @Post()
+  async createOrganisation(
+    @Req() req: Request,
+    @Body() data: { name: string },
+  ) {
+    const [user, organisation] = await getUserAndOrgFromRequest(
+      req,
+      this.userService,
+      this.organisationService,
+    );
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (organisation) {
+      Logger.warn(`User ${user.id} is already a member of an organisation`);
+      throw new HttpException(
+        'User is already a member of an organisation',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const createdOrg = await this.organisationService.createOrganisation(
+      data.name,
+      user,
+    );
+
+    Logger.log(`User ${user.id} created organisation ${createdOrg.id}`);
+
+    return createdOrg;
+  }
 }

@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Organisation } from './schemas/organisation.schema';
 import { Model } from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class OrganisationService {
@@ -28,5 +29,16 @@ export class OrganisationService {
 
     organisation.members.push(user);
     await organisation.save();
+  }
+
+  async createOrganisation(name: string, user: User) {
+    const organisation = new this.OrganisationModel({
+      name,
+      members: [user],
+      inviteCode: randomUUID(),
+    });
+
+    await organisation.save();
+    return organisation;
   }
 }
