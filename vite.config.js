@@ -6,7 +6,7 @@ const config = {
 	plugins: [
 		sveltekit(),
 		SvelteKitPWA({
-			registerType: 'prompt',
+			registerType: 'autoUpdate',
 			// workbox: {
 			// 	// workaround to disable precaching every page
 			// 	maximumFileSizeToCacheInBytes: 1
