@@ -41,7 +41,11 @@
 		}
 	}
 
+	const isBrowser = typeof window !== 'undefined';
+
 	onMount(() => {
+		if (!isBrowser) return;
+
 		const tab = $page.url.searchParams.get('tab');
 		if (tab) {
 			selectedTab = tab as Tab;
@@ -51,6 +55,8 @@
 	});
 
 	onDestroy(() => {
+		if (!isBrowser) return;
+
 		document.removeEventListener('visibilitychange', handleVisibilityChange);
 	});
 
