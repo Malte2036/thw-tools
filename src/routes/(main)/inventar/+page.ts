@@ -4,14 +4,24 @@ import { userToFriendlyString } from '$lib/api/inventarItem';
 import { getOrganisationForUser } from '$lib/api/organisationApi';
 import type { PageLoad } from './$types';
 
+export const prerender = true;
 export const ssr = false;
 
+const EMPTY = {
+	inventarItems: [],
+	inventarItemEventBulks: [],
+	organisation: null
+};
+
 export const load = (async () => {
+	const isBrowser = typeof window !== 'undefined';
+	if (!isBrowser) return EMPTY;
+
 	if (!(await isAuthenticated())) {
 		console.log('Not authenticated');
 
 		await login();
-		return {};
+		return EMPTY;
 	}
 
 	try {
@@ -37,6 +47,6 @@ export const load = (async () => {
 		};
 	} catch (error) {
 		console.error(error);
-		return {};
+		return EMPTY;
 	}
 }) satisfies PageLoad;
