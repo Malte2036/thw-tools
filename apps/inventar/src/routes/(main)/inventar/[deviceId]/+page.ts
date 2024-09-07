@@ -7,11 +7,11 @@ const EMPTY = {
 	deviceId: null
 };
 
-export const load = (async ({ params }) => {
+export const load = (async ({ url, params }) => {
 	if (!(await isAuthenticated())) {
 		console.log('Not authenticated');
 
-		await login();
+		await login(url);
 		return EMPTY;
 	}
 

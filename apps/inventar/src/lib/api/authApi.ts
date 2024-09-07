@@ -46,12 +46,13 @@ export const getKindeClient = () => {
 
 const LOCAL_STORAGE_LAST_PATH = 'auth_last_path';
 
-const saveLastPath = () => {
+const saveLastPath = (url: URL) => {
 	if (!browser) {
 		console.warn('saveLastPath: not in browser');
 		return;
 	}
-	const path = window.location.pathname + window.location.search;
+
+	const path = url.pathname + url.search;
 	if (path.startsWith('/auth')) {
 		clearLastPath();
 		return;
@@ -84,15 +85,16 @@ export const redirectToLastPathBeforeAuth = () => {
 	goto(lastPath);
 };
 
-export const login = async () => {
+export const login = async (currentUrl: URL) => {
 	if (!browser) {
 		console.warn('login: not in browser');
 		return;
 	}
 
-	saveLastPath();
+	saveLastPath(currentUrl);
 
 	const url = await getKindeClient().login();
+	// use window.location.href instead of goto because of the redirect to an external domain
 	window.location.href = url.toString();
 };
 

@@ -13,14 +13,14 @@ const EMPTY = {
 	organisation: null
 };
 
-export const load = (async () => {
+export const load = (async ({ url }) => {
 	const isBrowser = typeof window !== 'undefined';
 	if (!isBrowser) return EMPTY;
 
 	if (!(await isAuthenticated())) {
 		console.log('Not authenticated');
 
-		await login();
+		await login(url);
 		return EMPTY;
 	}
 
