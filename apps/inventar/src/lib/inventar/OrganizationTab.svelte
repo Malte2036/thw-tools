@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import { exportInventarItemEventBulksAsCsv } from '$lib/api/inventarApi';
 	import {
 		userToFriendlyString,
@@ -6,6 +7,7 @@
 		type InventarItemEventBulk
 	} from '$lib/api/inventarItem';
 	import { generateInviteLink, type Organisation } from '$lib/api/organisation';
+	import { leaveOrganisation } from '$lib/api/organisationApi';
 	import Button from '$lib/Button.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 
@@ -29,6 +31,20 @@
 		a.click();
 		URL.revokeObjectURL(url);
 	}
+
+	const leaveOrg = async () => {
+		await leaveOrganisation();
+
+		bannerMessage.set({
+			message: 'Organisation verlassen!',
+			type: 'info',
+			autoDismiss: {
+				duration: 5000
+			}
+		});
+
+		invalidateAll();
+	};
 </script>
 
 {#if !organisation}
@@ -62,6 +78,7 @@
 					</li>
 				{/each}
 			</ul>
+			<Button secondary click={leaveOrg}>Organisation verlassen</Button>
 		</div>
 		<div class="flex flex-col gap-2">
 			<div class="font-bold text-xl">Einladungslink:</div>
@@ -116,11 +133,7 @@
 		</div>
 		<div class="flex flex-col gap-2">
 			<div class="font-bold text-xl">Exportieren:</div>
-			<Button
-			click={exportInventarAsCsv}
-			>
-				Exportiere Inventar als CSV
-			</Button>
-			</div>
+			<Button click={exportInventarAsCsv}>Exportiere Inventar als CSV</Button>
+		</div>
 	</div>
 {/if}

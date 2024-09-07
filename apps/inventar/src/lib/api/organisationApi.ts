@@ -13,3 +13,7 @@ export async function joinOrganisation(inviteCode: string): Promise<Organisation
 export async function createOrganisation(name: string): Promise<Organisation> {
 	return await apiPost<Organisation>('/organisations/', { name });
 }
+
+export async function leaveOrganisation(): Promise<void> {
+	await apiPost<void>('/organisations/leave');
+}

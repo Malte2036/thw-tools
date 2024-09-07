@@ -31,7 +31,7 @@ export async function apiGet<T>(path: string) {
 	}
 }
 
-export async function apiPost<T>(path: string, body: any) {
+export async function apiPost<T>(path: string, body?: any) {
 	const url = new URL(path, PUBLIC_API_URL);
 	try {
 		const response = await fetch(url, {
@@ -40,7 +40,7 @@ export async function apiPost<T>(path: string, body: any) {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${await getToken()}`
 			},
-			body: JSON.stringify(body)
+			body: body ? JSON.stringify(body) : undefined
 		});
 
 		if (!response.ok) {
