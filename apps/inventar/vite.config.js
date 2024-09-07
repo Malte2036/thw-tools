@@ -7,8 +7,9 @@ const config = {
 		sveltekit(),
 		SvelteKitPWA({
 			workbox: {
-				// workaround to disable precaching every page
-				maximumFileSizeToCacheInBytes: 1
+				globPatterns: []
+				// // workaround to disable precaching every page
+				// maximumFileSizeToCacheInBytes: 1
 			},
 			manifest: {
 				theme_color: '#120a8f',
