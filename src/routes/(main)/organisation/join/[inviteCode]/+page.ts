@@ -4,11 +4,11 @@ import type { PageLoad } from './$types';
 
 export const ssr = false;
 
-export const load = (async ({ params: { inviteCode } }) => {
+export const load = (async ({ url, params: { inviteCode } }) => {
 	if (!(await isAuthenticated())) {
 		console.log('Not authenticated');
 
-		await login();
+		await login(url);
 		return {};
 	}
 

@@ -9,6 +9,7 @@
 	} from '$lib/api/authApi';
 	import Button from '$lib/Button.svelte';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
 	onMount(async () => {
 		console.log('Callback page mounted');
@@ -24,7 +25,7 @@
 		if (!(await isAuthenticated())) {
 			console.log('User is not authenticated');
 			alert('User is not authenticated');
-			login();
+			login($page.url);
 			return;
 		}
 
@@ -47,7 +48,7 @@
 				<Button secondary click={checkLoginStatus}>Überprüfe Login Status</Button>
 				<Button secondary click={() => getUser().then((user) => console.log(user))}>Get User</Button
 				>
-				<Button secondary click={login}>Login</Button>
+				<Button secondary click={() => login($page.url)}>Login</Button>
 			</div>
 		</div>
 	{/if}
