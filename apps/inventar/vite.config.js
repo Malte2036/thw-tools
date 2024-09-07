@@ -6,6 +6,7 @@ const config = {
 	plugins: [
 		sveltekit(),
 		SvelteKitPWA({
+			registerType: 'prompt',
 			workbox: {
 				globPatterns: []
 				// // workaround to disable precaching every page
