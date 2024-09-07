@@ -10,6 +10,7 @@
 	import VestIcon from '$lib/icons/VestIcon.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { onMount } from 'svelte';
+	import MobileRetro from '$lib/icons/MobileRetro.svelte';
 
 	const description = {
 		headline: 'Inoffizielle Tools für THW-Helfer:',
@@ -123,6 +124,12 @@
 					<VestIcon />
 				</div>
 				<div class="font-bold">THW Bekleidungs Rechner</div>
+			</LinkButton>
+			<LinkButton url="/inventar" dataUmamiEvent={'Open Inventar'}>
+				<div class="w-6">
+					<MobileRetro />
+				</div>
+				<div class="font-bold">Inventarisierung</div>
 			</LinkButton>
 		</div>
 	</div>
