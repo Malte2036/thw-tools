@@ -96,4 +96,18 @@ export class OrganisationController {
 
     return createdOrg;
   }
+
+  @Post('leave')
+  async leaveOrganisation(@Req() req: Request) {
+    const [user, organisation] = await getUserAndOrgFromRequestAndThrow(
+      req,
+      this.userService,
+      this.organisationService,
+    );
+
+    await this.organisationService.leaveOrganisation(user, organisation);
+    Logger.log(`User ${user.id} left organisation ${organisation.id}`);
+
+    return {};
+  }
 }

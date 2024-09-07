@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Organisation } from './schemas/organisation.schema';
+import {
+  Organisation,
+  OrganisationDocument,
+} from './schemas/organisation.schema';
 import { Model } from 'mongoose';
-import { User } from 'src/user/schemas/user.schema';
+import { User, UserDocument } from 'src/user/schemas/user.schema';
 import { randomUUID } from 'crypto';
 
 @Injectable()
@@ -40,5 +43,15 @@ export class OrganisationService {
 
     await organisation.save();
     return organisation;
+  }
+
+  async leaveOrganisation(
+    user: UserDocument,
+    organisation: OrganisationDocument,
+  ) {
+    await this.OrganisationModel.updateOne(
+      { _id: organisation._id },
+      { $pull: { members: user._id } },
+    );
   }
 }
