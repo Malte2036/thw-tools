@@ -8,6 +8,7 @@
 	import { page } from '$app/stores';
 	import type { PageData } from './$types';
 	import { onDestroy, onMount } from 'svelte';
+	import NoOrganisation from '$lib/inventar/NoOrganisation.svelte';
 
 	export let data: PageData;
 
@@ -100,10 +101,5 @@
 		{/if}
 	</div>
 {:else}
-	<div class="flex flex-col gap-4 p-4">
-		<div class="text-center text-2xl font-bold">Du bist in keiner Organisation.</div>
-		<div class="text-center text-lg">
-			Lass dich per Einladungslink in eine bestehende Organisation einladen.
-		</div>
-	</div>
+	<NoOrganisation />
 {/if}
