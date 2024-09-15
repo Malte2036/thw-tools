@@ -4,17 +4,6 @@
 	import { dev } from '$app/environment';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
 
-	// setup service worker for pwa support
-	import { onMount } from 'svelte';
-	// import { pwaInfo } from 'virtual:pwa-info';
-
-	// $: webManifest = pwaInfo ? pwaInfo.webManifest.linkTag : '';
-
-	// let ReloadPrompt: any;
-	// onMount(async () => {
-	// 	pwaInfo && (ReloadPrompt = (await import('$lib/ReloadPrompt.svelte')).default);
-	// });
-
 	import '../app.css';
 	import { page } from '$app/stores';
 	import Header from './Header.svelte';
@@ -47,7 +36,7 @@
 </script>
 
 <svelte:head>
-	<!-- {@html webManifest} -->
+	<link rel="manifest" href="/manifest.json" />
 
 	{#if !dev}
 		<script
@@ -58,10 +47,7 @@
 		></script>
 	{/if}
 </svelte:head>
-<!-- 
-{#if ReloadPrompt}
-	<svelte:component this={ReloadPrompt} />
-{/if} -->
+
 <div class="flex flex-col gap-4 justify-between min-h-screen">
 	{#if title !== undefined}
 		<Header {title} />
