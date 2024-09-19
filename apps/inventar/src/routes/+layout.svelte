@@ -16,19 +16,7 @@
 	$: title = getCurrentTitleByPath($page.url.pathname);
 
 	function getCurrentTitleByPath(path: string): string | undefined {
-		if (path.startsWith('/quiz/ga')) {
-			return 'Grundausbildungs-Quiz';
-		} else if (path.startsWith('/quiz/agt')) {
-			return 'Atemschutz-Quiz';
-		} else if (path.startsWith('/quiz/cbrn')) {
-			return 'CBRN-Quiz';
-		} else if (path.startsWith('/cbrn/protective-suite')) {
-			return 'CBRN-Schutzanzug';
-		} else if (path === '/') {
-			return undefined;
-		} else {
-			return 'THW-Tools';
-		}
+		return 'Inventar';
 	}
 
 	let showFeedback = false;
