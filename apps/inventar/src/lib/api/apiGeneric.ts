@@ -1,5 +1,6 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import { getToken } from './authApi';
+import { UnauthorizedError } from './error';
 
 const checkIfResposeIsUnauthorized = (res: Response) => {
 	if (res.status === 403) {
