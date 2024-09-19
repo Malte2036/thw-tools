@@ -1,10 +1,11 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
-COPY package.json package-lock.json .
-RUN npm ci
+COPY pnpm-lock.yaml .
+RUN apk add --no-cache curl && curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 COPY . .
-RUN npm run build
-RUN npm prune --production
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
+RUN pnpm prune --prod
 
 FROM node:18-alpine
 WORKDIR /app
