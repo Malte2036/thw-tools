@@ -43,6 +43,13 @@
 			return;
 		}
 
+		$bannerMessage = {
+			message: `Gerät mit der ID ${decodedText} gescannt.`,
+			autoDismiss: {
+				duration: 5 * 1000
+			}
+		};
+
 		if (scannedDeviceIds.some((item) => item.deviceId === decodedText)) {
 			return;
 		}
@@ -56,13 +63,6 @@
 			deviceId: decodedText,
 			existingItem: inventarItems.find((item) => item.deviceId === decodedText)
 		});
-
-		$bannerMessage = {
-			message: `Gerät mit der ID ${decodedText} gescannt.`,
-			autoDismiss: {
-				duration: 5 * 1000
-			}
-		};
 	}
 
 	async function submit(eventType: InventarItemEventType) {
@@ -134,9 +134,4 @@
 			click={() => submit('borrowed')}>Ausleihen</Button
 		>
 	</div>
-	<!-- <ScanInventarItemResultDialog
-		deviceId={scannedDeviceId.deviceId}
-		lastEvent={inventarItems.find((item) => item.deviceId === scannedDeviceId?.deviceId)?.lastEvent}
-		onSubmit={submit}
-	/> -->
 {/if}
