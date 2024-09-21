@@ -48,10 +48,8 @@
 		<div>©2024 Malte Sehmer</div>
 		<div class="text-gray-400">|</div>
 		<a
-			data-umami-event={$page.route.id === '/impressum'
-				? 'Close Impressum button'
-				: 'Open Impressum button'}
-			href={$page.route.id === '/impressum' ? '/' : '/impressum'}
+			data-umami-event={'Open Impressum button'}
+			href={'https://thw-tools.de/impressum'}
 			class="underline">Impressum</a
 		>
 		<div class="text-gray-400">|</div>
