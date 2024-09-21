@@ -4,8 +4,8 @@
 	"display": "standalone",
 	"scope": "/",
 	"start_url": "/",
-	"name": "THW-Tools",
-	"short_name": "THW-Tools",
+	"name": "THW-Funk",
+	"short_name": "THW-Funk",
 	"icons": [
 		{
 			"src": "/pwa/icons/icon-72x72.png",
