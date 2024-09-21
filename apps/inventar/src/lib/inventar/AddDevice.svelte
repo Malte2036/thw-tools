@@ -103,7 +103,7 @@
 	<div class="font-bold text-2xl">Gescannte Geräte:</div>
 	<div>
 		{#each scannedDeviceIds as scannedDeviceId}
-			<div class="flex gap-2">
+			<div class="flex gap-2 items-center">
 				<div>{scannedDeviceId.deviceId}</div>
 				{#if scannedDeviceId.existingItem}
 					<InventarItemEventTypeBadge type={scannedDeviceId.existingItem.lastEvent.type} />
