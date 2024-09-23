@@ -8,7 +8,7 @@
 </script>
 
 <div class="flex flex-col gap-2 p-4">
-	<LinkButton url="/inventar">Zurück zur Inventarliste</LinkButton>
+	<LinkButton url="/">Zurück zur Inventarliste</LinkButton>
 
 	<InventarItemEventsList deviceId={data.deviceId ?? ''} />
 </div>

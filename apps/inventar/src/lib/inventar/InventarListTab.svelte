@@ -28,7 +28,7 @@
 				event={item.lastEvent}
 				deviceId={item.deviceId}
 				isSelected={false}
-				click={() => goto(`/inventar/${item.deviceId}`)}
+				click={() => goto(`/device/${item.deviceId}`)}
 			/>
 		{/each}
 	</div>
