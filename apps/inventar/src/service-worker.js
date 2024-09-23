@@ -10,6 +10,8 @@ const ASSETS = [
 	...files // everything in `static`
 ].filter((url) => !url.endsWith('.gif'));
 
+console.log('Caching the following assets:', ASSETS);
+
 self.addEventListener('install', (event) => {
 	// Create a new cache and add all files to it
 	async function addFilesToCache() {
@@ -48,6 +50,10 @@ self.addEventListener('fetch', (event) => {
 			}
 		}
 
+		// We don't want to cache inventory related backend requests, because they are dynamic.
+		return await fetch(event.request);
+
+		/*
 		// for everything else, try the network first, but
 		// fall back to the cache if we're offline
 		try {
@@ -75,6 +81,7 @@ self.addEventListener('fetch', (event) => {
 			// as there is nothing we can do to respond to this request
 			throw err;
 		}
+		*/
 	}
 
 	event.respondWith(respond());

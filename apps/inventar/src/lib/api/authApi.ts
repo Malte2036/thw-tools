@@ -1,9 +1,5 @@
 import { browser } from '$app/environment';
-import {
-	PUBLIC_KINDE_API_CLIENT,
-	PUBLIC_KINDE_DOMAIN,
-	PUBLIC_KINDE_REDIRECT_URI
-} from '$env/static/public';
+import { PUBLIC_KINDE_API_CLIENT, PUBLIC_KINDE_DOMAIN } from '$env/static/public';
 import { createKindeBrowserClient } from '@kinde-oss/kinde-typescript-sdk';
 import { goto } from '$app/navigation';
 import { sessionManager } from './auth/sessionManager';
@@ -18,8 +14,8 @@ export const getKindeClient = () => {
 	_kindeClient = createKindeBrowserClient({
 		authDomain: PUBLIC_KINDE_DOMAIN,
 		clientId: PUBLIC_KINDE_API_CLIENT,
-		logoutRedirectURL: 'http://localhost:5173',
-		redirectURL: PUBLIC_KINDE_REDIRECT_URI,
+		logoutRedirectURL: window.location.origin,
+		redirectURL: window.location.origin + '/auth/callback',
 		sessionManager: sessionManager
 		// audience: 'https://api.thw-tools.de'
 		// redirectURL: 'https://7a0d-176-198-201-152.ngrok-free.app/auth/callback',
