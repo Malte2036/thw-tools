@@ -32,7 +32,13 @@
 
 <div class="flex flex-col gap-16 p-4">
 	<div class="flex flex-col gap-4">
-		<div class="text-center text-2xl font-bold">Du bist in keiner Organisation.</div>
+		<div>
+			<div class="text-center text-2xl font-bold">Du bist in keiner Organisation.</div>
+			<div class="text-center text-sm text-gray-500">
+				Du glaubst, dass das ein Fehler ist? Versuche einmal die Seite neu zu laden.
+			</div>
+		</div>
+
 		<div class="text-center text-lg">
 			Lass dich per Einladungslink in eine bestehende <span class="font-bold"
 				>Organisation einladen</span
