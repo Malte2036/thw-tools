@@ -4,7 +4,6 @@ import { userToFriendlyString } from '$lib/api/inventarItem';
 import { getOrganisationForUser } from '$lib/api/organisationApi';
 import type { PageLoad } from './$types';
 
-export const prerender = true;
 export const ssr = false;
 
 const EMPTY = {
