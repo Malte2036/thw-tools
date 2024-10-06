@@ -14,6 +14,6 @@ Anforderungen:
 Installation:
 
 - repo forken / git clone
-- npm i
+- pnpm i
 - cp .env.example .env
-- npm run dev
+- pnpm run dev
