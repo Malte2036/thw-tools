@@ -10,12 +10,15 @@
 	import VestIcon from '$lib/icons/VestIcon.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { onMount } from 'svelte';
+	import WalkieTalkieIcon from '$lib/icons/WalkieTalkieIcon.svelte';
+	import CircleRadiationIcon from '$lib/icons/CircleRadiationIcon.svelte';
 
 	const description = {
 		headline: 'Inoffizielle Tools für THW-Helfer:',
 		subheadline:
-			'Grundausbildungs-Quiz, Atemschutz-Quiz, CBRN-Quiz, Finnentest-Tracker & Spannungsfall-Berechnung.',
-		keywords: 'THW, Quiz, Finnentest, Spannungsfall, Elektro, CBRN, AGT, Atemschutz, Feuerwehr'
+			'Grundausbildungs-Quiz, Atemschutz-Quiz, CBRN-Quiz, Sprechfunk-Quiz, Finnentest-Tracker & Spannungsfall-Berechnung.',
+		keywords:
+			'THW, Quiz, Finnentest, Spannungsfall, Elektro, CBRN, AGT, Atemschutz, Sprechfunk, Feuerwehr'
 	};
 
 	onMount(() => {
@@ -82,6 +85,12 @@
 				</div>
 				<div class="font-bold">Grundausbildungs-Quiz</div>
 			</LinkButton>
+			<LinkButton url={`/quiz/radio/listing/`} dataUmamiEvent={'Open Radio Quiz'}>
+				<div class="w-6">
+					<WalkieTalkieIcon />
+				</div>
+				<div class="font-bold">Sprechfunk-Quiz</div>
+			</LinkButton>
 			<LinkButton url={`/quiz/agt/listing/`} dataUmamiEvent={'Open AGT Quiz'}>
 				<div class="w-6">
 					<ChartSimpleIcon />
@@ -90,13 +99,11 @@
 			</LinkButton>
 			<LinkButton url={`/quiz/cbrn/listing/`} dataUmamiEvent={'Open CBRN Quiz'}>
 				<div class="w-6">
-					<FlaskVialIcon />
+					<CircleRadiationIcon />
 				</div>
 				<div class="font-bold">CBRN-Quiz</div>
-			</LinkButton><LinkButton
-				url={`/cbrn/protective-suite`}
-				dataUmamiEvent={'Open CBRN Protective Suite'}
-			>
+			</LinkButton>
+			<LinkButton url={`/cbrn/protective-suite`} dataUmamiEvent={'Open CBRN Protective Suite'}>
 				<div class="w-6">
 					<VestIcon />
 				</div>
