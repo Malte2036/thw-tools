@@ -4,6 +4,19 @@ import { QuestionType } from '$lib/model/question';
 export async function GET() {
 	const types: QuestionType[] = Object.values(QuestionType);
 
+	const quizTypeLinks = types.map(
+		(t) =>
+			`
+            <url>
+                <loc>https://thw-tools.de/quiz/${t}/</loc>
+                <priority>0.7</priority>
+            </url>
+            <url>
+                <loc>https://thw-tools.de/quiz/${t}/listing/</loc>
+                <priority>0.8</priority>
+            </url>`
+	);
+
 	const singleQuestionLinks = await Promise.all(
 		types.map(async (t) => {
 			const questionIds = await getQuestions(t);
@@ -40,30 +53,7 @@ export async function GET() {
             <loc>https://thw-tools.de/clothing/</loc>
             <priority>0.8</priority>
         </url>
-        <url>
-            <loc>https://thw-tools.de/quiz/ga/</loc>
-            <priority>0.7</priority>
-        </url>
-        <url>
-            <loc>https://thw-tools.de/quiz/ga/listing/</loc>
-            <priority>0.8</priority>
-        </url>
-        <url>
-            <loc>https://thw-tools.de/quiz/agt/</loc>
-            <priority>0.7</priority>
-        </url>
-        <url>
-            <loc>https://thw-tools.de/quiz/agt/listing/</loc>
-            <priority>0.8</priority>
-        </url>
-        <url>
-            <loc>https://thw-tools.de/quiz/cbrn/</loc>
-            <priority>0.7</priority>
-        </url>
-        <url>
-            <loc>https://thw-tools.de/quiz/cbrn/listing/</loc>
-            <priority>0.8</priority>
-        </url>
+        ${quizTypeLinks.join('')}
         ${singleQuestionLinks.join('')}
       </urlset>`.trim(),
 		{
