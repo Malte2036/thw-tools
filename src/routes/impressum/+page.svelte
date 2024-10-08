@@ -19,16 +19,55 @@
 			Ich übernehme keine Haftung für die Richtigkeit der Inhalte dieser Website. Die Inhalte werden
 			nach bestem Wissen und Gewissen erstellt. Für Hinweise auf Fehler bin ich dankbar.
 		</span>
+
 		<span>
-			Die Fragen des <span class="italic">AGT-Quiz</span> stammen von der
+			Die Fragen des <span class="italic">Grundausbildungs-Quiz</span> stammen vom Technischen
+			Hilfswerk (siehe
+			<a
+				href="https://ov-woerth.thw.de/fileadmin/user_upload/LVBY/GSTR/OWOE/PDF/Fragenkatalog_zur_Grundausbildung.pdf"
+				target="_blank"
+				rel="noreferrer"
+			>
+				Fragenkatalog zur Grundausbildung</a
+			>).
+		</span>
+
+		<span>
+			Die Fragen des <span class="italic">Sprechfunk-Quiz</span> stammen vom Technischen Hilfswerk
+			(siehe
+			<a
+				href="https://ov-woerth.thw.de/fileadmin/user_upload/LVBY/GSTR/OWOE/Mediathek/Ausbildungsmaterial/Musterloesung_Sprechfunk_Satz_A.pdf"
+				target="_blank"
+				rel="noreferrer"
+			>
+				Prüfungsbogen A</a
+			>
+			und
+			<a
+				href="https://ov-woerth.thw.de/fileadmin/user_upload/LVBY/GSTR/OWOE/Mediathek/Ausbildungsmaterial/Musterloesung_Sprechfunk_Satz_B.pdf"
+				target="_blank"
+				rel="noreferrer"
+			>
+				Prüfungsbogen B</a
+			>).
+		</span>
+
+		<span>
+			Die Fragen des <span class="italic">AGT-Quiz</span> stammen von der Niedersächsischen Akademie
+			für Brand- und Katastrophenschutz (siehe
 			<a
 				href="https://www.nlbk.niedersachsen.de/startseite/service/download/ausbildung_nach_fwdv_2/kreisausbildung/lehrgang_atemschutzgeratetrager/downloadbereich-lehrgang-atemschutzgeraetetraeger-86208.html"
 				target="_blank"
 				rel="noreferrer"
 			>
-				Niedersächsischen Akademie für Brand- und Katastrophenschutz</a
-			>.
+				Fragenkatalog</a
+			>).
 		</span>
+
+		<span>
+			Die Fragen des <span class="italic">CBRN-Quiz</span> stammen vom Technischen Hilfswerk
+		</span>
+
 		<span
 			>Diese Seite verfügt über kein Impressum nach deutschem Recht: Ein Impressum gemäß § 5 TMG ist
 			nicht erforderlich, da es sich nicht um einen geschäftsmäßigen Dienst, sondern um eine private
