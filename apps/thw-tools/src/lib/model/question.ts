@@ -1,7 +1,8 @@
 export enum QuestionType {
 	GA = 'ga',
 	AGT = 'agt',
-	CBRN = 'cbrn'
+	CBRN = 'cbrn',
+	RADIO = 'radio'
 }
 
 export type IQuestion = {

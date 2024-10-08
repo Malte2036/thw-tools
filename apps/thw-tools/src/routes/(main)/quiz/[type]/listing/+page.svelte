@@ -32,6 +32,8 @@
 				return `Das Atemschutz-Quiz besteht aus ${count} Fragen für die Atemschutzausbildung im Technischen Hilfswerk.`;
 			case QuestionType.CBRN:
 				return `Das CBRN-Quiz besteht aus ${count} Fragen für die CBRN Ausbildung im Technischen Hilfswerk.`;
+			case QuestionType.RADIO:
+				return `Das Sprechfunk-Quiz besteht aus ${count} Fragen für die Sprechfunkausbildung im Technischen Hilfswerk.`;
 			default:
 				return `Das Quiz besteht aus ${count} Fragen für die Ausbildung im Technischen Hilfswerk.`;
 		}
