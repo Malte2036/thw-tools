@@ -2,6 +2,7 @@
 	import { dateToFriendlyString } from '$lib/utils';
 	import {
 		eventTypeToEmoji,
+		type InventarItem,
 		type InventarItemDeviceId,
 		type InventarItemEvent
 	} from '../api/inventarItem';
@@ -11,6 +12,8 @@
 	export let deviceId: InventarItemDeviceId;
 	export let isSelected: boolean;
 	export let click: () => void;
+
+	export let item: InventarItem | undefined;
 
 	export let secondary: boolean = false;
 </script>
@@ -28,6 +31,11 @@
 		<div class="flex flex-row gap-2 justify-between w-full">
 			<div class="text-nowrap">ID: <span class="font-bold">{deviceId}</span></div>
 			<InventarItemEventTypeBadge type={event.type} />
+			{#if item && item.name}
+				<div class="rounded-xl text-sm px-2 h-min bg-slate-200 whitespace-nowrap">
+					{item.name}
+				</div>
+			{/if}
 		</div>
 		<div class="flex flex-row gap-2 items-center w-full">
 			<div class="text-sm text-nowrap text-gray-500">

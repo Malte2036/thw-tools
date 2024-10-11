@@ -27,6 +27,7 @@
 			<InventarItemEventItem
 				event={item.lastEvent}
 				deviceId={item.deviceId}
+				{item}
 				isSelected={false}
 				click={() => goto(`/device/${item.deviceId}`)}
 			/>

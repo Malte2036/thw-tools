@@ -14,6 +14,7 @@ export type InventarItem = {
 	_id: InternalId;
 	deviceId: InventarItemDeviceId;
 	lastEvent: InventarItemEvent;
+	name?: string;
 };
 
 export type InventarItemEventType = 'borrowed' | 'returned';
@@ -106,8 +107,10 @@ export function isSearchStringInInventarItem(
 	inventarItem: InventarItem
 ): boolean {
 	return (
-		searchStringIsInArray(searchString.trim(), [inventarItem.deviceId]) ||
-		isSearchStringInInventarItemEvent(searchString, inventarItem.lastEvent)
+		searchStringIsInArray(
+			searchString.trim(),
+			[inventarItem.deviceId, inventarItem.name].filter(Boolean)
+		) || isSearchStringInInventarItemEvent(searchString, inventarItem.lastEvent)
 	);
 }
 
