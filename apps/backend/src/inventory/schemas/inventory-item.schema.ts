@@ -16,6 +16,9 @@ export class InventoryItem {
   organisation: Organisation;
 
   @Prop({ required: true })
+  einheit: string;
+
+  @Prop({ required: true })
   ebene: number;
 
   @Prop()

@@ -6,7 +6,7 @@ import {
   inventarNummerRegex,
   InventoryItem,
 } from './schemas/inventory-item.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
 
 export const InventarCsvRowSchema = z.object({
@@ -33,8 +33,21 @@ export class InventoryService {
     private inventoryItemModel: Model<InventoryItem>,
   ) {}
 
+  async getInventoryItemByInventarNummer(
+    organisationId: mongoose.Types.ObjectId,
+    inventarNummer: string,
+  ) {
+    return this.inventoryItemModel
+      .findOne({
+        organisation: organisationId,
+        inventarNummer,
+      })
+      .exec();
+  }
+
   async parseCsvData(
     organisation: OrganisationDocument,
+    einheit: string,
     file: Express.Multer.File,
   ) {
     const records: InventarCsvRow[] = [];
@@ -63,7 +76,7 @@ export class InventoryService {
         })
         .on('end', async () => {
           try {
-            await this.processCsvData(organisation, records);
+            await this.processCsvData(organisation, einheit, records);
             resolve({ message: 'CSV file processed successfully' });
           } catch (error) {
             reject(error);
@@ -79,6 +92,7 @@ export class InventoryService {
 
   async processCsvData(
     organisation: OrganisationDocument,
+    einheit: string,
     records: InventarCsvRow[],
   ) {
     const getKeyFromDelimitedString = (
@@ -124,6 +138,7 @@ export class InventoryService {
 
         return {
           organisation: organisation,
+          einheit,
           ebene: ebene,
           art: sanitizeValue(record.Art),
           ausstattung: sanitizeValue(
