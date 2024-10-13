@@ -1,28 +1,28 @@
 <script lang="ts">
 	import Input from '$lib/Input.svelte';
 	import {
-		isSearchStringInInventarItemEventBulk,
-		type InventarItem,
-		type InventarItemEventBulk
-	} from '../api/inventarItem';
-	import InventarItemEventBulkItem from './InventarItemEventBulkItem.svelte';
+		isSearchStringInFunkItemEventBulk,
+		type FunkItem,
+		type FunkItemEventBulk
+	} from '../api/funkModels';
+	import InventarItemEventBulkItem from './FunkItemEventBulkItem.svelte';
 
-	export let bulks: InventarItemEventBulk[];
-	export let inventarItems: InventarItem[];
+	export let bulks: FunkItemEventBulk[];
+	export let funkItems: FunkItem[];
 
 	let searchTerm: string = '';
 	let filteredBulks = bulks;
 
-	const getInventarItems = (bulk: InventarItemEventBulk) => {
-		return inventarItems.filter((item) =>
-			bulk.inventarItemEvents.some((event) => event.inventarItem._id === item._id)
+	const getInventarItems = (bulk: FunkItemEventBulk) => {
+		return funkItems.filter((item) =>
+			bulk.funkItemEvents.some((event) => event.funkItem._id === item._id)
 		);
 	};
 
 	$: {
 		filteredBulks = bulks
 			.filter((item) =>
-				isSearchStringInInventarItemEventBulk(
+				isSearchStringInFunkItemEventBulk(
 					searchTerm,
 					item,
 					getInventarItems(item).map((item) => item.deviceId)

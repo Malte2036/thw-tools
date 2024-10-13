@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { eventTypeToFriendlyString, type InventarItemEventType } from '../api/inventarItem';
+	import { eventTypeToFriendlyString, type FunkItemEventType } from '../api/funkModels';
 
-	export let type: InventarItemEventType;
+	export let type: FunkItemEventType;
 </script>
 
 <div class="rounded-xl text-sm px-2 h-min bg-green-200" class:isBorrowed={type === 'borrowed'}>

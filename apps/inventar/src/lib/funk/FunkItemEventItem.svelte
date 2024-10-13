@@ -2,18 +2,18 @@
 	import { dateToFriendlyString } from '$lib/utils';
 	import {
 		eventTypeToEmoji,
-		type InventarItem,
-		type InventarItemDeviceId,
-		type InventarItemEvent
-	} from '../api/inventarItem';
-	import InventarItemEventTypeBadge from './InventarItemEventTypeBadge.svelte';
+		type FunkItem,
+		type FunkItemDeviceId,
+		type FunkItemEvent
+	} from '../api/funkModels';
+	import InventarItemEventTypeBadge from './FunkItemEventTypeBadge.svelte';
 
-	export let event: InventarItemEvent;
-	export let deviceId: InventarItemDeviceId;
+	export let event: FunkItemEvent;
+	export let deviceId: FunkItemDeviceId;
 	export let isSelected: boolean;
 	export let click: () => void;
 
-	export let item: InventarItem | undefined;
+	export let item: FunkItem | undefined;
 
 	export let secondary: boolean = false;
 </script>

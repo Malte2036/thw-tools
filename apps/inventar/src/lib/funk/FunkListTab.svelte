@@ -1,18 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Input from '$lib/Input.svelte';
-	import { isSearchStringInInventarItem, type InventarItem } from '../api/inventarItem';
-	import InventarItemEventItem from './InventarItemEventItem.svelte';
+	import { isSearchStringInFunkItem, type FunkItem } from '../api/funkModels';
+	import InventarItemEventItem from './FunkItemEventItem.svelte';
 
-	export let items: InventarItem[];
+	export let items: FunkItem[];
 
 	let searchedDeviceId: string = '';
 	let filterdInventarItems = items;
 
 	$: {
-		filterdInventarItems = items.filter((item) =>
-			isSearchStringInInventarItem(searchedDeviceId, item)
-		);
+		filterdInventarItems = items.filter((item) => isSearchStringInFunkItem(searchedDeviceId, item));
 	}
 </script>
 

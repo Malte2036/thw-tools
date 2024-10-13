@@ -1,28 +1,28 @@
 <script lang="ts">
-	import { getInventarItemEvents } from '$lib/api/inventarApi';
+	import { getFunkItemEvents } from '$lib/api/funkApi';
 	import Input from '$lib/Input.svelte';
 	import {
-		isSearchStringInInventarItemEvent,
-		type InventarItemDeviceId,
-		type InventarItemEvent
-	} from '../api/inventarItem';
-	import InventarItemEventItem from './InventarItemEventItem.svelte';
+		isSearchStringInFunkItemEvent,
+		type FunkItemDeviceId,
+		type FunkItemEvent
+	} from '../api/funkModels';
+	import InventarItemEventItem from './FunkItemEventItem.svelte';
 
-	export let deviceId: InventarItemDeviceId;
+	export let deviceId: FunkItemDeviceId;
 
-	let events: InventarItemEvent[] = [];
-	let filteredEvents: InventarItemEvent[] = [];
+	let events: FunkItemEvent[] = [];
+	let filteredEvents: FunkItemEvent[] = [];
 
 	let search = '';
 	$: {
-		filteredEvents = events.filter((event) => isSearchStringInInventarItemEvent(search, event));
+		filteredEvents = events.filter((event) => isSearchStringInFunkItemEvent(search, event));
 	}
 
-	async function loadEvents(deviceId: InventarItemDeviceId) {
+	async function loadEvents(deviceId: FunkItemDeviceId) {
 		events = [];
 		search = '';
 
-		const data = await getInventarItemEvents(deviceId);
+		const data = await getFunkItemEvents(deviceId);
 
 		data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 		events = data;

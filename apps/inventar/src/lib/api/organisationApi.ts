@@ -1,5 +1,5 @@
 import { apiGet, apiPost } from './apiGeneric';
-import type { User } from './inventarItem';
+import type { User } from './funkModels';
 import type { Organisation } from './organisation';
 
 export async function getOrganisationForUser(): Promise<Organisation> {

@@ -1,29 +1,25 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { exportInventarItemEventBulksAsCsv } from '$lib/api/inventarApi';
-	import {
-		userToFriendlyString,
-		type InventarItem,
-		type InventarItemEventBulk
-	} from '$lib/api/inventarItem';
+	import { exportFunkItemEventBulksAsCsv } from '$lib/api/funkApi';
+	import { userToFriendlyString, type FunkItem, type FunkItemEventBulk } from '$lib/api/funkModels';
 	import { generateInviteLink, type Organisation } from '$lib/api/organisation';
 	import { leaveOrganisation } from '$lib/api/organisationApi';
 	import Button from '$lib/Button.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 
 	export let organisation: Organisation | undefined;
-	export let inventarItems: InventarItem[];
-	export let inventarItemEventBulks: InventarItemEventBulk[];
+	export let funkItems: FunkItem[];
+	export let funkItemEventBulks: FunkItemEventBulk[];
 
 	function getBorrowedBatteryCount(): number {
-		return inventarItemEventBulks.reduce(
+		return funkItemEventBulks.reduce(
 			(acc, bulk) => acc + (bulk.eventType === 'borrowed' ? 1 : -1) * bulk.batteryCount,
 			0
 		);
 	}
 
 	async function exportInventarAsCsv() {
-		const blob = await exportInventarItemEventBulksAsCsv();
+		const blob = await exportFunkItemEventBulksAsCsv();
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');
 		a.href = url;
@@ -59,8 +55,8 @@
 		<div class="	flex flex-col gap-2">
 			<div class="font-bold text-xl">Inventar:</div>
 			<p>
-				Ausgeliehene Geräte: {inventarItems.filter((item) => item.lastEvent.type === 'borrowed')
-					.length} von {inventarItems.length}
+				Ausgeliehene Geräte: {funkItems.filter((item) => item.lastEvent.type === 'borrowed').length}
+				von {funkItems.length}
 			</p>
 			<p>
 				Ausgeliehene Batterien: {getBorrowedBatteryCount()}

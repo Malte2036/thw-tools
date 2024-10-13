@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
-	import InventarItemEventsList from '$lib/inventar/InventarItemEventsList.svelte';
+	import FunkItemEventsList from '$lib/funk/FunkItemEventsList.svelte';
 	import LinkButton from '$lib/LinkButton.svelte';
 	import type { PageData } from './$types';
 
@@ -8,7 +8,6 @@
 </script>
 
 <div class="flex flex-col gap-2 p-4">
-	<LinkButton url="/">Zurück zur Inventarliste</LinkButton>
-
-	<InventarItemEventsList deviceId={data.deviceId ?? ''} />
+	<LinkButton url="/">Zurück zur Funkgeräteliste</LinkButton>
+	<FunkItemEventsList deviceId={data.deviceId ?? ''} />
 </div>

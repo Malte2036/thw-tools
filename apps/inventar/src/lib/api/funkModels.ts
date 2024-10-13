@@ -8,41 +8,41 @@ export type User = {
 	email?: string;
 };
 
-export type InventarItemDeviceId = string;
+export type FunkItemDeviceId = string;
 
-export type InventarItem = {
+export type FunkItem = {
 	_id: InternalId;
-	deviceId: InventarItemDeviceId;
-	lastEvent: InventarItemEvent;
+	deviceId: FunkItemDeviceId;
+	lastEvent: FunkItemEvent;
 	name?: string;
 };
 
-export type InventarItemEventType = 'borrowed' | 'returned';
+export type FunkItemEventType = 'borrowed' | 'returned';
 
-export type InventarItemEvent = {
+export type FunkItemEvent = {
 	_id: InternalId;
-	inventarItem: InventarItem;
+	funkItem: FunkItem;
 	user: User;
-	type: InventarItemEventType;
+	type: FunkItemEventType;
 	date: string;
 };
 
-export type InventarItemEventBulk = {
+export type FunkItemEventBulk = {
 	_id: InternalId;
-	inventarItemEvents: InventarItemEvent[];
+	funkItemEvents: FunkItemEvent[];
 	batteryCount: number;
-	eventType: InventarItemEventType;
+	eventType: FunkItemEventType;
 	user: User;
 	date: string;
 };
 
 export const deviceIdRegex = /^\d{4}-\d{6}$/;
 
-export function validateInventarItemDeviceId(deviceId: string): boolean {
+export function validateFunkItemDeviceId(deviceId: string): boolean {
 	return deviceIdRegex.test(deviceId);
 }
 
-export function eventTypeToFriendlyString(eventType: InventarItemEventType): string {
+export function eventTypeToFriendlyString(eventType: FunkItemEventType): string {
 	switch (eventType) {
 		case 'borrowed':
 			return 'ausgeliehen';
@@ -53,7 +53,7 @@ export function eventTypeToFriendlyString(eventType: InventarItemEventType): str
 	return eventType;
 }
 
-export function eventTypeToEmoji(eventType: InventarItemEventType): string {
+export function eventTypeToEmoji(eventType: FunkItemEventType): string {
 	switch (eventType) {
 		case 'borrowed':
 			return '❌';
@@ -88,10 +88,10 @@ export function batteryCountToFriendlyString(batteryCount: number): string {
 	return `${batteryCount} Batterie${batteryCount === 1 ? '' : 'n'}`;
 }
 
-export function isSearchStringInInventarItemEventBulk(
+export function isSearchStringInFunkItemEventBulk(
 	searchString: string,
-	eventBulk: InventarItemEventBulk,
-	deviceIds: InventarItemDeviceId[]
+	eventBulk: FunkItemEventBulk,
+	deviceIds: FunkItemDeviceId[]
 ): boolean {
 	return searchStringIsInArray(searchString.trim(), [
 		userToFriendlyString(eventBulk.user),
@@ -102,22 +102,14 @@ export function isSearchStringInInventarItemEventBulk(
 	]);
 }
 
-export function isSearchStringInInventarItem(
-	searchString: string,
-	inventarItem: InventarItem
-): boolean {
+export function isSearchStringInFunkItem(searchString: string, item: FunkItem): boolean {
 	return (
-		searchStringIsInArray(
-			searchString.trim(),
-			[inventarItem.deviceId, inventarItem.name].filter(Boolean)
-		) || isSearchStringInInventarItemEvent(searchString, inventarItem.lastEvent)
+		searchStringIsInArray(searchString.trim(), [item.deviceId, item.name].filter(Boolean)) ||
+		isSearchStringInFunkItemEvent(searchString, item.lastEvent)
 	);
 }
 
-export function isSearchStringInInventarItemEvent(
-	searchString: string,
-	event: InventarItemEvent
-): boolean {
+export function isSearchStringInFunkItemEvent(searchString: string, event: FunkItemEvent): boolean {
 	return searchStringIsInArray(searchString.trim(), [
 		userToFriendlyString(event.user),
 		dateToFriendlyString(new Date(event.date)),

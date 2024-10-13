@@ -1,4 +1,4 @@
-import type { User } from './inventarItem';
+import type { User } from './funkModels';
 
 export type Organisation = {
 	_id: string;

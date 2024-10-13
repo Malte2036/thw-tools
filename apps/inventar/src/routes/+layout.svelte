@@ -16,7 +16,7 @@
 	$: title = getCurrentTitleByPath($page.url.pathname);
 
 	function getCurrentTitleByPath(path: string): string | undefined {
-		return 'Inventar';
+		return 'Funk';
 	}
 
 	let showFeedback = false;

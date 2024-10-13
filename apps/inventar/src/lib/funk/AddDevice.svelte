@@ -1,26 +1,26 @@
 <script lang="ts">
-	import { bulkCreateInventarItemEvents } from '$lib/api/inventarApi';
+	import { bulkCreateFunkItemEvents } from '$lib/api/funkApi';
 	import Button from '$lib/Button.svelte';
 	import Input from '$lib/Input.svelte';
-	import ManuelDeviceIdInput from '$lib/inventar/ManuelDeviceIdInput.svelte';
-	import QrScanner from '$lib/inventar/QRScanner.svelte';
+	import ManuelDeviceIdInput from '$lib/funk/ManuelDeviceIdInput.svelte';
+	import QrScanner from '$lib/funk/QRScanner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import {
 		batteryCountToFriendlyString,
 		eventTypeToFriendlyString,
-		validateInventarItemDeviceId,
-		type InventarItem,
-		type InventarItemDeviceId,
-		type InventarItemEventType
-	} from '../api/inventarItem';
-	import InventarItemEventTypeBadge from './InventarItemEventTypeBadge.svelte';
+		validateFunkItemDeviceId,
+		type FunkItem,
+		type FunkItemDeviceId,
+		type FunkItemEventType
+	} from '../api/funkModels';
+	import InventarItemEventTypeBadge from './FunkItemEventTypeBadge.svelte';
 
-	export let inventarItems: InventarItem[];
+	export let items: FunkItem[];
 	export let reset: () => void;
 
 	let scannedDeviceIds: {
-		deviceId: InventarItemDeviceId;
-		existingItem?: InventarItem;
+		deviceId: FunkItemDeviceId;
+		existingItem?: FunkItem;
 	}[] = [];
 
 	let batteryCountInput: string = '0';
@@ -32,7 +32,7 @@
 
 		decodedText = decodedText.trim();
 
-		if (!validateInventarItemDeviceId(decodedText)) {
+		if (!validateFunkItemDeviceId(decodedText)) {
 			$bannerMessage = {
 				message: `Ungültige Geräte-ID: ${decodedText}`,
 				autoDismiss: {
@@ -56,23 +56,23 @@
 
 		console.log(
 			`Gerät mit der ID ${decodedText} gescannt.`,
-			inventarItems.find((item) => item.deviceId === decodedText)
+			items.find((item) => item.deviceId === decodedText)
 		);
 
 		scannedDeviceIds = scannedDeviceIds.concat({
 			deviceId: decodedText,
-			existingItem: inventarItems.find((item) => item.deviceId === decodedText)
+			existingItem: items.find((item) => item.deviceId === decodedText)
 		});
 	}
 
-	async function submit(eventType: InventarItemEventType) {
+	async function submit(eventType: FunkItemEventType) {
 		if (scannedDeviceIds.length == 0) {
 			return;
 		}
 
 		const batteryCount = parseInt(batteryCountInput);
 
-		await bulkCreateInventarItemEvents(
+		await bulkCreateFunkItemEvents(
 			scannedDeviceIds.map((e) => e.deviceId),
 			batteryCount,
 			eventType

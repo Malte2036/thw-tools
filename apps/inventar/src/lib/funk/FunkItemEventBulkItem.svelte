@@ -3,11 +3,11 @@
 	import {
 		batteryCountToFriendlyString,
 		eventTypeToEmoji,
-		type InventarItemEventBulk
-	} from '../api/inventarItem';
-	import InventarItemEventTypeBadge from './InventarItemEventTypeBadge.svelte';
+		type FunkItemEventBulk
+	} from '../api/funkModels';
+	import InventarItemEventTypeBadge from './FunkItemEventTypeBadge.svelte';
 
-	export let bulk: InventarItemEventBulk;
+	export let bulk: FunkItemEventBulk;
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -37,8 +37,8 @@
 				{batteryCountToFriendlyString(bulk.batteryCount)}
 			</li>
 			<li>
-				{bulk.inventarItemEvents
-					.map((event) => event.inventarItem.deviceId)
+				{bulk.funkItemEvents
+					.map((event) => event.funkItem.deviceId)
 					.sort()
 					.join(', ')}
 			</li>

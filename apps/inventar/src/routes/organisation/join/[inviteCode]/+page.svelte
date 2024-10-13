@@ -19,6 +19,6 @@
 				einer Organisation.
 			</div>
 		{/if}
-		<LinkButton url={`/?tab=Organisation`}>Zur Inventarliste</LinkButton>
+		<LinkButton url={`/?tab=Organisation`}>Zur Funkgeräteliste</LinkButton>
 	</div>
 </div>

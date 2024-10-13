@@ -1,14 +1,14 @@
 import { getToken, isAuthenticated, login } from '$lib/api/authApi';
-import { getInventarItemEventBulks, getInventarItems } from '$lib/api/inventarApi';
-import { userToFriendlyString } from '$lib/api/inventarItem';
+import { getFunkItemEventBulks, getFunkItems } from '$lib/api/funkApi';
+import { userToFriendlyString } from '$lib/api/funkModels';
 import { getOrganisationForUser } from '$lib/api/organisationApi';
 import type { PageLoad } from './$types';
 
 export const ssr = false;
 
 const EMPTY = {
-	inventarItems: [],
-	inventarItemEventBulks: [],
+	funkItems: [],
+	funkItemEventBulks: [],
 	organisation: null
 };
 
@@ -24,24 +24,24 @@ export const load = (async ({ url }) => {
 	}
 
 	try {
-		const [organisation, inventarItems, inventarItemEventBulks] = await Promise.all([
+		const [organisation, funkItems, funkItemEventBulks] = await Promise.all([
 			getOrganisationForUser().then((org) => {
 				org.members.sort((a, b) => userToFriendlyString(a).localeCompare(userToFriendlyString(b)));
 				return org;
 			}),
-			getInventarItems().then((items) =>
+			getFunkItems().then((items) =>
 				items.sort(
 					(a, b) => new Date(b.lastEvent.date).getTime() - new Date(a.lastEvent.date).getTime()
 				)
 			),
-			getInventarItemEventBulks().then((bulks) =>
+			getFunkItemEventBulks().then((bulks) =>
 				bulks.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 			)
 		]);
 
 		return {
-			inventarItems,
-			inventarItemEventBulks,
+			funkItems,
+			funkItemEventBulks,
 			organisation
 		};
 	} catch (error) {
