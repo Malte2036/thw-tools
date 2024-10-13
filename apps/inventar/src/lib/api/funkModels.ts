@@ -1,45 +1,55 @@
+import { z } from 'zod';
 import { dateToFriendlyString, searchStringIsInArray } from '$lib/utils';
 
-type InternalId = string;
+export const inventarNummerRegex = /^\d{4}-\d{6}$/;
+export const InventarNummer = z
+	.string()
+	.regex(inventarNummerRegex, 'Invalid inventar number format');
 
-export type User = {
-	firstName?: string;
-	lastName?: string;
-	email?: string;
-};
+export const UserSchema = z.object({
+	firstName: z.string().optional(),
+	lastName: z.string().optional(),
+	email: z.string().optional()
+});
+
+export type User = z.infer<typeof UserSchema>;
 
 export type FunkItemDeviceId = string;
 
-export type FunkItem = {
-	_id: InternalId;
-	deviceId: FunkItemDeviceId;
-	lastEvent: FunkItemEvent;
-	name?: string;
-};
+export const FunkItemSchema = z.object({
+	_id: z.string(),
+	deviceId: InventarNummer,
+	lastEvent: z.lazy((): z.ZodType => FunkItemEventSchema),
+	name: z.string().optional()
+});
+
+export type FunkItem = z.infer<typeof FunkItemSchema>;
 
 export type FunkItemEventType = 'borrowed' | 'returned';
 
-export type FunkItemEvent = {
-	_id: InternalId;
-	funkItem: FunkItem;
-	user: User;
-	type: FunkItemEventType;
-	date: string;
-};
+export const FunkItemEventSchema = z.object({
+	_id: z.string(),
+	funkItem: z.lazy(() => FunkItemSchema),
+	user: UserSchema,
+	type: z.enum(['borrowed', 'returned']),
+	date: z.string()
+});
 
-export type FunkItemEventBulk = {
-	_id: InternalId;
-	funkItemEvents: FunkItemEvent[];
-	batteryCount: number;
-	eventType: FunkItemEventType;
-	user: User;
-	date: string;
-};
+export type FunkItemEvent = z.infer<typeof FunkItemEventSchema>;
 
-export const deviceIdRegex = /^\d{4}-\d{6}$/;
+export const FunkItemEventBulkSchema = z.object({
+	_id: z.string(),
+	funkItemEvents: z.array(FunkItemEventSchema),
+	batteryCount: z.number(),
+	eventType: z.enum(['borrowed', 'returned']),
+	user: UserSchema,
+	date: z.string()
+});
+
+export type FunkItemEventBulk = z.infer<typeof FunkItemEventBulkSchema>;
 
 export function validateFunkItemDeviceId(deviceId: string): boolean {
-	return deviceIdRegex.test(deviceId);
+	return InventarNummer.safeParse(deviceId).success;
 }
 
 export function eventTypeToFriendlyString(eventType: FunkItemEventType): string {

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
 	import Input from '$lib/Input.svelte';
-	import { deviceIdRegex } from '../api/funkModels';
+	import { inventarNummerRegex } from '../api/funkModels';
 
 	export let onScan: (decodedText: string) => void;
 
@@ -41,7 +41,7 @@
 			placeholder="Inventarnummer"
 			label="Inventarnummer des Gerätes"
 			inputmode="numeric"
-			pattern={deviceIdRegex.source}
+			pattern={inventarNummerRegex.source}
 		/>
 		<Button
 			secondary

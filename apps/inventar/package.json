@@ -41,7 +41,8 @@
 		"@kinde-oss/kinde-typescript-sdk": "^2.9.1",
 		"@malte2036/thw-tools-components": "^0.2.16",
 		"es-cookie": "^1.5.0",
-		"html5-qrcode": "^2.3.8"
+		"html5-qrcode": "^2.3.8",
+		"zod": "^3.23.8"
 	},
 	"optionalDependencies": {
 		"@rollup/rollup-linux-x64-gnu": "^4.21.2"
