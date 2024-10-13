@@ -37,6 +37,18 @@
 	};
 </script>
 
+<div class="p-2">
+	<h1 class="text-2xl font-bold">Inventar</h1>
+	<p class="text-lg">
+		Scanne den QR-Code oder gib die Inventar-Nummer manuell ein, um Informationen zu einem
+		Inventar-Item im OV zu erhalten.
+	</p>
+	<p class="text-lg text-gray-500">
+		PS: Dieser Teil der Seite ist noch nicht fertig und befindet sich in der Entwicklung. Es sind
+		noch nicht alle Inventar-Items im System erfasst.
+	</p>
+</div>
+
 {#if isFetching}
 	<div class="flex flex-col gap-2 p-2">
 		<div class="text-xl">Lade Inventar-Item...</div>
