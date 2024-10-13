@@ -11,6 +11,7 @@ import { FunkModule } from './funk/funk.module';
 import { OrganisationModule } from './organisation/organisation.module';
 import { QuizModule } from './quiz-stats/quiz.module';
 import { UserModule } from './user/user.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     UserModule,
     OrganisationModule,
+    InventoryModule,
   ],
   providers: [
     AppService,
@@ -39,6 +41,8 @@ import { UserModule } from './user/user.module';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('/funk', '/organisations');
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes('/funk', '/inventory', '/organisations');
   }
 }

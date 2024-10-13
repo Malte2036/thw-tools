@@ -1,15 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { inventarNummerRegex } from 'src/inventory/schemas/inventory-item.schema';
 import { Organisation } from 'src/organisation/schemas/organisation.schema';
 
 export type FunkItemDocument = HydratedDocument<FunkItem>;
 
-export type FunkDeviceId = string;
-
 @Schema()
 export class FunkItem {
-  @Prop({ required: true })
-  deviceId: FunkDeviceId;
+  @Prop({ required: true, match: inventarNummerRegex })
+  deviceId: string;
 
   @Prop({
     required: true,

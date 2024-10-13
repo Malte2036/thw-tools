@@ -9,11 +9,7 @@ import {
   FunkItemEventDocument,
   FunkItemEventType,
 } from './schemas/funk-item-event.schema';
-import {
-  FunkDeviceId,
-  FunkItem as FunkItem,
-  FunkItemDocument,
-} from './schemas/funlk-item.schema';
+import { FunkItem, FunkItemDocument } from './schemas/funlk-item.schema';
 
 @Injectable()
 export class FunkService {
@@ -50,7 +46,7 @@ export class FunkService {
 
   async getFunkItemByDeviceId(
     organisationId: mongoose.Types.ObjectId,
-    deviceId: FunkDeviceId,
+    deviceId: string,
   ) {
     return (
       this.funkItemModel
