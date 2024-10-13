@@ -30,12 +30,14 @@
 	<div class="flex flex-col gap-0 w-full">
 		<div class="flex flex-row gap-2 justify-between w-full">
 			<div class="text-nowrap">ID: <span class="font-bold">{deviceId}</span></div>
-			<InventarItemEventTypeBadge type={event.type} />
-			{#if item && item.name}
-				<div class="rounded-xl text-sm px-2 h-min bg-slate-200 whitespace-nowrap">
-					{item.name}
-				</div>
-			{/if}
+			<div class="flex gap-1">
+				<InventarItemEventTypeBadge type={event.type} />
+				{#if item && item.name}
+					<div class="rounded-xl text-sm px-2 h-min bg-slate-200 whitespace-nowrap">
+						{item.name}
+					</div>
+				{/if}
+			</div>
 		</div>
 		<div class="flex flex-row gap-2 items-center w-full">
 			<div class="text-sm text-nowrap text-gray-500">
