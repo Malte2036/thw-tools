@@ -7,11 +7,13 @@
 	import QrScanner from '$lib/funk/QRScanner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 
+	let isFetching = false;
 	let inventoryItem: InventoryItem | undefined;
 
 	const onScan = (decodedText: string) => {
 		console.log(decodedText);
 
+		isFetching = true;
 		getInventoryItemByInventarNummer(decodedText)
 			.then((item) => {
 				console.log(`Got item: ${item}`);
@@ -28,16 +30,23 @@
 						duration: 5000
 					}
 				};
+			})
+			.finally(() => {
+				isFetching = false;
 			});
 	};
 </script>
 
-<div class="flex flex-col gap-2 p-2">
-	<QrScanner {onScan} />
-	<ManuelDeviceIdInput {onScan} />
-</div>
-
-{#if inventoryItem !== undefined}
+{#if isFetching}
+	<div class="flex flex-col gap-2 p-2">
+		<div class="text-xl">Lade Inventar-Item...</div>
+	</div>
+{:else if inventoryItem === undefined}
+	<div class="flex flex-col gap-2 p-2">
+		<QrScanner {onScan} />
+		<ManuelDeviceIdInput {onScan} />
+	</div>
+{:else}
 	<Dialog title="Inventar-Details">
 		<div slot="content" class="flex flex-col gap-2">
 			<div>
