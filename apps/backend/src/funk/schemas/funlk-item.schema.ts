@@ -2,14 +2,14 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Organisation } from 'src/organisation/schemas/organisation.schema';
 
-export type InventarItemDocument = HydratedDocument<InventarItem>;
+export type FunkItemDocument = HydratedDocument<FunkItem>;
 
-export type InventarDeviceId = string;
+export type FunkDeviceId = string;
 
 @Schema()
-export class InventarItem {
+export class FunkItem {
   @Prop({ required: true })
-  deviceId: InventarDeviceId;
+  deviceId: FunkDeviceId;
 
   @Prop({
     required: true,
@@ -19,4 +19,4 @@ export class InventarItem {
   organisation: Organisation;
 }
 
-export const InventarItemSchema = SchemaFactory.createForClass(InventarItem);
+export const FunkItemSchema = SchemaFactory.createForClass(FunkItem);

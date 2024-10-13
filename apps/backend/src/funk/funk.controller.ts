@@ -15,8 +15,8 @@ import { OrganisationService } from 'src/organisation/organisation.service';
 import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
 import { UserDocument } from 'src/user/schemas/user.schema';
 import { UserService } from 'src/user/user.service';
-import { InventarService } from './inventar.service';
-import { InventarItemEventType } from './schemas/inventar-item-event.schema';
+import { FunkService } from './funk.service';
+import { FunkItemEventType } from './schemas/funk-item-event.schema';
 
 export async function getUserAndOrgFromRequest(
   req: Request,
@@ -63,38 +63,38 @@ export async function getUserAndOrgFromRequestAndThrow(
   return [user, organisation];
 }
 
-@ApiTags('inventar')
-@Controller('inventar')
-export class InventarController {
+@ApiTags('funk')
+@Controller('funk')
+export class FunkController {
   constructor(
-    private readonly inventarService: InventarService,
+    private readonly funkService: FunkService,
 
     private readonly userService: UserService,
     private readonly organisationService: OrganisationService,
   ) {}
 
   @Get()
-  async getInventar(@Req() req: Request) {
+  async getFunkItems(@Req() req: Request) {
     const [, organisation] = await getUserAndOrgFromRequestAndThrow(
       req,
       this.userService,
       this.organisationService,
     );
-    return this.inventarService.getExpandedInventarItems(organisation._id);
+    return this.funkService.getExpandedFunkItems(organisation._id);
   }
 
   @Post('events/bulk')
-  async bulkCreateInventarItemEvents(
+  async bulkCreateFunkItemEvents(
     @Body()
     body: {
       deviceIds: string[];
       batteryCount: number;
-      eventType: InventarItemEventType;
+      eventType: FunkItemEventType;
     },
     @Req() req: Request,
   ) {
     Logger.log(
-      `Bulk creating inventar item events with type ${body.eventType} for devices ${body.deviceIds.join(', ')}`,
+      `Bulk creating funk item events with type ${body.eventType} for devices ${body.deviceIds.join(', ')}`,
     );
 
     if (
@@ -113,7 +113,7 @@ export class InventarController {
       this.organisationService,
     );
 
-    await this.inventarService.bulkCreateInventarItemEvents(
+    await this.funkService.bulkCreateFunkItemEvents(
       body,
       user,
       organisation,
@@ -124,7 +124,7 @@ export class InventarController {
   }
 
   @Get(':deviceId/events')
-  async getInventarItemEvents(
+  async getFunkItemEvents(
     @Param('deviceId') deviceId: string,
     @Req() req: Request,
   ) {
@@ -134,45 +134,41 @@ export class InventarController {
       this.organisationService,
     );
 
-    const item = await this.inventarService.getInventarItemByDeviceId(
+    const item = await this.funkService.getFunkItemByDeviceId(
       organisation._id,
       deviceId,
     );
     if (!item) {
-      throw new HttpException('Inventar item not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Funk item not found', HttpStatus.NOT_FOUND);
     }
 
-    return this.inventarService.getInventarItemEvents(item);
+    return this.funkService.getFunkItemEvents(item);
   }
 
   @Get('events/bulk')
-  async getInventarItemEventBulks(@Req() req: Request) {
+  async getFunkItemEventBulks(@Req() req: Request) {
     const [, organisation] = await getUserAndOrgFromRequestAndThrow(
       req,
       this.userService,
       this.organisationService,
     );
 
-    return this.inventarService.getInventarItemEventBulks(organisation._id);
+    return this.funkService.getFunkItemEventBulks(organisation._id);
   }
 
   @Get('events/bulk/export')
   @Header('Content-Type', 'text/csv')
-  @Header(
-    'Content-Disposition',
-    'attachment; filename="inventar_item_events.csv"',
-  )
-  async exportInventarItemEventBulksAsCsv(@Req() req: Request) {
+  @Header('Content-Disposition', 'attachment; filename="funk_item_events.csv"')
+  async exportFunkItemEventBulksAsCsv(@Req() req: Request) {
     const [, organisation] = await getUserAndOrgFromRequestAndThrow(
       req,
       this.userService,
       this.organisationService,
     );
-
-    const csvData =
-      await this.inventarService.exportInventarItemEventBulksAsCsv(
-        organisation._id,
-      );
+    3;
+    const csvData = await this.funkService.exportFunkItemEventBulksAsCsv(
+      organisation._id,
+    );
 
     return csvData;
   }

@@ -1,30 +1,26 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
-import {
-  InventarItemEvent,
-  InventarItemEventType,
-} from './inventar-item-event.schema';
+import { FunkItemEvent, FunkItemEventType } from './funk-item-event.schema';
 import { Organisation } from 'src/organisation/schemas/organisation.schema';
 
-export type InventarItemEventBulkDocument =
-  HydratedDocument<InventarItemEventBulk>;
+export type FunkItemEventBulkDocument = HydratedDocument<FunkItemEventBulk>;
 
 @Schema()
-export class InventarItemEventBulk {
+export class FunkItemEventBulk {
   @Prop({
     required: true,
     type: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: InventarItemEvent.name,
+        ref: FunkItemEvent.name,
       },
     ],
   })
-  inventarItemEvents: InventarItemEvent[];
+  funkItemEvents: FunkItemEvent[];
 
   @Prop({ required: true })
-  eventType: InventarItemEventType;
+  eventType: FunkItemEventType;
 
   @Prop({ required: false, default: 0 })
   batteryCount: number;
@@ -43,6 +39,5 @@ export class InventarItemEventBulk {
   date: Date;
 }
 
-export const InventarItemEventBulkSchema = SchemaFactory.createForClass(
-  InventarItemEventBulk,
-);
+export const FunkItemEventBulkSchema =
+  SchemaFactory.createForClass(FunkItemEventBulk);

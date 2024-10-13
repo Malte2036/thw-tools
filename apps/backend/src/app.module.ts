@@ -7,7 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthMiddleware } from './auth.middleware';
 import { AuthModule } from './auth/auth.module';
-import { InventarModule } from './inventar/inventar.module';
+import { FunkModule } from './funk/funk.module';
 import { OrganisationModule } from './organisation/organisation.module';
 import { QuizModule } from './quiz-stats/quiz.module';
 import { UserModule } from './user/user.module';
@@ -23,7 +23,7 @@ import { UserModule } from './user/user.module';
       },
     ]),
     QuizModule,
-    InventarModule,
+    FunkModule,
     AuthModule,
     UserModule,
     OrganisationModule,
@@ -39,6 +39,6 @@ import { UserModule } from './user/user.module';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('/inventar', '/organisations');
+    consumer.apply(AuthMiddleware).forRoutes('/funk', '/organisations');
   }
 }

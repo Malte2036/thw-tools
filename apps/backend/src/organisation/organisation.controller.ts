@@ -9,12 +9,12 @@ import {
   Req,
 } from '@nestjs/common';
 import { OrganisationService } from './organisation.service';
+import { UserService } from 'src/user/user.service';
+import { ApiTags } from '@nestjs/swagger';
 import {
   getUserAndOrgFromRequest,
   getUserAndOrgFromRequestAndThrow,
-} from 'src/inventar/inventar.controller';
-import { UserService } from 'src/user/user.service';
-import { ApiTags } from '@nestjs/swagger';
+} from 'src/funk/funk.controller';
 
 @ApiTags('organisations')
 @Controller('organisations')
