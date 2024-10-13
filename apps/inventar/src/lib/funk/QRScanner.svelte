@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
 	import { Html5Qrcode } from 'html5-qrcode';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	export let onScan: (decodedText: string) => void;
 
@@ -10,6 +10,12 @@
 	let html5Qrcode: Html5Qrcode;
 
 	onMount(init);
+
+	onDestroy(() => {
+		if (scanning) {
+			stop();
+		}
+	});
 
 	function init() {
 		html5Qrcode = new Html5Qrcode('reader');
