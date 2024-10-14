@@ -80,7 +80,15 @@ export class FunkController {
       this.userService,
       this.organisationService,
     );
-    return this.funkService.getExpandedFunkItems(organisation._id);
+    const start = Date.now();
+
+    const items = await this.funkService.getExpandedFunkItems(organisation._id);
+
+    Logger.log(
+      `Funk items (${items.length}) fetched from mongodb in ${Date.now() - start}ms`,
+    );
+
+    return items;
   }
 
   @Post('events/bulk')
