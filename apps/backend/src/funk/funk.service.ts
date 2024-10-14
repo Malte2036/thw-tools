@@ -157,36 +157,14 @@ export class FunkService {
     organisationId: mongoose.Types.ObjectId,
   ): Promise<FunkItemEventBulk[]> {
     return this.funkItemEventBulkModel
-      .aggregate([
-        { $match: { organisation: organisationId } },
-        {
-          $lookup: {
-            from: 'funkitemevents',
-            localField: 'funkItemEvents',
-            foreignField: '_id',
-            as: 'funkItemEvents',
-          },
+      .find({ organisation: organisationId })
+      .populate({
+        path: 'funkItemEvents',
+        populate: {
+          path: 'funkItem',
         },
-        {
-          $lookup: {
-            from: 'funkitems',
-            localField: 'funkItemEvents.funkItem',
-            foreignField: '_id',
-            as: 'funkItems',
-          },
-        },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'user',
-            foreignField: '_id',
-            as: 'user',
-          },
-        },
-        {
-          $unwind: '$user',
-        },
-      ])
+      })
+      .populate('user')
       .exec();
   }
 
