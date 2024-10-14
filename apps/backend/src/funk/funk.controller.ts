@@ -161,7 +161,15 @@ export class FunkController {
       this.organisationService,
     );
 
-    return this.funkService.getFunkItemEventBulks(organisation._id);
+    const start = Date.now();
+    const eventBulks = await this.funkService.getFunkItemEventBulks(
+      organisation._id,
+    );
+
+    Logger.debug(
+      `Funk item event bulks (${eventBulks.length}) fetched from mongodb in ${Date.now() - start}ms`,
+    );
+    return eventBulks;
   }
 
   @Get('events/bulk/export')

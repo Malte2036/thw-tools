@@ -41,3 +41,5 @@ export class FunkItemEventBulk {
 
 export const FunkItemEventBulkSchema =
   SchemaFactory.createForClass(FunkItemEventBulk);
+
+FunkItemEventBulkSchema.index({ organisation: 1, date: -1 });

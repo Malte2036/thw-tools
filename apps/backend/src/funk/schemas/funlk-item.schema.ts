@@ -19,3 +19,5 @@ export class FunkItem {
 }
 
 export const FunkItemSchema = SchemaFactory.createForClass(FunkItem);
+
+FunkItemSchema.index({ deviceId: 1, organisation: 1 }, { unique: true });

@@ -27,3 +27,5 @@ export class FunkItemEvent {
 }
 
 export const FunkItemEventSchema = SchemaFactory.createForClass(FunkItemEvent);
+
+FunkItemEventSchema.index({ funkItem: 1, date: -1 });

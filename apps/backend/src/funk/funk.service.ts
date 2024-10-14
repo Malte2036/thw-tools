@@ -32,16 +32,26 @@ export class FunkService {
 
   async getExpandedFunkItems(organisationId: mongoose.Types.ObjectId) {
     const funkItems = await this.getFunkItems(organisationId);
-    return Promise.all(
-      funkItems.map(async (item) => {
-        const lastEvent = await this.getLastEventForItem(item);
 
-        return {
-          ...item.toObject(),
-          lastEvent,
-        };
-      }),
+    // Fetch all last events for the items in a single query
+    const itemIds = funkItems.map((item) => item._id);
+    const lastEvents = await this.funkItemEventModel
+      .aggregate([
+        { $match: { funkItem: { $in: itemIds } } },
+        { $sort: { date: -1 } },
+        { $group: { _id: '$funkItem', lastEvent: { $first: '$$ROOT' } } },
+      ])
+      .exec();
+
+    // Map last events to their respective items
+    const lastEventMap = new Map(
+      lastEvents.map((event) => [event._id.toString(), event.lastEvent]),
     );
+
+    return funkItems.map((item) => ({
+      ...item.toObject(),
+      lastEvent: lastEventMap.get(item._id.toString()) || null,
+    }));
   }
 
   async getFunkItemByDeviceId(
@@ -147,14 +157,36 @@ export class FunkService {
     organisationId: mongoose.Types.ObjectId,
   ): Promise<FunkItemEventBulk[]> {
     return this.funkItemEventBulkModel
-      .find({ organisation: organisationId })
-      .populate({
-        path: 'funkItemEvents',
-        populate: {
-          path: 'funkItem',
+      .aggregate([
+        { $match: { organisation: organisationId } },
+        {
+          $lookup: {
+            from: 'funkitemevents',
+            localField: 'funkItemEvents',
+            foreignField: '_id',
+            as: 'funkItemEvents',
+          },
         },
-      })
-      .populate('user')
+        {
+          $lookup: {
+            from: 'funkitems',
+            localField: 'funkItemEvents.funkItem',
+            foreignField: '_id',
+            as: 'funkItems',
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'user',
+            foreignField: '_id',
+            as: 'user',
+          },
+        },
+        {
+          $unwind: '$user',
+        },
+      ])
       .exec();
   }
 
