@@ -22,7 +22,13 @@ export async function apiGet<T>(path: string) {
 		if (!response.ok) {
 			checkIfResposeIsUnauthorized(response);
 
-			throw new HttpError(response.status, `Failed to fetch data from ${url}`, response.statusText);
+			const errorData = await response.json();
+
+			throw new HttpError(
+				response.status,
+				`Failed to fetch data from ${url}: ${errorData.message}`,
+				errorData.message ?? response.statusText
+			);
 		}
 
 		const data: T = await response.json();
@@ -47,7 +53,14 @@ export async function apiPost<T>(path: string, body?: any) {
 
 		if (!response.ok) {
 			checkIfResposeIsUnauthorized(response);
-			throw new HttpError(response.status, `Failed to post data to ${url}`, response.statusText);
+
+			const errorData = await response.json();
+
+			throw new HttpError(
+				response.status,
+				`Failed to post data from ${url}: ${errorData.message}`,
+				errorData.message ?? response.statusText
+			);
 		}
 
 		const data: T = await response.json();
@@ -69,7 +82,14 @@ export async function apiGetFile(path: string) {
 
 		if (!response.ok) {
 			checkIfResposeIsUnauthorized(response);
-			throw new HttpError(response.status, `Failed to fetch file from ${url}`, response.statusText);
+
+			const errorData = await response.json();
+
+			throw new HttpError(
+				response.status,
+				`Failed to get file from ${url}: ${errorData.message}`,
+				errorData.message ?? response.statusText
+			);
 		}
 
 		return response.blob();

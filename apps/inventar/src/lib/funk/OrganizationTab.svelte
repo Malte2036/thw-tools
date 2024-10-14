@@ -129,7 +129,7 @@
 		</div>
 		<div class="flex flex-col gap-2">
 			<div class="font-bold text-xl">Exportieren:</div>
-			<Button click={exportInventarAsCsv}>Exportiere Inventar als CSV</Button>
+			<Button click={exportInventarAsCsv}>Exportiere die Funkgeräteliste als CSV</Button>
 		</div>
 	</div>
 {/if}
