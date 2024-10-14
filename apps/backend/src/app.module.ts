@@ -1,17 +1,18 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthMiddleware } from './auth.middleware';
+import { AuthMiddleware } from './middleware/auth.middleware';
 import { AuthModule } from './auth/auth.module';
 import { FunkModule } from './funk/funk.module';
 import { OrganisationModule } from './organisation/organisation.module';
 import { QuizModule } from './quiz-stats/quiz.module';
 import { UserModule } from './user/user.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { LoggingMiddleware } from './middleware/logging.middleware';
 
 @Module({
   imports: [
@@ -44,5 +45,9 @@ export class AppModule {
     consumer
       .apply(AuthMiddleware)
       .forRoutes('/funk', '/inventory', '/organisations');
+
+    consumer
+      .apply(LoggingMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }
