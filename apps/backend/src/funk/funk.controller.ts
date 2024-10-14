@@ -80,15 +80,8 @@ export class FunkController {
       this.userService,
       this.organisationService,
     );
-    const start = Date.now();
 
-    const items = await this.funkService.getExpandedFunkItems(organisation._id);
-
-    Logger.debug(
-      `Funk items (${items.length}) fetched from mongodb in ${Date.now() - start}ms`,
-    );
-
-    return items;
+    return this.funkService.getExpandedFunkItems(organisation._id);
   }
 
   @Post('events/bulk')
@@ -161,15 +154,7 @@ export class FunkController {
       this.organisationService,
     );
 
-    const start = Date.now();
-    const eventBulks = await this.funkService.getFunkItemEventBulks(
-      organisation._id,
-    );
-
-    Logger.debug(
-      `Funk item event bulks (${eventBulks.length}) fetched from mongodb in ${Date.now() - start}ms`,
-    );
-    return eventBulks;
+    return this.funkService.getFunkItemEventBulks(organisation._id);
   }
 
   @Get('events/bulk/export')
