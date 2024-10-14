@@ -23,29 +23,18 @@ export const load = (async ({ url }) => {
 		return EMPTY;
 	}
 
-	try {
-		const [organisation, funkItems, funkItemEventBulks] = await Promise.all([
-			getOrganisationForUser().then((org) => {
-				org.members.sort((a, b) => userToFriendlyString(a).localeCompare(userToFriendlyString(b)));
-				return org;
-			}),
-			getFunkItems().then((items) =>
-				items.sort(
-					(a, b) => new Date(b.lastEvent.date).getTime() - new Date(a.lastEvent.date).getTime()
-				)
-			),
-			getFunkItemEventBulks().then((bulks) =>
-				bulks.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+	return {
+		organisation: getOrganisationForUser().then((org) => {
+			org.members.sort((a, b) => userToFriendlyString(a).localeCompare(userToFriendlyString(b)));
+			return org;
+		}),
+		funkItems: getFunkItems().then((items) =>
+			items.sort(
+				(a, b) => new Date(b.lastEvent.date).getTime() - new Date(a.lastEvent.date).getTime()
 			)
-		]);
-
-		return {
-			funkItems,
-			funkItemEventBulks,
-			organisation
-		};
-	} catch (error) {
-		console.error(error);
-		return EMPTY;
-	}
+		),
+		funkItemEventBulks: getFunkItemEventBulks().then((bulks) =>
+			bulks.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+		)
+	};
 }) satisfies PageLoad;

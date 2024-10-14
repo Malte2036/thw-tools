@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Button from '$lib/Button.svelte';
 	import FunkItemEventsList from '$lib/funk/FunkItemEventsList.svelte';
 	import LinkButton from '$lib/LinkButton.svelte';
 	import type { PageData } from './$types';

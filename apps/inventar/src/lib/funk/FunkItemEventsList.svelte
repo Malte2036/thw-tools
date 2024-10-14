@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { getFunkItemEvents } from '$lib/api/funkApi';
+	import ErrorState from '$lib/ErrorState.svelte';
 	import Input from '$lib/Input.svelte';
+	import LoadingState from '$lib/LoadingState.svelte';
 	import {
 		isSearchStringInFunkItemEvent,
 		type FunkItemDeviceId,
@@ -11,6 +13,8 @@
 	export let deviceId: FunkItemDeviceId;
 
 	let events: FunkItemEvent[] = [];
+	let eventsPromise: Promise<void> | undefined = undefined;
+
 	let filteredEvents: FunkItemEvent[] = [];
 
 	let search = '';
@@ -28,7 +32,7 @@
 		events = data;
 	}
 
-	$: loadEvents(deviceId);
+	$: eventsPromise = loadEvents(deviceId);
 </script>
 
 <div class="flex flex-col gap-2">
@@ -37,19 +41,28 @@
 	<Input placeholder="Filtere nach Ereignissen..." bind:inputValue={search} />
 
 	<div class="flex flex-col gap-2">
-		{#if events.length === 0}
-			<p>Keine Ereignisse vorhanden.</p>
-		{:else}
-			{#each filteredEvents as event}
-				<InventarItemEventItem
-					{event}
-					{deviceId}
-					item={undefined}
-					isSelected={false}
-					click={() => {}}
-					secondary
-				/>
-			{/each}
-		{/if}
+		{#await eventsPromise}
+			<LoadingState />
+		{:then}
+			{#if events.length === 0}
+				<p>Keine Ereignisse vorhanden.</p>
+			{:else}
+				{#each filteredEvents as event}
+					<InventarItemEventItem
+						{event}
+						{deviceId}
+						item={undefined}
+						isSelected={false}
+						click={() => {}}
+						secondary
+					/>
+				{/each}
+			{/if}
+		{:catch error}
+			<ErrorState
+				label={`Fehler beim Laden der Ereignisse für das Funkgerät mit der Inventarnummer ${deviceId}.`}
+				{error}
+			/>
+		{/await}
 	</div>
 </div>

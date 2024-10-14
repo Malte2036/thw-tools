@@ -1,6 +1,6 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import { getToken } from './authApi';
-import { UnauthorizedError } from './error';
+import { HttpError, UnauthorizedError } from './error';
 
 const checkIfResposeIsUnauthorized = (res: Response) => {
 	if (res.status === 403) {
@@ -21,7 +21,8 @@ export async function apiGet<T>(path: string) {
 
 		if (!response.ok) {
 			checkIfResposeIsUnauthorized(response);
-			throw new Error(`Failed to fetch data from ${url}`);
+
+			throw new HttpError(response.status, `Failed to fetch data from ${url}`, response.statusText);
 		}
 
 		const data: T = await response.json();
@@ -46,7 +47,7 @@ export async function apiPost<T>(path: string, body?: any) {
 
 		if (!response.ok) {
 			checkIfResposeIsUnauthorized(response);
-			throw new Error(`Failed to post data to ${url}`);
+			throw new HttpError(response.status, `Failed to post data to ${url}`, response.statusText);
 		}
 
 		const data: T = await response.json();
@@ -68,7 +69,7 @@ export async function apiGetFile(path: string) {
 
 		if (!response.ok) {
 			checkIfResposeIsUnauthorized(response);
-			throw new Error(`Failed to fetch file from ${url}`);
+			throw new HttpError(response.status, `Failed to fetch file from ${url}`, response.statusText);
 		}
 
 		return response.blob();

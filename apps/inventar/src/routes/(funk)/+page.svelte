@@ -9,6 +9,8 @@
 	import type { PageData } from './$types';
 	import { onDestroy, onMount } from 'svelte';
 	import NoOrganisation from '$lib/funk/NoOrganisation.svelte';
+	import ErrorState from '$lib/ErrorState.svelte';
+	import LoadingState from '$lib/LoadingState.svelte';
 
 	export let data: PageData;
 
@@ -73,30 +75,66 @@
 	};
 </script>
 
-{#if data.organisation}
+{#await data.organisation}
+	<LoadingState />
+{:then organisation}
 	<div class="flex flex-col gap-4 p-4">
-		<AddDevice items={data.funkItems} reset={invalidateAll} />
+		{#await data.funkItems}
+			<LoadingState />
+		{:then funkItems}
+			<AddDevice items={funkItems} reset={invalidateAll} />
 
-		<div class="flex w-full justify-center">
-			<Tabs
-				items={Object.values(Tab)}
-				onSelect={onTabSelect}
-				initialSelected={$page.url.searchParams.get('tab') ?? undefined}
-			/>
-		</div>
+			<div class="flex w-full justify-center">
+				<Tabs
+					items={Object.values(Tab)}
+					onSelect={onTabSelect}
+					initialSelected={$page.url.searchParams.get('tab') ?? undefined}
+				/>
+			</div>
 
-		{#if selectedTab === Tab.BULK_HISTORY}
-			<FunkBulkHistoryTab bulks={data.funkItemEventBulks} funkItems={data.funkItems} />
-		{:else if selectedTab === Tab.ORGANIZATION}
-			<OrganizationTab
-				organisation={data.organisation}
-				funkItems={data.funkItems}
-				funkItemEventBulks={data.funkItemEventBulks}
+			{#if selectedTab === Tab.BULK_HISTORY}
+				{#await data.funkItemEventBulks}
+					<LoadingState />
+				{:then funkItemEventBulks}
+					<FunkBulkHistoryTab bulks={funkItemEventBulks} {funkItems} />
+				{:catch error}
+					<ErrorState
+						label="Beim Abrufen der Ausleihhistorie aus der Datenbank ist leider ein Fehler aufgetreten."
+						{error}
+					/>
+				{/await}
+			{:else if selectedTab === Tab.ORGANIZATION}
+				{#await data.funkItemEventBulks}
+					<LoadingState />
+				{:then funkItemEventBulks}
+					<OrganizationTab
+						organisation={organisation ?? undefined}
+						{funkItems}
+						{funkItemEventBulks}
+					/>
+				{:catch error}
+					<ErrorState
+						label="Beim Abrufen der Ausleihhistorie aus der Datenbank ist leider ein Fehler aufgetreten."
+						{error}
+					/>
+				{/await}
+			{:else}
+				<FunkListTab items={funkItems} />
+			{/if}
+		{:catch error}
+			<ErrorState
+				label="Beim Abrufen der Funkgeräte aus der Datenbank ist leider ein Fehler aufgetreten."
+				{error}
 			/>
-		{:else}
-			<FunkListTab items={data.funkItems} />
-		{/if}
+		{/await}
 	</div>
-{:else}
-	<NoOrganisation />
-{/if}
+{:catch error}
+	{#if error.status === 404}
+		<NoOrganisation />
+	{:else}
+		<ErrorState
+			label="Beim Abrufen der Organisation aus der Datenbank ist leider ein Fehler aufgetreten."
+			{error}
+		/>
+	{/if}
+{/await}
