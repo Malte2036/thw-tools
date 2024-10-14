@@ -84,7 +84,7 @@ export class FunkController {
 
     const items = await this.funkService.getExpandedFunkItems(organisation._id);
 
-    Logger.log(
+    Logger.debug(
       `Funk items (${items.length}) fetched from mongodb in ${Date.now() - start}ms`,
     );
 

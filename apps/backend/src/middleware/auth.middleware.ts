@@ -11,7 +11,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     // verify token
     verifier(req, res, (err) => {
-      Logger.log('JWT verification took', Date.now() - start, 'ms');
+      Logger.debug(`JWT verification took: ${Date.now() - start}ms`);
       if (err) {
         // Handle JWT verification error
         return res.status(401).json({ message: 'Unauthorized' });
