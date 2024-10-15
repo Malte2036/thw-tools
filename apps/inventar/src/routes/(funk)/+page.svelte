@@ -10,7 +10,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import NoOrganisation from '$lib/funk/NoOrganisation.svelte';
 	import ErrorState from '$lib/ErrorState.svelte';
-	import LoadingState from '$lib/LoadingState.svelte';
+	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { user } from '$lib/shared/stores/userStore';
 
@@ -76,7 +76,7 @@
 </script>
 
 {#await $user.fetching}
-	<LoadingState />
+	<LoadingSpinner />
 {:then}
 	<div class="flex flex-col gap-4 p-4">
 		<AddDevice reset={invalidateAll} />
@@ -90,7 +90,7 @@
 		</div>
 
 		{#await $funk.fetching}
-			<LoadingState />
+			<LoadingSpinner />
 		{:then}
 			{#if selectedTab === Tab.BULK_HISTORY}
 				<FunkBulkHistoryTab />

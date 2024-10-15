@@ -2,7 +2,7 @@
 	import { getFunkItemEvents } from '$lib/api/funkApi';
 	import ErrorState from '$lib/ErrorState.svelte';
 	import Input from '$lib/Input.svelte';
-	import LoadingState from '$lib/LoadingState.svelte';
+	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { getOrganisationUserByInternalId } from '$lib/shared/stores/userStore';
 	import {
 		isSearchStringInFunkItemEvent,
@@ -55,7 +55,7 @@
 
 	<div class="flex flex-col gap-2">
 		{#await eventsPromise}
-			<LoadingState />
+			<LoadingSpinner />
 		{:then}
 			{#if events.length === 0}
 				<p>Keine Ereignisse vorhanden.</p>

@@ -43,7 +43,7 @@ export async function apiGet<T>(path: string, verifyData?: (data: T) => boolean)
 	}
 }
 
-export async function apiPost<T>(path: string, body?: any) {
+export async function apiPost<T>(path: string, body?: any, verifyData?: (data: T) => boolean) {
 	const url = new URL(path, PUBLIC_API_URL);
 	try {
 		const response = await fetch(url, {
@@ -68,6 +68,10 @@ export async function apiPost<T>(path: string, body?: any) {
 		}
 
 		const data: T = await response.json();
+		if (verifyData && !verifyData(data)) {
+			throw new CustomError(`Failed to verify data.`);
+		}
+
 		return data;
 	} catch (error) {
 		console.error('Error posting data:', error);
