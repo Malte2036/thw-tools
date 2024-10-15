@@ -13,6 +13,7 @@ import { QuizModule } from './quiz-stats/quiz.module';
 import { UserModule } from './user/user.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { LoggingMiddleware } from './middleware/logging.middleware';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { LoggingMiddleware } from './middleware/logging.middleware';
     UserModule,
     OrganisationModule,
     InventoryModule,
+    AiModule,
   ],
   providers: [
     AppService,
