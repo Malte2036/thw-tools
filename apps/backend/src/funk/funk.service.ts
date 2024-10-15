@@ -3,10 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
 import { UserDocument } from 'src/user/schemas/user.schema';
-import { FunkItemEventBulk as FunkItemEventBulk } from './schemas/funk-item-event-bulk.schema';
+import { FunkItemEventBulk } from './schemas/funk-item-event-bulk.schema';
 import {
   FunkItemEvent,
-  FunkItemEventDocument,
   FunkItemEventType,
 } from './schemas/funk-item-event.schema';
 import { FunkItem, FunkItemDocument } from './schemas/funlk-item.schema';
@@ -88,20 +87,7 @@ export class FunkService {
   }
 
   async getFunkItemEvents(itemDoc: FunkItemDocument) {
-    return this.funkItemEventModel
-      .find({ funkItem: itemDoc._id })
-      .populate('user')
-      .exec();
-  }
-
-  async getLastEventForItem(
-    itemDoc: FunkItemDocument,
-  ): Promise<FunkItemEventDocument | null> {
-    return this.funkItemEventModel
-      .findOne({ funkItem: itemDoc._id })
-      .sort({ date: -1 })
-      .populate('user')
-      .exec();
+    return this.funkItemEventModel.find({ funkItem: itemDoc._id }).exec();
   }
 
   async bulkCreateFunkItemEvents(
@@ -160,11 +146,7 @@ export class FunkService {
       .find({ organisation: organisationId })
       .populate({
         path: 'funkItemEvents',
-        populate: {
-          path: 'funkItem',
-        },
       })
-      .populate('user')
       .exec();
   }
 

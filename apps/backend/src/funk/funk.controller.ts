@@ -81,7 +81,7 @@ export class FunkController {
       this.organisationService,
     );
 
-    return this.funkService.getExpandedFunkItems(organisation._id);
+    return this.funkService.getFunkItems(organisation._id);
   }
 
   @Post('events/bulk')
