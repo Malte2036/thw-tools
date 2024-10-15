@@ -7,6 +7,7 @@ export const InventarNummer = z
 	.regex(inventarNummerRegex, 'Invalid inventar number format');
 
 export const UserSchema = z.object({
+	_id: z.string(),
 	firstName: z.string().optional(),
 	lastName: z.string().optional(),
 	email: z.string().optional()
@@ -19,7 +20,7 @@ export type FunkItemDeviceId = string;
 export const FunkItemSchema = z.object({
 	_id: z.string(),
 	deviceId: InventarNummer,
-	lastEvent: z.lazy((): z.ZodType => FunkItemEventSchema),
+	lastEvent: z.string().optional(),
 	name: z.string().optional()
 });
 
@@ -29,9 +30,9 @@ export type FunkItemEventType = 'borrowed' | 'returned';
 
 export const FunkItemEventSchema = z.object({
 	_id: z.string(),
-	funkItem: z.lazy(() => FunkItemSchema),
-	user: UserSchema,
-	type: z.enum(['borrowed', 'returned']),
+	funkItem: z.string().optional(),
+	user: z.string(),
+	type: z.enum(['borrowed', 'returned']).default('borrowed'),
 	date: z.string()
 });
 
@@ -42,7 +43,7 @@ export const FunkItemEventBulkSchema = z.object({
 	funkItemEvents: z.array(FunkItemEventSchema),
 	batteryCount: z.number(),
 	eventType: z.enum(['borrowed', 'returned']),
-	user: UserSchema,
+	user: z.string(),
 	date: z.string()
 });
 
@@ -101,10 +102,11 @@ export function batteryCountToFriendlyString(batteryCount: number): string {
 export function isSearchStringInFunkItemEventBulk(
 	searchString: string,
 	eventBulk: FunkItemEventBulk,
+	bulkUser: User | undefined,
 	deviceIds: FunkItemDeviceId[]
 ): boolean {
 	return searchStringIsInArray(searchString.trim(), [
-		userToFriendlyString(eventBulk.user),
+		bulkUser && userToFriendlyString(bulkUser),
 		dateToFriendlyString(new Date(eventBulk.date)),
 		eventTypeToFriendlyString(eventBulk.eventType),
 		batteryCountToFriendlyString(eventBulk.batteryCount),
@@ -112,16 +114,25 @@ export function isSearchStringInFunkItemEventBulk(
 	]);
 }
 
-export function isSearchStringInFunkItem(searchString: string, item: FunkItem): boolean {
+export function isSearchStringInFunkItem(
+	searchString: string,
+	item: FunkItem,
+	lastEvent: FunkItemEvent,
+	eventUser: User | undefined
+): boolean {
 	return (
 		searchStringIsInArray(searchString.trim(), [item.deviceId, item.name].filter(Boolean)) ||
-		isSearchStringInFunkItemEvent(searchString, item.lastEvent)
+		isSearchStringInFunkItemEvent(searchString, lastEvent, eventUser)
 	);
 }
 
-export function isSearchStringInFunkItemEvent(searchString: string, event: FunkItemEvent): boolean {
+export function isSearchStringInFunkItemEvent(
+	searchString: string,
+	event: FunkItemEvent,
+	eventUser: User | undefined
+): boolean {
 	return searchStringIsInArray(searchString.trim(), [
-		userToFriendlyString(event.user),
+		eventUser && userToFriendlyString(eventUser),
 		dateToFriendlyString(new Date(event.date)),
 		eventTypeToFriendlyString(event.type)
 	]);

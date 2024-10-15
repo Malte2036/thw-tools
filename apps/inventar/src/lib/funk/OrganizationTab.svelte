@@ -6,15 +6,16 @@
 	import { leaveOrganisation } from '$lib/api/organisationApi';
 	import Button from '$lib/Button.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
-
-	export let organisation: Organisation | undefined;
-	export let funkItems: FunkItem[];
-	export let funkItemEventBulks: FunkItemEventBulk[];
+	import { getLastFunkItemEventByFunkItemInternalId } from '$lib/shared/stores/funkStore';
+	import { funk } from '$lib/shared/stores/funkStore';
+	import { user } from '$lib/shared/stores/userStore';
 
 	function getBorrowedBatteryCount(): number {
-		return funkItemEventBulks.reduce(
-			(acc, bulk) => acc + (bulk.eventType === 'borrowed' ? 1 : -1) * bulk.batteryCount,
-			0
+		return (
+			$funk.funkItemEventBulks?.reduce(
+				(acc, bulk) => acc + (bulk.eventType === 'borrowed' ? 1 : -1) * bulk.batteryCount,
+				0
+			) ?? 0
 		);
 	}
 
@@ -23,7 +24,7 @@
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = `inventar_${organisation?.name.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString()}.csv`;
+		a.download = `inventar_${$user.organisation?.name.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString()}.csv`;
 		a.click();
 		URL.revokeObjectURL(url);
 	}
@@ -41,6 +42,19 @@
 
 		invalidateAll();
 	};
+
+	const getBorrowedDevicesCount = () => {
+		return (
+			$funk.funkItems?.filter(
+				(item) => getLastFunkItemEventByFunkItemInternalId($funk, item._id)?.type === 'borrowed'
+			).length ?? 0
+		);
+	};
+
+	const borrowedCount: number = getBorrowedDevicesCount();
+	$: $funk && getBorrowedDevicesCount();
+
+	const organisation: Organisation | null = $user.organisation;
 </script>
 
 {#if !organisation}
@@ -55,17 +69,17 @@
 		<div class="	flex flex-col gap-2">
 			<div class="font-bold text-xl">Inventar:</div>
 			<p>
-				Ausgeliehene Geräte: {funkItems.filter((item) => item.lastEvent.type === 'borrowed').length}
-				von {funkItems.length}
+				Ausgeliehene Geräte: {borrowedCount}
+				von {$funk.funkItems?.length}
 			</p>
 			<p>
 				Ausgeliehene Batterien: {getBorrowedBatteryCount()}
 			</p>
 		</div>
 		<div class="flex flex-col gap-2">
-			<div class="font-bold text-xl">Mitglieder:</div>
+			<div class="font-bold text-xl">Mitglieder ({$user.organisation?.members.length}):</div>
 			<ul class="flex flex-col gap-2 list-disc pl-4">
-				{#each organisation?.members ?? [] as member}
+				{#each $user.organisation?.members ?? [] as member}
 					<li>
 						{userToFriendlyString(member)}
 						<span class="text-gray-500">

@@ -6,13 +6,17 @@ export const InventoryItemZodSchema = z.object({
 	organisation: z.string(),
 	einheit: z.string(),
 	ebene: z.number().int(),
-	art: z.string().optional(),
+	art: z.string().nullable().optional(),
 	ausstattung: z.string(),
-	hersteller: z.string().optional(),
-	typ: z.string().optional(),
-	inventarNummer: z.string().regex(inventarNummerRegex, 'Invalid inventarNummer format').optional(),
-	sachNummer: z.string().optional(),
-	gerateNummer: z.string().optional()
+	hersteller: z.string().nullable().optional(),
+	typ: z.string().nullable().optional(),
+	inventarNummer: z
+		.string()
+		.regex(inventarNummerRegex, 'Invalid inventarNummer format')
+		.nullable()
+		.optional(),
+	sachNummer: z.string().nullable().optional(),
+	gerateNummer: z.string().nullable().optional()
 });
 
 export type InventoryItem = z.infer<typeof InventoryItemZodSchema>;

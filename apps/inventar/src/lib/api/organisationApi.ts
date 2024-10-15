@@ -1,9 +1,19 @@
 import { apiGet, apiPost } from './apiGeneric';
 import type { User } from './funkModels';
-import type { Organisation } from './organisation';
+import { OrganisationSchema, type Organisation } from './organisation';
 
 export async function getOrganisationForUser(): Promise<Organisation> {
-	return await apiGet<Organisation>('/organisations/me');
+	return await apiGet<Organisation>(
+		'/organisations/me',
+
+		(data) => {
+			const result = OrganisationSchema.safeParse(data);
+			if (!result.success) {
+				console.error('Error parsing Organisation:', result.error);
+			}
+			return result.success;
+		}
+	);
 }
 
 export async function joinOrganisation(inviteCode: string): Promise<Organisation> {

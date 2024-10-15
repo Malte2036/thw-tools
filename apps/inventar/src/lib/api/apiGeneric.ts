@@ -1,6 +1,6 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import { getToken } from './authApi';
-import { HttpError, UnauthorizedError } from './error';
+import { CustomError, HttpError, UnauthorizedError } from './error';
 
 const checkIfResposeIsUnauthorized = (res: Response) => {
 	if (res.status === 403) {
@@ -8,7 +8,7 @@ const checkIfResposeIsUnauthorized = (res: Response) => {
 	}
 };
 
-export async function apiGet<T>(path: string) {
+export async function apiGet<T>(path: string, verifyData?: (data: T) => boolean) {
 	const url = new URL(path, PUBLIC_API_URL);
 
 	try {
@@ -32,6 +32,10 @@ export async function apiGet<T>(path: string) {
 		}
 
 		const data: T = await response.json();
+		if (verifyData && !verifyData(data)) {
+			throw new CustomError(`Failed to verify data.`);
+		}
+
 		return data;
 	} catch (error) {
 		console.error('Error fetching data:', error);

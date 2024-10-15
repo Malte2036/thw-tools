@@ -1,34 +1,40 @@
 <script lang="ts">
+	import { getOrganisationForUser } from '$lib/api/organisationApi';
 	import Input from '$lib/Input.svelte';
+	import { getOrganisationUserByInternalId } from '$lib/shared/stores/userStore';
 	import {
 		isSearchStringInFunkItemEventBulk,
 		type FunkItem,
 		type FunkItemEventBulk
 	} from '../api/funkModels';
 	import InventarItemEventBulkItem from './FunkItemEventBulkItem.svelte';
-
-	export let bulks: FunkItemEventBulk[];
-	export let funkItems: FunkItem[];
+	import { user } from '$lib/shared/stores/userStore';
+	import { funk } from '$lib/shared/stores/funkStore';
 
 	let searchTerm: string = '';
-	let filteredBulks = bulks;
+	let filteredBulks = $funk.funkItemEventBulks;
 
+	// What does this function do?
 	const getInventarItems = (bulk: FunkItemEventBulk) => {
-		return funkItems.filter((item) =>
-			bulk.funkItemEvents.some((event) => event.funkItem._id === item._id)
+		return (
+			$funk.funkItems?.filter((item) =>
+				bulk.funkItemEvents.some((event) => event.funkItem === item._id)
+			) ?? []
 		);
 	};
 
 	$: {
-		filteredBulks = bulks
-			.filter((item) =>
-				isSearchStringInFunkItemEventBulk(
-					searchTerm,
-					item,
-					getInventarItems(item).map((item) => item.deviceId)
+		filteredBulks =
+			$funk.funkItemEventBulks
+				?.filter((item) =>
+					isSearchStringInFunkItemEventBulk(
+						searchTerm,
+						item,
+						getOrganisationUserByInternalId($user, item.user),
+						getInventarItems(item).map((item) => item.deviceId)
+					)
 				)
-			)
-			.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+				.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) ?? [];
 	}
 </script>
 

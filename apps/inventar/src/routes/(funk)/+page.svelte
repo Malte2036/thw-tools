@@ -11,8 +11,8 @@
 	import NoOrganisation from '$lib/funk/NoOrganisation.svelte';
 	import ErrorState from '$lib/ErrorState.svelte';
 	import LoadingState from '$lib/LoadingState.svelte';
-
-	export let data: PageData;
+	import { funk } from '$lib/shared/stores/funkStore';
+	import { user } from '$lib/shared/stores/userStore';
 
 	enum Tab {
 		FUNK_LIST = 'Funkliste',
@@ -75,51 +75,29 @@
 	};
 </script>
 
-{#await data.organisation}
+{#await $user.fetching}
 	<LoadingState />
-{:then organisation}
+{:then}
 	<div class="flex flex-col gap-4 p-4">
-		{#await data.funkItems}
+		<AddDevice reset={invalidateAll} />
+
+		<div class="flex w-full justify-center">
+			<Tabs
+				items={Object.values(Tab)}
+				onSelect={onTabSelect}
+				initialSelected={$page.url.searchParams.get('tab') ?? undefined}
+			/>
+		</div>
+
+		{#await $funk.fetching}
 			<LoadingState />
-		{:then funkItems}
-			<AddDevice items={funkItems} reset={invalidateAll} />
-
-			<div class="flex w-full justify-center">
-				<Tabs
-					items={Object.values(Tab)}
-					onSelect={onTabSelect}
-					initialSelected={$page.url.searchParams.get('tab') ?? undefined}
-				/>
-			</div>
-
+		{:then}
 			{#if selectedTab === Tab.BULK_HISTORY}
-				{#await data.funkItemEventBulks}
-					<LoadingState />
-				{:then funkItemEventBulks}
-					<FunkBulkHistoryTab bulks={funkItemEventBulks} {funkItems} />
-				{:catch error}
-					<ErrorState
-						label="Beim Abrufen der Ausleihhistorie aus der Datenbank ist leider ein Fehler aufgetreten."
-						{error}
-					/>
-				{/await}
+				<FunkBulkHistoryTab />
 			{:else if selectedTab === Tab.ORGANIZATION}
-				{#await data.funkItemEventBulks}
-					<LoadingState />
-				{:then funkItemEventBulks}
-					<OrganizationTab
-						organisation={organisation ?? undefined}
-						{funkItems}
-						{funkItemEventBulks}
-					/>
-				{:catch error}
-					<ErrorState
-						label="Beim Abrufen der Ausleihhistorie aus der Datenbank ist leider ein Fehler aufgetreten."
-						{error}
-					/>
-				{/await}
+				<OrganizationTab />
 			{:else}
-				<FunkListTab items={funkItems} />
+				<FunkListTab />
 			{/if}
 		{:catch error}
 			<ErrorState

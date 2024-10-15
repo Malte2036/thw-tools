@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getOrganisationUserByInternalId } from '$lib/shared/stores/userStore';
 	import { dateToFriendlyString } from '$lib/utils';
 	import {
 		eventTypeToEmoji,
@@ -7,24 +8,24 @@
 		type FunkItemEvent
 	} from '../api/funkModels';
 	import InventarItemEventTypeBadge from './FunkItemEventTypeBadge.svelte';
+	import { user } from '$lib/shared/stores/userStore';
 
 	export let event: FunkItemEvent;
 	export let deviceId: FunkItemDeviceId;
 	export let isSelected: boolean;
-	export let click: () => void;
 
 	export let item: FunkItem | undefined;
 
 	export let secondary: boolean = false;
+
+	const eventUser = getOrganisationUserByInternalId($user, event.user);
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<div
+<a
 	class="text-xl flex flex-row items-center p-2 gap-2 bg-thw-50 border-thw-500 border-2 shadow-sm rounded-2xl transition-colors hover:cursor-pointer overflow-x-auto"
 	class:secondary
 	class:selectedItem={isSelected}
-	on:click={click}
+	href={`/device/${deviceId}`}
 >
 	<div class="text-2xl">{eventTypeToEmoji(event.type)}</div>
 	<div class="flex flex-col gap-0 w-full">
@@ -42,8 +43,10 @@
 		<div class="flex flex-row gap-2 items-center w-full">
 			<div class="text-sm text-nowrap text-gray-500">
 				<span class="italic">
-					{event.user.firstName ?? ''}
-					{event.user.lastName ?? ''}
+					{#if eventUser}
+						{eventUser.firstName ?? ''}
+						{eventUser.lastName ?? ''}
+					{/if}
 				</span>
 				{' am '}
 				<span>
@@ -52,7 +55,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+</a>
 
 <style lang="scss">
 	.selectedItem {

@@ -9,13 +9,15 @@
 	<h1 class="text-xl font-bold">{label}</h1>
 	{#if error}
 		<p class="text-sm text-gray-500">
-			{#if error instanceof HttpError}
+			{#if error instanceof HttpError && error.status}
 				Statuscode: {error.status}
 				{#if error.statusText}
 					- {error.statusText}
 				{/if}
+			{:else if error.message}
+				{error.message}
 			{:else}
-				Fehler
+				Unbekannter Fehler
 			{/if}
 		</p>
 	{/if}

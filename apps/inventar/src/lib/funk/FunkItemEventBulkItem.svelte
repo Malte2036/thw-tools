@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getFunkItemByInternalId } from '$lib/shared/stores/funkStore';
 	import { dateToFriendlyString } from '$lib/utils';
 	import {
 		batteryCountToFriendlyString,
@@ -6,8 +7,14 @@
 		type FunkItemEventBulk
 	} from '../api/funkModels';
 	import InventarItemEventTypeBadge from './FunkItemEventTypeBadge.svelte';
+	import { funk } from '$lib/shared/stores/funkStore';
+	import { user } from '$lib/shared/stores/userStore';
+
+	import { getOrganisationUserByInternalId } from '$lib/shared/stores/userStore';
 
 	export let bulk: FunkItemEventBulk;
+
+	const bulkUser = getOrganisationUserByInternalId($user, bulk.user);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -22,8 +29,10 @@
 		<div class="flex flex-row gap-2 justify-between w-full">
 			<div class="text-nowrap text-sm">
 				<span class="italic">
-					{bulk.user.firstName ?? ''}
-					{bulk.user.lastName ?? ''}
+					{#if bulkUser}
+						{bulkUser.firstName ?? ''}
+						{bulkUser.lastName ?? ''}
+					{/if}
 				</span>
 				{' am '}
 				<span>
@@ -37,10 +46,20 @@
 				{batteryCountToFriendlyString(bulk.batteryCount)}
 			</li>
 			<li>
-				{bulk.funkItemEvents
-					.map((event) => event.funkItem.deviceId)
-					.sort()
-					.join(', ')}
+				{#await $funk.funkItems then funkItems}
+					{bulk.funkItemEvents
+						.map(
+							(event) =>
+								getFunkItemByInternalId(
+									{
+										funkItems
+									},
+									event.funkItem
+								)?.deviceId
+						)
+						.sort()
+						.join(', ')}
+				{/await}
 			</li>
 		</ul>
 	</div>

@@ -3,12 +3,15 @@
 	import ErrorState from '$lib/ErrorState.svelte';
 	import Input from '$lib/Input.svelte';
 	import LoadingState from '$lib/LoadingState.svelte';
+	import { getOrganisationUserByInternalId } from '$lib/shared/stores/userStore';
 	import {
 		isSearchStringInFunkItemEvent,
 		type FunkItemDeviceId,
 		type FunkItemEvent
 	} from '../api/funkModels';
 	import InventarItemEventItem from './FunkItemEventItem.svelte';
+	import { user } from '$lib/shared/stores/userStore';
+	import { funk, getAllFunkItemEventsByFunkItemDeviceId } from '$lib/shared/stores/funkStore';
 
 	export let deviceId: FunkItemDeviceId;
 
@@ -18,9 +21,19 @@
 	let filteredEvents: FunkItemEvent[] = [];
 
 	let search = '';
-	$: {
-		filteredEvents = events.filter((event) => isSearchStringInFunkItemEvent(search, event));
-	}
+
+	const filterEvents = () => {
+		const eventsForDevice = getAllFunkItemEventsByFunkItemDeviceId($funk, deviceId);
+		filteredEvents = eventsForDevice.filter((event) =>
+			isSearchStringInFunkItemEvent(
+				search,
+				event,
+				getOrganisationUserByInternalId($user, event.user)
+			)
+		);
+	};
+
+	$: (search || true) && $funk && filterEvents();
 
 	async function loadEvents(deviceId: FunkItemDeviceId) {
 		events = [];
@@ -48,14 +61,7 @@
 				<p>Keine Ereignisse vorhanden.</p>
 			{:else}
 				{#each filteredEvents as event}
-					<InventarItemEventItem
-						{event}
-						{deviceId}
-						item={undefined}
-						isSelected={false}
-						click={() => {}}
-						secondary
-					/>
+					<InventarItemEventItem {event} {deviceId} item={undefined} isSelected={false} secondary />
 				{/each}
 			{/if}
 		{:catch error}

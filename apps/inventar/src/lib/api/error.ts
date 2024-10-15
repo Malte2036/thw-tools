@@ -15,3 +15,10 @@ export class HttpError extends Error {
 		this.name = 'HttpError';
 	}
 }
+
+export class CustomError extends Error {
+	constructor(public message: string) {
+		super(message);
+		this.name = 'CustomError';
+	}
+}
