@@ -79,7 +79,7 @@
 		<div class="flex flex-col gap-2">
 			<div class="font-bold text-xl">Mitglieder ({$user.organisation?.members.length}):</div>
 			<ul class="flex flex-col gap-2 list-disc pl-4">
-				{#each $user.organisation?.members ?? [] as member}
+				{#each $user.organisation?.members ?? [] as member (member._id)}
 					<li>
 						{userToFriendlyString(member)}
 						<span class="text-gray-500">

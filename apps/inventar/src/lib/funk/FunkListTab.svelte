@@ -13,7 +13,7 @@
 		lastEvent: FunkItemEvent;
 	};
 	let filteredInventarItems: FilteredData[] = [];
-	$: $funk && filterInventarItems();
+	$: $funk && (searchedDeviceId || true) && filterInventarItems();
 
 	const filterInventarItems = () => {
 		filteredInventarItems = $funk.funkItems
@@ -40,13 +40,13 @@
 </script>
 
 <div class="flex flex-col gap-2">
-	<div class="font-bold text-2xl">Inventarliste:</div>
+	<div class="font-bold text-2xl">Funkliste:</div>
 	<Input placeholder="Geräte suchen..." bind:inputValue={searchedDeviceId} />
 	<div class="flex flex-col gap-2">
 		{#if filteredInventarItems.length === 0}
 			<p>Keine Geräte vorhanden.</p>
 		{/if}
-		{#each filteredInventarItems as data}
+		{#each filteredInventarItems as data (data.item._id)}
 			<InventarItemEventItem
 				event={data.lastEvent}
 				deviceId={data.item.deviceId}

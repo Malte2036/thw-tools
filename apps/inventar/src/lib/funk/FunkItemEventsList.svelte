@@ -60,7 +60,7 @@
 			{#if events.length === 0}
 				<p>Keine Ereignisse vorhanden.</p>
 			{:else}
-				{#each filteredEvents as event}
+				{#each filteredEvents as event (event._id)}
 					<InventarItemEventItem {event} {deviceId} item={undefined} isSelected={false} secondary />
 				{/each}
 			{/if}
