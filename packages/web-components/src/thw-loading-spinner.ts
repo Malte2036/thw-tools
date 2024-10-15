@@ -1,5 +1,5 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, css, html, unsafeCSS } from "lit";
+import { customElement } from "lit/decorators.js";
 import { thwColors } from "./colors";
 
 /**
