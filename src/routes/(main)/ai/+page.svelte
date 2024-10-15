@@ -3,6 +3,7 @@
 	import { askAiKnowledgeBase, type AiKnowledgeBaseAskApiResponse } from '$lib/api/apiAi';
 	import Button from '$lib/Button.svelte';
 	import Input from '$lib/Input.svelte';
+	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 
 	let input = '';
 
@@ -15,14 +16,14 @@
 
 <div class="flex flex-col content-between p-4 h-full">
 	<div class="flex flex-col gap-4 flex-grow bg-thw-100 rounded-lg p-2">
-		<h1 class="text-2xl font-bold">Ask AI</h1>
+		<h1 class="text-2xl font-bold">Ask Knowledge Base</h1>
 
 		<Input bind:inputValue={input} placeholder="Ask AI" />
 
 		<Button click={ask}>Ask</Button>
 
 		{#await response}
-			<p>Loading...</p>
+			<LoadingSpinner />
 		{:then data}
 			{#if data}
 				<div class="text-lg font-bold">Ergebniss aus der Knowledge Base:</div>
