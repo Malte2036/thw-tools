@@ -50,9 +50,9 @@ self.addEventListener('fetch', (event) => {
 			}
 		}
 
-		const cachedRequests = [`${PUBLIC_API_URL}/inventory`];
+		const cachedRequests = [`/inventory`];
 
-		if (!cachedRequests.includes(url.href)) {
+		if (!cachedRequests.endsWith(url.href)) {
 			// We don't want to cache inventory related backend requests, because they are dynamic.
 			return await fetch(event.request);
 		}
