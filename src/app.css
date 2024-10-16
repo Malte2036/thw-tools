@@ -21,3 +21,79 @@ body {
 		Helvetica Neue,
 		sans-serif;
 }
+
+.markdown h1 {
+	@apply text-3xl;
+}
+
+.markdown h2 {
+	@apply text-2xl;
+}
+
+.markdown h3 {
+	@apply text-xl;
+}
+
+.markdown h4 {
+	@apply text-lg;
+}
+
+.markdown h5 {
+	@apply text-base;
+}
+
+.markdown h6 {
+	@apply text-sm;
+}
+
+.markdown blockquote {
+	@apply border-l-4 border-gray-300 pl-2;
+}
+
+.markdown ol {
+	@apply list-decimal list-inside pl-2;
+}
+
+.markdown li {
+	@apply list-disc list-inside pl-2;
+}
+
+.markdown p {
+	@apply py-2;
+}
+
+.markdown a {
+	@apply text-blue-500;
+}
+
+.markdown a:hover {
+	@apply text-blue-700;
+}
+
+.markdown img {
+	@apply mx-auto my-4;
+}
+
+.markdown pre {
+	@apply bg-gray-100 p-4 rounded;
+}
+
+.markdown code {
+	@apply bg-gray-200 px-1 rounded;
+}
+
+.markdown table {
+	@apply w-full border-collapse;
+}
+
+.markdown th {
+	@apply border-b-2 border-gray-300 p-2 text-left;
+}
+
+.markdown td {
+	@apply border-b border-gray-200 p-2;
+}
+
+.markdown hr {
+	@apply border-t border-gray-300 my-4;
+}

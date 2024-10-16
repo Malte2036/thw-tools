@@ -5,6 +5,7 @@
 	import Input from '$lib/Input.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { writable } from 'svelte/store';
+	import DOMPurify from 'dompurify';
 
 	let input = '';
 
@@ -50,9 +51,13 @@
 			<LoadingSpinner />
 		{:then}
 			{#if $streamedResponse}
-				<div class="text-lg font-bold">Ergebniss aus der Knowledge Base:</div>
-				<div>
-					{@html marked($streamedResponse)}
+				<div class="flex flex-col gap-2">
+					<div class="text-lg font-bold">Ergebniss aus der Knowledge Base:</div>
+					<div class="markdown">
+						{#await marked($streamedResponse) then markedResponse}
+							{@html DOMPurify.sanitize(markedResponse)}
+						{/await}
+					</div>
 				</div>
 			{/if}
 		{:catch error}
