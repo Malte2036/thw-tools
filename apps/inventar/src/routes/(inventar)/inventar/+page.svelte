@@ -1,41 +1,32 @@
 <script lang="ts">
-	import { getInventoryItemByInventarNummer } from '$lib/api/inventoryApi';
 	import type { InventoryItem } from '$lib/api/inventoryModels';
 	import Button from '$lib/Button.svelte';
 	import Dialog from '$lib/Dialog.svelte';
 	import ManuelDeviceIdInput from '$lib/funk/ManuelDeviceIdInput.svelte';
 	import QrScanner from '$lib/funk/QRScanner.svelte';
+	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
+	import { getInventoryItemByInventarNummer, inventory } from '$lib/shared/stores/inventoryStore';
 
-	let isFetching = false;
 	let inventoryItem: InventoryItem | undefined;
 
 	const onScan = (decodedText: string) => {
-		console.log(decodedText);
-
-		isFetching = true;
-		getInventoryItemByInventarNummer(decodedText)
-			.then((item) => {
-				console.log(`Got item: ${item}`);
-
-				inventoryItem = item;
-				console.log(JSON.stringify(inventoryItem));
-			})
-			.catch((error) => {
-				console.error(`Error while fetching item: ${error}`);
-				$bannerMessage = {
-					message: 'Inventar Item nicht gefunden',
-					type: 'error',
-					autoDismiss: {
-						duration: 5000
-					}
-				};
-			})
-			.finally(() => {
-				isFetching = false;
-			});
+		inventoryItem = getInventoryItemByInventarNummer($inventory, decodedText);
+		if (!inventoryItem) {
+			$bannerMessage = {
+				message: 'Inventar Item nicht gefunden',
+				type: 'error',
+				autoDismiss: {
+					duration: 5000
+				}
+			};
+		}
 	};
 </script>
+
+{#await $inventory.fetching}
+	<LoadingSpinner />
+{/await}
 
 <div class="p-2">
 	<h1 class="text-2xl font-bold">Inventar</h1>
@@ -49,11 +40,7 @@
 	</p>
 </div>
 
-{#if isFetching}
-	<div class="flex flex-col gap-2 p-2">
-		<div class="text-xl">Lade Inventar-Item...</div>
-	</div>
-{:else if inventoryItem === undefined}
+{#if inventoryItem === undefined}
 	<div class="flex flex-col gap-2 p-2">
 		<QrScanner {onScan} />
 		<ManuelDeviceIdInput {onScan} />
