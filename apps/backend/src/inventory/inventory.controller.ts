@@ -29,6 +29,18 @@ export class InventoryController {
     private readonly inventoryService: InventoryService,
   ) {}
 
+  @Get()
+  async getInventoryItems(@Req() req: Request) {
+    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
+      req,
+      this.userService,
+      this.organisationService,
+    );
+
+    Logger.log('Getting inventory items');
+    return this.inventoryService.getInventoryItems(organisation._id);
+  }
+
   @Get('inventarNummer/:inventarNummer')
   async getInventoryItemByInventarNumber(
     @Req() req: Request,

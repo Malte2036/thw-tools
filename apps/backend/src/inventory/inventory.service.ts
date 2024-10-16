@@ -33,6 +33,14 @@ export class InventoryService {
     private inventoryItemModel: Model<InventoryItem>,
   ) {}
 
+  async getInventoryItems(organisationId: mongoose.Types.ObjectId) {
+    return this.inventoryItemModel
+      .find({
+        organisation: organisationId,
+      })
+      .exec();
+  }
+
   async getInventoryItemByInventarNummer(
     organisationId: mongoose.Types.ObjectId,
     inventarNummer: string,
