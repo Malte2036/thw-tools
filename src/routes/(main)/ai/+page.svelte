@@ -1,16 +1,32 @@
 <script lang="ts">
 	import { marked } from 'marked';
-	import { askAiKnowledgeBase, type AiKnowledgeBaseAskApiResponse } from '$lib/api/apiAi';
+	import { streamAskAiKnowledgeBase } from '$lib/api/apiAi';
 	import Button from '$lib/Button.svelte';
 	import Input from '$lib/Input.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
+	import { writable } from 'svelte/store';
 
 	let input = '';
 
-	let response: Promise<AiKnowledgeBaseAskApiResponse> | null = null;
+	const streamedResponse = writable(''); // Store to accumulate streamed data
+
+	let fetchStream: Promise<ReadableStream<string>>;
 
 	async function ask() {
-		response = askAiKnowledgeBase(input);
+		streamedResponse.set(''); // Clear any previous content
+
+		fetchStream = streamAskAiKnowledgeBase(input);
+		fetchStream.then(async (stream) => {
+			const reader = stream.getReader();
+
+			while (true) {
+				const { done, value } = await reader.read();
+				if (done) break;
+
+				// Decode and append each chunk to the store
+				streamedResponse.update((current: string) => current + value);
+			}
+		});
 	}
 </script>
 
@@ -30,16 +46,14 @@
 
 		<Button click={ask}>Ask</Button>
 
-		{#await response}
+		{#await fetchStream}
 			<LoadingSpinner />
-		{:then data}
-			{#if data}
+		{:then}
+			{#if $streamedResponse}
 				<div class="text-lg font-bold">Ergebniss aus der Knowledge Base:</div>
 				<div>
-					{@html marked(data.answer)}
+					{@html marked($streamedResponse)}
 				</div>
-			{:else}
-				<p>Ask a question to AI</p>
 			{/if}
 		{:catch error}
 			<p>Error: {error.message}</p>
