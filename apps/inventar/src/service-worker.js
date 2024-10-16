@@ -50,12 +50,12 @@ self.addEventListener('fetch', (event) => {
 			}
 		}
 
-		const cachedRequests = [`/inventory`];
-
-		if (!cachedRequests.endsWith(url.href)) {
+		if (!url.pathname.startsWith('/inventory')) {
 			// We don't want to cache inventory related backend requests, because they are dynamic.
 			return await fetch(event.request);
 		}
+
+		console.log('Try fetching', url.pathname, 'from cache');
 
 		// for everything else, try the network first, but
 		// fall back to the cache if we're offline
