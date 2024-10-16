@@ -141,7 +141,7 @@ export class InventoryService {
           throw new Error(`Invalid number for Ebene: ${record.Ebene}`);
         }
 
-        let inventarNummer = sanitizeValue(record['Inventar Nr']) ?? '';
+        let inventarNummer = sanitizeValue(record['Inventar Nr']) ?? null;
         if (inventarNummer && !inventarNummer.match(inventarNummerRegex)) {
           Logger.debug(
             `Invalid Inventar Nr: ${inventarNummer}, setting to null`,
