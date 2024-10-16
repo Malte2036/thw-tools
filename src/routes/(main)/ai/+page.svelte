@@ -17,6 +17,14 @@
 <div class="flex flex-col content-between p-4 h-full">
 	<div class="flex flex-col gap-4 flex-grow bg-thw-100 rounded-lg p-2">
 		<h1 class="text-2xl font-bold">Ask Knowledge Base</h1>
+		<div class="text-gray-500">
+			Aktuell ist die Knowledge Base mit den Ausbildungsunterlagen der <i class="font-bold"
+				>Grundausbildung</i
+			>
+			und den Bereichsausbildungen <i class="font-bold">AGT</i>, <i class="font-bold">CBRN</i> und
+			<i class="font-bold">SEA</i> gefüllt. Es wird empfohlen, die Fragen so präzise wie möglich zu formulieren
+			und es wird auf keinerlei Richtigkeit der Antworten garantiert.
+		</div>
 
 		<Input bind:inputValue={input} placeholder="Ask AI" />
 
