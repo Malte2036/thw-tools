@@ -55,7 +55,6 @@ export class InventoryService {
 
   async parseCsvData(
     organisation: OrganisationDocument,
-    einheit: string,
     file: Express.Multer.File,
   ) {
     const records: InventarCsvRow[] = [];
@@ -84,7 +83,7 @@ export class InventoryService {
         })
         .on('end', async () => {
           try {
-            await this.processCsvData(organisation, einheit, records);
+            await this.processCsvData(organisation, records);
             resolve({ message: 'CSV file processed successfully' });
           } catch (error) {
             reject(error);
@@ -100,7 +99,6 @@ export class InventoryService {
 
   async processCsvData(
     organisation: OrganisationDocument,
-    einheit: string,
     records: InventarCsvRow[],
   ) {
     const getKeyFromDelimitedString = (
@@ -119,16 +117,24 @@ export class InventoryService {
     const sanitizeValue = (value: any) => {
       if (typeof value === 'string') {
         const res = value.trim();
-        if (res === '') {
+        if (res.length === 0) {
           return null;
         }
+
+        if (res.startsWith('-')) {
+          return sanitizeValue(res.substring(1));
+        }
+
         return res;
       }
 
       return value;
     };
 
-    const csvRecordToInventoryItem = (record: InventarCsvRow) => {
+    const csvRecordToInventoryItem = (
+      record: InventarCsvRow,
+      einheit: string,
+    ) => {
       try {
         const ebene = parseInt(record.Ebene);
         if (isNaN(ebene)) {
@@ -136,7 +142,7 @@ export class InventoryService {
         }
 
         let inventarNummer = sanitizeValue(record['Inventar Nr']) ?? '';
-        if (!inventarNummer.match(inventarNummerRegex)) {
+        if (inventarNummer && !inventarNummer.match(inventarNummerRegex)) {
           Logger.debug(
             `Invalid Inventar Nr: ${inventarNummer}, setting to null`,
           );
@@ -184,10 +190,27 @@ export class InventoryService {
       }
     };
 
-    console.log(records);
+    let einheit: string;
+    const inventoryItems = records
+      .map((record) => {
+        if (record.Ebene === '') {
+          einheit = record['Ausstattung | Hersteller | Typ'];
+          Logger.debug(`Setting Einheit to ${einheit} for the next records`);
+          return null;
+        }
+        return csvRecordToInventoryItem(record, einheit);
+      })
+      .filter(Boolean);
 
-    await this.inventoryItemModel.insertMany(
-      records.map((record) => csvRecordToInventoryItem(record)).filter(Boolean),
-    );
+    const einheiten = [...new Set(inventoryItems.map((item) => item.einheit))];
+    Logger.debug(`Deleting existing inventory items for ${einheiten}`);
+    await this.deleteAllInventoryItemsByEinheit(einheiten);
+
+    Logger.debug(`Inserting ${inventoryItems.length} inventory`);
+    await this.inventoryItemModel.insertMany(inventoryItems);
   }
+
+  deleteAllInventoryItemsByEinheit = async (einheit: string[]) => {
+    return this.inventoryItemModel.deleteMany({ einheit: { $in: einheit } });
+  };
 }

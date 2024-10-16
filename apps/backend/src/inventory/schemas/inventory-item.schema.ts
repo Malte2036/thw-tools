@@ -4,7 +4,7 @@ import { Organisation } from 'src/organisation/schemas/organisation.schema';
 
 export type InventoryItemDocument = HydratedDocument<InventoryItem>;
 
-export const inventarNummerRegex = /^\d{4}-\d{6}$/;
+export const inventarNummerRegex = /^\d{4}-S?\d{6}$/;
 
 @Schema()
 export class InventoryItem {
