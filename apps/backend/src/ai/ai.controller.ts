@@ -1,4 +1,12 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Logger,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { AiService } from './ai.service';
 
 @Controller('ai')
@@ -6,15 +14,12 @@ export class AiController {
   constructor(private readonly aiService: AiService) {}
 
   @Post('knowledge-base/ask')
-  async ask(@Body() { question }: { question: string }) {
+  async ask(@Res() response, @Body() { question }: { question: string }) {
     Logger.log(`Received question: ${question}`);
     if (!question) {
-      throw new Error('Invalid question');
+      throw new HttpException('Question is required', HttpStatus.BAD_REQUEST);
     }
 
-    const answer = await this.aiService.askKnowledgeBase(question);
-    Logger.log(`Answer: ${answer}`);
-
-    return { answer };
+    return this.aiService.streamAskKnowledgeBase(response, question);
   }
 }

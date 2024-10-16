@@ -1,10 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { AiKnowledgeBaseAnswerSchema } from './schemas/ai-knowledge-base-answer.model';
+import { Injectable } from '@nestjs/common';
+import { Response } from 'express';
 
 @Injectable()
 export class AiService {
-  async askKnowledgeBase(question: string): Promise<string> {
-    const response = await fetch(
+  async streamAskKnowledgeBase(response: Response, question: string) {
+    const fetchResponse = await fetch(
       `${process.env.THW_TOOLS_AI_SERVICE_URL}/ask`,
       {
         method: 'POST',
@@ -17,16 +17,24 @@ export class AiService {
       },
     );
 
-    const json = await response.json();
+    response.status(fetchResponse.status);
+    fetchResponse.headers.forEach((value, name) => {
+      response.setHeader(name, value);
+    });
+    // Stream directly to the response
+    const reader = fetchResponse.body.getReader();
+    const writer = response;
 
-    const validationResult = AiKnowledgeBaseAnswerSchema.safeParse(json);
+    const pump = async () => {
+      const { done, value } = await reader.read();
+      if (done) {
+        writer.end();
+        return;
+      }
+      writer.write(value);
+      pump();
+    };
 
-    if (!validationResult.success) {
-      Logger.debug(json);
-      Logger.error(validationResult.error.errors);
-      throw new Error('Invalid response from AI service');
-    }
-
-    return validationResult.data.response;
+    pump();
   }
 }
