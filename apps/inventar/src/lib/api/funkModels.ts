@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { dateToFriendlyString, searchStringIsInArray } from '$lib/utils';
 
-export const inventarNummerRegex = /^\d{4}-\d{6}$/;
+export const inventarNummerRegex = /^\d{4}-S?\d{6}$/;
 export const InventarNummer = z
 	.string()
 	.regex(inventarNummerRegex, 'Invalid inventar number format');
