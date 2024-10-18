@@ -12,6 +12,7 @@
 	import { onMount } from 'svelte';
 	import WalkieTalkieIcon from '$lib/icons/WalkieTalkieIcon.svelte';
 	import CircleRadiationIcon from '$lib/icons/CircleRadiationIcon.svelte';
+	import BrainIcon from '$lib/icons/BrainIcon.svelte';
 
 	const description = {
 		headline: 'Inoffizielle Tools für THW-Helfer:',
@@ -130,6 +131,12 @@
 					<VestIcon />
 				</div>
 				<div class="font-bold">THW Bekleidungs Rechner</div>
+			</LinkButton>
+			<LinkButton url="/ai" dataUmamiEvent={'Open AI Knowledge Base'}>
+				<div class="w-6">
+					<BrainIcon />
+				</div>
+				<div class="font-bold">AI Knowledge Base</div>
 			</LinkButton>
 		</div>
 	</div>
