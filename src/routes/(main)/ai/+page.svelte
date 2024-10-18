@@ -38,9 +38,9 @@
 			Aktuell ist die Knowledge Base mit den Ausbildungsunterlagen der <i class="font-bold"
 				>Grundausbildung</i
 			>
-			und den Bereichsausbildungen <i class="font-bold">AGT</i>, <i class="font-bold">CBRN</i> und
-			<i class="font-bold">SEA</i> gefüllt. Es wird empfohlen, die Fragen so präzise wie möglich zu formulieren
-			und es wird auf keinerlei Richtigkeit der Antworten garantiert.
+			und den Bereichsausbildungen <i class="font-bold">AGT</i> und <i class="font-bold">CBRN</i> gefüllt.
+			Es wird empfohlen, die Fragen so präzise wie möglich zu formulieren und es wird auf keinerlei Richtigkeit
+			der Antworten garantiert.
 		</div>
 
 		<Input bind:inputValue={input} placeholder="Ask AI" />
