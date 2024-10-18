@@ -5,7 +5,7 @@ import { Response } from 'express';
 export class AiService {
   async streamAskKnowledgeBase(response: Response, question: string) {
     const fetchResponse = await fetch(
-      `${process.env.THW_TOOLS_AI_SERVICE_URL}/ask`,
+      `${process.env.THW_TOOLS_AI_SERVICE_URL}/ask/stream`,
       {
         method: 'POST',
         headers: {
