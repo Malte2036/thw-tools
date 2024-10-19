@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { uploadInventoryTHWInExportFile } from '$lib/api/inventoryApi';
+	import type { ImportInventoryItemsResult } from '$lib/api/inventoryModels';
 	import Button from '$lib/Button.svelte';
 	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
 	import LinkButton from '$lib/LinkButton.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 
-	let uploadPromise: Promise<void> | null = null;
+	let uploadPromise: Promise<ImportInventoryItemsResult> | null = null;
 
 	let files: FileList | null = null;
 
@@ -20,16 +21,18 @@
 
 		uploadPromise = uploadInventoryTHWInExportFile(file);
 
-		await uploadPromise;
-		uploadPromise = null;
+		const res = await uploadPromise;
 
 		$bannerMessage = {
-			message: 'THWin Export erfolgreich importiert',
+			message: `Es wurden ${res.count} Inventar-Items der Einheiten ${res.einheiten.map((einheit) => `'${einheit}'`).join(', ')} importiert`,
 			type: 'info',
 			autoDismiss: {
 				duration: 5000
 			}
 		};
+
+		uploadPromise = null;
+		files = null;
 	};
 </script>
 

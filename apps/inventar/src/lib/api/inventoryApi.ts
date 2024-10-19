@@ -1,5 +1,10 @@
 import { apiGet, apiPostFile } from './apiGeneric';
-import { InventoryItemZodSchema, type InventoryItem } from './inventoryModels';
+import {
+	ImportInventoryItemsResultZodSchema,
+	InventoryItemZodSchema,
+	type ImportInventoryItemsResult,
+	type InventoryItem
+} from './inventoryModels';
 
 export async function getInventoryItems(): Promise<InventoryItem[]> {
 	return await apiGet<InventoryItem[]>('/inventory', (data) => {
@@ -23,6 +28,14 @@ export async function getInventoryItems(): Promise<InventoryItem[]> {
 // 	});
 // }
 
-export async function uploadInventoryTHWInExportFile(file: File): Promise<void> {
-	return apiPostFile('/inventory/import/csv', file);
+export async function uploadInventoryTHWInExportFile(
+	file: File
+): Promise<ImportInventoryItemsResult> {
+	return apiPostFile<ImportInventoryItemsResult>('/inventory/import/csv', file, (data) => {
+		const result = ImportInventoryItemsResultZodSchema.safeParse(data);
+		if (!result.success) {
+			console.error('Error parsing ImportInventoryItemsResult:', result.error);
+		}
+		return result.success;
+	});
 }

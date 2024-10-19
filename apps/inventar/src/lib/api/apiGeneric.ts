@@ -79,7 +79,7 @@ export async function apiPost<T>(path: string, body?: any, verifyData?: (data: T
 	}
 }
 
-export async function apiPostFile(path: string, file: File) {
+export async function apiPostFile<T>(path: string, file: File, verifyData?: (data: T) => boolean) {
 	const url = new URL(path, PUBLIC_API_URL);
 	try {
 		const formData = new FormData();
@@ -104,6 +104,12 @@ export async function apiPostFile(path: string, file: File) {
 				errorData.message ?? response.statusText
 			);
 		}
+
+		const data: T = await response.json();
+		if (verifyData && !verifyData(data)) {
+			throw new CustomError(`Failed to verify data.`);
+		}
+		return data;
 	} catch (error) {
 		console.error('Error posting file:', error);
 		throw error;

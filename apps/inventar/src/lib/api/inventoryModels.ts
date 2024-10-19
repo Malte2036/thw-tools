@@ -20,3 +20,10 @@ export const InventoryItemZodSchema = z.object({
 });
 
 export type InventoryItem = z.infer<typeof InventoryItemZodSchema>;
+
+export const ImportInventoryItemsResultZodSchema = z.object({
+	count: z.number().int(),
+	einheiten: z.string().array()
+});
+
+export type ImportInventoryItemsResult = z.infer<typeof ImportInventoryItemsResultZodSchema>;
