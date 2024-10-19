@@ -6,6 +6,7 @@
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { writable } from 'svelte/store';
 	import DOMPurify from 'dompurify';
+	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
 
 	let input = '';
 
@@ -61,7 +62,10 @@
 				</div>
 			{/if}
 		{:catch error}
-			<p>Error: {error.message}</p>
+			<ErrorDisplay
+				label="Beim Abrufen der Daten aus der Knowledge Base ist ein Fehler aufgetreten."
+				{error}
+			/>
 		{/await}
 	</div>
 </div>
