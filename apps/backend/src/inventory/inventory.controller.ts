@@ -68,11 +68,17 @@ export class InventoryController {
       this.organisationService,
     );
 
+    if (!file) {
+      Logger.error('No file provided');
+      throw new Error('No file provided');
+    }
+
     Logger.log(
-      `User ${user.id} is importing inventory, with file of size ${file.size}`,
+      `User ${user.id} is importing inventory, with file ${file.originalname}`,
     );
 
-    this.inventoryService.parseCsvData(organisation, file);
+    await this.inventoryService.parseCsvData(organisation, file);
     Logger.log('File processed');
+    return { message: 'File processed' };
   }
 }
