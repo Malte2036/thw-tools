@@ -1,9 +1,6 @@
 import {
-  Body,
   Controller,
   Get,
-  HttpException,
-  HttpStatus,
   Logger,
   Param,
   Post,
@@ -14,11 +11,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 
-import { InventoryService } from './inventory.service';
 import { getUserAndOrgFromRequestAndThrow } from 'src/funk/funk.controller';
 import { OrganisationService } from 'src/organisation/organisation.service';
 import { UserService } from 'src/user/user.service';
-import { z } from 'zod';
+import { InventoryService } from './inventory.service';
 
 @ApiTags('inventory')
 @Controller('inventory')
@@ -28,6 +24,18 @@ export class InventoryController {
     private readonly organisationService: OrganisationService,
     private readonly inventoryService: InventoryService,
   ) {}
+
+  @Get()
+  async getInventoryItems(@Req() req: Request) {
+    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
+      req,
+      this.userService,
+      this.organisationService,
+    );
+
+    Logger.log('Getting inventory items');
+    return this.inventoryService.getInventoryItems(organisation._id);
+  }
 
   @Get('inventarNummer/:inventarNummer')
   async getInventoryItemByInventarNumber(
@@ -52,7 +60,6 @@ export class InventoryController {
   @UseInterceptors(FileInterceptor('file'))
   async importInventoryViaCsv(
     @Req() req: Request,
-    @Body() body: { einheit: string },
     @UploadedFile() file: Express.Multer.File,
   ) {
     const [user, organisation] = await getUserAndOrgFromRequestAndThrow(
@@ -61,20 +68,11 @@ export class InventoryController {
       this.organisationService,
     );
 
-    const einheitParsed = z.string().safeParse(body.einheit);
-    if (!einheitParsed.success) {
-      throw new HttpException(
-        'Einheit is not a valid string',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const einheit = einheitParsed.data;
-
     Logger.log(
-      `User ${user.id} is importing inventory for ${einheit}, with file ${file.originalname}`,
+      `User ${user.id} is importing inventory, with file ${file.originalname}`,
     );
-    this.inventoryService.parseCsvData(organisation, einheit, file);
+
+    this.inventoryService.parseCsvData(organisation, file);
     Logger.log('File processed');
   }
 }
