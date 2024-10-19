@@ -23,26 +23,45 @@
 			};
 		}
 	};
+
+	const getEinheiten = () => {
+		return new Set<string>($inventory.inventoryItems?.map((item) => item.einheit));
+	};
 </script>
 
-{#await $inventory.fetching}
-	<LoadingSpinner />
-{:catch error}
-	<div class="p-2">
-		<ErrorDisplay label="Inventar-Items konnten nicht geladen werden" {error} />
+<div class="p-2 flex flex-col gap-4">
+	<div class="flex flex-col gap-2">
+		<h1 class="text-2xl font-bold">Inventar</h1>
+		<p class="text-lg">
+			Scanne den QR-Code oder gib die Inventar-Nummer manuell ein, um Informationen zu einem
+			Inventar-Item im OV zu erhalten.
+		</p>
 	</div>
-{/await}
 
-<div class="p-2">
-	<h1 class="text-2xl font-bold">Inventar</h1>
-	<p class="text-lg">
-		Scanne den QR-Code oder gib die Inventar-Nummer manuell ein, um Informationen zu einem
-		Inventar-Item im OV zu erhalten.
-	</p>
-	<p class="text-lg text-gray-500">
-		PS: Dieser Teil der Seite ist noch nicht fertig und befindet sich in der Entwicklung. Es sind
-		noch nicht alle Inventar-Items im System erfasst.
-	</p>
+	<div class="flex flex-col gap-2">
+		{#await $inventory.fetching}
+			<LoadingSpinner />
+		{:then}
+			{#if $inventory.inventoryItems?.length === 0}
+				<p class="text-lg text-gray-500">Es sind noch keine Inventar-Items im System erfasst.</p>
+			{:else}
+				<div class="text-lg text-gray-500">
+					Es sind bereits {$inventory.inventoryItems?.length} Inventar-Items im System der folgenden
+					Einheiten erfasst:
+
+					<ul class="list-disc list-inside pl-2">
+						{#each Array.from(getEinheiten()) as einheit}
+							<li>{einheit}</li>
+						{/each}
+					</ul>
+				</div>
+			{/if}
+		{:catch error}
+			<div class="p-2">
+				<ErrorDisplay label="Inventar-Items konnten nicht geladen werden" {error} />
+			</div>
+		{/await}
+	</div>
 </div>
 
 {#if inventoryItem === undefined}
