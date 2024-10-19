@@ -87,8 +87,8 @@ export class InventoryController {
       `User ${user.id} is importing inventory, with file ${file.originalname}`,
     );
 
-    await this.inventoryService.parseCsvData(organisation, file);
-    Logger.log('File processed');
-    return { message: 'File processed' };
+    const res = await this.inventoryService.parseCsvData(organisation, file);
+    Logger.log('Processed CSV data', res);
+    return res;
   }
 }

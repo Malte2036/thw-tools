@@ -56,10 +56,13 @@ export class InventoryService {
   async parseCsvData(
     organisation: OrganisationDocument,
     file: Express.Multer.File,
-  ) {
+  ): Promise<{
+    count: number;
+    einheiten: string[];
+  }> {
     const records: InventarCsvRow[] = [];
 
-    await new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
       parse(file.buffer, {
         delimiter: ';',
         columns: true,
@@ -83,8 +86,8 @@ export class InventoryService {
         })
         .on('end', async () => {
           try {
-            await this.processCsvData(organisation, records);
-            resolve({ message: 'CSV file processed successfully' });
+            const res = await this.processCsvData(organisation, records);
+            resolve(res);
           } catch (error) {
             reject(error);
           }
@@ -93,14 +96,15 @@ export class InventoryService {
           reject(error);
         });
     });
-
-    Logger.log(`Processed ${records.length} CSV rows`);
   }
 
   async processCsvData(
     organisation: OrganisationDocument,
     records: InventarCsvRow[],
-  ) {
+  ): Promise<{
+    count: number;
+    einheiten: string[];
+  }> {
     const getKeyFromDelimitedString = (
       str: string,
       delimiter: string,
@@ -208,6 +212,11 @@ export class InventoryService {
 
     Logger.debug(`Inserting ${inventoryItems.length} inventory`);
     await this.inventoryItemModel.insertMany(inventoryItems);
+
+    return {
+      count: inventoryItems.length,
+      einheiten,
+    };
   }
 
   deleteAllInventoryItemsByEinheit = async (einheit: string[]) => {
