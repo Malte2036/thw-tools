@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import { uploadInventoryTHWInExportFile } from '$lib/api/inventoryApi';
 	import type { ImportInventoryItemsResult } from '$lib/api/inventoryModels';
 	import Button from '$lib/Button.svelte';
@@ -33,6 +34,8 @@
 
 		uploadPromise = null;
 		files = null;
+
+		invalidateAll();
 	};
 </script>
 
