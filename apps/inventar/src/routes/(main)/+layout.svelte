@@ -1,19 +1,13 @@
 <script lang="ts">
-	import type { LayoutData } from './$types';
 	import { user } from '$lib/shared/stores/userStore';
-	import { funk } from '$lib/shared/stores/funkStore';
+	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
 
 	const subscribeToData = () => {
 		$user.fetching = data.organisation;
-		$funk.fetching = data.funkData;
 
 		data.organisation.then((org) => ($user.organisation = org));
-		data.funkData.then((funkData) => {
-			$funk.funkItems = funkData?.funkItems ?? null;
-			$funk.funkItemEventBulks = funkData?.funkItemEventBulks ?? null;
-		});
 	};
 	$: data && subscribeToData();
 </script>

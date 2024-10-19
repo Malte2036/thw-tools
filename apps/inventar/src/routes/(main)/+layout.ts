@@ -1,14 +1,12 @@
 import { isAuthenticated, login } from '$lib/api/authApi';
 import { userToFriendlyString } from '$lib/api/funkModels';
-import { getInventoryItems } from '$lib/api/inventoryApi';
 import { getOrganisationForUser } from '$lib/api/organisationApi';
 import type { LayoutLoad } from './$types';
 
 export const ssr = false;
 
 const EMPTY = {
-	organisation: Promise.resolve(null),
-	inventoryItems: Promise.resolve(null)
+	organisation: Promise.resolve(null)
 };
 
 export const load = (async ({ url }) => {
@@ -26,7 +24,6 @@ export const load = (async ({ url }) => {
 		organisation: getOrganisationForUser().then((org) => {
 			org.members.sort((a, b) => userToFriendlyString(a).localeCompare(userToFriendlyString(b)));
 			return org;
-		}),
-		inventoryItems: getInventoryItems()
+		})
 	};
 }) satisfies LayoutLoad;

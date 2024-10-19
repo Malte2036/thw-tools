@@ -11,11 +11,14 @@
 	import Dialog from '$lib/Dialog.svelte';
 	import Button from '$lib/Button.svelte';
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
+	import type { LayoutData } from './$types';
 
 	let title: string | undefined;
 	$: title = getCurrentTitleByPath($page.url.pathname);
 
 	function getCurrentTitleByPath(path: string): string | undefined {
+		if (path.startsWith('/inventar')) return 'Inventar';
+
 		return 'Funk';
 	}
 

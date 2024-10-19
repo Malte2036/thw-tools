@@ -6,10 +6,8 @@
 	export let data: LayoutData;
 
 	const subscribeToData = () => {
-		$user.fetching = data.organisation;
 		$inventory.fetching = data.inventoryItems;
 
-		data.organisation.then((org) => ($user.organisation = org));
 		data.inventoryItems.then((items) => ($inventory.inventoryItems = items));
 	};
 	$: data && subscribeToData();

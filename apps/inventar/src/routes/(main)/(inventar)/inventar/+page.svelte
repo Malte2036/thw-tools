@@ -2,6 +2,7 @@
 	import type { InventoryItem } from '$lib/api/inventoryModels';
 	import Button from '$lib/Button.svelte';
 	import Dialog from '$lib/Dialog.svelte';
+	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
 	import ManuelDeviceIdInput from '$lib/funk/ManuelDeviceIdInput.svelte';
 	import QrScanner from '$lib/funk/QRScanner.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
@@ -26,6 +27,10 @@
 
 {#await $inventory.fetching}
 	<LoadingSpinner />
+{:catch error}
+	<div class="p-2">
+		<ErrorDisplay label="Inventar-Items konnten nicht geladen werden" {error} />
+	</div>
 {/await}
 
 <div class="p-2">
