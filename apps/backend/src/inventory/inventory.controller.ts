@@ -69,7 +69,7 @@ export class InventoryController {
     );
 
     Logger.log(
-      `User ${user.id} is importing inventory, with file ${file.originalname}`,
+      `User ${user.id} is importing inventory, with file of size ${file.size}`,
     );
 
     this.inventoryService.parseCsvData(organisation, file);
