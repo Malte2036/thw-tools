@@ -104,5 +104,28 @@
         };
       });
     </script>
+    <div>
+      <h1>THW Error Display</h1>
+      <thw-error-display
+        id="error-display"
+        label="Error Example"
+      ></thw-error-display>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Define the error object
+        const httpError = {
+          message: "Failed to fetch data",
+          status: 404,
+          statusText: "Not Found",
+        };
+
+        // Get the error display element
+        const errorDisplay = document.getElementById("error-display");
+
+        // Set the error property of the error display element
+        errorDisplay.error = httpError;
+      });
+    </script>
   </body>
 </html>
