@@ -9,7 +9,7 @@
 	import type { PageData } from './$types';
 	import { onDestroy, onMount } from 'svelte';
 	import NoOrganisation from '$lib/funk/NoOrganisation.svelte';
-	import ErrorState from '$lib/ErrorState.svelte';
+	import ErrorState from '$lib/ErrorDisplay.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { user } from '$lib/shared/stores/userStore';
@@ -110,9 +110,11 @@
 	{#if error.status === 404}
 		<NoOrganisation />
 	{:else}
-		<ErrorState
-			label="Beim Abrufen der Organisation aus der Datenbank ist leider ein Fehler aufgetreten."
-			{error}
-		/>
+		<div class="p-2">
+			<ErrorState
+				label="Beim Abrufen der Organisation aus der Datenbank ist leider ein Fehler aufgetreten."
+				{error}
+			/>
+		</div>
 	{/if}
 {/await}

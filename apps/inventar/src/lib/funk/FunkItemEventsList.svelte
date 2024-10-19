@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getFunkItemEvents } from '$lib/api/funkApi';
-	import ErrorState from '$lib/ErrorState.svelte';
+	import ErrorState from '$lib/ErrorDisplay.svelte';
 	import Input from '$lib/Input.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { getOrganisationUserByInternalId } from '$lib/shared/stores/userStore';
