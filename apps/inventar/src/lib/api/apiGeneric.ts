@@ -49,10 +49,9 @@ export async function apiPost<T>(path: string, body?: any, verifyData?: (data: T
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
 				Authorization: `Bearer ${await getToken()}`
 			},
-			body: body ? JSON.stringify(body) : undefined
+			body: body
 		});
 
 		if (!response.ok) {

@@ -1,4 +1,4 @@
-import { apiGet } from './apiGeneric';
+import { apiGet, apiPost } from './apiGeneric';
 import { InventoryItemZodSchema, type InventoryItem } from './inventoryModels';
 
 export async function getInventoryItems(): Promise<InventoryItem[]> {
@@ -22,3 +22,11 @@ export async function getInventoryItems(): Promise<InventoryItem[]> {
 // 		return result.success;
 // 	});
 // }
+
+export async function uploadInventoryTHWInExportFile(file: File): Promise<void> {
+	const formData = new FormData();
+	formData.append('file', file, file.name);
+	console.log('uploadInventoryTHWInExportFile', file);
+
+	return apiPost<void>('/inventory/import/csv', formData);
+}
