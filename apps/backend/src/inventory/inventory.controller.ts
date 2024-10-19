@@ -73,6 +73,11 @@ export class InventoryController {
       throw new Error('No file provided');
     }
 
+    if (file.mimetype !== 'text/csv') {
+      Logger.error('Invalid file type provided');
+      throw new Error('Only CSV files are allowed');
+    }
+
     Logger.log(
       `User ${user.id} is importing inventory, with file ${file.originalname}`,
     );
