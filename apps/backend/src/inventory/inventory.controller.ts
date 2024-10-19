@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Logger,
   Param,
   Post,
@@ -70,12 +72,15 @@ export class InventoryController {
 
     if (!file) {
       Logger.error('No file provided');
-      throw new Error('No file provided');
+      throw new HttpException('No file provided', HttpStatus.BAD_REQUEST);
     }
 
     if (file.mimetype !== 'text/csv') {
       Logger.error('Invalid file type provided');
-      throw new Error('Only CSV files are allowed');
+      throw new HttpException(
+        'Only CSV files are allowed',
+        HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+      );
     }
 
     Logger.log(
