@@ -49,9 +49,10 @@ export async function apiPost<T>(path: string, body?: any, verifyData?: (data: T
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {
+				'Content-Type': 'application/json',
 				Authorization: `Bearer ${await getToken()}`
 			},
-			body: body
+			body: body ? JSON.stringify(body) : undefined
 		});
 
 		if (!response.ok) {
@@ -74,6 +75,37 @@ export async function apiPost<T>(path: string, body?: any, verifyData?: (data: T
 		return data;
 	} catch (error) {
 		console.error('Error posting data:', error);
+		throw error;
+	}
+}
+
+export async function apiPostFile(path: string, file: File) {
+	const url = new URL(path, PUBLIC_API_URL);
+	try {
+		const formData = new FormData();
+		formData.append('file', file, file.name);
+
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${await getToken()}`
+			},
+			body: formData
+		});
+
+		if (!response.ok) {
+			checkIfResposeIsUnauthorized(response);
+
+			const errorData = await response.json();
+
+			throw new HttpError(
+				response.status,
+				`Failed to post file to ${url}: ${errorData.message}`,
+				errorData.message ?? response.statusText
+			);
+		}
+	} catch (error) {
+		console.error('Error posting file:', error);
 		throw error;
 	}
 }
