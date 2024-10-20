@@ -50,11 +50,6 @@ self.addEventListener('fetch', (event) => {
 			}
 		}
 
-		if (!url.pathname.startsWith('/inventory')) {
-			// We don't want to cache inventory related backend requests, because they are dynamic.
-			return await fetch(event.request);
-		}
-
 		console.log('Try fetching', url.pathname, 'from cache');
 
 		// for everything else, try the network first, but
