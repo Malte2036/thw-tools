@@ -50,7 +50,7 @@ self.addEventListener('fetch', (event) => {
 			}
 		}
 
-		console.log('Try fetching', url.pathname, 'from cache');
+		// console.log('Try fetching', url.pathname, 'from cache');
 
 		// for everything else, try the network first, but
 		// fall back to the cache if we're offline

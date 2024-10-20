@@ -1,15 +1,9 @@
 <script lang="ts">
-	import { getOrganisationForUser } from '$lib/api/organisationApi';
 	import Input from '$lib/Input.svelte';
-	import { getOrganisationUserByInternalId } from '$lib/shared/stores/userStore';
-	import {
-		isSearchStringInFunkItemEventBulk,
-		type FunkItem,
-		type FunkItemEventBulk
-	} from '../api/funkModels';
-	import InventarItemEventBulkItem from './FunkItemEventBulkItem.svelte';
-	import { user } from '$lib/shared/stores/userStore';
 	import { funk } from '$lib/shared/stores/funkStore';
+	import { getOrganisationUserByInternalId, user } from '$lib/shared/stores/userStore';
+	import { isSearchStringInFunkItemEventBulk, type FunkItemEventBulk } from '../api/funkModels';
+	import InventarItemEventBulkItem from './FunkItemEventBulkItem.svelte';
 
 	let searchTerm: string = '';
 	let filteredBulks = $funk.funkItemEventBulks;
