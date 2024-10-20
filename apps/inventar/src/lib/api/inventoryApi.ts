@@ -1,4 +1,4 @@
-import { apiGet, apiPostFile } from './apiGeneric';
+import { apiGet, apiPostFile, type ResponeData } from './apiGeneric';
 import {
 	ImportInventoryItemsResultZodSchema,
 	InventoryItemZodSchema,
@@ -6,7 +6,7 @@ import {
 	type InventoryItem
 } from './inventoryModels';
 
-export async function getInventoryItems(): Promise<InventoryItem[]> {
+export async function getInventoryItems(): Promise<ResponeData<InventoryItem[]>> {
 	return await apiGet<InventoryItem[]>('/inventory', (data) => {
 		const result = InventoryItemZodSchema.array().safeParse(data);
 		if (!result.success) {
@@ -31,11 +31,16 @@ export async function getInventoryItems(): Promise<InventoryItem[]> {
 export async function uploadInventoryTHWInExportFile(
 	file: File
 ): Promise<ImportInventoryItemsResult> {
-	return apiPostFile<ImportInventoryItemsResult>('/inventory/import/csv', file, (data) => {
-		const result = ImportInventoryItemsResultZodSchema.safeParse(data);
-		if (!result.success) {
-			console.error('Error parsing ImportInventoryItemsResult:', result.error);
+	const response = await apiPostFile<ImportInventoryItemsResult>(
+		'/inventory/import/csv',
+		file,
+		(data) => {
+			const result = ImportInventoryItemsResultZodSchema.safeParse(data);
+			if (!result.success) {
+				console.error('Error parsing ImportInventoryItemsResult:', result.error);
+			}
+			return result.success;
 		}
-		return result.success;
-	});
+	);
+	return response.data;
 }

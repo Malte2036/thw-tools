@@ -8,7 +8,22 @@ const checkIfResposeIsUnauthorized = (res: Response) => {
 	}
 };
 
-export async function apiGet<T>(path: string, verifyData?: (data: T) => boolean) {
+export type ResponeData<T> = {
+	data: T;
+	fromCache: boolean;
+};
+
+function responseToData<T>(response: Response, data: T): ResponeData<T> {
+	return {
+		data,
+		fromCache: response.headers.get('x-served-from') === 'cache'
+	};
+}
+
+export async function apiGet<T>(
+	path: string,
+	verifyData?: (data: T) => boolean
+): Promise<ResponeData<T>> {
 	const url = new URL(path, PUBLIC_API_URL);
 
 	try {
@@ -36,14 +51,18 @@ export async function apiGet<T>(path: string, verifyData?: (data: T) => boolean)
 			throw new CustomError(`Failed to verify data.`);
 		}
 
-		return data;
+		return responseToData(response, data);
 	} catch (error) {
 		console.error('Error fetching data:', error);
 		throw error;
 	}
 }
 
-export async function apiPost<T>(path: string, body?: any, verifyData?: (data: T) => boolean) {
+export async function apiPost<T>(
+	path: string,
+	body?: any,
+	verifyData?: (data: T) => boolean
+): Promise<ResponeData<T>> {
 	const url = new URL(path, PUBLIC_API_URL);
 	try {
 		const response = await fetch(url, {
@@ -72,14 +91,18 @@ export async function apiPost<T>(path: string, body?: any, verifyData?: (data: T
 			throw new CustomError(`Failed to verify data.`);
 		}
 
-		return data;
+		return responseToData(response, data);
 	} catch (error) {
 		console.error('Error posting data:', error);
 		throw error;
 	}
 }
 
-export async function apiPostFile<T>(path: string, file: File, verifyData?: (data: T) => boolean) {
+export async function apiPostFile<T>(
+	path: string,
+	file: File,
+	verifyData?: (data: T) => boolean
+): Promise<ResponeData<T>> {
 	const url = new URL(path, PUBLIC_API_URL);
 	try {
 		const formData = new FormData();
@@ -109,7 +132,7 @@ export async function apiPostFile<T>(path: string, file: File, verifyData?: (dat
 		if (verifyData && !verifyData(data)) {
 			throw new CustomError(`Failed to verify data.`);
 		}
-		return data;
+		return responseToData(response, data);
 	} catch (error) {
 		console.error('Error posting file:', error);
 		throw error;

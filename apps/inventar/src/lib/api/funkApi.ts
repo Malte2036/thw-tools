@@ -10,7 +10,7 @@ import {
 } from './funkModels';
 
 export async function getFunkItems(): Promise<FunkItem[]> {
-	return await apiGet<FunkItem[]>('/funk', (data) =>
+	const response = await apiGet<FunkItem[]>('/funk', (data) =>
 		data.every((d) => {
 			const result = FunkItemSchema.safeParse(d);
 			if (!result.success) {
@@ -19,16 +19,18 @@ export async function getFunkItems(): Promise<FunkItem[]> {
 			return result.success;
 		})
 	);
+	return response.data;
 }
 
 export async function getFunkItem(deviceId: string): Promise<FunkItem> {
-	return await apiGet<FunkItem>(`/funk/${deviceId}`, (data) => {
+	const response = await apiGet<FunkItem>(`/funk/${deviceId}`, (data) => {
 		const result = FunkItemSchema.safeParse(data);
 		if (!result.success) {
 			console.error('Error parsing FunkItem:', result.error);
 		}
 		return result.success;
 	});
+	return response.data;
 }
 
 export async function bulkCreateFunkItemEvents(
@@ -44,7 +46,7 @@ export async function bulkCreateFunkItemEvents(
 }
 
 export async function getFunkItemEvents(deviceId: string): Promise<FunkItemEvent[]> {
-	return await apiGet<FunkItemEvent[]>(`/funk/${deviceId}/events`, (data) =>
+	const response = await apiGet<FunkItemEvent[]>(`/funk/${deviceId}/events`, (data) =>
 		data.every((d) => {
 			const result = FunkItemEventSchema.safeParse(d);
 			if (!result.success) {
@@ -53,10 +55,11 @@ export async function getFunkItemEvents(deviceId: string): Promise<FunkItemEvent
 			return result.success;
 		})
 	);
+	return response.data;
 }
 
 export async function getFunkItemEventBulks(): Promise<FunkItemEventBulk[]> {
-	return await apiGet<FunkItemEventBulk[]>(`/funk/events/bulk`, (data) =>
+	const response = await apiGet<FunkItemEventBulk[]>(`/funk/events/bulk`, (data) =>
 		data.every((d) => {
 			const result = FunkItemEventSchema.safeParse(d);
 			if (!result.success) {
@@ -65,6 +68,7 @@ export async function getFunkItemEventBulks(): Promise<FunkItemEventBulk[]> {
 			return result.success;
 		})
 	);
+	return response.data;
 }
 
 export async function exportFunkItemEventBulksAsCsv(): Promise<Blob> {

@@ -10,7 +10,10 @@ export const ssr = false;
 
 const EMPTY = {
 	organisation: Promise.resolve(null),
-	inventoryItems: Promise.resolve([]),
+	inventoryItems: Promise.resolve({
+		data: [],
+		fromCache: false
+	}),
 	funkData: Promise.resolve(null)
 };
 

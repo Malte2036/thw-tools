@@ -4,6 +4,7 @@ import { writable } from 'svelte/store';
 export type InventoryData = {
 	inventoryItems: InventoryItem[] | null;
 	fetching?: Promise<any>;
+	fromCache?: boolean;
 };
 
 export const inventory = writable<InventoryData>({

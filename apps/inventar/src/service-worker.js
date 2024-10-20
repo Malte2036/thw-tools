@@ -32,7 +32,6 @@ self.addEventListener('activate', (event) => {
 
 	event.waitUntil(deleteOldCaches());
 });
-
 self.addEventListener('fetch', (event) => {
 	// ignore POST requests etc
 	if (event.request.method !== 'GET') return;
@@ -46,11 +45,17 @@ self.addEventListener('fetch', (event) => {
 			const response = await cache.match(url.pathname);
 
 			if (response) {
-				return response;
+				// Add custom header to cached response
+				const newHeaders = new Headers(response.headers);
+				newHeaders.set('x-served-from', 'cache');
+
+				return new Response(response.body, {
+					status: response.status,
+					statusText: response.statusText,
+					headers: newHeaders
+				});
 			}
 		}
-
-		// console.log('Try fetching', url.pathname, 'from cache');
 
 		// for everything else, try the network first, but
 		// fall back to the cache if we're offline
@@ -72,7 +77,15 @@ self.addEventListener('fetch', (event) => {
 			const response = await cache.match(event.request);
 
 			if (response) {
-				return response;
+				// Add custom header to cached response
+				const newHeaders = new Headers(response.headers);
+				newHeaders.set('x-served-from', 'cache');
+
+				return new Response(response.body, {
+					status: response.status,
+					statusText: response.statusText,
+					headers: newHeaders
+				});
 			}
 
 			// if there's no cache, then just error out
