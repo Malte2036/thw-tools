@@ -10,13 +10,23 @@
 	import InventarItemEventTypeBadge from './FunkItemEventTypeBadge.svelte';
 	import { user } from '$lib/shared/stores/userStore';
 
-	export let event: FunkItemEvent;
-	export let deviceId: FunkItemDeviceId;
-	export let isSelected: boolean;
 
-	export let item: FunkItem | undefined;
 
-	export let secondary: boolean = false;
+	interface Props {
+		event: FunkItemEvent;
+		deviceId: FunkItemDeviceId;
+		isSelected: boolean;
+		item: FunkItem | undefined;
+		secondary?: boolean;
+	}
+
+	let {
+		event,
+		deviceId,
+		isSelected,
+		item,
+		secondary = false
+	}: Props = $props();
 
 	const eventUser = getOrganisationUserByInternalId($user, event.user);
 </script>

@@ -20,14 +20,18 @@
 	} from '../api/funkModels';
 	import InventarItemEventTypeBadge from './FunkItemEventTypeBadge.svelte';
 
-	export let reset: () => void;
+	interface Props {
+		reset: () => void;
+	}
+
+	let { reset }: Props = $props();
 
 	let scannedDeviceIds: {
 		deviceId: FunkItemDeviceId;
 		lastEvent?: FunkItemEvent;
-	}[] = [];
+	}[] = $state([]);
 
-	let batteryCountInput: string = '0';
+	let batteryCountInput: string = $state('0');
 
 	async function onScan(decodedText: string) {
 		if (!decodedText) {

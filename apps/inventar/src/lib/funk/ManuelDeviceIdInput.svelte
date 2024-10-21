@@ -3,11 +3,15 @@
 	import Input from '$lib/Input.svelte';
 	import { inventarNummerRegex } from '../api/funkModels';
 
-	export let onScan: (decodedText: string) => void;
+	interface Props {
+		onScan: (decodedText: string) => void;
+	}
 
-	let visible = false;
+	let { onScan }: Props = $props();
 
-	let inputValue = '';
+	let visible = $state(false);
+
+	let inputValue = $state('');
 
 	const HYPHEN_INDEX = 4;
 	const HYPHEN = '-';

@@ -12,9 +12,13 @@
 	import Button from '$lib/Button.svelte';
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 	import type { LayoutData } from './$types';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
 
-	let title: string | undefined;
-	$: title = getCurrentTitleByPath($page.url.pathname);
+	let { children }: Props = $props();
+
+	let title: string | undefined = $derived(getCurrentTitleByPath($page.url.pathname));
 
 	function getCurrentTitleByPath(path: string): string | undefined {
 		if (path.startsWith('/inventar')) return 'Inventar';
@@ -22,8 +26,8 @@
 		return 'Funk';
 	}
 
-	let showFeedback = false;
-	let showInstallPWAHelp = false;
+	let showFeedback = $state(false);
+	let showInstallPWAHelp = $state(false);
 </script>
 
 <svelte:head>
@@ -45,7 +49,7 @@
 	{/if}
 	<Banner />
 	<div class="grow">
-		<slot />
+		{@render children?.()}
 	</div>
 	<div class="flex flex-row justify-center gap-2 mb-3 flex-wrap px-2">
 		<div>©2024 Malte Sehmer</div>
@@ -56,22 +60,22 @@
 			class="underline">Impressum</a
 		>
 		<div class="text-gray-400">|</div>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
 			class="underline cursor-pointer"
-			on:click={() => (showFeedback = true)}
+			onclick={() => (showFeedback = true)}
 			data-umami-event="Open Feedback Dialog"
 		>
 			Feedback
 		</div>
 		<div class="text-gray-400">|</div>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
 			class="underline cursor-pointer"
 			data-umami-event="Open Offline Availability Dialog"
-			on:click={() => (showInstallPWAHelp = true)}
+			onclick={() => (showInstallPWAHelp = true)}
 		>
 			Als App installieren
 		</div>

@@ -1,19 +1,32 @@
 <script lang="ts">
 	import { trackEvent } from './utils';
 
-	export let secondary = false;
-	export let disabled = false;
-	export let click: (() => void) | undefined = undefined;
-	export let dataUmamiEvent: string | undefined = undefined;
-	export let tooltip: string | undefined = undefined;
+	interface Props {
+		secondary?: boolean;
+		disabled?: boolean;
+		click?: (() => void) | undefined;
+		dataUmamiEvent?: string | undefined;
+		tooltip?: string | undefined;
+		size?: 'small' | 'medium' | 'large';
+		children?: import('svelte').Snippet;
+	}
 
-	export let size: 'small' | 'medium' | 'large' = 'medium';
+	let {
+		secondary = false,
+		disabled = false,
+		click = undefined,
+		dataUmamiEvent = undefined,
+		tooltip = undefined,
+		size = 'medium',
+		children
+	}: Props = $props();
 </script>
 
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="group relative">
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<thw-button
-		on:click={async () => {
+		onclick={async () => {
 			if (click) click();
 			trackEvent(dataUmamiEvent);
 		}}
@@ -21,7 +34,7 @@
 		type={secondary ? 'secondary' : 'primary'}
 		{size}
 	>
-		<slot />
+		{@render children?.()}
 	</thw-button>
 	{#if tooltip}
 		<span

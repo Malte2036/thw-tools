@@ -1,16 +1,28 @@
 <script lang="ts">
 	import type { FormEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
-	export let inputValue: string;
-	export let onInput: FormEventHandler<HTMLInputElement> = () => {};
 
-	export let label: string | undefined = undefined;
-	export let placeholder: string | undefined = undefined;
 
-	export let type: HTMLInputAttributes['type'] = 'text';
-	export let inputmode: HTMLInputAttributes['inputmode'] = 'text';
 
-	export let pattern: string | undefined = undefined;
+	interface Props {
+		inputValue: string;
+		onInput?: FormEventHandler<HTMLInputElement>;
+		label?: string | undefined;
+		placeholder?: string | undefined;
+		type?: HTMLInputAttributes['type'];
+		inputmode?: HTMLInputAttributes['inputmode'];
+		pattern?: string | undefined;
+	}
+
+	let {
+		inputValue = $bindable(),
+		onInput = () => {},
+		label = undefined,
+		placeholder = undefined,
+		type = 'text',
+		inputmode = 'text',
+		pattern = undefined
+	}: Props = $props();
 </script>
 
 <div class="flex flex-col gap-1">
@@ -24,7 +36,7 @@
 		{...{ type }}
 		{...{ inputmode }}
 		bind:value={inputValue}
-		on:input={onInput}
+		oninput={onInput}
 		{placeholder}
 		{pattern}
 	/>

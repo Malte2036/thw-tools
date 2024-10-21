@@ -1,9 +1,18 @@
 <script lang="ts">
-	export let header: string[];
-	export let values: string[][];
-	export let onValueClick: ((row: string[], index: number) => void) | undefined = undefined;
 
-	export let selectedIndex: number | undefined = undefined;
+	interface Props {
+		header: string[];
+		values: string[][];
+		onValueClick?: ((row: string[], index: number) => void) | undefined;
+		selectedIndex?: number | undefined;
+	}
+
+	let {
+		header,
+		values,
+		onValueClick = undefined,
+		selectedIndex = $bindable(undefined)
+	}: Props = $props();
 </script>
 
 <table>
@@ -18,7 +27,7 @@
 		{#each values as row, index}
 			<tr class="hover:bg-thw-700 hover:text-white cursor-pointer">
 				{#each row as column}
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
 
 					<td
 						class="border border-slate-700"
@@ -27,7 +36,7 @@
 						class:hover:text-white={onValueClick}
 						class:bg-thw-900={selectedIndex === index}
 						class:text-white={selectedIndex === index}
-						on:click={() => {
+						onclick={() => {
 							if (!onValueClick) return;
 
 							selectedIndex = index;

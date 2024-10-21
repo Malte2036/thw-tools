@@ -9,7 +9,7 @@
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { getInventoryItemByInventarNummer, inventory } from '$lib/shared/stores/inventoryStore';
 
-	let inventoryItem: InventoryItem | undefined;
+	let inventoryItem: InventoryItem | undefined = $state();
 
 	const onScan = (decodedText: string) => {
 		inventoryItem = getInventoryItemByInventarNummer($inventory, decodedText);

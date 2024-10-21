@@ -2,7 +2,11 @@
 	import LinkButton from '$lib/LinkButton.svelte';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 <div class="flex flex-col gap-4 p-4">

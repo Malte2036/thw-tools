@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { getFunkItemEvents } from '$lib/api/funkApi';
 	import ErrorState from '$lib/ErrorDisplay.svelte';
 	import Input from '$lib/Input.svelte';
@@ -13,14 +15,18 @@
 	import { user } from '$lib/shared/stores/userStore';
 	import { funk, getAllFunkItemEventsByFunkItemDeviceId } from '$lib/shared/stores/funkStore';
 
-	export let deviceId: FunkItemDeviceId;
+	interface Props {
+		deviceId: FunkItemDeviceId;
+	}
 
-	let events: FunkItemEvent[] = [];
-	let eventsPromise: Promise<void> | undefined = undefined;
+	let { deviceId }: Props = $props();
 
-	let filteredEvents: FunkItemEvent[] = [];
+	let events: FunkItemEvent[] = $state([]);
+	let eventsPromise: Promise<void> | undefined = $state(undefined);
 
-	let search = '';
+	let filteredEvents: FunkItemEvent[] = $state([]);
+
+	let search = $state('');
 
 	const filterEvents = () => {
 		const eventsForDevice = getAllFunkItemEventsByFunkItemDeviceId($funk, deviceId);
@@ -33,7 +39,9 @@
 		);
 	};
 
-	$: (search || true) && $funk && filterEvents();
+	run(() => {
+		(search || true) && $funk && filterEvents();
+	});
 
 	async function loadEvents(deviceId: FunkItemDeviceId) {
 		events = [];
@@ -45,7 +53,9 @@
 		events = data;
 	}
 
-	$: eventsPromise = loadEvents(deviceId);
+	run(() => {
+		eventsPromise = loadEvents(deviceId);
+	});
 </script>
 
 <div class="flex flex-col gap-2">

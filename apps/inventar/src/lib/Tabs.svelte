@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	export let items: string[];
-	export let onSelect: (selected: string) => void;
-	export let initialSelected: string | undefined = undefined;
+	interface Props {
+		items: string[];
+		onSelect: (selected: string) => void;
+		initialSelected?: string | undefined;
+	}
 
-	let tabs: HTMLElement;
+	let { items, onSelect, initialSelected = undefined }: Props = $props();
+
+	let tabs: HTMLElement = $state();
 
 	onMount(() => {
 		// Define the onSelect function
@@ -15,4 +19,4 @@
 	});
 </script>
 
-<thw-tabs bind:this={tabs} {items} {initialSelected} />
+<thw-tabs bind:this={tabs} {items} {initialSelected}></thw-tabs>

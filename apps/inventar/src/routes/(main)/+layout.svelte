@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { user } from '$lib/shared/stores/userStore';
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { inventory } from '$lib/shared/stores/inventoryStore';
@@ -6,7 +8,12 @@
 
 	import type { LayoutData } from './$types';
 
-	export let data: LayoutData;
+	interface Props {
+		data: LayoutData;
+		children?: import('svelte').Snippet;
+	}
+
+	let { data, children }: Props = $props();
 
 	const subscribeToData = () => {
 		$user.fetching = data.organisation;
@@ -35,7 +42,9 @@
 			$funk.funkItemEventBulks = funkData?.funkItemEventBulks ?? null;
 		});
 	};
-	$: data && subscribeToData();
+	run(() => {
+		data && subscribeToData();
+	});
 </script>
 
-<slot></slot>
+{@render children?.()}

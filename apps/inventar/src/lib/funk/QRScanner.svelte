@@ -3,9 +3,13 @@
 	import { Html5Qrcode } from 'html5-qrcode';
 	import { onDestroy, onMount } from 'svelte';
 
-	export let onScan: (decodedText: string) => void;
+	interface Props {
+		onScan: (decodedText: string) => void;
+	}
 
-	let scanning = false;
+	let { onScan }: Props = $props();
+
+	let scanning = $state(false);
 
 	let html5Qrcode: Html5Qrcode;
 

@@ -6,8 +6,8 @@
 
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 
-	let name: string = '';
-	let error: string | null = null;
+	let name: string = $state('');
+	let error: string | null = $state(null);
 
 	const createOrg = async () => {
 		error = null;

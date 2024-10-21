@@ -2,7 +2,11 @@
 	import Button from './Button.svelte';
 	import Dialog from './Dialog.svelte';
 
-	export let onClose: () => void = () => {};
+	interface Props {
+		onClose?: () => void;
+	}
+
+	let { onClose = () => {} }: Props = $props();
 
 	function detectOS() {
 		const userAgent = navigator.userAgent.toLowerCase();
@@ -15,7 +19,7 @@
 		}
 	}
 	const os = detectOS();
-	let visibleOS: 'iOS' | 'Android' = os !== 'Unknown' ? os : 'Android';
+	let visibleOS: 'iOS' | 'Android' = $state(os !== 'Unknown' ? os : 'Android');
 </script>
 
 <Dialog title={`Offline Verfügbarkeit als App auf ${visibleOS}`}>

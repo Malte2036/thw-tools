@@ -2,7 +2,7 @@
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import Button from './Button.svelte';
 
-	let show = false;
+	let show = $state(false);
 
 	function dismissAlert() {
 		show = false;

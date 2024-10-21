@@ -1,7 +1,11 @@
 <script lang="ts">
-	export let options: { value: string; label: string }[];
-	export let selected: string;
-	export let label: string | undefined = undefined;
+	interface Props {
+		options: { value: string; label: string }[];
+		selected: string;
+		label?: string | undefined;
+	}
+
+	let { options, selected = $bindable(), label = undefined }: Props = $props();
 </script>
 
 <div class="flex flex-col gap-1">

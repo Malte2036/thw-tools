@@ -12,13 +12,17 @@
 
 	import { getOrganisationUserByInternalId } from '$lib/shared/stores/userStore';
 
-	export let bulk: FunkItemEventBulk;
+	interface Props {
+		bulk: FunkItemEventBulk;
+	}
+
+	let { bulk }: Props = $props();
 
 	const bulkUser = getOrganisationUserByInternalId($user, bulk.user);
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
 <div
 	class="text-xl flex flex-row items-center p-2 gap-2 bg-thw-50 border-thw-500 border-2 shadow-sm rounded-2xl transition-colors hover:cursor-pointer overflow-x-auto"
 >

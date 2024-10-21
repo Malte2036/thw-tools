@@ -3,7 +3,11 @@
 	import HomeIcon from '$lib/icons/HomeIcon.svelte';
 	import logo from '$lib/icons/thw-mzgw.webp';
 
-	export let title: string;
+	interface Props {
+		title: string;
+	}
+
+	let { title }: Props = $props();
 </script>
 
 <div

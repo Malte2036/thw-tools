@@ -13,14 +13,9 @@
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { user } from '$lib/shared/stores/userStore';
+	import { FunkTab } from './device/types';
 
-	enum Tab {
-		FUNK_LIST = 'Funkliste',
-		BULK_HISTORY = 'Ausleihhistorie',
-		ORGANIZATION = 'Organisation'
-	}
-
-	let selectedTab: Tab = Tab.FUNK_LIST;
+	let selectedTab: FunkTab = $state(FunkTab.FUNK_LIST);
 	let lastHiddenTime: number | null = null;
 
 	const invalidationThreshold = 2 * 60 * 1000; // 2 minutes
@@ -51,7 +46,7 @@
 
 		const tab = $page.url.searchParams.get('tab');
 		if (tab) {
-			selectedTab = tab as Tab;
+			selectedTab = tab as FunkTab;
 		}
 
 		document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -64,9 +59,9 @@
 	});
 
 	const onTabSelect = (selected: string) => {
-		selectedTab = selected as Tab;
+		selectedTab = selected as FunkTab;
 
-		if (selectedTab === Tab.FUNK_LIST) {
+		if (selectedTab === FunkTab.FUNK_LIST) {
 			$page.url.searchParams.delete('tab');
 		} else {
 			$page.url.searchParams.set('tab', selected);
@@ -83,7 +78,7 @@
 
 		<div class="flex w-full justify-center">
 			<Tabs
-				items={Object.values(Tab)}
+				items={Object.values(FunkTab)}
 				onSelect={onTabSelect}
 				initialSelected={$page.url.searchParams.get('tab') ?? undefined}
 			/>
@@ -92,9 +87,9 @@
 		{#await $funk.fetching}
 			<LoadingSpinner />
 		{:then}
-			{#if selectedTab === Tab.BULK_HISTORY}
+			{#if selectedTab === FunkTab.BULK_HISTORY}
 				<FunkBulkHistoryTab />
-			{:else if selectedTab === Tab.ORGANIZATION}
+			{:else if selectedTab === FunkTab.ORGANIZATION}
 				<OrganizationTab />
 			{:else}
 				<FunkListTab />

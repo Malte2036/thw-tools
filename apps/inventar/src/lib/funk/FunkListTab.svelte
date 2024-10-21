@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { goto } from '$app/navigation';
 	import Input from '$lib/Input.svelte';
 	import { funk, getLastFunkItemEventByFunkItemInternalId } from '$lib/shared/stores/funkStore';
@@ -6,14 +8,13 @@
 	import { isSearchStringInFunkItem, type FunkItem, type FunkItemEvent } from '../api/funkModels';
 	import InventarItemEventItem from './FunkItemEventItem.svelte';
 
-	let searchedDeviceId: string = '';
+	let searchedDeviceId: string = $state('');
 
 	type FilteredData = {
 		item: FunkItem;
 		lastEvent: FunkItemEvent;
 	};
-	let filteredInventarItems: FilteredData[] = [];
-	$: $funk && (searchedDeviceId || true) && filterInventarItems();
+	let filteredInventarItems: FilteredData[] = $state([]);
 
 	const filterInventarItems = () => {
 		filteredInventarItems = $funk.funkItems
@@ -37,6 +38,9 @@
 				);
 			}) as FilteredData[];
 	};
+	run(() => {
+		$funk && (searchedDeviceId || true) && filterInventarItems();
+	});
 </script>
 
 <div class="flex flex-col gap-2">

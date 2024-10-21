@@ -8,9 +8,9 @@
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 
-	let uploadPromise: Promise<ImportInventoryItemsResult> | null = null;
+	let uploadPromise: Promise<ImportInventoryItemsResult> | null = $state(null);
 
-	let files: FileList | null = null;
+	let files: FileList | null = $state(null);
 
 	const importFile = async () => {
 		const file = files?.[0];

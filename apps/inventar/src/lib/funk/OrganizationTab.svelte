@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { invalidateAll } from '$app/navigation';
 	import { exportFunkItemEventBulksAsCsv } from '$lib/api/funkApi';
 	import { userToFriendlyString, type FunkItem, type FunkItemEventBulk } from '$lib/api/funkModels';
@@ -52,7 +54,9 @@
 	};
 
 	const borrowedCount: number = getBorrowedDevicesCount();
-	$: $funk && getBorrowedDevicesCount();
+	run(() => {
+		$funk && getBorrowedDevicesCount();
+	});
 
 	const organisation: Organisation | null = $user.organisation;
 </script>

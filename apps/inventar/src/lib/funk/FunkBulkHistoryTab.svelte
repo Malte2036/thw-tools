@@ -1,12 +1,14 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Input from '$lib/Input.svelte';
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { getOrganisationUserByInternalId, user } from '$lib/shared/stores/userStore';
 	import { isSearchStringInFunkItemEventBulk, type FunkItemEventBulk } from '../api/funkModels';
 	import InventarItemEventBulkItem from './FunkItemEventBulkItem.svelte';
 
-	let searchTerm: string = '';
-	let filteredBulks = $funk.funkItemEventBulks;
+	let searchTerm: string = $state('');
+	let filteredBulks = $state($funk.funkItemEventBulks);
 
 	// What does this function do?
 	const getInventarItems = (bulk: FunkItemEventBulk) => {
@@ -17,7 +19,7 @@
 		);
 	};
 
-	$: {
+	run(() => {
 		filteredBulks =
 			$funk.funkItemEventBulks
 				?.filter((item) =>
@@ -29,7 +31,7 @@
 					)
 				)
 				.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) ?? [];
-	}
+	});
 </script>
 
 <div class="flex flex-col gap-2">
