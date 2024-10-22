@@ -1,21 +1,28 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
+	import { page } from '$app/stores';
+	import ErrorState from '$lib/ErrorDisplay.svelte';
+	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import Tabs from '$lib/Tabs.svelte';
 	import AddDevice from '$lib/funk/AddDevice.svelte';
 	import FunkBulkHistoryTab from '$lib/funk/FunkBulkHistoryTab.svelte';
 	import FunkListTab from '$lib/funk/FunkListTab.svelte';
-	import OrganizationTab from '$lib/funk/OrganizationTab.svelte';
-	import { page } from '$app/stores';
-	import type { PageData } from './$types';
-	import { onDestroy, onMount } from 'svelte';
 	import NoOrganisation from '$lib/funk/NoOrganisation.svelte';
-	import ErrorState from '$lib/ErrorDisplay.svelte';
-	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
+	import OrganizationTab from '$lib/funk/OrganizationTab.svelte';
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { user } from '$lib/shared/stores/userStore';
-	import { FunkTab } from './device/types';
+	import { onDestroy, onMount } from 'svelte';
 
-	let selectedTab: FunkTab = $state(FunkTab.FUNK_LIST);
+	const tabs = {
+		funkList: 'Funkgeräte',
+		bulkHistory: 'Ausleihhistorie',
+		organization: 'Organisation'
+	} as const;
+
+	type FunkTab = keyof typeof tabs;
+	type FunkTabValue = (typeof tabs)[FunkTab];
+
+	let selectedTab: FunkTab = $state('funkList');
 	let lastHiddenTime: number | null = null;
 
 	const invalidationThreshold = 2 * 60 * 1000; // 2 minutes
@@ -58,10 +65,10 @@
 		document.removeEventListener('visibilitychange', handleVisibilityChange);
 	});
 
-	const onTabSelect = (selected: string) => {
-		selectedTab = selected as FunkTab;
+	const onTabSelect = (selected: FunkTab) => {
+		selectedTab = selected;
 
-		if (selectedTab === FunkTab.FUNK_LIST) {
+		if (selectedTab === 'funkList') {
 			$page.url.searchParams.delete('tab');
 		} else {
 			$page.url.searchParams.set('tab', selected);
@@ -78,18 +85,21 @@
 
 		<div class="flex w-full justify-center">
 			<Tabs
-				items={Object.values(FunkTab)}
+				items={Object.entries(tabs).map(([key, value]) => ({
+					key: key as FunkTab,
+					label: value as FunkTabValue
+				}))}
 				onSelect={onTabSelect}
-				initialSelected={$page.url.searchParams.get('tab') ?? undefined}
+				initialSelected={($page.url.searchParams.get('tab') as FunkTab) ?? undefined}
 			/>
 		</div>
 
 		{#await $funk.fetching}
 			<LoadingSpinner />
 		{:then}
-			{#if selectedTab === FunkTab.BULK_HISTORY}
+			{#if selectedTab === 'bulkHistory'}
 				<FunkBulkHistoryTab />
-			{:else if selectedTab === FunkTab.ORGANIZATION}
+			{:else if selectedTab === 'organization'}
 				<OrganizationTab />
 			{:else}
 				<FunkListTab />
