@@ -39,7 +39,7 @@
 	"type": "module",
 	"dependencies": {
 		"@kinde-oss/kinde-typescript-sdk": "^2.9.1",
-		"@malte2036/thw-tools-components": "^0.2.19",
+		"@malte2036/thw-tools-components": "^0.2.21",
 		"es-cookie": "^1.5.0",
 		"html5-qrcode": "^2.3.8",
 		"zod": "^3.23.8"
