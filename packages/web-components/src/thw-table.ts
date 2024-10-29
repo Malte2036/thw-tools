@@ -8,6 +8,7 @@ import { thwColors } from "./colors";
  * @param {string[][]} values - The values of the table.
  * @param {Function} onValueClick - The callback function when a table row is clicked.
  * @param {number | undefined} selectedIndex - The index of the selected row.
+ * @param {number | undefined} maxHeight - The maximum height of the table.
  */
 @customElement("thw-table")
 export class THWTable extends LitElement {
@@ -18,17 +19,14 @@ export class THWTable extends LitElement {
     index: number
   ) => void;
   @property({ type: Number }) selectedIndex?: number;
+  @property({ type: Number }) maxHeight?: number;
 
   static override styles = css`
-    .overflow-x-auto {
-      overflow-x: auto;
-    }
-    .max-h-600 {
-      max-height: 600px;
+    .table-wrapper {
       overflow: auto;
     }
     table {
-      min-width: 100%;
+      width: 100%;
       border-collapse: collapse;
       background-color: white;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -44,6 +42,9 @@ export class THWTable extends LitElement {
       background-color: ${unsafeCSS(thwColors[100])};
       color: ${unsafeCSS(thwColors[900])};
       font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 1;
     }
     tr {
       transition: background-color 0.2s, color 0.2s;
@@ -68,8 +69,11 @@ export class THWTable extends LitElement {
 
   override render() {
     return html`
-      <div class="overflow-x-auto">
-        <div class="max-h-600">
+      <div class="table-container">
+        <div
+          class="table-wrapper"
+          style=${this.maxHeight ? `max-height: ${this.maxHeight}px;` : ""}
+        >
           <table>
             <thead>
               <tr>
