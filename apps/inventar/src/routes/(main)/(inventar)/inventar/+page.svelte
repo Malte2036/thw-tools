@@ -8,6 +8,7 @@
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { getInventoryItemByInventarNummer, inventory } from '$lib/shared/stores/inventoryStore';
+	import LinkButton from '$lib/LinkButton.svelte';
 
 	let inventoryItem: InventoryItem | undefined = $state();
 
@@ -32,6 +33,10 @@
 <div class="p-2 flex flex-col gap-4">
 	<div class="flex flex-col gap-2">
 		<h1 class="text-2xl font-bold">Inventar</h1>
+		<div class="flex gap-2">
+			<LinkButton url="list">Alle Inventar-Items anzeigen</LinkButton>
+			<LinkButton url="upload" secondary>Import</LinkButton>
+		</div>
 		<p class="text-lg">
 			Scanne den QR-Code oder gib die Inventar-Nummer manuell ein, um Informationen zu einem
 			Inventar-Item im OV zu erhalten.

@@ -39,6 +39,9 @@ export const dateToFriendlyString = (date: Date) => {
 	return `${formattedDate}Uhr`;
 };
 
-export const searchStringIsInArray = (searchString: string, array: (string | undefined)[]) => {
+export const searchStringIsInArray = (
+	searchString: string,
+	array: (string | null | undefined)[]
+) => {
 	return array.some((item) => item?.toLowerCase().includes(searchString.toLowerCase()));
 };
