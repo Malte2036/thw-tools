@@ -127,5 +127,27 @@
         errorDisplay.error = httpError;
       });
     </script>
+    <div>
+      <h1>THW Table</h1>
+      <thw-table id="example-table"></thw-table>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const table = document.getElementById("example-table");
+
+        // Set the header and values properties
+        table.header = ["Name", "Age", "Occupation"];
+        table.values = [
+          ["Alice", "30", "Engineer"],
+          ["Bob", "25", "Designer"],
+          ["Charlie", "35", "Teacher"],
+        ];
+
+        // Set the onValueClick callback
+        table.onValueClick = (row, index) => {
+          console.log("Clicked row:", row, "at index:", index);
+        };
+      });
+    </script>
   </body>
 </html>
