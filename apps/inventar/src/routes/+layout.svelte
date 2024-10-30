@@ -12,6 +12,7 @@
 	import Button from '$lib/Button.svelte';
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 	import type { LayoutData } from './$types';
+	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -44,9 +45,7 @@
 </svelte:head>
 
 <div class="flex flex-col gap-4 justify-between min-h-screen">
-	{#if title !== undefined}
-		<Header {title} />
-	{/if}
+	<NavigationBar />
 	<Banner />
 	<div class="grow">
 		{@render children?.()}
