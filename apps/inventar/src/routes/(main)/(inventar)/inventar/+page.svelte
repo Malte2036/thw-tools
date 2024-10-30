@@ -1,7 +1,5 @@
 <script lang="ts">
 	import type { InventoryItem } from '$lib/api/inventoryModels';
-	import Button from '$lib/Button.svelte';
-	import Dialog from '$lib/Dialog.svelte';
 	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
 	import ManuelDeviceIdInput from '$lib/funk/ManuelDeviceIdInput.svelte';
 	import QrScanner from '$lib/funk/QRScanner.svelte';
@@ -9,6 +7,7 @@
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { getInventoryItemByInventarNummer, inventory } from '$lib/shared/stores/inventoryStore';
 	import LinkButton from '$lib/LinkButton.svelte';
+	import InventoryDetailsDialog from '$lib/inventar/InventoryDetailsDialog.svelte';
 
 	let inventoryItem: InventoryItem | undefined = $state();
 
@@ -34,7 +33,7 @@
 	<div class="flex flex-col gap-2">
 		<h1 class="text-2xl font-bold">Inventar</h1>
 		<div class="flex gap-2">
-			<LinkButton url="list">Alle Inventar-Items anzeigen</LinkButton>
+			<LinkButton url="list">Alle Items anzeigen</LinkButton>
 			<LinkButton url="upload" secondary>Import</LinkButton>
 		</div>
 		<p class="text-lg">
@@ -71,59 +70,20 @@
 
 {#if inventoryItem === undefined}
 	<div class="flex flex-col gap-2 p-2">
-		<QrScanner {onScan} />
-		<ManuelDeviceIdInput {onScan} />
+		<QrScanner 
+			{onScan} 
+			scanButtonText="QR-Code scannen"
+			closeButtonText="Scanner schließen"
+		/>
+		<ManuelDeviceIdInput 
+			{onScan}
+			showButtonText="Inventarnummer manuell eingeben"
+			submitButtonText="Suchen"
+		/>
 	</div>
 {:else}
-	<Dialog title="Inventar-Details">
-		<div slot="content" class="flex flex-col gap-2">
-			<div>
-				<span class="font-bold">Inventar-Nummer:</span>
-				<span>{inventoryItem.inventarNummer}</span>
-			</div>
-			<div>
-				<span class="font-bold">Sach-Nummer:</span>
-				<span>{inventoryItem.sachNummer}</span>
-			</div>
-			<div>
-				<span class="font-bold">Ebene:</span>
-				<span>{inventoryItem.ebene}</span>
-			</div>
-			<div>
-				<span class="font-bold">Einheit:</span>
-				<span>{inventoryItem.einheit}</span>
-			</div>
-			{#if inventoryItem.art}
-				<div>
-					<span class="font-bold">Art:</span>
-					<span>{inventoryItem.art}</span>
-				</div>
-			{/if}
-			<div>
-				<span class="font-bold">Ausstattung:</span>
-				<span>{inventoryItem.ausstattung}</span>
-			</div>
-			{#if inventoryItem.hersteller}
-				<div>
-					<span class="font-bold">Hersteller:</span>
-					<span>{inventoryItem.hersteller}</span>
-				</div>
-			{/if}
-			{#if inventoryItem.typ}
-				<div>
-					<span class="font-bold">Typ:</span>
-					<span>{inventoryItem.typ}</span>
-				</div>
-			{/if}
-			{#if inventoryItem.gerateNummer}
-				<div>
-					<span class="font-bold">Geräte-Nummer:</span>
-					<span>{inventoryItem.gerateNummer}</span>
-				</div>
-			{/if}
-		</div>
-		<div slot="footer">
-			<Button click={() => (inventoryItem = undefined)}>Schließen</Button>
-		</div></Dialog
-	>
+	<InventoryDetailsDialog 
+		{inventoryItem} 
+		onClose={() => inventoryItem = undefined}
+	/>
 {/if}

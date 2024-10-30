@@ -5,9 +5,15 @@
 
 	interface Props {
 		onScan: (decodedText: string) => void;
+		scanButtonText?: string;
+		closeButtonText?: string;
 	}
 
-	let { onScan }: Props = $props();
+	let { 
+		onScan,
+		scanButtonText = 'Gerät scannen',
+		closeButtonText = 'Scanner schließen'
+	}: Props = $props();
 
 	let scanning = $state(false);
 
@@ -66,9 +72,9 @@
 <div class="flex flex-col gap-4">
 	<reader id="reader" class={`bg-gray-500 h-full w-full ${scanning ? '' : 'hidden'}`}></reader>
 	{#if scanning}
-		<Button secondary click={stop}>Scanner schließen</Button>
+		<Button secondary click={stop}>{closeButtonText}</Button>
 	{:else}
-		<Button click={start}>Gerät scannen</Button>
+		<Button click={start}>{scanButtonText}</Button>
 	{/if}
 </div>
 

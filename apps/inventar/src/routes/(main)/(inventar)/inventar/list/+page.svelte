@@ -79,15 +79,16 @@
 	{:then}
 		<div class="flex flex-col gap-4">
 			<div class="flex flex-col md:flex-row items-center gap-4">
-				<div class="flex-1">
+				<div class="w-full md:w-64">
+					<Select options={getEinheiten()} bind:selected={selectedEinheit} label="Einheit Filter" />
+				</div>
+				<div class="w-full">
 					<Input
 						inputValue={searchTerm}
 						onInput={handleSearch}
 						placeholder="Suche nach Inventarnummer, Ausstattung, etc."
+						label="Suche"
 					/>
-				</div>
-				<div class="w-full md:w-64">
-					<Select options={getEinheiten()} bind:selected={selectedEinheit} label="Einheit Filter" />
 				</div>
 			</div>
 

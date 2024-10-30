@@ -5,9 +5,15 @@
 
 	interface Props {
 		onScan: (decodedText: string) => void;
+		showButtonText?: string;
+		submitButtonText?: string;
 	}
 
-	let { onScan }: Props = $props();
+	let { 
+		onScan,
+		showButtonText = 'Gerät manuell hinzufügen',
+		submitButtonText = 'Eintragen'
+	}: Props = $props();
 
 	let visible = $state(false);
 
@@ -41,9 +47,9 @@
 				onScan(inputValue);
 			}}
 		>
-			Eintragen
+			{submitButtonText}
 		</Button>
 	</div>
 {:else}
-	<Button secondary click={() => (visible = true)}>Gerät manuell hinzufügen</Button>
+	<Button secondary click={() => (visible = true)}>{showButtonText}</Button>
 {/if}
