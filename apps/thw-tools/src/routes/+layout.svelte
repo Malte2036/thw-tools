@@ -1,37 +1,14 @@
 <script lang="ts">
 	import '@malte2036/thw-tools-components';
-
 	import { dev } from '$app/environment';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
-
 	import '../app.css';
 	import { page } from '$app/stores';
-	import Header from './Header.svelte';
 	import Banner from '$lib/Banner.svelte';
 	import Dialog from '$lib/Dialog.svelte';
 	import Button from '$lib/Button.svelte';
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
-
-	let title: string | undefined;
-	$: title = getCurrentTitleByPath($page.url.pathname);
-
-	function getCurrentTitleByPath(path: string): string | undefined {
-		if (path.startsWith('/quiz/ga')) {
-			return 'Grundausbildungs-Quiz';
-		} else if (path.startsWith('/quiz/agt')) {
-			return 'Atemschutz-Quiz';
-		} else if (path.startsWith('/quiz/cbrn')) {
-			return 'CBRN-Quiz';
-		} else if (path.startsWith('/quiz/radio')) {
-			return 'Sprechfunk-Quiz';
-		} else if (path.startsWith('/cbrn/protective-suite')) {
-			return 'CBRN-Schutzanzug';
-		} else if (path === '/') {
-			return undefined;
-		} else {
-			return 'THW-Tools';
-		}
-	}
+	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 
 	let showFeedback = false;
 	let showInstallPWAHelp = false;
@@ -51,9 +28,7 @@
 </svelte:head>
 
 <div class="flex flex-col gap-4 justify-between min-h-screen">
-	{#if title !== undefined}
-		<Header {title} />
-	{/if}
+	<NavigationBar />
 	<Banner />
 	<div class="grow">
 		<slot />
