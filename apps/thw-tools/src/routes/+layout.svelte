@@ -30,7 +30,7 @@
 <div class="flex flex-col gap-4 justify-between min-h-screen">
 	<NavigationBar />
 	<Banner />
-	<div class="grow">
+	<div class="flex-grow flex flex-col">
 		<slot />
 	</div>
 	<div class="flex flex-row justify-center gap-2 mb-3 flex-wrap px-2">
