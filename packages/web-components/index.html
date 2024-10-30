@@ -9,6 +9,44 @@
   </head>
   <body>
     <div>
+      <h1>THW Navigation Bar</h1>
+      <thw-navigation-bar
+        id="nav-bar"
+        title="THW Tools"
+        currentPath="/dashboard"
+      ></thw-navigation-bar>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const navBar = document.getElementById("nav-bar");
+        navBar.navItems = [
+          {
+            title: "Main Menu",
+            items: [
+              { name: "Dashboard", href: "/dashboard" },
+              { name: "Profile", href: "/profile" },
+              { name: "Settings", href: "/settings" },
+            ],
+          },
+          {
+            title: "External Links",
+            items: [
+              {
+                name: "Documentation",
+                href: "https://example.com/docs",
+                external: true,
+              },
+              {
+                name: "GitHub",
+                href: "https://github.com/example/repo",
+                external: true,
+              },
+            ],
+          },
+        ];
+      });
+    </script>
+    <div>
       <h1>THW Button</h1>
 
       <div style="display: flex; flex-direction: column; gap: 1rem">
