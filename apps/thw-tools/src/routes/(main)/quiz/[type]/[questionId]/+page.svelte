@@ -32,12 +32,13 @@
 
 		shuffledAnswers = shuffle(Array.from(q.answers));
 
-		currentQuestionAnsweredCountData = undefined;
-
 		if (!import.meta.env.SSR) {
-			getQuestionStatsCountForType(questionType, q.number).then(
-				(data) => (currentQuestionAnsweredCountData = data)
-			);
+			getQuestionStatsCountForType(questionType, q.number)
+				.then((data) => (currentQuestionAnsweredCountData = data))
+				.catch((error) => {
+					console.warn('Could not get current question stats');
+					currentQuestionAnsweredCountData = undefined;
+				});
 		}
 	}
 
