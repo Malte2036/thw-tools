@@ -142,6 +142,10 @@
 				/>
 			</div>
 		</div>
-		<QuestionStatisticsForQuestion {answeredCountData} {currentQuestionAnsweredCountData} />
+		<QuestionStatisticsForQuestion
+			{answeredCountData}
+			{currentQuestionAnsweredCountData}
+			{questionType}
+		/>
 	</div>
 </div>
