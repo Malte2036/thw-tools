@@ -77,17 +77,19 @@ export class THWTable extends LitElement {
           <table>
             <thead>
               <tr>
-                ${this.header.map((title) => html`<th>${title}</th>`)}
+                ${(this.header || []).map((title) => html`<th>${title}</th>`)}
               </tr>
             </thead>
             <tbody>
-              ${this.values.map(
+              ${(this.values || []).map(
                 (row, index) => html`
                   <tr
                     class=${this.selectedIndex === index ? "selected" : ""}
                     @click=${() => this.handleRowClick(row, index)}
                   >
-                    ${this.header.map((_, i) => html`<td>${row[i]}</td>`)}
+                    ${(this.header || []).map(
+                      (_, i) => html`<td>${row[i]}</td>`
+                    )}
                   </tr>
                 `
               )}
