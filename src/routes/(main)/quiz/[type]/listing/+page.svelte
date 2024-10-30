@@ -14,14 +14,16 @@
 	let questionType: QuestionType;
 
 	$: questionType = data.questionType;
-
-	onMount(() => {
-		try {
-			getQuestionStatsCountForType(questionType).then((data) => (answeredCountData = data));
-		} catch (error) {
-			console.warn('Could not add count');
+	$: {
+		// Refetch stats when question type changes
+		if (questionType) {
+			try {
+				getQuestionStatsCountForType(questionType).then((data) => (answeredCountData = data));
+			} catch (error) {
+				console.warn('Could not add count');
+			}
 		}
-	});
+	}
 
 	function getDescriptionForQuestionType(questionType: QuestionType) {
 		const count = data.allQuestions.length;
