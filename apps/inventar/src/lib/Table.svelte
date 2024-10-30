@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
 	interface Props {
 		header: string[];
 		values: string[][];
@@ -14,12 +12,6 @@
 		onValueClick = undefined,
 		selectedIndex = $bindable(undefined)
 	}: Props = $props();
-
-	function handleRowClick(row: string[], index: number) {
-		if (!onValueClick) return;
-		selectedIndex = index;
-		onValueClick(row, index);
-	}
 </script>
 
 <thw-table {header} {values} {onValueClick} {selectedIndex} maxHeight={600}></thw-table>

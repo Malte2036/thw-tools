@@ -15,24 +15,12 @@
 
 	const HYPHEN_INDEX = 4;
 	const HYPHEN = '-';
-	const DEVICE_ID_LENGTH = 11;
 
 	const fixInputValue = (value: string) => {
-		inputValue = value.trimStart();
+		inputValue = value.trim();
 
 		if (value.length > HYPHEN_INDEX && value[HYPHEN_INDEX] !== HYPHEN) {
-			console.log(
-				'Adding hyphen to',
-				value,
-				value.slice(0, HYPHEN_INDEX),
-				value.slice(HYPHEN_INDEX)
-			);
-
 			inputValue = value.slice(0, HYPHEN_INDEX) + HYPHEN + value.slice(HYPHEN_INDEX);
-		}
-
-		if (value.length > DEVICE_ID_LENGTH) {
-			inputValue = value.slice(0, DEVICE_ID_LENGTH);
 		}
 	};
 </script>
