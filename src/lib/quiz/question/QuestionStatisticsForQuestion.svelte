@@ -1,11 +1,8 @@
 <script lang="ts">
-	import type { AnsweredCountData } from '../../../routes/(main)/quiz/[type]/[questionId]/+page.server';
-	import QuestionsStatistics from './QuestionsStatistics.svelte';
 	import type { QuestionType } from '$lib/model/question';
+	import type { AnsweredCountData } from '../../../routes/(main)/quiz/[type]/[questionId]/+page.server';
 
-	export let answeredCountData: AnsweredCountData | undefined;
 	export let currentQuestionAnsweredCountData: AnsweredCountData | undefined;
-	export let questionType: QuestionType;
 
 	function getQuizTypeName(type: QuestionType) {
 		switch (type) {
@@ -42,7 +39,7 @@
 				/>
 			</div>
 			<span class="text-sm text-gray-600 whitespace-nowrap font-medium">
-				<span class="inline-block w-[4ch] text-right">{currentCorrectPercentage ?? ''}</span>%
+				<span class="inline-block min-w-[4ch] text-right">{currentCorrectPercentage ?? ''}</span>%
 				richtig
 			</span>
 		</div>
@@ -51,12 +48,5 @@
 			davon {(currentQuestionAnsweredCountData?.right || 0).toLocaleString('de-DE')}
 			Mal richtig
 		</p>
-	</div>
-
-	<div>
-		<h3 class="text-lg font-medium text-gray-700 mb-2">
-			Globale Statistik {getQuizTypeName(questionType)}
-		</h3>
-		<QuestionsStatistics {answeredCountData} {questionType} />
 	</div>
 </div>
