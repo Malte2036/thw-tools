@@ -84,11 +84,9 @@
 	});
 
 	onMount(() => {
-		try {
-			getQuestionStatsCountForType(questionType).then((data) => (answeredCountData = data));
-		} catch (error) {
-			console.warn('Could not add count');
-		}
+		getQuestionStatsCountForType(questionType)
+			.then((data) => (answeredCountData = data))
+			.catch((error) => console.warn('Could not get stats'));
 	});
 </script>
 
