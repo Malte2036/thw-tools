@@ -202,7 +202,9 @@ export class THWNavigationBar extends LitElement {
 
   private isActivePath(href: string): boolean {
     if (href.startsWith("http")) return false;
-    return this.currentPath.startsWith(href);
+    const currentPathWithoutQuery = this.currentPath.split("?")[0];
+    const hrefWithoutQuery = href.split("?")[0];
+    return currentPathWithoutQuery === hrefWithoutQuery;
   }
 
   private toggleMenu() {
