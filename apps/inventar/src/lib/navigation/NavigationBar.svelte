@@ -7,7 +7,7 @@
 			title: 'THW OV Düsseldorf',
 			items: [
 				{ name: 'Funkliste', href: '/' },
-				{ name: 'OV Inventar', href: '/inventar' }
+				{ name: 'OV Inventar (Beta)', href: '/inventar' }
 			]
 		},
 		{

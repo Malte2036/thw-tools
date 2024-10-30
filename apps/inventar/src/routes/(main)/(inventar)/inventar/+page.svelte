@@ -31,7 +31,10 @@
 
 <div class="p-2 flex flex-col gap-4">
 	<div class="flex flex-col gap-2">
-		<h1 class="text-2xl font-bold">Inventar</h1>
+		<div class="flex items-center gap-2">
+			<h1 class="text-2xl font-bold">OV Inventar</h1>
+			<span class="bg-thw-300 text-xs px-2 py-1 rounded-full">Beta</span>
+		</div>
 		<div class="flex gap-2">
 			<LinkButton url="list">Alle Items anzeigen</LinkButton>
 			<LinkButton url="upload" secondary>Import</LinkButton>
@@ -70,20 +73,13 @@
 
 {#if inventoryItem === undefined}
 	<div class="flex flex-col gap-2 p-2">
-		<QrScanner 
-			{onScan} 
-			scanButtonText="QR-Code scannen"
-			closeButtonText="Scanner schließen"
-		/>
-		<ManuelDeviceIdInput 
+		<QrScanner {onScan} scanButtonText="QR-Code scannen" closeButtonText="Scanner schließen" />
+		<ManuelDeviceIdInput
 			{onScan}
 			showButtonText="Inventarnummer manuell eingeben"
 			submitButtonText="Suchen"
 		/>
 	</div>
 {:else}
-	<InventoryDetailsDialog 
-		{inventoryItem} 
-		onClose={() => inventoryItem = undefined}
-	/>
+	<InventoryDetailsDialog {inventoryItem} onClose={() => (inventoryItem = undefined)} />
 {/if}

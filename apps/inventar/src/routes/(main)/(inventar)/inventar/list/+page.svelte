@@ -70,7 +70,10 @@
 	<LinkButton url="../" secondary>Zurück zur Inventar-Übersicht</LinkButton>
 
 	<div class="flex flex-col gap-2">
-		<h1 class="text-2xl font-bold">Inventar Liste</h1>
+		<div class="flex items-center gap-2">
+			<h1 class="text-2xl font-bold">OV Inventar Liste</h1>
+			<span class="bg-thw-300 text-xs px-2 py-1 rounded-full">Beta</span>
+		</div>
 		<p class="text-lg">Übersicht aller Inventar-Items im System.</p>
 	</div>
 
