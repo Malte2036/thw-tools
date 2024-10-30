@@ -241,7 +241,7 @@ export class THWNavigationBar extends LitElement {
             </a>
 
             <div class="desktop-nav">
-              ${this.navItems.map(
+              ${(this.navItems || []).map(
                 (category) => html`
                   <div class="nav-group">
                     <button class="nav-group-button">${category.title}</button>
@@ -293,7 +293,7 @@ export class THWNavigationBar extends LitElement {
           ${this.isMenuOpen
             ? html`
                 <div class="mobile-nav">
-                  ${this.navItems.map(
+                  ${(this.navItems || []).map(
                     (category) => html`
                       <div>
                         <div class="mobile-nav-title">${category.title}</div>
