@@ -12,8 +12,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1
       '@malte2036/thw-tools-components':
-        specifier: ^0.2.26
-        version: 0.2.26
+        specifier: ^0.2.27
+        version: 0.2.27
       es-cookie:
         specifier: ^1.5.0
         version: 1.5.0
@@ -383,8 +383,8 @@ packages:
   '@lit/reactive-element@2.0.4':
     resolution: {integrity: sha512-GFn91inaUa2oHLak8awSIigYz0cU0Payr1rcFsrkf5OJ5eSPxElyZfKh0f2p9FsTiZWXQdWGJeXZICEfXXYSXQ==}
 
-  '@malte2036/thw-tools-components@0.2.26':
-    resolution: {integrity: sha512-E2VtlYjsKGUdGikFaCoMFu+jdAHJD6nOeUtUc006VpfiOxoM1VdGbfN2+YJz9jf+8Ov1vZSl73Gc8MIOrqZxZg==}
+  '@malte2036/thw-tools-components@0.2.27':
+    resolution: {integrity: sha512-pRpGLXKLrITPWW2kFW922WmiGxjjSQKUqn2tuw790saAEKTGEsz+MmOQbuPPUn9KLNimIwqea+LrXoVV/PKHjg==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2156,7 +2156,7 @@ snapshots:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.2.1
 
-  '@malte2036/thw-tools-components@0.2.26':
+  '@malte2036/thw-tools-components@0.2.27':
     dependencies:
       lit: 3.2.0
 
