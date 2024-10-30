@@ -250,7 +250,7 @@ export class THWNavigationBar extends LitElement {
                         (item) => html`
                           <a
                             href=${item.href}
-                            target=${item.external ? "_blank" : "_self"}
+                            target=${item.external ? "_blank" : ""}
                             rel=${item.external ? "noopener noreferrer" : ""}
                             class="nav-link ${this.isActivePath(item.href)
                               ? "active"
@@ -301,7 +301,7 @@ export class THWNavigationBar extends LitElement {
                           (item) => html`
                             <a
                               href=${item.href}
-                              target=${item.external ? "_blank" : "_self"}
+                              target=${item.external ? "_blank" : ""}
                               rel=${item.external ? "noopener noreferrer" : ""}
                               class="nav-link ${this.isActivePath(item.href)
                                 ? "active"
