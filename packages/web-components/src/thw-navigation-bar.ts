@@ -201,10 +201,28 @@ export class THWNavigationBar extends LitElement {
   `;
 
   private isActivePath(href: string): boolean {
+    // Guard against invalid inputs
+    if (!href || !this.currentPath) return false;
     if (href.startsWith("http")) return false;
-    const currentPathWithoutQuery = this.currentPath.split("?")[0];
-    const hrefWithoutQuery = href.split("?")[0];
-    return currentPathWithoutQuery === hrefWithoutQuery;
+
+    // Normalize paths by removing trailing slashes, leading slashes, query params, and hashes
+    const normalizedPath = (path: string) => {
+      return decodeURIComponent(path)
+        .split("?")[0] // Remove query params
+        .split("#")[0] // Remove hash fragments
+        .replace(/^\.\/|^\/+|\/+$/g, "") // Remove ./, leading and trailing slashes
+        .toLowerCase(); // Case insensitive comparison
+    };
+
+    const currentPathNormalized = normalizedPath(this.currentPath);
+    const hrefNormalized = normalizedPath(href);
+
+    // Special case for home page
+    if (hrefNormalized === "") {
+      return currentPathNormalized === "";
+    }
+
+    return currentPathNormalized === hrefNormalized;
   }
 
   private toggleMenu() {
