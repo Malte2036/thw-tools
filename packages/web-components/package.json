@@ -1,6 +1,6 @@
 {
   "name": "@malte2036/thw-tools-components",
-  "version": "0.2.27",
+  "version": "0.2.28",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/malte2036/thw-tools-components.git"
@@ -15,11 +15,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:watch": "vite build --watch"
+    "build:watch": "vite build --watch",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@open-wc/testing": "^4.0.0",
+    "jsdom": "^25.0.1",
     "typescript": "^5.2.2",
-    "vite": "^5.1.6"
+    "vite": "^5.1.6",
+    "vitest": "^2.1.4"
   },
   "dependencies": {
     "lit": "^3.1.2"

@@ -200,29 +200,58 @@ export class THWNavigationBar extends LitElement {
     }
   `;
 
-  private isActivePath(href: string): boolean {
-    // Guard against invalid inputs
-    if (!href || !this.currentPath) return false;
-    if (href.startsWith("http")) return false;
+  public isActivePath(href: string): boolean {
+    if (!href) return false;
+    if (!this.currentPath) return href === "";
 
-    // Normalize paths by removing trailing slashes, leading slashes, query params, and hashes
-    const normalizedPath = (path: string) => {
-      return decodeURIComponent(path)
-        .split("?")[0] // Remove query params
-        .split("#")[0] // Remove hash fragments
-        .replace(/^\.\/|^\/+|\/+$/g, "") // Remove ./, leading and trailing slashes
-        .toLowerCase(); // Case insensitive comparison
+    const normalize = (path: string) => {
+      return (
+        path
+          .toLowerCase()
+          .split(/[?#]/)[0] // Remove query parameters and hashes
+          .replace(/\/+/g, "/") // Replace multiple slashes with single slash
+          .replace(/\/$/, "") || // Remove trailing slash
+        "/"
+      );
     };
 
-    const currentPathNormalized = normalizedPath(this.currentPath);
-    const hrefNormalized = normalizedPath(href);
+    const currentPath = normalize(this.currentPath);
+    const testHref = normalize(href);
 
-    // Special case for home page
-    if (hrefNormalized === "") {
-      return currentPathNormalized === "";
+    if (href.startsWith("http://") || href.startsWith("https://")) {
+      return false; // External links are never active
     }
 
-    return currentPathNormalized === hrefNormalized;
+    // Build a list of nav item hrefs
+    const navItemHrefs: string[] = [];
+    const collectHrefs = (navItems: any[]) => {
+      navItems.forEach((item) => {
+        if (item.items) {
+          collectHrefs(item.items);
+        } else if (!item.external) {
+          navItemHrefs.push(normalize(item.href));
+        }
+      });
+    };
+    collectHrefs(this.navItems);
+
+    // Find all hrefs that are prefixes of currentPath
+    const matchingHrefs = navItemHrefs.filter((navHref) =>
+      currentPath.startsWith(navHref)
+    );
+
+    // If there are matching hrefs, pick the longest one
+    let activeHref;
+    if (matchingHrefs.length > 0) {
+      activeHref = matchingHrefs.reduce((a, b) =>
+        a.length >= b.length ? a : b
+      );
+    } else {
+      // If no matching hrefs, activeHref is '/'
+      activeHref = "/";
+    }
+
+    return testHref === activeHref;
   }
 
   private toggleMenu() {

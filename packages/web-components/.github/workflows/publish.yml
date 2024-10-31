@@ -11,14 +11,28 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
         with:
           node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
-      - run: npm ci
-      - run: npx web-component-analyzer analyze src --format vscode --outFile vscode-html-custom-data.json
-      - run: npm run build
-      - run: npm publish --access public
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --no-watch
+
+      - name: Generate VSCode custom data
+        run: npx web-component-analyzer analyze src --format vscode --outFile vscode-html-custom-data.json
+
+      - name: Build package
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
