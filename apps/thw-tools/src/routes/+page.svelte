@@ -81,10 +81,10 @@
 			description: 'Hilfreiche Werkzeuge für den THW-Alltag',
 			tools: [
 				{
-					name: 'CBRN-Schutzanzug',
+					name: 'THW Bekleidungs Rechner',
 					icon: VestIcon,
-					url: '/cbrn/protective-suite',
-					event: 'Open CBRN Protective Suite'
+					url: '/clothing',
+					event: 'Open THW Clothing'
 				},
 				{
 					name: 'Finnentest',
@@ -101,10 +101,10 @@
 					external: true
 				},
 				{
-					name: 'THW Bekleidungs Rechner',
+					name: 'CBRN-Schutzanzug',
 					icon: VestIcon,
-					url: '/clothing',
-					event: 'Open THW Clothing'
+					url: '/cbrn/protective-suite',
+					event: 'Open CBRN Protective Suite'
 				}
 			]
 		}
