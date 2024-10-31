@@ -37,6 +37,8 @@
 			return 'Sprechfunk-Quiz';
 		} else if (path.startsWith('/cbrn/protective-suite')) {
 			return 'CBRN-Schutzanzug';
+		} else if (path.startsWith('/clothing')) {
+			return 'Bekleidungsrechner';
 		} else if (path === '/') {
 			return undefined;
 		} else {
