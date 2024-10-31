@@ -25,8 +25,31 @@
 
 	$: currentPath = $page.url.pathname;
 	$: isHomePage = currentPath === '/';
+
+	function getCurrentTitleByPath(path: string): string | undefined {
+		if (path.startsWith('/quiz/ga')) {
+			return 'Grundausbildungs-Quiz';
+		} else if (path.startsWith('/quiz/agt')) {
+			return 'Atemschutz-Quiz';
+		} else if (path.startsWith('/quiz/cbrn')) {
+			return 'CBRN-Quiz';
+		} else if (path.startsWith('/quiz/radio')) {
+			return 'Sprechfunk-Quiz';
+		} else if (path.startsWith('/cbrn/protective-suite')) {
+			return 'CBRN-Schutzanzug';
+		} else if (path === '/') {
+			return undefined;
+		} else {
+			return 'THW-Tools';
+		}
+	}
 </script>
 
 {#if !isHomePage}
-	<thw-navigation-bar logoUrl={logo} title="THW Tools" {navItems} {currentPath} />
+	<thw-navigation-bar
+		logoUrl={logo}
+		title={getCurrentTitleByPath(currentPath)}
+		{navItems}
+		{currentPath}
+	/>
 {/if}
