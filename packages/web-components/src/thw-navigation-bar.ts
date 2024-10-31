@@ -1,6 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { thwColors } from "./colors";
+import "./external-icon";
 
 interface NavItem {
   name: string;
@@ -193,11 +194,6 @@ export class THWNavigationBar extends LitElement {
       font-size: 1.125rem;
       padding: 0.5rem 0;
     }
-
-    .external-icon {
-      width: 1rem;
-      height: 1rem;
-    }
   `;
 
   public isActivePath(href: string): boolean {
@@ -258,25 +254,6 @@ export class THWNavigationBar extends LitElement {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  private renderExternalIcon() {
-    return html`
-      <svg
-        class="external-icon"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-        />
-      </svg>
-    `;
-  }
-
   override render() {
     return html`
       <nav>
@@ -306,7 +283,9 @@ export class THWNavigationBar extends LitElement {
                               : ""}"
                           >
                             <span>${item.name}</span>
-                            ${item.external ? this.renderExternalIcon() : ""}
+                            ${item.external
+                              ? html`<thw-external-icon></thw-external-icon>`
+                              : ""}
                           </a>
                         `
                       )}
@@ -358,7 +337,9 @@ export class THWNavigationBar extends LitElement {
                               @click=${() => (this.isMenuOpen = false)}
                             >
                               <span>${item.name}</span>
-                              ${item.external ? this.renderExternalIcon() : ""}
+                              ${item.external
+                                ? html`<thw-external-icon></thw-external-icon>`
+                                : ""}
                             </a>
                           `
                         )}
