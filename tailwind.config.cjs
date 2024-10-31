@@ -17,6 +17,9 @@ module.exports = {
 					800: '#1f11ee',
 					900: '#1a0ec7'
 				}
+			},
+			fontFamily: {
+				calibri: ['Calibri', 'sans-serif']
 			}
 		}
 	},

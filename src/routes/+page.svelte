@@ -44,6 +44,71 @@
 			}
 		}
 	});
+
+	const toolCategories = [
+		{
+			title: 'Ausbildungs-Quiz',
+			description: 'Teste und verbessere dein Wissen in verschiedenen THW-Bereichen',
+			tools: [
+				{
+					name: 'Grundausbildungs-Quiz',
+					icon: HammerIcon,
+					url: '/quiz/ga/listing/',
+					event: 'Open GA Quiz'
+				},
+				{
+					name: 'Sprechfunk-Quiz',
+					icon: WalkieTalkieIcon,
+					url: '/quiz/radio/listing/',
+					event: 'Open Radio Quiz'
+				},
+				{
+					name: 'Atemschutz-Quiz',
+					icon: ChartSimpleIcon,
+					url: '/quiz/agt/listing/',
+					event: 'Open AGT Quiz'
+				},
+				{
+					name: 'CBRN-Quiz',
+					icon: CircleRadiationIcon,
+					url: '/quiz/cbrn/listing/',
+					event: 'Open CBRN Quiz'
+				}
+			]
+		},
+		{
+			title: 'Praktische Tools',
+			description: 'Hilfreiche Werkzeuge für den THW-Alltag',
+			tools: [
+				{
+					name: 'CBRN-Schutzanzug',
+					icon: VestIcon,
+					url: '/cbrn/protective-suite',
+					event: 'Open CBRN Protective Suite'
+				},
+				{
+					name: 'Finnentest',
+					icon: HearthPulseIcon,
+					url: 'https://finnentest.thw-tools.de',
+					event: 'Open Finnentest',
+					external: true
+				},
+				{
+					name: 'Elektro Spannungsfall',
+					icon: BoltIcon,
+					url: 'https://elektro.thw-tools.de',
+					event: 'Open Elektro Spannungsfall',
+					external: true
+				},
+				{
+					name: 'THW Bekleidungs Rechner',
+					icon: VestIcon,
+					url: '/clothing',
+					event: 'Open THW Clothing'
+				}
+			]
+		}
+	];
 </script>
 
 <svelte:head>
@@ -60,84 +125,67 @@
 	<meta name="keywords" content={description.keywords} />
 </svelte:head>
 
-<div class="flex flex-col gap-4 mx-auto h-full items-center justify-between mt-16 max-md:mt-8 py-4">
-	<div class="flex flex-col gap-8 items-center px-12 w-full max-w-4xl">
-		<img
-			src={logo}
-			class="w-96 max-md:w-64 aspect-auto"
-			width="384"
-			height="308.42"
-			alt="THW MehrzweckGerätewagen"
-		/>
-		<h1 class="w-fit text-5xl max-md:text-4xl font-bold">THW Tools</h1>
-		<h2 class="w-fit text-2xl max-md:text-lg text-center">
-			<span class="font-bold">
-				{description.headline}
-			</span>
-			<span>
-				{description.subheadline}
-			</span>
-		</h2>
-		<div class="w-full flex flex-col items-center gap-4 max-w-sm max-md:max-w-[18rem]">
-			<LinkButton url={`/quiz/ga/listing/`} dataUmamiEvent={'Open GA Quiz'}>
-				<div class="w-6">
-					<HammerIcon />
+<div class="min-h-screen bg-gradient-to-b from-white to-thw-50 font-calibri">
+	<div class="container mx-auto px-4 py-8">
+		<!-- Hero Section -->
+		<div class="flex flex-col items-center text-center mb-16">
+			<img
+				src={logo}
+				class="w-96 max-md:w-64 aspect-auto mb-8"
+				width="384"
+				height="308.42"
+				alt="THW MehrzweckGerätewagen"
+			/>
+			<h1 class="text-5xl max-md:text-4xl font-bold text-thw-900 mb-4">THW Tools</h1>
+			<h2 class="text-2xl max-md:text-lg max-w-3xl">
+				<span class="font-bold text-thw-800">{description.headline}</span>
+				<span class="text-gray-700">{description.subheadline}</span>
+			</h2>
+		</div>
+
+		<!-- Tools Grid -->
+		<div class="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+			{#each toolCategories as category}
+				<div
+					class="bg-white border-2 border-thw-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-8"
+				>
+					<div class="flex flex-col h-full">
+						<!-- Category Header -->
+						<div class="border-b-2 border-thw-100 pb-4 mb-6">
+							<h3 class="text-2xl font-bold text-thw-800 mb-2">{category.title}</h3>
+							<p class="text-gray-600">{category.description}</p>
+						</div>
+
+						<!-- Tools List -->
+						<div class="flex flex-col gap-3 flex-grow">
+							{#each category.tools as tool}
+								<LinkButton url={tool.url} blank={tool.external} dataUmamiEvent={tool.event}>
+									<div class="w-6 group-hover:text-thw-600 transition-colors">
+										<svelte:component this={tool.icon} />
+									</div>
+									<div class="font-bold flex-grow text-left">{tool.name}</div>
+									{#if tool.external}
+										<div class="text-sm text-thw-400">↗</div>
+									{/if}
+								</LinkButton>
+							{/each}
+						</div>
+					</div>
 				</div>
-				<div class="font-bold">Grundausbildungs-Quiz</div>
-			</LinkButton>
-			<LinkButton url={`/quiz/radio/listing/`} dataUmamiEvent={'Open Radio Quiz'}>
-				<div class="w-6">
-					<WalkieTalkieIcon />
-				</div>
-				<div class="font-bold">Sprechfunk-Quiz</div>
-			</LinkButton>
-			<LinkButton url={`/quiz/agt/listing/`} dataUmamiEvent={'Open AGT Quiz'}>
-				<div class="w-6">
-					<ChartSimpleIcon />
-				</div>
-				<div class="font-bold">Atemschutz-Quiz</div>
-			</LinkButton>
-			<LinkButton url={`/quiz/cbrn/listing/`} dataUmamiEvent={'Open CBRN Quiz'}>
-				<div class="w-6">
-					<CircleRadiationIcon />
-				</div>
-				<div class="font-bold">CBRN-Quiz</div>
-			</LinkButton>
-			<LinkButton url={`/cbrn/protective-suite`} dataUmamiEvent={'Open CBRN Protective Suite'}>
-				<div class="w-6">
-					<VestIcon />
-				</div>
-				<div class="font-bold">CBRN-Schutzanzug</div>
-			</LinkButton>
-			<LinkButton url="https://finnentest.thw-tools.de" blank dataUmamiEvent={'Open Finnentest'}>
-				<div class="w-6">
-					<HearthPulseIcon />
-				</div>
-				<div class="font-bold">Finnentest</div>
-			</LinkButton>
-			<LinkButton
-				url="https://elektro.thw-tools.de"
-				blank
-				dataUmamiEvent={'Open Elektro Spannungsfall'}
-			>
-				<div class="w-6">
-					<BoltIcon />
-				</div>
-				<div class="font-bold">Elektro Spannungsfall</div>
-			</LinkButton>
-			<LinkButton url="/clothing" dataUmamiEvent={'Open THW Clothing'}>
-				<div class="w-6">
-					<VestIcon />
-				</div>
-				<div class="font-bold">THW Bekleidungs Rechner</div>
-			</LinkButton>
+			{/each}
+		</div>
+
+		<!-- Info Section -->
+		<div class="mt-16 text-center max-w-2xl mx-auto">
+			<p class="text-gray-600">
+				Diese inoffiziellen Tools wurden von THW-Helfern für THW-Helfer entwickelt, um die
+				Ausbildung und den Einsatz zu unterstützen.
+			</p>
 		</div>
 	</div>
 </div>
 
 {#each ['ga', 'agt', 'cbrn'] as questionType}
-	<!-- svelte-ignore a11y-missing-content -->
-	<a href={`/quiz/${questionType}`} />
-	<!-- svelte-ignore a11y-missing-content -->
-	<a href={`/quiz/${questionType}/listing`} />
+	<a href={`/quiz/${questionType}`} class="hidden" />
+	<a href={`/quiz/${questionType}/listing`} class="hidden" />
 {/each}
