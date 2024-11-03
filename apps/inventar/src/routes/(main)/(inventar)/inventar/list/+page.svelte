@@ -13,7 +13,16 @@
 	let selectedEinheit = $state('all');
 	let filteredItems = $state<InventoryItem[]>([]);
 
-	const tableHeader = ['Inventar-Nr.', 'Einheit', 'Ausstattung', 'Art', 'Hersteller', 'Typ'];
+	const tableHeader = [
+		'Inventar-Nr.',
+		'Einheit',
+		'Ausstattung',
+		'Art',
+		'Hersteller',
+		'Typ',
+		'Sach-Nr.',
+		'Gerät-Nr.'
+	];
 
 	const getTableValues = (items: InventoryItem[]) => {
 		return items.map((item) => [
@@ -22,7 +31,9 @@
 			item.ausstattung,
 			item.art || '-',
 			item.hersteller || '-',
-			item.typ || '-'
+			item.typ || '-',
+			item.sachNummer || '-',
+			item.gerateNummer || '-'
 		]);
 	};
 
