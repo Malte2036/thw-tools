@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import Button from '$lib/Button.svelte';
 	import Dialog from '$lib/Dialog.svelte';
 	import ErrorState from '$lib/ErrorDisplay.svelte';
@@ -12,6 +13,7 @@
 	function handleClose() {
 		showSuccessDialog = false;
 		window.location.href = '/';
+		invalidateAll();
 	}
 </script>
 
