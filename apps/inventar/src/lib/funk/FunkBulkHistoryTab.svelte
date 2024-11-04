@@ -35,7 +35,6 @@
 </script>
 
 <div class="flex flex-col gap-2">
-	<div class="font-bold text-2xl">Historie:</div>
 
 	<div class="flex flex-col gap-2">
 		<Input placeholder="Historie durchsuchen..." bind:inputValue={searchTerm} />
