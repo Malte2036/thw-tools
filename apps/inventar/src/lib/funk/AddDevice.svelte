@@ -7,7 +7,7 @@
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import {
 		funk,
-		getFunkItemByInternalId,
+		getFunkItemByDeviceId,
 		getLastFunkItemEventByFunkItemInternalId
 	} from '$lib/shared/stores/funkStore';
 	import {
@@ -62,7 +62,11 @@
 			return;
 		}
 
-		const existingItem = getFunkItemByInternalId($funk, decodedText);
+		
+		
+		console.log($funk.funkItems);
+		
+		const existingItem = getFunkItemByDeviceId($funk, decodedText);
 
 		console.log(`Gerät mit der ID ${decodedText} gescannt.`, existingItem);
 

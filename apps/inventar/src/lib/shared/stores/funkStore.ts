@@ -15,6 +15,9 @@ export const funk = writable<FunkData>({
 export const getFunkItemByInternalId = ({ funkItems }: FunkData, internalId: string) =>
 	funkItems?.find((item) => item._id === internalId);
 
+export const getFunkItemByDeviceId = ({ funkItems }: FunkData, deviceId: string) =>
+	funkItems?.find((item) => item.deviceId === deviceId);
+
 export const getFunkItemEventByInternalId = (
 	{ funkItemEventBulks }: FunkData,
 	internalId: string
