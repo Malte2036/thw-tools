@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Organisation,
@@ -27,7 +27,10 @@ export class OrganisationService {
     });
 
     if (!organisation) {
-      throw new Error('Organisation not found');
+      throw new HttpException(
+        'Invalid invite code - organization not found',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     organisation.members.push(user);
