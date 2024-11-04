@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { thwColors } from "./colors";
+import { thwColors, grayColors } from "./colors";
 import "./external-icon";
 
 interface NavItem {
@@ -12,6 +12,7 @@ interface NavItem {
 interface NavCategory {
   title: string;
   items: NavItem[];
+  external?: boolean;
 }
 
 /**
@@ -112,6 +113,12 @@ export class THWNavigationBar extends LitElement {
 
     .nav-group-button:hover {
       color: ${unsafeCSS(thwColors[800])};
+    }
+
+    .external-indicator {
+      font-size: 0.75rem;
+      font-weight: normal;
+      color: ${unsafeCSS(grayColors[500])};
     }
 
     .dropdown {
@@ -270,7 +277,12 @@ export class THWNavigationBar extends LitElement {
               ${(this.navItems || []).map(
                 (category) => html`
                   <div class="nav-group">
-                    <button class="nav-group-button">${category.title}</button>
+                    <button class="nav-group-button">
+                      ${category.title}
+                      ${category.external
+                        ? html`<span class="external-indicator">(Extern)</span>`
+                        : ""}
+                    </button>
                     <div class="dropdown">
                       ${category.items.map(
                         (item) => html`
@@ -324,7 +336,14 @@ export class THWNavigationBar extends LitElement {
                   ${(this.navItems || []).map(
                     (category) => html`
                       <div>
-                        <div class="mobile-nav-title">${category.title}</div>
+                        <div class="mobile-nav-title">
+                          ${category.title}
+                          ${category.external
+                            ? html`<span class="external-indicator"
+                                >(Extern)</span
+                              >`
+                            : ""}
+                        </div>
                         ${category.items.map(
                           (item) => html`
                             <a
