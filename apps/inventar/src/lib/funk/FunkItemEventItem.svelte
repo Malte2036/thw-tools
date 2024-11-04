@@ -7,8 +7,9 @@
 		type FunkItemDeviceId,
 		type FunkItemEvent
 	} from '../api/funkModels';
-	import InventarItemEventTypeBadge from './FunkItemEventTypeBadge.svelte';
+	import FunkItemEventTypeBadge from './FunkItemEventTypeBadge.svelte';
 	import { user } from '$lib/shared/stores/userStore';
+	import { eventTypeToFriendlyString } from '../api/funkModels';
 
 
 
@@ -40,14 +41,11 @@
 	<div class="text-2xl">{eventTypeToEmoji(event.type)}</div>
 	<div class="flex flex-col gap-0 w-full">
 		<div class="flex flex-row gap-2 justify-between w-full">
-			<div class="text-nowrap">ID: <span class="font-bold">{deviceId}</span></div>
+			<div class="text-nowrap font-bold">{deviceId}</div>
 			<div class="flex gap-1">
-				<InventarItemEventTypeBadge type={event.type} />
-				{#if item && item.name}
-					<div class="rounded-xl text-sm px-2 h-min bg-slate-200 whitespace-nowrap">
-						{item.name}
+					<div class="rounded-xl text-sm px-2 h-min bg-green-200 whitespace-nowrap" class:isBorrowed={event.type === 'borrowed'}>
+						{item?.name ?? eventTypeToFriendlyString(event.type)}
 					</div>
-				{/if}
 			</div>
 		</div>
 		<div class="flex flex-row gap-2 items-center w-full">
@@ -74,5 +72,9 @@
 
 	.secondary {
 		@apply border-dashed border-thw-300;
+	}
+	
+	.isBorrowed {
+		@apply bg-red-200;
 	}
 </style>
