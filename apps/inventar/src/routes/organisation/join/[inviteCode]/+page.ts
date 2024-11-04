@@ -1,5 +1,6 @@
 import { isAuthenticated, login } from '$lib/api/authApi';
 import { joinOrganisation } from '$lib/api/organisationApi';
+import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
 export const ssr = false;
@@ -9,20 +10,14 @@ export const load = (async ({ url, params: { inviteCode } }) => {
 		console.log('Not authenticated');
 
 		await login(url);
-		return {};
+		throw error(401, 'Not authenticated');
 	}
 
 	if (!inviteCode) {
-		console.log('No invite code');
-		return {};
+		throw error(400, 'No invite code');
 	}
 
-	try {
-		const organisation = await joinOrganisation(inviteCode);
-		return {
-			organisation
-		};
-	} catch (error) {
-		return {};
-	}
+	return {
+		organisation: joinOrganisation(inviteCode)
+	};
 }) satisfies PageLoad;

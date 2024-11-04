@@ -19,14 +19,6 @@
 
 	let { children }: Props = $props();
 
-	let title: string | undefined = $derived(getCurrentTitleByPath($page.url.pathname));
-
-	function getCurrentTitleByPath(path: string): string | undefined {
-		if (path.startsWith('/inventar')) return 'Inventar';
-
-		return 'Funk';
-	}
-
 	let showFeedback = $state(false);
 	let showInstallPWAHelp = $state(false);
 </script>

@@ -5,12 +5,10 @@
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import Tabs from '$lib/Tabs.svelte';
 	import AddDevice from '$lib/funk/AddDevice.svelte';
+	import FunkAdvancedTab from '$lib/funk/FunkAdvancedTab.svelte';
 	import FunkBulkHistoryTab from '$lib/funk/FunkBulkHistoryTab.svelte';
 	import FunkListTab from '$lib/funk/FunkListTab.svelte';
-	import NoOrganisation from '$lib/funk/NoOrganisation.svelte';
-	import FunkAdvancedTab from '$lib/funk/FunkAdvancedTab.svelte';
 	import { funk } from '$lib/shared/stores/funkStore';
-	import { user } from '$lib/shared/stores/userStore';
 	import { onDestroy, onMount } from 'svelte';
 
 	const tabs = {
@@ -77,49 +75,34 @@
 	};
 </script>
 
-{#await $user.fetching}
-	<LoadingSpinner />
-{:then}
-	<div class="flex flex-col gap-4 p-4">
-		<AddDevice reset={invalidateAll} />
+<div class="flex flex-col gap-4 p-4">
+	<AddDevice reset={invalidateAll} />
 
-		<div class="flex w-full justify-center">
-			<Tabs
-				items={Object.entries(tabs).map(([key, value]) => ({
-					key: key as FunkTab,
-					label: value as FunkTabValue
-				}))}
-				onSelect={onTabSelect}
-				initialSelected={($page.url.searchParams.get('tab') as FunkTab) ?? undefined}
-			/>
-		</div>
-
-		{#await $funk.fetching}
-			<LoadingSpinner />
-		{:then}
-			{#if selectedTab === 'bulkHistory'}
-				<FunkBulkHistoryTab />
-			{:else if selectedTab === 'advanced'}
-				<FunkAdvancedTab />
-			{:else}
-				<FunkListTab />
-			{/if}
-		{:catch error}
-			<ErrorState
-				label="Beim Abrufen der Funkgeräte aus der Datenbank ist leider ein Fehler aufgetreten."
-				{error}
-			/>
-		{/await}
+	<div class="flex w-full justify-center">
+		<Tabs
+			items={Object.entries(tabs).map(([key, value]) => ({
+				key: key as FunkTab,
+				label: value as FunkTabValue
+			}))}
+			onSelect={onTabSelect}
+			initialSelected={($page.url.searchParams.get('tab') as FunkTab) ?? undefined}
+		/>
 	</div>
-{:catch error}
-	{#if error.status === 404}
-		<NoOrganisation />
-	{:else}
-		<div class="p-2">
-			<ErrorState
-				label="Beim Abrufen der Organisation aus der Datenbank ist leider ein Fehler aufgetreten."
-				{error}
-			/>
-		</div>
-	{/if}
-{/await}
+
+	{#await $funk.fetching}
+		<LoadingSpinner />
+	{:then}
+		{#if selectedTab === 'bulkHistory'}
+			<FunkBulkHistoryTab />
+		{:else if selectedTab === 'advanced'}
+			<FunkAdvancedTab />
+		{:else}
+			<FunkListTab />
+		{/if}
+	{:catch error}
+		<ErrorState
+			label="Beim Abrufen der Funkgeräte aus der Datenbank ist leider ein Fehler aufgetreten."
+			{error}
+		/>
+	{/await}
+</div>

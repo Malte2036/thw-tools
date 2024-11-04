@@ -7,6 +7,9 @@
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 
 	import type { LayoutData } from './$types';
+	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
+	import NoOrganisation from '$lib/funk/NoOrganisation.svelte';
+	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
 
 	interface Props {
 		data: LayoutData;
@@ -47,4 +50,19 @@
 	});
 </script>
 
-{@render children?.()}
+{#await $user.fetching}
+	<LoadingSpinner />
+{:then}
+	{@render children?.()}
+{:catch error}
+	{#if error.status === 404}
+		<NoOrganisation />
+	{:else}
+		<div class="p-2">
+			<ErrorDisplay
+				label="Beim Abrufen der Organisation aus der Datenbank ist leider ein Fehler aufgetreten."
+				{error}
+			/>
+		</div>
+	{/if}
+{/await}
