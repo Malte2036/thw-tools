@@ -11,6 +11,9 @@
 	import { getLastFunkItemEventByFunkItemInternalId } from '$lib/shared/stores/funkStore';
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { user } from '$lib/shared/stores/userStore';
+	import Table from '$lib/Table.svelte';
+	import Card from '$lib/Card.svelte';
+	import InfoItem from '$lib/InfoItem.svelte';
 
 	function getBorrowedBatteryCount(): number {
 		return (
@@ -62,92 +65,90 @@
 </script>
 
 {#if !organisation}
-	<div class="text-center text-2xl">Du bist in keiner Organisation.</div>
-	<div class="text-center text-lg">Erstelle eine Organisation oder lass dich einladen.</div>
+	<div class="flex flex-col gap-4 items-center p-4">
+		<div class="text-2xl font-bold">Du bist in keiner Organisation</div>
+		<div class="text-lg text-gray-500">Erstelle eine Organisation oder lass dich einladen.</div>
+	</div>
 {:else}
-	<div class="flex flex-col gap-4">
-		<div class="flex flex-col gap-2">
-			<div class="font-bold text-2xl">Organisation:</div>
-			<p>Name: {organisation?.name}</p>
-		</div>
-		<div class="	flex flex-col gap-2">
-			<div class="font-bold text-xl">Inventar:</div>
-			<p>
-				Ausgeliehene Geräte: {borrowedCount}
-				von {$funk.funkItems?.length}
-			</p>
-			<p>
-				Ausgeliehene Batterien: {getBorrowedBatteryCount()}
-			</p>
-		</div>
-		<div class="flex flex-col gap-2">
-			<div class="font-bold text-xl">Mitglieder ({$user.organisation?.members.length}):</div>
-			<ul class="flex flex-col gap-2 list-disc pl-4">
-				{#each $user.organisation?.members ?? [] as member (member._id)}
-					<li>
-						{userToFriendlyString(member)}
-						<span class="text-gray-500">
-							({member.email})
-						</span>
-					</li>
-				{/each}
-			</ul>
-			<Button secondary click={leaveOrg}>Organisation verlassen</Button>
-		</div>
-		<div class="flex flex-col gap-2">
-			<div class="font-bold text-xl">Einladungslink:</div>
-			<a
-				class="break-all text-thw underline"
-				href={generateInviteLink(organisation)}
-				target="_blank"
-			>
-				{generateInviteLink(organisation)}
-			</a>
-			<div class="flex gap-2 w-full">
-				<Button
-					secondary
-					click={() => {
-						navigator.clipboard.writeText(generateInviteLink(organisation));
+	<div class="flex flex-col gap-6 p-4">
+		<Card title="Organisation">
+			<InfoItem label="Name" value={organisation?.name ?? ''} />
+		</Card>
 
-						bannerMessage.set({
-							message: 'Einladungslink kopiert',
-							autoDismiss: {
-								duration: 5 * 1000
-							},
-							type: 'info'
-						});
-					}}
-				>
-					Link kopieren
-				</Button>
-				<Button
-					secondary
-					click={async () => {
-						try {
-							await navigator.share({
-								title: `Einladungslink - ${organisation.name}`,
-								url: generateInviteLink(organisation)
-							});
-						} catch (error) {
-							console.error('Error sharing link', error);
-						}
+		<Card title="Inventar Übersicht">
+			<InfoItem
+				label="Ausgeliehene Geräte"
+				value={`${borrowedCount} von ${$funk.funkItems?.length}`}
+			/>
+			<InfoItem label="Ausgeliehene Batterien" value={getBorrowedBatteryCount()} />
+		</Card>
 
-						$bannerMessage = {
-							message: 'Einladungslink geteilt',
-							autoDismiss: {
-								duration: 5 * 1000
-							},
-							type: 'info'
-						};
-					}}
-				>
-					Link teilen
-				</Button>
+		<Card title={`Mitglieder (${$user.organisation?.members.length})`}>
+			<Table
+				header={['Name', 'E-Mail']}
+				values={($user.organisation?.members ?? []).map((member) => [
+					userToFriendlyString(member),
+					member.email ?? ''
+				])}
+			/>
+			<div class="mt-3">
+				<Button secondary click={leaveOrg}>Organisation verlassen</Button>
 			</div>
-		</div>
-		<div class="flex flex-col gap-2">
-			<div class="font-bold text-xl">Exportieren:</div>
+		</Card>
+
+		<Card title="Einladungslink">
+			<div class="flex flex-col gap-4">
+				<div class="text-gray-600">
+					Mit diesem Link können andere THW-Mitglieder deiner Organisation beitreten:
+				</div>
+				<a
+					class="break-all text-thw underline"
+					href={generateInviteLink(organisation)}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{generateInviteLink(organisation)}
+				</a>
+				<div class="flex gap-2">
+					<Button
+						secondary
+						click={() => {
+							navigator.clipboard.writeText(generateInviteLink(organisation));
+							bannerMessage.set({
+								message: 'Einladungslink kopiert',
+								autoDismiss: { duration: 5000 },
+								type: 'info'
+							});
+						}}
+					>
+						Link kopieren
+					</Button>
+					<Button
+						secondary
+						click={async () => {
+							try {
+								await navigator.share({
+									title: `Einladungslink - ${organisation.name}`,
+									url: generateInviteLink(organisation)
+								});
+								$bannerMessage = {
+									message: 'Einladungslink geteilt',
+									autoDismiss: { duration: 5000 },
+									type: 'info'
+								};
+							} catch (error) {
+								console.error('Error sharing link', error);
+							}
+						}}
+					>
+						Link teilen
+					</Button>
+				</div>
+			</div>
+		</Card>
+
+		<Card title="Exportieren">
 			<Button click={exportInventarAsCsv}>Exportiere die Funkgeräteliste als CSV</Button>
-		</div>
+		</Card>
 	</div>
 {/if}
