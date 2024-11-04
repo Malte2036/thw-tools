@@ -8,7 +8,7 @@
 	import FunkBulkHistoryTab from '$lib/funk/FunkBulkHistoryTab.svelte';
 	import FunkListTab from '$lib/funk/FunkListTab.svelte';
 	import NoOrganisation from '$lib/funk/NoOrganisation.svelte';
-	import OrganizationTab from '$lib/funk/OrganizationTab.svelte';
+	import FunkAdvancedTab from '$lib/funk/FunkAdvancedTab.svelte';
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { user } from '$lib/shared/stores/userStore';
 	import { onDestroy, onMount } from 'svelte';
@@ -16,7 +16,7 @@
 	const tabs = {
 		funkList: 'Funkgeräte',
 		bulkHistory: 'Ausleihhistorie',
-		organization: 'Organisation'
+		advanced: 'Erweitert'
 	} as const;
 
 	type FunkTab = keyof typeof tabs;
@@ -99,8 +99,8 @@
 		{:then}
 			{#if selectedTab === 'bulkHistory'}
 				<FunkBulkHistoryTab />
-			{:else if selectedTab === 'organization'}
-				<OrganizationTab />
+			{:else if selectedTab === 'advanced'}
+				<FunkAdvancedTab />
 			{:else}
 				<FunkListTab />
 			{/if}

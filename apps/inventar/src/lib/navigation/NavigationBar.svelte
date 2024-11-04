@@ -7,7 +7,8 @@
 			title: 'THW OV Düsseldorf',
 			items: [
 				{ name: 'Funkliste', href: '/' },
-				{ name: 'OV Inventar (Beta)', href: '/inventar' }
+				{ name: 'OV Inventar (Beta)', href: '/inventar/' },
+				{ name: 'Organisation', href: '/organisation/' }
 			]
 		},
 		{
@@ -45,9 +46,22 @@
 	$: currentPath = $page.url.pathname;
 
 	function getCurrentTitleByPath(path: string): string | undefined {
-		if (path.startsWith('/inventar')) return 'Inventar';
+		const normalizedPath = path.replace(/\/$/, '');
+		let bestMatch = { name: 'THW OV Düsseldorf', slashCount: -1 };
 
-		return 'Funk';
+		for (const section of navItems) {
+			for (const item of section.items) {
+				const normalizedHref = item.href.replace(/\/$/, '');
+				if (normalizedPath.startsWith(normalizedHref)) {
+					const slashCount = (normalizedHref.match(/\//g) || []).length;
+					if (slashCount > bestMatch.slashCount) {
+						bestMatch = { name: item.name, slashCount };
+					}
+				}
+			}
+		}
+
+		return bestMatch.name;
 	}
 </script>
 
