@@ -21,7 +21,9 @@
 					duration: 5000
 				}
 			};
+			return false;
 		}
+		return true;
 	};
 
 	const getEinheiten = () => {

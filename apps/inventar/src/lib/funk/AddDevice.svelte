@@ -10,6 +10,7 @@
 		getFunkItemByDeviceId,
 		getLastFunkItemEventByFunkItemInternalId
 	} from '$lib/shared/stores/funkStore';
+	import { playScanSound } from '$lib/sound/sound';
 	import {
 		batteryCountToFriendlyString,
 		eventTypeToFriendlyString,
@@ -33,7 +34,7 @@
 
 	let batteryCountInput: string = $state('0');
 
-	async function onScan(decodedText: string) {
+	function onScan(decodedText: string, isQrScan: boolean = false) {
 		if (!decodedText) {
 			return;
 		}
@@ -51,32 +52,29 @@
 			return;
 		}
 
-		$bannerMessage = {
-			message: `Gerät mit der ID ${decodedText} gescannt.`,
-			autoDismiss: {
-				duration: 5 * 1000
-			}
-		};
-
 		if (scannedDeviceIds.some((item) => item.deviceId === decodedText)) {
 			return;
 		}
 
-		
-		
-		console.log($funk.funkItems);
-		
 		const existingItem = getFunkItemByDeviceId($funk, decodedText);
-
-		console.log(`Gerät mit der ID ${decodedText} gescannt.`, existingItem);
-
-		const lastEvent: FunkItemEvent | undefined =
+		const lastEvent =
 			existingItem && getLastFunkItemEventByFunkItemInternalId($funk, existingItem._id);
 
 		scannedDeviceIds = scannedDeviceIds.concat({
 			deviceId: decodedText,
 			lastEvent
 		});
+
+		if (isQrScan) {
+			playScanSound();
+		}
+
+		$bannerMessage = {
+			message: `Gerät mit der ID ${decodedText} gescannt.`,
+			autoDismiss: {
+				duration: 5 * 1000
+			}
+		};
 	}
 
 	async function submit(eventType: FunkItemEventType) {
@@ -109,7 +107,7 @@
 </script>
 
 <div class="flex flex-col gap-2">
-	<QrScanner {onScan} />
+	<QrScanner onScan={(text) => onScan(text, true)} />
 	<ManuelDeviceIdInput {onScan} />
 </div>
 

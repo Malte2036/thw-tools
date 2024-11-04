@@ -9,7 +9,7 @@
 		closeButtonText?: string;
 	}
 
-	let { 
+	let {
 		onScan,
 		scanButtonText = 'Gerät scannen',
 		closeButtonText = 'Scanner schließen'
