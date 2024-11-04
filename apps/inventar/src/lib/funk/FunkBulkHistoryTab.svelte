@@ -43,9 +43,11 @@
 			{#if filteredBulks.length === 0}
 				<div>Keine Historie vorhanden.</div>
 			{:else}
-				{#each filteredBulks as bulk}
-					<InventarItemEventBulkItem {bulk} />
-				{/each}
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+					{#each filteredBulks as bulk}
+						<InventarItemEventBulkItem {bulk} />
+					{/each}
+				</div>
 			{/if}
 		{:else}
 			<div>Historie lädt...</div>
