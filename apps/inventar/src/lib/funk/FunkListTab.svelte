@@ -9,44 +9,37 @@
 
 
 	let searchedDeviceId = $state('');
+	let isBorrowedExpanded = $state(true);
+	let isAvailableExpanded = $state(true);
 
 	type FilteredData = {
 		item: FunkItem;
 		lastEvent: FunkItemEvent;
 	};
 
-	let borrowedItems = $state<FilteredData[]>([]);
-	let availableItems = $state<FilteredData[]>([]);
+	let filteredItems = $derived($funk?.funkItems
+		?.map((item) => {
+			const lastFunkItemEvent = getLastFunkItemEventByFunkItemInternalId($funk, item._id);
+			if (!lastFunkItemEvent) return null;
 
-	$effect(() => {
-		if (!$funk) return;
+			return {
+				item: item,
+				lastEvent: lastFunkItemEvent
+			} satisfies FilteredData;
+		})
+		.filter((data) => {
+			if (!data || !data.lastEvent) return false;
 
-		const filteredItems = $funk.funkItems
-			?.map((item) => {
-				const lastFunkItemEvent = getLastFunkItemEventByFunkItemInternalId($funk, item._id);
-				if (!lastFunkItemEvent) return null;
+			return isSearchStringInFunkItem(
+				searchedDeviceId,
+				data.item,
+				data.lastEvent,
+				getOrganisationUserByInternalId($user, data.lastEvent.user)
+			);
+		}) ?? []);
 
-				return {
-					item: item,
-					lastEvent: lastFunkItemEvent
-				} satisfies FilteredData;
-			})
-			.filter((data) => {
-				if (!data || !data.lastEvent) return false;
-
-				return isSearchStringInFunkItem(
-					searchedDeviceId,
-					data.item,
-					data.lastEvent,
-					getOrganisationUserByInternalId($user, data.lastEvent.user)
-				);
-			}) as FilteredData[];
-
-			
-		// Split items into borrowed and available
-		borrowedItems = filteredItems.filter((data) => data.lastEvent.type === 'borrowed');
-		availableItems = filteredItems.filter((data) => data.lastEvent.type === 'returned');
-	});
+	let borrowedItems = $derived(filteredItems.filter((data) => data.lastEvent.type === 'borrowed'));
+	let availableItems = $derived(filteredItems.filter((data) => data.lastEvent.type === 'returned'));
 </script>
 
 <div class="flex flex-col gap-4">
@@ -54,37 +47,71 @@
 	
 	<!-- Borrowed Section -->
 	<div class="flex flex-col gap-2">
-		<h2 class="font-bold text-xl text-thw first-letter:uppercase">{eventTypeToFriendlyString('borrowed')} ({borrowedItems.length})</h2>
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-			{#if borrowedItems.length === 0}
-				<p class="text-gray-500">Keine ausgeliehenen Geräte vorhanden.</p>
-			{/if}
-			{#each borrowedItems as data (data.item._id)}
-				<InventarItemEventItem
-					event={data.lastEvent}
-					deviceId={data.item.deviceId}
-					item={data.item}
-					isSelected={false}
-				/>
-			{/each}
-		</div>
+		<button
+			class="flex items-center gap-2 w-fit"
+			on:click={() => (isBorrowedExpanded = !isBorrowedExpanded)}
+		>
+			<h2 class="font-bold text-xl text-thw first-letter:uppercase">
+				{eventTypeToFriendlyString('borrowed')} ({borrowedItems.length} / {filteredItems.length})
+			</h2>
+			<svg
+				class="w-6 h-6 transform transition-transform {isBorrowedExpanded ? 'rotate-180' : ''}"
+				fill="none"
+				stroke="currentColor"
+				viewBox="0 0 24 24"
+			>
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+			</svg>
+		</button>
+		{#if isBorrowedExpanded}
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+				{#if borrowedItems.length === 0}
+					<p class="text-gray-500">Keine ausgeliehenen Geräte vorhanden.</p>
+				{/if}
+				{#each borrowedItems as data (data.item._id)}
+					<InventarItemEventItem
+						event={data.lastEvent}
+						deviceId={data.item.deviceId}
+						item={data.item}
+						isSelected={false}
+					/>
+				{/each}
+			</div>
+		{/if}
 	</div>
 
 	<!-- Available Section -->
 	<div class="flex flex-col gap-2">
-		<h2 class="font-bold text-xl text-thw first-letter:uppercase">{eventTypeToFriendlyString('returned')} ({availableItems.length})</h2>
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-			{#if availableItems.length === 0}
-				<p class="text-gray-500">Keine verfügbaren Geräte vorhanden.</p>
-			{/if}
-			{#each availableItems as data (data.item._id)}
-				<InventarItemEventItem
-					event={data.lastEvent}
-					deviceId={data.item.deviceId}
-					item={data.item}
-					isSelected={false}
-				/>
-			{/each}
-		</div>
+		<button
+			class="flex items-center gap-2 w-fit"
+			on:click={() => (isAvailableExpanded = !isAvailableExpanded)}
+		>
+			<h2 class="font-bold text-xl text-thw first-letter:uppercase">
+				{eventTypeToFriendlyString('returned')} ({availableItems.length} / {filteredItems.length})
+			</h2>
+			<svg
+				class="w-6 h-6 transform transition-transform {isAvailableExpanded ? 'rotate-180' : ''}"
+				fill="none"
+				stroke="currentColor"
+				viewBox="0 0 24 24"
+			>
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+			</svg>
+		</button>
+		{#if isAvailableExpanded}
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+				{#if availableItems.length === 0}
+					<p class="text-gray-500">Keine verfügbaren Geräte vorhanden.</p>
+				{/if}
+				{#each availableItems as data (data.item._id)}
+					<InventarItemEventItem
+						event={data.lastEvent}
+						deviceId={data.item.deviceId}
+						item={data.item}
+						isSelected={false}
+					/>
+				{/each}
+			</div>
+		{/if}
 	</div>
 </div>
