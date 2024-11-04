@@ -12,7 +12,8 @@
 			]
 		},
 		{
-			title: 'Quiz',
+			title: 'THW Tools',
+			external: true,
 			items: [
 				{
 					name: 'Grundausbildungs-Quiz',
@@ -25,12 +26,7 @@
 					external: true
 				},
 				{ name: 'Atemschutz-Quiz', href: 'https://thw-tools.de/quiz/agt/listing/', external: true },
-				{ name: 'CBRN-Quiz', href: 'https://thw-tools.de/quiz/cbrn/listing/', external: true }
-			]
-		},
-		{
-			title: 'Tools',
-			items: [
+				{ name: 'CBRN-Quiz', href: 'https://thw-tools.de/quiz/cbrn/listing/', external: true },
 				{
 					name: 'CBRN-Schutzanzug',
 					href: 'https://thw-tools.de/cbrn/protective-suite',

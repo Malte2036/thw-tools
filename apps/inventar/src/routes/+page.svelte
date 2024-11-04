@@ -6,7 +6,7 @@
 
 	import VestIcon from '$lib/icons/VestIcon.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
-	import { onMount } from 'svelte';
+	import { onMount, type Component } from 'svelte';
 	import WalkieTalkieIcon from '../lib/icons/WalkieTalkieIcon.svelte';
 	import HammerIcon from '../lib/icons/HammerIcon.svelte';
 	import CircleRadiationIcon from '../lib/icons/CircleRadiationIcon.svelte';
@@ -43,11 +43,26 @@
 		}
 	});
 
-	const toolCategories = [
+	type ToolCategory = {
+		title: string;
+		description: string;
+		external: boolean;
+		tools: Tool[];
+	};
+
+	type Tool = {
+		name: string;
+		icon: Component;
+		url: string;
+		event: string;
+		external?: boolean;
+	};
+
+	const toolCategories: ToolCategory[] = [
 		{
 			title: 'THW OV Düsseldorf',
 			description: 'Tools für den internen Gebrauch im THW OV Düsseldorf.',
-			isExternal: false,
+			external: false,
 			tools: [
 				{
 					name: 'Funkliste',
@@ -60,13 +75,13 @@
 					icon: WarehouseIcon,
 					url: '/inventar/',
 					event: 'Open OV Inventar'
-				}   
+				}
 			]
 		},
 		{
 			title: 'THW Tools',
 			description: 'Teste und verbessere dein Wissen in verschiedenen THW-Bereichen.',
-			isExternal: true,
+			external: true,
 			tools: [
 				{
 					name: 'Grundausbildungs-Quiz',
@@ -77,7 +92,7 @@
 				},
 				{
 					name: 'Sprechfunk-Quiz',
-                    
+
 					icon: WalkieTalkieIcon,
 					url: 'https://thw-tools.de/quiz/radio/listing/',
 					event: 'Open Radio Quiz',
@@ -173,9 +188,9 @@
 						<div class="border-b-2 border-thw-100 flex flex-col gap-2">
 							<h3 class="text-2xl font-bold text-thw-800 flex gap-2 flex-row items-baseline">
 								<span class="text-nowrap">{category.title}</span>
-									{#if category.isExternal}
-										<div class="text-sm font-normal text-nowrap">(Externe Tools)</div>
-									{/if}
+								{#if category.external}
+									<div class="text-sm font-normal text-nowrap">(Externe Tools)</div>
+								{/if}
 							</h3>
 							<p class="text-gray-600">{category.description}</p>
 						</div>
