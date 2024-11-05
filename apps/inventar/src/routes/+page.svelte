@@ -223,8 +223,3 @@
 		</div>
 	</div>
 </div>
-
-{#each ['ga', 'agt', 'cbrn'] as questionType}
-	<a href={`/quiz/${questionType}`} class="hidden" />
-	<a href={`/quiz/${questionType}/listing`} class="hidden" />
-{/each}

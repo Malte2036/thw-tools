@@ -11,8 +11,6 @@
 	import { user } from '$lib/shared/stores/userStore';
 	import { eventTypeToFriendlyString } from '../api/funkModels';
 
-
-
 	interface Props {
 		event: FunkItemEvent;
 		deviceId: FunkItemDeviceId;
@@ -21,13 +19,7 @@
 		secondary?: boolean;
 	}
 
-	let {
-		event,
-		deviceId,
-		isSelected,
-		item,
-		secondary = false
-	}: Props = $props();
+	let { event, deviceId, isSelected, item, secondary = false }: Props = $props();
 
 	const eventUser = getOrganisationUserByInternalId($user, event.user);
 </script>
@@ -36,16 +28,19 @@
 	class="text-xl flex flex-row items-center p-2 gap-2 bg-thw-50 border-thw-500 border-2 shadow-sm rounded-2xl transition-colors hover:cursor-pointer overflow-x-auto"
 	class:secondary
 	class:selectedItem={isSelected}
-	href={`/device/${deviceId}`}
+	href={`/funk/device/${deviceId}`}
 >
 	<div class="text-2xl">{eventTypeToEmoji(event.type)}</div>
 	<div class="flex flex-col gap-0 w-full">
 		<div class="flex flex-row gap-2 justify-between w-full">
 			<div class="text-nowrap font-bold">{deviceId}</div>
 			<div class="flex gap-1">
-					<div class="rounded-xl text-sm px-2 h-min bg-green-200 whitespace-nowrap" class:isBorrowed={event.type === 'borrowed'}>
-						{item?.name ?? eventTypeToFriendlyString(event.type)}
-					</div>
+				<div
+					class="rounded-xl text-sm px-2 h-min bg-green-200 whitespace-nowrap"
+					class:isBorrowed={event.type === 'borrowed'}
+				>
+					{item?.name ?? eventTypeToFriendlyString(event.type)}
+				</div>
 			</div>
 		</div>
 		<div class="flex flex-row gap-2 items-center w-full">
@@ -73,7 +68,7 @@
 	.secondary {
 		@apply border-dashed border-thw-300;
 	}
-	
+
 	.isBorrowed {
 		@apply bg-red-200;
 	}
