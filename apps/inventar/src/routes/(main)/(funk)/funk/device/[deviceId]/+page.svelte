@@ -11,6 +11,6 @@
 </script>
 
 <div class="flex flex-col gap-2 p-4">
-	<LinkButton url="/">Zurück zur Funkgeräteliste</LinkButton>
+	<LinkButton url="../">Zurück zur Funkgeräteliste</LinkButton>
 	<FunkItemEventsList deviceId={data.deviceId ?? ''} />
 </div>

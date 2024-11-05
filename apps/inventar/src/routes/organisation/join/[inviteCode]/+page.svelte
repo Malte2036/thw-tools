@@ -46,7 +46,7 @@
 					Das hat nicht geklappt. Der Einladungscode ist entweder ungültig oder du bist bereits in
 					einer Organisation.
 				</div>
-				<LinkButton url="/">Zur Funkgeräteliste</LinkButton>
+				<LinkButton url="/funk/">Zur Funkgeräteliste</LinkButton>
 			</div>
 		{/if}
 	{:catch error}
