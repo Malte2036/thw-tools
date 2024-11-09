@@ -33,9 +33,11 @@ export class AppDatabase extends Dexie {
 			timestamp
 		}));
 
-		await this.inventoryItems.clear();
-
-		await this.inventoryItems.bulkAdd(itemsWithTimestamp);
+		// Start a transaction to ensure atomicity
+		await this.transaction('rw', this.inventoryItems, async () => {
+			await this.inventoryItems.clear();
+			await this.inventoryItems.bulkAdd(itemsWithTimestamp);
+		});
 	}
 
 	async getInventoryItems(): Promise<InventoryItem[]> {
