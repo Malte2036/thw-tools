@@ -6,6 +6,8 @@ import {
 	type ImportInventoryItemsResult,
 	type InventoryItem
 } from './inventoryModels';
+import { inventory } from '$lib/shared/stores/inventoryStore';
+import { apiMeta, updateLastFetched } from '$lib/shared/stores/apiMetaStore';
 
 export async function getInventoryItems(): Promise<{
 	fromCache: boolean;
@@ -33,7 +35,7 @@ export async function getInventoryItems(): Promise<{
 }
 
 async function fetchItems(): Promise<ResponeData<InventoryItem[]>> {
-	const freshData = await apiGet<InventoryItem[]>('/inventory', (data) => {
+	const fetchPromise = apiGet<InventoryItem[]>('/inventory', (data) => {
 		const result = InventoryItemZodSchema.array().safeParse(data);
 		if (!result.success) {
 			console.error('Error parsing InventoryItem[]:', result.error);
@@ -41,7 +43,23 @@ async function fetchItems(): Promise<ResponeData<InventoryItem[]>> {
 		return result.success;
 	});
 
-	return freshData;
+	inventory.update((state) => ({ ...state, fetching: fetchPromise }));
+
+	try {
+		const result = await fetchPromise;
+
+		inventory.update((state) => ({
+			...state,
+			fetching: undefined
+		}));
+
+		updateLastFetched('inventory');
+
+		return result;
+	} catch (error) {
+		inventory.update((state) => ({ ...state, fetching: undefined }));
+		throw error;
+	}
 }
 
 // export async function getInventoryItemByInventarNummer(

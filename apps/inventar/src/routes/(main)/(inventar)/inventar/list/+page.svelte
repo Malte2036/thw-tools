@@ -5,15 +5,25 @@
 	import Select from '$lib/Select.svelte';
 	import Table from '$lib/Table.svelte';
 	import type { InventoryItem } from '$lib/api/inventoryModels';
-	import { inventory } from '$lib/shared/stores/inventoryStore';
 	import { searchStringIsInArray } from '$lib/utils';
 	import { db } from '$lib/utils/db';
+	import { apiMeta } from '$lib/shared/stores/apiMetaStore';
 
 	let searchTerm = $state('');
 	let selectedEinheit = $state('all');
 	let filteredItems = $state<InventoryItem[]>([]);
 	let allItems = $state<InventoryItem[]>([]);
 	let loading = $state(true);
+	let lastFetchedStr = $derived(
+		$apiMeta.lastFetched['inventory']?.toLocaleString('de-DE', {
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			day: '2-digit',
+			month: '2-digit',
+			year: 'numeric'
+		})
+	);
 
 	$effect(() => {
 		let unsubscribe: (() => void) | undefined;
@@ -105,6 +115,10 @@
 			<span class="bg-thw-300 text-xs px-2 py-1 rounded-full">Beta</span>
 		</div>
 		<p class="text-lg">Übersicht aller Inventar-Items im System.</p>
+	</div>
+
+	<div class="text-sm text-gray-500 mb-4">
+		Last updated: {lastFetchedStr}
 	</div>
 
 	{#if loading}
