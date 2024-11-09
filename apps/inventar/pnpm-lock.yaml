@@ -14,6 +14,9 @@ importers:
       '@malte2036/thw-tools-components':
         specifier: 0.2.33
         version: 0.2.33
+      dexie:
+        specifier: ^4.0.9
+        version: 4.0.9
       es-cookie:
         specifier: ^1.5.0
         version: 1.5.0
@@ -852,6 +855,9 @@ packages:
 
   devalue@5.1.1:
     resolution: {integrity: sha512-maua5KUiapvEwiEAe+XnlZ3Rh0GD+qI1J/nb9vrJc3muPXvcF/8gXYTWF76+5DAqHyDUtOIImEuo0YKE9mshVw==}
+
+  dexie@4.0.9:
+    resolution: {integrity: sha512-VQG1huEVSAdDZssb9Bb9mFy+d3jAE0PT4d1nIRYlT46ip1fzbs1tXi0SlUayRDgV3tTbJG8ZRqAo2um49gtynA==}
 
   didyoumean@1.2.2:
     resolution: {integrity: sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw==}
@@ -2624,6 +2630,8 @@ snapshots:
   deepmerge@4.3.1: {}
 
   devalue@5.1.1: {}
+
+  dexie@4.0.9: {}
 
   didyoumean@1.2.2: {}
 

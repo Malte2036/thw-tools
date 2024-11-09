@@ -5,13 +5,21 @@
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
 	import Table from '$lib/Table.svelte';
-	import { inventory } from '$lib/shared/stores/inventoryStore';
+	import { getInventoryItems } from '$lib/shared/stores/inventoryStore';
 	import type { InventoryItem } from '$lib/api/inventoryModels';
 	import { searchStringIsInArray } from '$lib/utils';
+	import { onMount } from 'svelte';
 
 	let searchTerm = $state('');
 	let selectedEinheit = $state('all');
 	let filteredItems = $state<InventoryItem[]>([]);
+	let allItems = $state<InventoryItem[]>([]);
+	let loading = $state(true);
+
+	onMount(async () => {
+		allItems = await getInventoryItems();
+		loading = false;
+	});
 
 	const tableHeader = [
 		'Inventar-Nr.',
@@ -38,7 +46,7 @@
 	};
 
 	const getEinheiten = () => {
-		const einheiten = new Set<string>($inventory.inventoryItems?.map((item) => item.einheit) || []);
+		const einheiten = new Set<string>(allItems?.map((item) => item.einheit) || []);
 		return [{ value: 'all', label: 'Alle Einheiten' }].concat(
 			Array.from(einheiten).map((e) => ({ value: e, label: e }))
 		);
@@ -73,7 +81,7 @@
 	};
 
 	$effect(() => {
-		filteredItems = filterItems($inventory.inventoryItems);
+		filteredItems = filterItems(allItems);
 	});
 </script>
 
@@ -88,9 +96,9 @@
 		<p class="text-lg">Übersicht aller Inventar-Items im System.</p>
 	</div>
 
-	{#await $inventory.fetching}
+	{#if loading}
 		<LoadingSpinner />
-	{:then}
+	{:else}
 		<div class="flex flex-col gap-4">
 			<div class="flex flex-col md:flex-row items-center gap-4">
 				<div class="w-full md:w-64">
@@ -113,11 +121,9 @@
 					<Table header={tableHeader} values={getTableValues(filteredItems)} />
 				</div>
 				<div class="text-gray-500">
-					Zeige {filteredItems.length} von {$inventory.inventoryItems?.length || 0} Items
+					Zeige {filteredItems.length} von {allItems.length} Items
 				</div>
 			{/if}
 		</div>
-	{:catch error}
-		<ErrorDisplay label="Inventar-Items konnten nicht geladen werden" {error} />
-	{/await}
+	{/if}
 </div>

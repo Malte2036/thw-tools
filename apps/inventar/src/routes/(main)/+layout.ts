@@ -33,7 +33,9 @@ export const load = (async ({ url }) => {
 			org.members.sort((a, b) => userToFriendlyString(a).localeCompare(userToFriendlyString(b)));
 			return org;
 		}),
-		inventoryItems: getInventoryItems(),
+		inventoryItems: getInventoryItems().then((items) => ({
+			fromCache: true
+		})),
 		funkData: Promise.all([getFunkItems(), getFunkItemEventBulks()]).then(([items, bulks]) => {
 			return {
 				funkItems: items

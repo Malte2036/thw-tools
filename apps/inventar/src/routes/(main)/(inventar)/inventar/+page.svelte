@@ -5,14 +5,25 @@
 	import QrScanner from '$lib/funk/QRScanner.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
-	import { getInventoryItemByInventarNummer, inventory } from '$lib/shared/stores/inventoryStore';
+	import {
+		getInventoryItems,
+		getInventoryItemByInventarNummer
+	} from '$lib/shared/stores/inventoryStore';
 	import LinkButton from '$lib/LinkButton.svelte';
 	import InventoryDetailsDialog from '$lib/inventar/InventoryDetailsDialog.svelte';
+	import { onMount } from 'svelte';
 
 	let inventoryItem: InventoryItem | undefined = $state();
+	let allItems: InventoryItem[] = $state([]);
+	let loading = $state(true);
 
-	const onScan = (decodedText: string) => {
-		inventoryItem = getInventoryItemByInventarNummer($inventory, decodedText);
+	onMount(async () => {
+		allItems = await getInventoryItems();
+		loading = false;
+	});
+
+	const onScan = async (decodedText: string) => {
+		inventoryItem = await getInventoryItemByInventarNummer(decodedText);
 		if (!inventoryItem) {
 			$bannerMessage = {
 				message: 'Inventar Item nicht gefunden',
@@ -27,7 +38,7 @@
 	};
 
 	const getEinheiten = () => {
-		return new Set<string>($inventory.inventoryItems?.map((item) => item.einheit));
+		return new Set<string>(allItems.map((item) => item.einheit));
 	};
 </script>
 
@@ -48,28 +59,21 @@
 	</div>
 
 	<div class="flex flex-col gap-2">
-		{#await $inventory.fetching}
+		{#if loading}
 			<LoadingSpinner />
-		{:then}
-			{#if $inventory.inventoryItems?.length === 0}
-				<p class="text-lg text-gray-500">Es sind noch keine Inventar-Items im System erfasst.</p>
-			{:else}
-				<div class="text-lg text-gray-500">
-					Es sind bereits {$inventory.inventoryItems?.length} Inventar-Items im System der folgenden
-					Einheiten erfasst:
+		{:else if allItems.length === 0}
+			<p class="text-lg text-gray-500">Es sind noch keine Inventar-Items im System erfasst.</p>
+		{:else}
+			<div class="text-lg text-gray-500">
+				Es sind bereits {allItems.length} Inventar-Items im System der folgenden Einheiten erfasst:
 
-					<ul class="list-disc list-inside pl-2">
-						{#each Array.from(getEinheiten()) as einheit}
-							<li>{einheit}</li>
-						{/each}
-					</ul>
-				</div>
-			{/if}
-		{:catch error}
-			<div class="p-2">
-				<ErrorDisplay label="Inventar-Items konnten nicht geladen werden" {error} />
+				<ul class="list-disc list-inside pl-2">
+					{#each Array.from(getEinheiten()) as einheit}
+						<li>{einheit}</li>
+					{/each}
+				</ul>
 			</div>
-		{/await}
+		{/if}
 	</div>
 </div>
 

@@ -24,13 +24,12 @@
 
 		$inventory.fetching = data.inventoryItems;
 		data.inventoryItems.then((res) => {
-			$inventory.inventoryItems = res.data;
 			$inventory.fromCache = res.fromCache;
 
 			if (res.fromCache) {
 				$bannerMessage = {
 					message:
-						'Die Inventar-Items wurden aus dem Cache geladen. Gehe online, um die neuesten Daten zu erhalten.',
+						'Die Inventar-Items wurden aus dem lokalen Speicher geladen. Die Daten werden im Hintergrund aktualisiert.',
 					type: 'info',
 					autoDismiss: {
 						duration: 5000

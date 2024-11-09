@@ -5,15 +5,42 @@ import {
 	type ImportInventoryItemsResult,
 	type InventoryItem
 } from './inventoryModels';
+import { getStoredInventoryItems, storeInventoryItems } from '../utils/db';
 
 export async function getInventoryItems(): Promise<ResponeData<InventoryItem[]>> {
-	return await apiGet<InventoryItem[]>('/inventory', (data) => {
+	// First try to get data from IndexedDB
+	const storedItems = await getStoredInventoryItems();
+
+	// Return stored data immediately if available
+	if (storedItems) {
+		// Start fetching fresh data in the background
+		fetchAndUpdateItems();
+
+		return {
+			data: storedItems,
+			fromCache: true
+		} satisfies ResponeData<InventoryItem[]>;
+	}
+
+	// If no stored data, wait for the API response
+	return await fetchAndUpdateItems();
+}
+
+async function fetchAndUpdateItems(): Promise<ResponeData<InventoryItem[]>> {
+	const freshData = await apiGet<InventoryItem[]>('/inventory', (data) => {
 		const result = InventoryItemZodSchema.array().safeParse(data);
 		if (!result.success) {
 			console.error('Error parsing InventoryItem[]:', result.error);
 		}
 		return result.success;
 	});
+
+	// If the API request was successful, store the new data
+	if (freshData.data) {
+		await storeInventoryItems(freshData.data);
+	}
+
+	return freshData;
 }
 
 // export async function getInventoryItemByInventarNummer(
