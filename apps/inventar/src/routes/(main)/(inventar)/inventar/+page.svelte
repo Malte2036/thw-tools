@@ -6,17 +6,10 @@
 	import LinkButton from '$lib/LinkButton.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
+	import { inventory } from '$lib/shared/stores/inventoryStore';
 	import { db } from '$lib/utils/db';
-	import { onMount } from 'svelte';
 
 	let inventoryItem: InventoryItem | undefined = $state();
-	let allItems: InventoryItem[] = $state([]);
-	let loading = $state(true);
-
-	onMount(async () => {
-		allItems = await db.getInventoryItems();
-		loading = false;
-	});
 
 	const onScan = async (decodedText: string) => {
 		inventoryItem = await db.getInventoryItemByInventarNummer(decodedText);
@@ -34,7 +27,7 @@
 	};
 
 	const getEinheiten = () => {
-		return new Set<string>(allItems.map((item) => item.einheit));
+		return new Set<string>($inventory.inventoryItems?.map((item) => item.einheit) || []);
 	};
 </script>
 
@@ -55,13 +48,14 @@
 	</div>
 
 	<div class="flex flex-col gap-2">
-		{#if loading}
+		{#if $inventory.inventoryItems === null}
 			<LoadingSpinner />
-		{:else if allItems.length === 0}
+		{:else if $inventory.inventoryItems.length === 0}
 			<p class="text-lg text-gray-500">Es sind noch keine Inventar-Items im System erfasst.</p>
 		{:else}
 			<div class="text-lg text-gray-500">
-				Es sind bereits {allItems.length} Inventar-Items im System der folgenden Einheiten erfasst:
+				Es sind bereits {$inventory.inventoryItems.length} Inventar-Items im System der folgenden Einheiten
+				erfasst:
 
 				<ul class="list-disc list-inside pl-2">
 					{#each Array.from(getEinheiten()) as einheit}

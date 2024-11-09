@@ -1,18 +1,16 @@
 import { isAuthenticated, login } from '$lib/api/authApi';
 import { getFunkItemEventBulks, getFunkItems } from '$lib/api/funkApi';
 import { userToFriendlyString } from '$lib/api/funkModels';
-import { getInventoryItems } from '$lib/api/inventoryApi';
 import { getOrganisationForUser } from '$lib/api/organisationApi';
 import { getLastFunkItemEventByFunkItemInternalId } from '$lib/shared/stores/funkStore';
 import type { LayoutLoad } from './$types';
+import { fetchInventoryItems } from '$lib/api/inventoryApi';
 
 export const ssr = false;
 
 const EMPTY = {
 	organisation: Promise.resolve(null),
-	inventoryItems: Promise.resolve({
-		fromCache: false
-	}),
+	inventoryItems: Promise.resolve(null),
 	funkData: Promise.resolve(null)
 };
 
@@ -32,7 +30,7 @@ export const load = (async ({ url }) => {
 			org.members.sort((a, b) => userToFriendlyString(a).localeCompare(userToFriendlyString(b)));
 			return org;
 		}),
-		inventoryItems: getInventoryItems(),
+		inventoryItems: fetchInventoryItems(),
 		funkData: Promise.all([getFunkItems(), getFunkItemEventBulks()]).then(([items, bulks]) => {
 			return {
 				funkItems: items

@@ -6,14 +6,13 @@
 	import Table from '$lib/Table.svelte';
 	import type { InventoryItem } from '$lib/api/inventoryModels';
 	import { searchStringIsInArray } from '$lib/utils';
-	import { db } from '$lib/utils/db';
 	import { apiMeta } from '$lib/shared/stores/apiMetaStore';
+	import { inventory } from '$lib/shared/stores/inventoryStore';
 
 	let searchTerm = $state('');
 	let selectedEinheit = $state('all');
 	let filteredItems = $state<InventoryItem[]>([]);
-	let allItems = $state<InventoryItem[]>([]);
-	let loading = $state(true);
+
 	let lastFetchedStr = $derived(
 		$apiMeta.lastFetched['inventory']?.toLocaleString('de-DE', {
 			hour: '2-digit',
@@ -24,23 +23,6 @@
 			year: 'numeric'
 		})
 	);
-
-	$effect(() => {
-		let unsubscribe: (() => void) | undefined;
-
-		const setupSubscription = async () => {
-			unsubscribe = await db.watchInventoryItems((items) => {
-				allItems = items;
-				loading = false;
-			});
-		};
-
-		setupSubscription();
-
-		return () => {
-			unsubscribe?.();
-		};
-	});
 
 	const tableHeader = [
 		'Inventar-Nr.',
@@ -67,7 +49,7 @@
 	};
 
 	const getEinheiten = () => {
-		const einheiten = new Set<string>(allItems?.map((item) => item.einheit) || []);
+		const einheiten = new Set<string>($inventory.inventoryItems?.map((item) => item.einheit) || []);
 		return [{ value: 'all', label: 'Alle Einheiten' }].concat(
 			Array.from(einheiten).map((e) => ({ value: e, label: e }))
 		);
@@ -102,7 +84,7 @@
 	};
 
 	$effect(() => {
-		filteredItems = filterItems(allItems);
+		filteredItems = filterItems($inventory.inventoryItems);
 	});
 </script>
 
@@ -121,7 +103,11 @@
 		Last updated: {lastFetchedStr}
 	</div>
 
-	{#if loading}
+	{#if $inventory.fetching}
+		<LoadingSpinner />
+	{/if}
+
+	{#if $inventory.inventoryItems === null}
 		<LoadingSpinner />
 	{:else}
 		<div class="flex flex-col gap-4">
@@ -146,7 +132,7 @@
 					<Table header={tableHeader} values={getTableValues(filteredItems)} />
 				</div>
 				<div class="text-gray-500">
-					Zeige {filteredItems.length} von {allItems.length} Items
+					Zeige {filteredItems.length} von {$inventory.inventoryItems.length} Items
 				</div>
 			{/if}
 		</div>
