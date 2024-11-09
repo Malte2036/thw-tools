@@ -24,8 +24,6 @@
 
 		$inventory.fetching = data.inventoryItems;
 		data.inventoryItems.then((res) => {
-			$inventory.fromCache = res.fromCache;
-
 			if (res.fromCache) {
 				$bannerMessage = {
 					message:
