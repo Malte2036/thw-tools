@@ -1,14 +1,13 @@
 <script lang="ts">
 	import Input from '$lib/Input.svelte';
-	import Select from '$lib/Select.svelte';
 	import LinkButton from '$lib/LinkButton.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
-	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
+	import Select from '$lib/Select.svelte';
 	import Table from '$lib/Table.svelte';
-	import { getInventoryItems } from '$lib/shared/stores/inventoryStore';
 	import type { InventoryItem } from '$lib/api/inventoryModels';
+	import { inventory } from '$lib/shared/stores/inventoryStore';
 	import { searchStringIsInArray } from '$lib/utils';
-	import { onMount } from 'svelte';
+	import { db } from '$lib/utils/db';
 
 	let searchTerm = $state('');
 	let selectedEinheit = $state('all');
@@ -16,9 +15,21 @@
 	let allItems = $state<InventoryItem[]>([]);
 	let loading = $state(true);
 
-	onMount(async () => {
-		allItems = await getInventoryItems();
-		loading = false;
+	$effect(() => {
+		let unsubscribe: (() => void) | undefined;
+
+		const setupSubscription = async () => {
+			unsubscribe = await db.watchInventoryItems((items) => {
+				allItems = items;
+				loading = false;
+			});
+		};
+
+		setupSubscription();
+
+		return () => {
+			unsubscribe?.();
+		};
 	});
 
 	const tableHeader = [

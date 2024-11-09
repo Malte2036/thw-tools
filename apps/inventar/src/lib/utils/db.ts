@@ -1,13 +1,13 @@
 import Dexie from 'dexie';
 import type { InventoryItem } from '$lib/api/inventoryModels';
+import { liveQuery } from 'dexie';
 
 // Extend Dexie with our database structure
 export class AppDatabase extends Dexie {
 	// Declare implicit table properties
 	inventoryItems!: Dexie.Table<
-		{
-			id?: number;
-			items: InventoryItem[];
+		InventoryItem & {
+			_id?: number;
 			timestamp: number;
 		},
 		number
@@ -18,53 +18,53 @@ export class AppDatabase extends Dexie {
 
 		// Define tables and indexes
 		this.version(1).stores({
-			// Primary key id (++), indexed by timestamp
-			inventoryItems: '++id, timestamp'
+			// Primary key _id (++), indexed by timestamp
+			inventoryItems: '++_id, timestamp, inventarNummer, einheit'
 		});
-	}
-
-	/**
-	 * Get the most recent inventory items
-	 */
-	async getLatestInventoryItems(): Promise<InventoryItem[] | null> {
-		const lastEntry = await this.inventoryItems.orderBy('timestamp').reverse().first();
-
-		return lastEntry?.items || null;
 	}
 
 	/**
 	 * Store new inventory items
 	 */
 	async storeInventoryItems(items: InventoryItem[]): Promise<void> {
-		// Clean up old entries - keep only the last 2 versions
-		const oldEntries = await this.inventoryItems.orderBy('timestamp').reverse().offset(2).toArray();
+		const timestamp = Date.now();
+		const itemsWithTimestamp = items.map((item) => ({
+			...item,
+			timestamp
+		}));
 
-		// Delete old entries
-		if (oldEntries.length > 0) {
-			await this.inventoryItems.bulkDelete(oldEntries.map((entry) => entry.id!));
-		}
+		await this.inventoryItems.clear();
 
-		// Add new entry
-		await this.inventoryItems.add({
-			items,
-			timestamp: Date.now()
+		await this.inventoryItems.bulkAdd(itemsWithTimestamp);
+	}
+
+	async getInventoryItems(): Promise<InventoryItem[]> {
+		return await this.inventoryItems.toArray();
+	}
+
+	async watchInventoryItems(callback: (items: InventoryItem[]) => void): Promise<() => void> {
+		// Use liveQuery to observe changes
+		const subscription = liveQuery(() => this.inventoryItems.toArray()).subscribe({
+			next: callback
 		});
+
+		// Return unsubscribe function
+		return () => subscription.unsubscribe();
+	}
+
+	async getInventoryItemByInventarNummer(
+		inventarNummer: string
+	): Promise<InventoryItem | undefined> {
+		return await this.inventoryItems.get({ inventarNummer });
+	}
+
+	async getInventoryItemsByEinheit(einheit: string): Promise<InventoryItem[]> {
+		return await this.inventoryItems.where('einheit').equals(einheit).toArray();
+	}
+
+	async isDbEmpty(): Promise<boolean> {
+		return (await this.inventoryItems.count()) === 0;
 	}
 }
 
-// Create a single instance of the database
 export const db = new AppDatabase();
-
-// Export functions that use the db instance
-export async function getStoredInventoryItems(): Promise<InventoryItem[] | null> {
-	return await db.getLatestInventoryItems();
-}
-
-export async function storeInventoryItems(items: InventoryItem[]): Promise<void> {
-	await db.storeInventoryItems(items);
-}
-
-// Helper function to clear the database (useful for testing/debugging)
-export async function clearDatabase(): Promise<void> {
-	await db.inventoryItems.clear();
-}

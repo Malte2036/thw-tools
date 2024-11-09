@@ -1,3 +1,4 @@
+import { db } from '$lib/utils/db';
 import { apiGet, apiPostFile, type ResponeData } from './apiGeneric';
 import {
 	ImportInventoryItemsResultZodSchema,
@@ -5,28 +6,33 @@ import {
 	type ImportInventoryItemsResult,
 	type InventoryItem
 } from './inventoryModels';
-import { getStoredInventoryItems, storeInventoryItems } from '../utils/db';
 
-export async function getInventoryItems(): Promise<ResponeData<InventoryItem[]>> {
+export async function getInventoryItems(): Promise<{
+	fromCache: boolean;
+}> {
 	// First try to get data from IndexedDB
-	const storedItems = await getStoredInventoryItems();
+	const isDbEmpty = await db.isDbEmpty();
 
 	// Return stored data immediately if available
-	if (storedItems) {
+	if (!isDbEmpty) {
 		// Start fetching fresh data in the background
-		fetchAndUpdateItems();
+		fetchItems();
 
 		return {
-			data: storedItems,
 			fromCache: true
-		} satisfies ResponeData<InventoryItem[]>;
+		};
 	}
 
 	// If no stored data, wait for the API response
-	return await fetchAndUpdateItems();
+	const items = await fetchItems();
+	await db.storeInventoryItems(items.data);
+
+	return {
+		fromCache: false
+	};
 }
 
-async function fetchAndUpdateItems(): Promise<ResponeData<InventoryItem[]>> {
+async function fetchItems(): Promise<ResponeData<InventoryItem[]>> {
 	const freshData = await apiGet<InventoryItem[]>('/inventory', (data) => {
 		const result = InventoryItemZodSchema.array().safeParse(data);
 		if (!result.success) {
@@ -34,11 +40,6 @@ async function fetchAndUpdateItems(): Promise<ResponeData<InventoryItem[]>> {
 		}
 		return result.success;
 	});
-
-	// If the API request was successful, store the new data
-	if (freshData.data) {
-		await storeInventoryItems(freshData.data);
-	}
 
 	return freshData;
 }

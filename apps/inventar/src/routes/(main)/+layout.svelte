@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
 
-	import { user } from '$lib/shared/stores/userStore';
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { inventory } from '$lib/shared/stores/inventoryStore';
-	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
+	import { user } from '$lib/shared/stores/userStore';
 
-	import type { LayoutData } from './$types';
+	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import NoOrganisation from '$lib/funk/NoOrganisation.svelte';
-	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
+	import type { LayoutData } from './$types';
 
 	interface Props {
 		data: LayoutData;
@@ -23,18 +22,6 @@
 		data.organisation.then((org) => ($user.organisation = org));
 
 		$inventory.fetching = data.inventoryItems;
-		data.inventoryItems.then((res) => {
-			if (res.fromCache) {
-				$bannerMessage = {
-					message:
-						'Die Inventar-Items wurden aus dem lokalen Speicher geladen. Die Daten werden im Hintergrund aktualisiert.',
-					type: 'info',
-					autoDismiss: {
-						duration: 5000
-					}
-				};
-			}
-		});
 
 		$funk.fetching = data.funkData;
 		data.funkData.then((funkData) => {

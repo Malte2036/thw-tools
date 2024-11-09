@@ -1,16 +1,12 @@
 <script lang="ts">
 	import type { InventoryItem } from '$lib/api/inventoryModels';
-	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
 	import ManuelDeviceIdInput from '$lib/funk/ManuelDeviceIdInput.svelte';
 	import QrScanner from '$lib/funk/QRScanner.svelte';
+	import InventoryDetailsDialog from '$lib/inventar/InventoryDetailsDialog.svelte';
+	import LinkButton from '$lib/LinkButton.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
-	import {
-		getInventoryItems,
-		getInventoryItemByInventarNummer
-	} from '$lib/shared/stores/inventoryStore';
-	import LinkButton from '$lib/LinkButton.svelte';
-	import InventoryDetailsDialog from '$lib/inventar/InventoryDetailsDialog.svelte';
+	import { db } from '$lib/utils/db';
 	import { onMount } from 'svelte';
 
 	let inventoryItem: InventoryItem | undefined = $state();
@@ -18,12 +14,12 @@
 	let loading = $state(true);
 
 	onMount(async () => {
-		allItems = await getInventoryItems();
+		allItems = await db.getInventoryItems();
 		loading = false;
 	});
 
 	const onScan = async (decodedText: string) => {
-		inventoryItem = await getInventoryItemByInventarNummer(decodedText);
+		inventoryItem = await db.getInventoryItemByInventarNummer(decodedText);
 		if (!inventoryItem) {
 			$bannerMessage = {
 				message: 'Inventar Item nicht gefunden',
