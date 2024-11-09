@@ -17,6 +17,7 @@ import { getUserAndOrgFromRequestAndThrow } from 'src/funk/funk.controller';
 import { OrganisationService } from 'src/organisation/organisation.service';
 import { UserService } from 'src/user/user.service';
 import { InventoryService } from './inventory.service';
+import { Request } from 'express';
 
 @ApiTags('inventory')
 @Controller('inventory')

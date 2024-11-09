@@ -17,14 +17,14 @@ import { UserDocument } from 'src/user/schemas/user.schema';
 import { UserService } from 'src/user/user.service';
 import { FunkService } from './funk.service';
 import { FunkItemEventType } from './schemas/funk-item-event.schema';
+import { Request } from 'express';
 
 export async function getUserAndOrgFromRequest(
   req: Request,
   userService: UserService,
   organisationService: OrganisationService,
 ): Promise<[UserDocument | null, OrganisationDocument | null]> {
-  const accessToken = (req.headers as any).authorization.split(' ')[1];
-  const user = await userService.getUserByAccessToken(accessToken);
+  const user = await userService.getUserByKindeId(req.user.sub);
   if (!user) {
     Logger.warn('User not found');
     return [null, null];

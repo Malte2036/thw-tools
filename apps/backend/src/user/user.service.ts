@@ -1,8 +1,8 @@
+import { UserCreatedWebhookEvent } from '@kinde/webhooks/dist/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserCreatedWebhookEvent } from '@kinde/webhooks/dist/types';
-import { User, UserDocument } from './schemas/user.schema';
+import { User } from './schemas/user.schema';
 
 @Injectable()
 export class UserService {
@@ -32,33 +32,5 @@ export class UserService {
     return this.userModel.findOne({
       kindeId: kindeId,
     });
-  }
-
-  private getHeader(accessToken: string) {
-    return {
-      Accept: 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    };
-  }
-
-  async getUserByAccessToken(accessToken: string): Promise<UserDocument> {
-    let kindeUserId: string;
-    try {
-      const res = await fetch(
-        `${process.env.KINDE_DOMAIN}/oauth2/user_profile`,
-        {
-          method: 'GET',
-          headers: this.getHeader(accessToken),
-        },
-      );
-      const data = await res.json();
-
-      kindeUserId = data.id;
-    } catch (err) {
-      Logger.error(err);
-      throw new Error('Failed to fetch user from kinde');
-    }
-
-    return await this.getUserByKindeId(kindeUserId);
   }
 }

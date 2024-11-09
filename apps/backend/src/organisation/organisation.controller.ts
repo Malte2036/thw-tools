@@ -15,6 +15,7 @@ import {
   getUserAndOrgFromRequest,
   getUserAndOrgFromRequestAndThrow,
 } from 'src/funk/funk.controller';
+import { Request } from 'express';
 
 @ApiTags('organisations')
 @Controller('organisations')
