@@ -29,7 +29,7 @@
 	};
 
 	const getEinheiten = () => {
-		return new Set<string>($inventory.inventoryItems?.map((item) => item.einheit) || []);
+		return Array.from(new Set($inventory.inventoryItems?.map((item) => item.einheit) || [])).sort();
 	};
 </script>
 
@@ -62,7 +62,7 @@
 				</div>
 				<Table
 					header={['Einheit', 'Anzahl']}
-					values={Array.from(getEinheiten()).map((einheit) => [
+					values={getEinheiten().map((einheit) => [
 						einheit,
 						$inventory.inventoryItems
 							?.filter((item) => item.einheit === einheit)

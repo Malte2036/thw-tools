@@ -53,9 +53,11 @@
 	};
 
 	const getEinheiten = () => {
-		const einheiten = new Set<string>($inventory.inventoryItems?.map((item) => item.einheit) || []);
+		const einheiten = Array.from(
+			new Set($inventory.inventoryItems?.map((item) => item.einheit) || [])
+		).sort();
 		return [{ value: 'all', label: 'Alle Einheiten' }].concat(
-			Array.from(einheiten).map((e) => ({ value: e, label: e }))
+			einheiten.map((e) => ({ value: e, label: e }))
 		);
 	};
 
