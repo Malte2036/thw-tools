@@ -1,23 +1,27 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
+import { LitElement, html, css, unsafeCSS, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { thwColors } from "./colors";
 
 /**
  * A table component.
  * @param {string[]} header - The header of the table.
- * @param {string[][]} values - The values of the table.
+ * @param {(string | TemplateResult | HTMLElement)[][]} values - The values of the table.
  * @param {number | undefined} selectedIndex - The index of the selected row.
  * @param {number | undefined} maxHeight - The maximum height of the table.
  *
  * @fires {CustomEvent} row-click - Fired when a row is clicked.
  * @property {Object} event.detail
- * @property {string[]} event.detail.row - The data of the clicked row.
+ * @property {(string | TemplateResult | HTMLElement)[]} event.detail.row - The data of the clicked row.
  * @property {number} event.detail.index - The index of the clicked row.
  */
 @customElement("thw-table")
 export class THWTable extends LitElement {
   @property({ type: Array }) header: string[] = [];
-  @property({ type: Array }) values: string[][] = [];
+  @property({ type: Array }) values: (
+    | string
+    | TemplateResult
+    | HTMLElement
+  )[][] = [];
   @property({ type: Number }) selectedIndex?: number;
   @property({ type: Number }) maxHeight?: number;
 
@@ -100,7 +104,10 @@ export class THWTable extends LitElement {
     `;
   }
 
-  private handleRowClick(row: string[], index: number) {
+  private handleRowClick(
+    row: (string | TemplateResult | HTMLElement)[],
+    index: number
+  ) {
     this.selectedIndex = index;
     this.dispatchEvent(
       new CustomEvent("row-click", {

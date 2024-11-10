@@ -103,6 +103,8 @@
             voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
             qu Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
             voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
+            qu Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
             qu
           </p>
         </div>
@@ -170,59 +172,188 @@
       <h1>THW Table</h1>
       <thw-table id="example-table"></thw-table>
     </div>
-    <script>
+    <script type="module">
+      import { html } from "lit";
+
       document.addEventListener("DOMContentLoaded", function () {
         const table = document.getElementById("example-table");
 
         // Set the header and values properties
         table.maxHeight = 600;
-        table.header = ["Name", "Age", "Occupation"];
+        table.header = ["", "Name", "Age", "Occupation"];
         table.values = [
-          ["Alice", "30", "Engineer"],
-          ["Bob", "25", "Designer"],
-          ["Charlie", "35", "Teacher"],
-          ["David", "28", "Developer"],
-          ["Eva", "22", "Artist"],
-          ["Frank", "40", "Manager"],
-          ["Alice", "30", "Engineer"],
-          ["Bob", "25", "Designer"],
-          ["Charlie", "35", "Teacher"],
-          ["David", "28", "Developer"],
-          ["Eva", "22", "Artist"],
-          ["Frank", "40", "Manager"],
-          ["Alice", "30", "Engineer"],
-          ["Bob", "25", "Designer"],
-          ["Charlie", "35", "Teacher"],
-          ["David", "28", "Developer"],
-          ["Eva", "22", "Artist"],
-          ["Frank", "40", "Manager"],
-          ["Alice", "30", "Engineer"],
-          ["Bob", "25", "Designer"],
-          ["Charlie", "35", "Teacher"],
-          ["David", "28", "Developer"],
-          ["Eva", "22", "Artist"],
-          ["Frank", "40", "Manager"],
-          ["Alice", "30", "Engineer"],
-          ["Bob", "25", "Designer"],
-          ["Charlie", "35", "Teacher"],
-          ["David", "28", "Developer"],
-          ["Eva", "22", "Artist"],
-          ["Frank", "40", "Manager"],
-          ["Alice", "30", "Engineer"],
-          ["Bob", "25", "Designer"],
-          ["Charlie", "35", "Teacher"],
-          ["David", "28", "Developer"],
-          ["Eva", "22", "Artist"],
-          ["Frank", "40", "Manager"],
-          ["Alice", "30", "Engineer"],
-          ["Bob", "25", "Designer"],
-          ["Charlie", "35", "Teacher"],
-          ["David", "28", "Developer"],
-          ["Eva", "22", "Artist"],
-          ["Frank", "40", "Manager"],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Alice",
+            "30",
+            "Engineer",
+          ],
+          ["", "Bob", "25", "Designer"],
+          ["", "Charlie", "35", "Teacher"],
+          ["", "David", "28", "Developer"],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Eva",
+            "22",
+            "Artist",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Frank",
+            "40",
+            "Manager",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Alice",
+            "30",
+            "Engineer",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Bob",
+            "25",
+            "Designer",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Charlie",
+            "35",
+            "Teacher",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "David",
+            "28",
+            "Developer",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Eva",
+            "22",
+            "Artist",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Frank",
+            "40",
+            "Manager",
+          ],
+          ["", "Alice", "30", "Engineer"],
+          ["", "Bob", "25", "Designer"],
+          ["", "Charlie", "35", "Teacher"],
+          ["", "David", "28", "Developer"],
+          ["", "Eva", "22", "Artist"],
+          ["", "Frank", "40", "Manager"],
+          ["", "Alice", "30", "Engineer"],
+          ["", "Bob", "25", "Designer"],
+          ["", "Charlie", "35", "Teacher"],
+          ["", "David", "28", "Developer"],
+          ["", "Eva", "22", "Artist"],
+          ["", "Frank", "40", "Manager"],
+          ["", "Alice", "30", "Engineer"],
+          ["", "Bob", "25", "Designer"],
+          ["", "Charlie", "35", "Teacher"],
+          ["", "David", "28", "Developer"],
+          ["", "Eva", "22", "Artist"],
+          ["", "Frank", "40", "Manager"],
+          ["", "Alice", "30", "Engineer"],
+          ["", "Bob", "25", "Designer"],
+          ["", "Charlie", "35", "Teacher"],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "David",
+            "28",
+            "Developer",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Eva",
+            "22",
+            "Artist",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Frank",
+            "40",
+            "Manager",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Alice",
+            "30",
+            "Engineer",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Bob",
+            "25",
+            "Designer",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Charlie",
+            "35",
+            "Teacher",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "David",
+            "28",
+            "Developer",
+          ],
+          ["", "Eva", "22", "Artist"],
+          ["", "Frank", "40", "Manager"],
         ];
 
-        // Replace onValueClick with event listener
         table.addEventListener("row-click", (event) => {
           const { row, index } = event.detail;
           console.log("Clicked row:", row, "at index:", index);
