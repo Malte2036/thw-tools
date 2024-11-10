@@ -1,6 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { thwColors } from "./colors";
+import { virtualize } from "@lit-labs/virtualizer/virtualize.js";
 
 /**
  * A table component.
@@ -23,20 +24,26 @@ export class THWTable extends LitElement {
 
   static override styles = css`
     .table-wrapper {
-      overflow: auto;
+      width: 100%;
     }
     table {
       width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      border-radius: 0.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+    tbody {
+      height: 600px;
+    }
+    tr {
+      display: flex;
+      width: 100%;
     }
     th,
     td {
       padding: 0.5rem 1rem;
       text-align: left;
       border-bottom: 1px solid #e2e8f0;
+      flex: 1;
     }
     th {
       background-color: ${unsafeCSS(thwColors[100])};
@@ -45,9 +52,6 @@ export class THWTable extends LitElement {
       position: sticky;
       top: 0;
       z-index: 1;
-    }
-    tr {
-      transition: background-color 0.2s, color 0.2s;
     }
     tr:hover {
       background-color: ${unsafeCSS(thwColors[200])};
@@ -69,33 +73,31 @@ export class THWTable extends LitElement {
 
   override render() {
     return html`
-      <div class="table-container">
-        <div
-          class="table-wrapper"
-          style=${this.maxHeight ? `max-height: ${this.maxHeight}px;` : ""}
-        >
-          <table>
-            <thead>
-              <tr>
-                ${(this.header || []).map((title) => html`<th>${title}</th>`)}
-              </tr>
-            </thead>
-            <tbody>
-              ${(this.values || []).map(
-                (row, index) => html`
-                  <tr
-                    class=${this.selectedIndex === index ? "selected" : ""}
-                    @click=${() => this.handleRowClick(row, index)}
-                  >
-                    ${(this.header || []).map(
-                      (_, i) => html`<td>${row[i]}</td>`
-                    )}
-                  </tr>
-                `
-              )}
-            </tbody>
-          </table>
-        </div>
+      <div
+        class="table-wrapper"
+        style=${this.maxHeight ? `max-height: ${this.maxHeight}px;` : ""}
+      >
+        <table>
+          <thead>
+            <tr>
+              ${(this.header || []).map((title) => html`<th>${title}</th>`)}
+            </tr>
+          </thead>
+          <tbody>
+            ${virtualize({
+              scroller: true,
+              items: this.values,
+              renderItem: (row, index) => html`
+                <tr
+                  class=${this.selectedIndex === index ? "selected" : ""}
+                  @click=${() => this.handleRowClick(row, index)}
+                >
+                  ${row.map((cell) => html`<td>${cell}</td>`)}
+                </tr>
+              `,
+            })}
+          </tbody>
+        </table>
       </div>
     `;
   }
