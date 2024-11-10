@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { userToFriendlyString } from '$lib/api/funkModels';
-	import { generateInviteLink, type Organisation } from '$lib/api/organisation';
+	import { generateInviteLink, type Organisation, type User } from '$lib/api/organisationModels';
 	import { leaveOrganisation } from '$lib/api/organisationApi';
 	import Button from '$lib/Button.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
@@ -12,10 +12,25 @@
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import ErrorState from '$lib/ErrorDisplay.svelte';
 
+	const createImage = (user: User) => {
+		if (!user.picture) return '';
+
+		const img = document.createElement('img');
+		img.src = user.picture ?? '';
+		img.alt = userToFriendlyString(user);
+		img.style.width = '25px';
+		img.style.height = '25px';
+		img.style.borderRadius = '50%';
+		img.style.verticalAlign = 'middle';
+
+		return img;
+	};
+
 	const organisation: Organisation | null = $derived($user.organisation);
 	const memberCount = $derived($user.organisation?.members.length ?? 0);
 	const memberTableValues = $derived(
 		($user.organisation?.members ?? []).map((member) => [
+			createImage(member),
 			userToFriendlyString(member),
 			member.email ?? ''
 		])
@@ -80,7 +95,7 @@
 			</Card>
 
 			<Card title={`Mitglieder (${memberCount})`}>
-				<Table header={['Name', 'E-Mail']} values={memberTableValues} />
+				<Table header={['', 'Name', 'E-Mail']} values={memberTableValues} />
 				<div class="mt-3">
 					<Button secondary click={leaveOrg}>Organisation verlassen</Button>
 				</div>

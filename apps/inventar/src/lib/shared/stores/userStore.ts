@@ -1,5 +1,5 @@
 import type { User } from '$lib/api/funkModels';
-import type { Organisation } from '$lib/api/organisation';
+import type { Organisation } from '$lib/api/organisationModels';
 import { writable } from 'svelte/store';
 
 export type UserData = {

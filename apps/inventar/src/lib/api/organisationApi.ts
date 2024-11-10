@@ -1,5 +1,5 @@
 import { apiGet, apiPost } from './apiGeneric';
-import { OrganisationSchema, type Organisation } from './organisation';
+import { OrganisationSchema, type Organisation } from './organisationModels';
 
 export async function getOrganisationForUser(): Promise<Organisation> {
 	const response = await apiGet<Organisation>('/organisations/me', (data) => {

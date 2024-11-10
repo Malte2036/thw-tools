@@ -1,19 +1,11 @@
 import { z } from 'zod';
 import { dateToFriendlyString, searchStringIsInArray } from '$lib/utils';
+import type { User } from './organisationModels';
 
 export const inventarNummerRegex = /^\d{4}-S?\d{6}$/;
 export const InventarNummer = z
 	.string()
 	.regex(inventarNummerRegex, 'Invalid inventar number format');
-
-export const UserSchema = z.object({
-	_id: z.string(),
-	firstName: z.string().optional(),
-	lastName: z.string().optional(),
-	email: z.string().optional()
-});
-
-export type User = z.infer<typeof UserSchema>;
 
 export type FunkItemDeviceId = string;
 

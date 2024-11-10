@@ -1,8 +1,19 @@
 <script lang="ts">
+	import type { SvelteComponent } from 'svelte';
+
+	type TableCell =
+		| string
+		| HTMLElement
+		| SvelteComponent
+		| {
+				component: typeof SvelteComponent;
+				props: Record<string, any>;
+		  };
+
 	interface Props {
 		header: string[];
-		values: string[][];
-		onValueClick?: ((row: string[], index: number) => void) | undefined;
+		values: TableCell[][];
+		onValueClick?: ((row: TableCell[], index: number) => void) | undefined;
 		selectedIndex?: number | undefined;
 	}
 
@@ -13,7 +24,7 @@
 		selectedIndex = $bindable(undefined)
 	}: Props = $props();
 
-	function handleRowClick(event: CustomEvent<{ row: string[]; index: number }>) {
+	function handleRowClick(event: CustomEvent<{ row: TableCell[]; index: number }>) {
 		const { row, index } = event.detail;
 		selectedIndex = index;
 		if (onValueClick) {
