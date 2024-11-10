@@ -222,10 +222,11 @@
           ["Frank", "40", "Manager"],
         ];
 
-        // Set the onValueClick callback
-        table.onValueClick = (row, index) => {
+        // Replace onValueClick with event listener
+        table.addEventListener("row-click", (event) => {
+          const { row, index } = event.detail;
           console.log("Clicked row:", row, "at index:", index);
-        };
+        });
       });
     </script>
   </body>

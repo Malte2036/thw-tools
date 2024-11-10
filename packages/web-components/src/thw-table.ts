@@ -6,18 +6,18 @@ import { thwColors } from "./colors";
  * A table component.
  * @param {string[]} header - The header of the table.
  * @param {string[][]} values - The values of the table.
- * @param {Function} onValueClick - The callback function when a table row is clicked.
  * @param {number | undefined} selectedIndex - The index of the selected row.
  * @param {number | undefined} maxHeight - The maximum height of the table.
+ *
+ * @fires {CustomEvent} row-click - Fired when a row is clicked.
+ * @property {Object} event.detail
+ * @property {string[]} event.detail.row - The data of the clicked row.
+ * @property {number} event.detail.index - The index of the clicked row.
  */
 @customElement("thw-table")
 export class THWTable extends LitElement {
   @property({ type: Array }) header: string[] = [];
   @property({ type: Array }) values: string[][] = [];
-  @property({ attribute: false }) onValueClick?: (
-    row: string[],
-    index: number
-  ) => void;
   @property({ type: Number }) selectedIndex?: number;
   @property({ type: Number }) maxHeight?: number;
 
@@ -101,10 +101,14 @@ export class THWTable extends LitElement {
   }
 
   private handleRowClick(row: string[], index: number) {
-    if (this.onValueClick) {
-      this.selectedIndex = index;
-      this.onValueClick(row, index);
-    }
+    this.selectedIndex = index;
+    this.dispatchEvent(
+      new CustomEvent("row-click", {
+        detail: { row, index },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 }
 
