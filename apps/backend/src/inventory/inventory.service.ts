@@ -183,6 +183,7 @@ export class InventoryService {
           inventarNummer,
           sachNummer: sanitizeValue(record.Sachnummer),
           gerateNummer: sanitizeValue(record['Gerätenr.']),
+          status: sanitizeValue(record.Status),
         } satisfies InventoryItem;
       } catch (error) {
         Logger.error(

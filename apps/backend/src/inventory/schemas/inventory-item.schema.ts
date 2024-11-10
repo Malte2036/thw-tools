@@ -41,6 +41,9 @@ export class InventoryItem {
 
   @Prop()
   gerateNummer: string;
+
+  @Prop()
+  status: string;
 }
 
 export const InventoryItemSchema = SchemaFactory.createForClass(InventoryItem);

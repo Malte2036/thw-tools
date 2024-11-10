@@ -77,7 +77,7 @@ export class InventoryController {
     }
 
     if (file.mimetype !== 'text/csv') {
-      Logger.error('Invalid file type provided');
+      Logger.error(`Invalid file type provided: ${file.mimetype}`);
       throw new HttpException(
         'Only CSV files are allowed',
         HttpStatus.UNSUPPORTED_MEDIA_TYPE,
