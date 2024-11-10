@@ -1,5 +1,5 @@
 import { PUBLIC_API_URL } from '$env/static/public';
-import { getToken } from './authApi';
+import { getIdToken, getToken } from './authApi';
 import { CustomError, HttpError, UnauthorizedError } from './error';
 
 const checkIfResposeIsUnauthorized = (res: Response) => {
@@ -20,6 +20,19 @@ function responseToData<T>(response: Response, data: T): ResponeData<T> {
 	};
 }
 
+async function createHeaders(includeContentType = true): Promise<Headers> {
+	const headers = new Headers();
+	headers.append('Authorization', `Bearer ${await getToken()}`);
+
+	if (includeContentType) {
+		headers.append('Content-Type', 'application/json');
+	}
+
+	headers.append('x-id-token', await getIdToken());
+
+	return headers;
+}
+
 export async function apiGet<T>(
 	path: string,
 	verifyData?: (data: T) => boolean
@@ -28,10 +41,7 @@ export async function apiGet<T>(
 
 	try {
 		const response = await fetch(url, {
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${await getToken()}`
-			}
+			headers: await createHeaders()
 		});
 
 		if (!response.ok) {
@@ -67,10 +77,7 @@ export async function apiPost<T>(
 	try {
 		const response = await fetch(url, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${await getToken()}`
-			},
+			headers: await createHeaders(),
 			body: body ? JSON.stringify(body) : undefined
 		});
 
@@ -110,9 +117,7 @@ export async function apiPostFile<T>(
 
 		const response = await fetch(url, {
 			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${await getToken()}`
-			},
+			headers: await createHeaders(false),
 			body: formData
 		});
 
@@ -143,9 +148,7 @@ export async function apiGetFile(path: string) {
 	const url = new URL(path, PUBLIC_API_URL);
 	try {
 		const response = await fetch(url, {
-			headers: {
-				Authorization: `Bearer ${await getToken()}`
-			}
+			headers: await createHeaders()
 		});
 
 		if (!response.ok) {

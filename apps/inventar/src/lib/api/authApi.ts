@@ -4,9 +4,11 @@ import { createKindeBrowserClient } from '@kinde-oss/kinde-typescript-sdk';
 import { goto } from '$app/navigation';
 import { sessionManager } from './auth/sessionManager';
 
-let _kindeClient: any = null;
+type KindeClientType = ReturnType<typeof createKindeBrowserClient>;
 
-export const getKindeClient = () => {
+let _kindeClient: KindeClientType | null = null;
+
+export const getKindeClient = (): KindeClientType => {
 	if (_kindeClient) {
 		return _kindeClient;
 	}
@@ -107,9 +109,8 @@ export const handleRedirectToApp = async () => {
 };
 
 export const getUser = async () => {
-	console.log('token:', await getToken());
-
 	const user = await getKindeClient().getUser();
+
 	return user;
 };
 
@@ -119,4 +120,8 @@ export const isAuthenticated = async () => {
 
 export const getToken = async () => {
 	return await getKindeClient().getToken();
+};
+
+export const getIdToken = async (): Promise<string> => {
+	return (await sessionManager.getSessionItem('id_token')) as string;
 };
