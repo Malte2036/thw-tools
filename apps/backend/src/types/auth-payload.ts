@@ -45,7 +45,7 @@ export const IdTokenPayloadSchema = z.object({
   /** User's full name */
   name: z.string(),
   /** User's profile picture URL */
-  picture: z.string().url(),
+  picture: z.string().url().optional(),
   /** Risk assessment time */
   rat: z.number(),
   /** Last update timestamp */
