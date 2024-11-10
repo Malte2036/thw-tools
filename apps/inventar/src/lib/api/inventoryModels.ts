@@ -16,7 +16,8 @@ export const InventoryItemZodSchema = z.object({
 		.nullable()
 		.optional(),
 	sachNummer: z.string().nullable().optional(),
-	gerateNummer: z.string().nullable().optional()
+	gerateNummer: z.string().nullable().optional(),
+	status: z.string().nullable().optional()
 });
 
 export type InventoryItem = z.infer<typeof InventoryItemZodSchema>;

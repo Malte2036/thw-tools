@@ -32,7 +32,8 @@
 		'Hersteller',
 		'Typ',
 		'Sach-Nr.',
-		'Gerät-Nr.'
+		'Gerät-Nr.',
+		'Status'
 	];
 
 	const getTableValues = (items: InventoryItem[]) => {
@@ -44,7 +45,8 @@
 			item.hersteller || '-',
 			item.typ || '-',
 			item.sachNummer || '-',
-			item.gerateNummer || '-'
+			item.gerateNummer || '-',
+			item.status || '-'
 		]);
 	};
 
