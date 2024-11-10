@@ -7,9 +7,9 @@
 		type FunkItemDeviceId,
 		type FunkItemEvent
 	} from '../api/funkModels';
-	import FunkItemEventTypeBadge from './FunkItemEventTypeBadge.svelte';
 	import { user } from '$lib/shared/stores/userStore';
 	import { eventTypeToFriendlyString } from '../api/funkModels';
+	import { db } from '$lib/utils/db';
 
 	interface Props {
 		event: FunkItemEvent;
@@ -22,6 +22,16 @@
 	let { event, deviceId, isSelected, item, secondary = false }: Props = $props();
 
 	const eventUser = getOrganisationUserByInternalId($user, event.user);
+
+	let itemType: string | undefined = $state(undefined);
+
+	$effect(() => {
+		if (!item?.deviceId) return;
+
+		db.getInventoryItemByInventarNummer(item.deviceId).then(
+			(inventoryItem) => (itemType = inventoryItem?.typ ?? undefined)
+		);
+	});
 </script>
 
 <a
@@ -39,7 +49,7 @@
 					class="rounded-xl text-sm px-2 h-min bg-green-200 whitespace-nowrap"
 					class:isBorrowed={event.type === 'borrowed'}
 				>
-					{item?.name ?? eventTypeToFriendlyString(event.type)}
+					{itemType ?? eventTypeToFriendlyString(event.type)}
 				</div>
 			</div>
 		</div>

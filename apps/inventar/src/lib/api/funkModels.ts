@@ -20,8 +20,7 @@ export type FunkItemDeviceId = string;
 export const FunkItemSchema = z.object({
 	_id: z.string(),
 	deviceId: InventarNummer,
-	lastEvent: z.string().optional(),
-	name: z.string().optional()
+	lastEvent: z.string().optional()
 });
 
 export type FunkItem = z.infer<typeof FunkItemSchema>;
@@ -121,7 +120,7 @@ export function isSearchStringInFunkItem(
 	eventUser: User | undefined
 ): boolean {
 	return (
-		searchStringIsInArray(searchString.trim(), [item.deviceId, item.name].filter(Boolean)) ||
+		searchStringIsInArray(searchString.trim(), [item.deviceId].filter(Boolean)) ||
 		isSearchStringInFunkItemEvent(searchString, lastEvent, eventUser)
 	);
 }
