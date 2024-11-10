@@ -8,9 +8,11 @@
 	import { searchStringIsInArray } from '$lib/utils';
 	import { apiMeta } from '$lib/shared/stores/apiMetaStore';
 	import { inventory } from '$lib/shared/stores/inventoryStore';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	let searchTerm = $state('');
-	let selectedEinheit = $state('all');
+	let selectedEinheit = $state($page.url.searchParams.get('einheit') || 'all');
 	let filteredItems = $state<InventoryItem[]>([]);
 
 	let lastFetchedStr = $derived(
@@ -85,6 +87,17 @@
 		searchTerm = target.value;
 	};
 
+	const handleEinheitChange = (value: string) => {
+		selectedEinheit = value;
+		const url = new URL(window.location.href);
+		if (value === 'all') {
+			url.searchParams.delete('einheit');
+		} else {
+			url.searchParams.set('einheit', value);
+		}
+		goto(url.toString(), { replaceState: true });
+	};
+
 	$effect(() => {
 		filteredItems = filterItems($inventory.inventoryItems);
 	});
@@ -115,7 +128,12 @@
 		<div class="flex flex-col gap-4">
 			<div class="flex flex-col md:flex-row items-center gap-4">
 				<div class="w-full md:w-64">
-					<Select options={getEinheiten()} bind:selected={selectedEinheit} label="Einheit Filter" />
+					<Select
+						options={getEinheiten()}
+						selected={selectedEinheit}
+						onSelect={handleEinheitChange}
+						label="Einheit Filter"
+					/>
 				</div>
 				<div class="w-full">
 					<Input

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import type { InventoryItem } from '$lib/api/inventoryModels';
 	import ManuelDeviceIdInput from '$lib/funk/ManuelDeviceIdInput.svelte';
 	import QrScanner from '$lib/funk/QRScanner.svelte';
@@ -59,7 +60,6 @@
 					Gesamtbestand: <span class="font-bold">{$inventory.inventoryItems.length}</span>
 					Inventarstücke, verteilt auf folgende Einheiten:
 				</div>
-
 				<Table
 					header={['Einheit', 'Anzahl']}
 					values={Array.from(getEinheiten()).map((einheit) => [
@@ -68,6 +68,7 @@
 							?.filter((item) => item.einheit === einheit)
 							.length.toLocaleString('de-DE') ?? '-'
 					])}
+					onValueClick={(row, index) => goto(`/inventar/list?einheit=${row[0]}`)}
 				/>
 			</div>
 		{/if}
