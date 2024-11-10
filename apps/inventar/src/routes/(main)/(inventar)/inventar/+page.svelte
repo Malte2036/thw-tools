@@ -7,6 +7,7 @@
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { inventory } from '$lib/shared/stores/inventoryStore';
+	import Table from '$lib/Table.svelte';
 	import { db } from '$lib/utils/db';
 
 	let inventoryItem: InventoryItem | undefined = $state();
@@ -34,16 +35,16 @@
 <div class="p-2 flex flex-col gap-4">
 	<div class="flex flex-col gap-2">
 		<div class="flex items-center gap-2">
-			<h1 class="text-2xl font-bold">OV Inventar</h1>
+			<h1 class="text-2xl font-bold">Inventarverwaltung</h1>
 			<span class="bg-thw-300 text-xs px-2 py-1 rounded-full">Beta</span>
 		</div>
 		<div class="flex gap-2">
-			<LinkButton url="list">Alle Items anzeigen</LinkButton>
-			<LinkButton url="upload" secondary>Import</LinkButton>
+			<LinkButton url="list">Inventarliste</LinkButton>
+			<LinkButton url="upload" secondary>Daten importieren</LinkButton>
 		</div>
 		<p class="text-lg">
-			Scanne den QR-Code oder gib die Inventar-Nummer manuell ein, um Informationen zu einem
-			Inventar-Item im OV zu erhalten.
+			Scannen Sie den QR-Code des Inventarstücks oder geben Sie die Inventarnummer manuell ein, um
+			detaillierte Informationen abzurufen.
 		</p>
 	</div>
 
@@ -51,17 +52,23 @@
 		{#if $inventory.inventoryItems === null}
 			<LoadingSpinner />
 		{:else if $inventory.inventoryItems.length === 0}
-			<p class="text-lg text-gray-500">Es sind noch keine Inventar-Items im System erfasst.</p>
+			<p class="text-lg text-gray-500">Aktuell sind keine Inventarstücke erfasst.</p>
 		{:else}
-			<div class="text-lg text-gray-500">
-				Es sind bereits {$inventory.inventoryItems.length} Inventar-Items im System der folgenden Einheiten
-				erfasst:
+			<div class="flex flex-col gap-2">
+				<div class="text-lg text-gray-500">
+					Gesamtbestand: <span class="font-bold">{$inventory.inventoryItems.length}</span>
+					Inventarstücke, verteilt auf folgende Einheiten:
+				</div>
 
-				<ul class="list-disc list-inside pl-2">
-					{#each Array.from(getEinheiten()) as einheit}
-						<li>{einheit}</li>
-					{/each}
-				</ul>
+				<Table
+					header={['Einheit', 'Anzahl']}
+					values={Array.from(getEinheiten()).map((einheit) => [
+						einheit,
+						$inventory.inventoryItems
+							?.filter((item) => item.einheit === einheit)
+							.length.toLocaleString('de-DE') ?? '-'
+					])}
+				/>
 			</div>
 		{/if}
 	</div>
