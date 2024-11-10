@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/Button.svelte';
-	import { Html5Qrcode } from 'html5-qrcode';
+	import { Html5Qrcode, type Html5QrcodeCameraScanConfig } from 'html5-qrcode';
 	import { onDestroy, onMount } from 'svelte';
 
 	interface Props {
@@ -31,17 +31,25 @@
 		html5Qrcode = new Html5Qrcode('reader');
 	}
 
+	interface ExtendedHtml5QrcodeCameraScanConfig extends Html5QrcodeCameraScanConfig {
+		focusMode?: string;
+		advanced?: { zoom: number }[];
+		experimentalFeatures?: { useBarCodeDetectorIfSupported: boolean };
+	}
+
 	function start() {
-		html5Qrcode.start(
-			{ facingMode: 'environment' },
-			{
-				fps: 10,
-				qrbox: qrboxFunction,
-				aspectRatio: 1
-			},
-			onScanSuccess,
-			onScanFailure
-		);
+		const config: ExtendedHtml5QrcodeCameraScanConfig = {
+			fps: 10,
+			qrbox: qrboxFunction,
+			aspectRatio: 1,
+			focusMode: 'continuous',
+			advanced: [{ zoom: 2.0 }],
+			experimentalFeatures: {
+				useBarCodeDetectorIfSupported: true
+			}
+		};
+
+		html5Qrcode.start({ facingMode: 'environment' }, config, onScanSuccess, onScanFailure);
 		scanning = true;
 	}
 
