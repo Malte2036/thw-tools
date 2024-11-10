@@ -24,11 +24,13 @@ export async function getUserAndOrgFromRequest(
   userService: UserService,
   organisationService: OrganisationService,
 ): Promise<[UserDocument | null, OrganisationDocument | null]> {
-  const user = await userService.getUserByKindeId(req.user.sub);
-  if (!user) {
-    Logger.warn('User not found');
-    return [null, null];
-  }
+  const user = await userService.updateOrCreateUser({
+    kindeId: req.idTokenPayload.sub,
+    email: req.idTokenPayload.email,
+    firstName: req.idTokenPayload.given_name,
+    lastName: req.idTokenPayload.family_name,
+    picture: req.idTokenPayload.picture,
+  });
 
   const organisation = await organisationService.getPrimaryOrganisationsForUser(
     user.id,

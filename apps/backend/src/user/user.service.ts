@@ -1,4 +1,3 @@
-import { UserCreatedWebhookEvent } from '@kinde/webhooks/dist/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -6,31 +5,32 @@ import { User } from './schemas/user.schema';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
   constructor(
     @InjectModel(User.name)
     private userModel: Model<User>,
   ) {}
-  async createUserFromKinde(webhookData: UserCreatedWebhookEvent) {
-    if (await this.getUserByKindeId(webhookData.data.user.id)) {
-      Logger.warn(
-        `User from webhook already exists: ${webhookData.data.user.id}`,
+
+  async updateOrCreateUser(userData: User) {
+    try {
+      const result = await this.userModel.findOneAndUpdate(
+        { kindeId: userData.kindeId },
+        { $set: userData },
+        {
+          upsert: true,
+          new: true,
+          setDefaultsOnInsert: true,
+        },
       );
-      return;
+
+      return result;
+    } catch (error) {
+      if (error.code === 11000) {
+        // Duplicate key error
+        return await this.userModel.findOne({ kindeId: userData.kindeId });
+      }
+      this.logger.error(`Failed to upsert user: ${error.message}`);
+      throw error;
     }
-
-    const user = new this.userModel({
-      kindeId: webhookData.data.user.id,
-      email: webhookData.data.user.email,
-      firstName: webhookData.data.user.first_name,
-      lastName: webhookData.data.user.last_name,
-    });
-
-    return user.save();
-  }
-
-  async getUserByKindeId(kindeId: string) {
-    return this.userModel.findOne({
-      kindeId: kindeId,
-    });
   }
 }

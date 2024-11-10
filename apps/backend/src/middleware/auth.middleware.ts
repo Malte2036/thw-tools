@@ -14,13 +14,36 @@ export class AuthMiddleware implements NestMiddleware {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const payload = await this.authService.verifyToken(token);
-    if (!payload) {
+    const tokenPayload = await this.authService.verifyToken(token);
+    if (!tokenPayload) {
       this.logger.error(`JWT verification failed for token: ${token}`);
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    req['user'] = payload;
+    const idToken = req.headers['x-id-token'];
+    if (!idToken) {
+      this.logger.error('No id token provided');
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const idTokenPayload = await this.authService.verifyIdToken(
+      idToken as string,
+    );
+
+    if (!idTokenPayload) {
+      this.logger.error('Invalid id token');
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    if (
+      tokenPayload.sub !== idTokenPayload.sub ||
+      tokenPayload.iss !== idTokenPayload.iss
+    ) {
+      this.logger.error('Token or id token mismatch');
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    req['idTokenPayload'] = idTokenPayload;
+
     next();
   }
 }

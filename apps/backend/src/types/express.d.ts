@@ -1,7 +1,7 @@
-import { AuthPayload } from './auth-payload';
+import { IdTokenPayload } from './auth-payload';
 
 declare module 'express' {
   export interface Request {
-    user?: AuthPayload;
+    idTokenPayload?: IdTokenPayload;
   }
 }
