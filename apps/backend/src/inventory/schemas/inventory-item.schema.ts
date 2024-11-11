@@ -24,6 +24,15 @@ export class InventoryItem {
   @Prop()
   art: string;
 
+  @Prop()
+  menge: number;
+
+  @Prop()
+  mengeIst: number;
+
+  @Prop()
+  verfuegbar: number;
+
   @Prop({ required: true })
   ausstattung: string;
 

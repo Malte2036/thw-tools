@@ -159,6 +159,9 @@ export class InventoryService {
           einheit,
           ebene: ebene,
           art: sanitizeValue(record.Art),
+          menge: sanitizeValue(record.Menge),
+          mengeIst: sanitizeValue(record['Menge Ist']),
+          verfuegbar: sanitizeValue(record.Verfügbar),
           ausstattung: sanitizeValue(
             getKeyFromDelimitedString(
               record['Ausstattung | Hersteller | Typ'],
