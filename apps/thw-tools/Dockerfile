@@ -9,14 +9,6 @@ FROM base AS prod-deps
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
 FROM base AS build
-
-ARG PUBLIC_API_URL
-ENV PUBLIC_API_URL=${PUBLIC_API_URL}
-ARG PUBLIC_UMAMI_ENDPOINT
-ENV PUBLIC_UMAMI_ENDPOINT=${PUBLIC_UMAMI_ENDPOINT}
-ARG PUBLIC_UMAMI_WEBSITEID
-ENV PUBLIC_UMAMI_WEBSITEID=${PUBLIC_UMAMI_WEBSITEID}
-
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 

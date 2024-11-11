@@ -1,9 +1,5 @@
+import { PUBLIC_API_URL } from '$env/static/public';
 import type { IQuestion, QuestionType } from '$lib/model/question';
-
-const PUBLIC_API_URL = import.meta.env.PUBLIC_API_URL;
-if (!PUBLIC_API_URL) {
-	throw new Error('PUBLIC_API_URL is not set');
-}
 
 export type QuestionsStatsCount = {
 	questionType: QuestionType;
