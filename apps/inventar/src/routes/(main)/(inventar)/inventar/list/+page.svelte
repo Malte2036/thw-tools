@@ -73,7 +73,8 @@
 				item.hersteller,
 				item.typ,
 				item.sachNummer,
-				item.gerateNummer
+				item.gerateNummer,
+				item.status
 			];
 
 			const matchesSearch =
