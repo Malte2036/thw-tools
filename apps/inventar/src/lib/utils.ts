@@ -41,7 +41,7 @@ export const dateToFriendlyString = (date: Date) => {
 
 export const searchStringIsInArray = (
 	searchString: string,
-	array: (string | null | undefined)[]
+	array: (string | number | null | undefined)[]
 ) => {
-	return array.some((item) => item?.toLowerCase().includes(searchString.toLowerCase()));
+	return array.some((item) => item?.toString().toLowerCase().includes(searchString.toLowerCase()));
 };
