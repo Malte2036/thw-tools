@@ -41,14 +41,13 @@
 	<Card title="Organisation">
 		<div class="flex flex-col gap-4">
 			<div class="text-gray-600">
-				Du bist in keiner Organisation. Du glaubst, dass das ein Fehler ist? Versuche einmal die
-				Seite neu zu laden.
+				Du bist in keiner Organisation. Falls für dein OV noch keine Organisation angelegt wurde,
+				kannst du diese hier erstellen.
 			</div>
-
 			<div class="text-gray-600">
-				Lass dich per Einladungslink in eine bestehende <span class="font-bold"
-					>Organisation einladen</span
-				> oder erstelle eine neue Organisation.
+				Ansonsten kannst du dich per Einladungslink in eine bestehende
+				<span class="font-bold">Organisation einladen</span>. Wende dich dafür einfach an eine
+				Person die bereits Mitglied der Organisation ist.
 			</div>
 		</div>
 	</Card>
