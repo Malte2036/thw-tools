@@ -1,19 +1,76 @@
-# THW Tools
+# THW Tools 🛠️
 
-Ein paar inoffizielle Tools für die Nutzung im _THW_!
-Unter anderem ein [Grundausbildungs-Quiz](https://thw-tools.de/quiz/ga/), ein [Sprechfunk-Quiz](https://thw-tools.de/quiz/radio/), ein [AGT-Quiz](https://thw-tools.de/quiz/agt/), ein [CBRN-Quiz](https://thw-tools.de/quiz/cbrn/), eine Anwendung zum tracken des [Finnentests](https://finnentest.thw-tools.de/) für Atemschutzgeräteträger und eine interaktive Anwendung zur Berechnung des [Elektro Spannungsfalls](https://elektro.thw-tools.de/).
+[![Tests](https://github.com/malte2036/thw-tools/actions/workflows/tests.yml/badge.svg)](https://github.com/malte2036/thw-tools/actions/workflows/tests.yml)
 
-### _Link zur Application:_ [https://thw-tools.de](https://thw-tools.de)
+Eine Sammlung inoffizieller Tools für das _THW_, entwickelt von THW-Helfern für THW-Helfer.
 
-### Developer guide
+## 🌐 Live Demo
 
-Anforderungen:
+Besuche [thw-tools.de](https://thw-tools.de) um die Tools direkt zu nutzen!
 
-- node >= 18
+## 🚀 Features
 
-Installation:
+### 📚 Quiz-Module
+
+- [Grundausbildungs-Quiz](https://thw-tools.de/quiz/ga/)
+- [Sprechfunk-Quiz](https://thw-tools.de/quiz/radio/)
+- [AGT-Quiz](https://thw-tools.de/quiz/agt/)
+- [CBRN-Quiz](https://thw-tools.de/quiz/cbrn/)
+
+### 🛠️ Praktische Tools
+
+- [Finnentest-Tracker](https://finnentest.thw-tools.de/)
+- [Elektro Spannungsfall-Rechner](https://elektro.thw-tools.de/)
+- [THW Bekleidungs-Rechner](https://thw-tools.de/clothing)
+- [CBRN-Schutzanzug](https://thw-tools.de/cbrn/protective-suite)
+
+## 💻 Entwicklung
+
+Dieses Projekt besteht aus fünf Repositories:
+
+- Frontend:
+
+  - [THW-Tools Frontend](https://github.com/malte2036/thw-tools)
+  - [THW-Elektro Frontend](https://github.com/malte2036/thw-elektro)
+  - [THW-Finnentest Frontend](https://github.com/malte2036/thw-finnentest)
+  - [THW-Inventar Frontend](https://github.com/malte2036/thw-inventar)
+
+- Backend:
+
+  - [THW-Tools Backend](https://github.com/malte2036/thw-tools-backend)
+
+### Voraussetzungen
+
+- Node.js >= 18
+- pnpm
+
+### Frontend Installation
 
 - repo forken / git clone
 - pnpm i
 - cp .env.example .env
 - pnpm run dev
+
+### Scripts
+
+- `pnpm dev` - Startet den Entwicklungsserver
+- `pnpm build` - Erstellt eine produktionsreife Version
+- `pnpm test` - Führt Tests aus
+- `pnpm lint` - Führt Linting durch
+- `pnpm format` - Formatiert den Code
+
+## 📱 PWA Support
+
+THW Tools ist als Progressive Web App (PWA) verfügbar und kann auf allen gängigen Geräten installiert werden.
+
+## 🤝 Beitragen
+
+Feedback und Pull Requests sind willkommen!
+
+## 📝 Disclaimer
+
+Dieses Projekt ist ein privates Projekt und hat keine direkte Verbindung zum THW. Das THW-Logo wird ausschließlich zu dekorativen Zwecken verwendet.
+
+## 📫 Kontakt
+
+Bei Fragen oder Anregungen kannst du mich über [Hermine](https://app.thw-messenger.de/thw/app#/contacts/profile/1990855) oder per [E-Mail](mailto:webmaster@thw-tools.de) erreichen.
