@@ -9,9 +9,28 @@
 	import Button from '$lib/Button.svelte';
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
+	import { onMount } from 'svelte';
+
+	import { goto } from '$app/navigation';
+	import { App } from '@capacitor/app';
+	import { Capacitor } from '@capacitor/core';
 
 	let showFeedback = false;
 	let showInstallPWAHelp = false;
+
+	onMount(() => {
+		if (Capacitor.isNativePlatform()) {
+			App.addListener('backButton', ({ canGoBack }) => {
+				if (canGoBack) {
+					history.back();
+				} else {
+					goto('/');
+				}
+			});
+		} else {
+			console.log('Running on the web version, Capacitor logic not applied.');
+		}
+	});
 </script>
 
 <svelte:head>
