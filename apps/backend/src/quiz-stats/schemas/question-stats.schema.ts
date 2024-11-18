@@ -20,3 +20,6 @@ export class QuestionStats {
 }
 
 export const QuestionStatsSchema = SchemaFactory.createForClass(QuestionStats);
+
+QuestionStatsSchema.index({ questionType: 1, questionNumber: 1, correct: 1 });
+QuestionStatsSchema.index({ questionType: 1, correct: 1 });

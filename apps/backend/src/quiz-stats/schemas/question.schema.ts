@@ -29,3 +29,6 @@ export class Question {
 }
 
 export const QuestionSchema = SchemaFactory.createForClass(Question);
+
+QuestionSchema.index({ type: 1, number: 1 });
+QuestionSchema.index({ type: 1 });
