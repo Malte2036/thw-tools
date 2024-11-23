@@ -7,19 +7,22 @@ export async function getOrganisationForUser(): Promise<Organisation> {
 		if (!result.success) {
 			console.error('Error parsing Organisation:', result.error);
 		}
+		console.log('Organisation:', result.data);
+
 		return result.success;
 	});
-	return response.data;
+
+	return OrganisationSchema.parse(response.data);
 }
 
 export async function joinOrganisation(inviteCode: string): Promise<Organisation> {
 	const response = await apiPost<Organisation>(`/organisations/join/`, { inviteCode });
-	return response.data;
+	return OrganisationSchema.parse(response.data);
 }
 
 export async function createOrganisation(name: string): Promise<Organisation> {
 	const response = await apiPost<Organisation>('/organisations/', { name });
-	return response.data;
+	return OrganisationSchema.parse(response.data);
 }
 
 export async function leaveOrganisation(): Promise<void> {

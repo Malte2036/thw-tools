@@ -79,10 +79,6 @@ export function userToFriendlyString(user: User): string {
 		return user.lastName;
 	}
 
-	if (user.email) {
-		return user.email;
-	}
-
 	return 'Unbekannt';
 }
 

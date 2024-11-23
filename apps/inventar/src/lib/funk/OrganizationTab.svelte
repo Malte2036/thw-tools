@@ -31,8 +31,7 @@
 	const memberTableValues = $derived(
 		($user.organisation?.members ?? []).map((member) => [
 			createImage(member),
-			userToFriendlyString(member),
-			member.email ?? ''
+			userToFriendlyString(member)
 		])
 	);
 
@@ -95,7 +94,7 @@
 			</Card>
 
 			<Card title={`Mitglieder (${memberCount})`}>
-				<Table header={['', 'Name', 'E-Mail']} values={memberTableValues} />
+				<Table header={['', 'Name']} values={memberTableValues} />
 				<div class="mt-3">
 					<Button secondary click={leaveOrg}>Organisation verlassen</Button>
 				</div>
