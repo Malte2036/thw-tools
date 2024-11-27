@@ -72,16 +72,14 @@
 	</header>
 
 	<div class="flex flex-col gap-6">
-		<div class="flex flex-col gap-2">
-			<QuestionsStatistics {answeredCountData} {questionType} />
+		<QuestionsStatistics {answeredCountData} {questionType} />
 
-			<LinkButton
-				url={`/quiz/${questionType}/1`}
-				dataUmamiEvent={`Start ${questionType.toUpperCase()} Quiz`}
-			>
-				{`${getHeaderForQuestionType(questionType)} starten`}
-			</LinkButton>
-		</div>
+		<LinkButton
+			url={`/quiz/${questionType}/1`}
+			dataUmamiEvent={`Start ${questionType.toUpperCase()} Quiz`}
+		>
+			{`${getHeaderForQuestionType(questionType)} starten`}
+		</LinkButton>
 
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
 			{#each data.allQuestions.sort((a, b) => a.number - b.number) as question}
