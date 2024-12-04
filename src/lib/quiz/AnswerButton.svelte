@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { addQuestionStatsCountForType } from '$lib/api/api';
+	import { addQuestionStatsCount } from '$lib/api/api';
 	import Button from '$lib/Button.svelte';
 	import type { ExtendedQuestion, QuestionType } from '$lib/model/question';
 	import type { AnsweredCountData } from '../../routes/(main)/quiz/[type]/[questionId]/+page.server';
 
-	export let questionType: QuestionType;
 	export let question: ExtendedQuestion;
 	export let revealAnswers: boolean;
 	export let completelyRight: boolean;
@@ -33,11 +32,11 @@
 					}
 				}
 			}
-			addQuestionStatsCountForType(questionType, question.number, completelyRight);
+			addQuestionStatsCount(question.id, completelyRight);
 		}
 	}}
-	dataUmamiEvent={`${questionType} quiz question ${revealAnswers ? 'next question' : 'answered'}`}
-	disabled={!revealAnswers && question.checkedIndices.length == 0}
+	dataUmamiEvent={`${question.type} quiz question ${revealAnswers ? 'next question' : 'answered'}`}
+	disabled={!revealAnswers && question.checkedAnswers.length == 0}
 	>{revealAnswers
 		? `${completelyRight ? 'Richtig' : 'Falsch'} - Nächste Frage`
 		: 'Überprüfen'}</Button

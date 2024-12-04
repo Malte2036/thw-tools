@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { afterNavigate, goto } from '$app/navigation';
-	import { getQuestionStatsCountForType } from '$lib/api/api';
-	import type { ExtendedQuestion, IQuestion, QuestionType } from '$lib/model/question';
+	import { getQuestionStatsCount, getQuestionStatsCountForType } from '$lib/api/api';
+	import type {
+		ExtendedQuestion,
+		Question,
+		QuestionAnswer,
+		QuestionType
+	} from '$lib/model/question';
 	import CheckboxAnswer from '$lib/quiz/answer/CheckboxAnswer.svelte';
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
 	import QuestionStatisticsForQuestion from '$lib/quiz/question/QuestionStatisticsForQuestion.svelte';
@@ -17,23 +22,23 @@
 	export let data: PageData;
 
 	let question: ExtendedQuestion;
-	let shuffledAnswers: [number, string][];
+	let shuffledAnswers: QuestionAnswer[];
 	let questionType: QuestionType;
 	let answeredCountData: AnsweredCountData | undefined;
 	let currentQuestionAnsweredCountData: AnsweredCountData | undefined;
 
-	function setQuestion(q: IQuestion) {
+	function setQuestion(q: Question) {
 		revealAnswers = false;
 
 		question = {
 			...q,
-			checkedIndices: []
+			checkedAnswers: []
 		};
 
 		shuffledAnswers = shuffle(Array.from(q.answers));
 
 		if (!import.meta.env.SSR) {
-			getQuestionStatsCountForType(questionType, q.number)
+			getQuestionStatsCount(q.id)
 				.then((data) => (currentQuestionAnsweredCountData = data))
 				.catch((error) => {
 					console.warn('Could not get current question stats');
@@ -51,8 +56,12 @@
 	let completelyRight = false;
 
 	$: completelyRight =
-		JSON.stringify(question.correctIndices.sort()) ===
-		JSON.stringify(question.checkedIndices.sort());
+		JSON.stringify(
+			question.answers
+				.filter((a) => a.isCorrect)
+				.map((a) => a.id)
+				.sort()
+		) === JSON.stringify(question.checkedAnswers.sort());
 
 	function gotoQuestionNumber(newQuestionNumber: number) {
 		goto(`/quiz/${questionType}/${newQuestionNumber}`);
@@ -114,16 +123,15 @@
 					/>
 				{/if}
 				<div class="flex flex-col flex-grow gap-2 w-full">
-					{#each shuffledAnswers as [index, value]}
+					{#each shuffledAnswers as answer}
 						<CheckboxAnswer
-							bind:answer={value}
-							checked={question.checkedIndices.includes(index)}
-							correct={question.correctIndices.includes(index)}
+							bind:answer
+							checked={question.checkedAnswers.includes(answer.id)}
 							bind:revealAnswers
 							changeCheckedCallback={(value) => {
-								question.checkedIndices = value
-									? [...question.checkedIndices, index]
-									: question.checkedIndices.filter((v) => v != index);
+								question.checkedAnswers = value
+									? [...question.checkedAnswers, answer.id]
+									: question.checkedAnswers.filter((v) => v != answer.id);
 							}}
 						/>
 					{/each}
@@ -132,7 +140,6 @@
 			<div class="mx-auto w-3/5 max-md:w-4/6">
 				<AnswerButton
 					bind:question
-					bind:questionType
 					bind:answeredCountData
 					bind:completelyRight
 					bind:currentQuestionAnsweredCountData
