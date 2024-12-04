@@ -14,10 +14,24 @@ import { UserModule } from './user/user.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { LoggingMiddleware } from './middleware/logging.middleware';
 import { AiModule } from './ai/ai.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Question } from './quiz-stats/schemas/question.schema';
+import { QuestionAnswer } from './quiz-stats/schemas/question-answer.schema';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'postgres',
+      database: 'thwtools',
+      entities: [Question, QuestionAnswer],
+      // Do not set this in production
+      synchronize: true,
+    }),
     MongooseModule.forRoot(process.env.MONGODB_URI),
     ThrottlerModule.forRoot([
       {

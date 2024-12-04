@@ -27,10 +27,13 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/throttler": "^6.1.1",
+    "@nestjs/typeorm": "^10.0.2",
     "body-parser": "^1.20.2",
     "csv-parse": "^5.5.6",
     "jose": "^5.9.6",
     "mongoose": "^8.5.2",
+    "pg": "^8.13.1",
+    "typeorm": "^0.3.20",
     "zod": "^3.23.8"
   },
   "devDependencies": {

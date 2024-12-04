@@ -1,34 +1,44 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  Index,
+} from 'typeorm';
+import { QuestionAnswer } from './question-answer.schema';
 
-export type QuizType = 'ga' | 'agt' | 'cbrn' | 'radio';
-
-export type QuestionDocument = HydratedDocument<Question>;
-
-@Schema()
-export class Question {
-  @Prop({ required: true })
-  type: QuizType;
-
-  @Prop({ required: true })
-  number: number;
-
-  @Prop({ required: true })
-  text: string;
-
-  @Prop({ required: true })
-  image: string;
-
-  @Prop({
-    required: true,
-  })
-  answers: Map<string, string>;
-
-  @Prop({ required: true })
-  correctIndices: string[];
+export enum QuizType {
+  GA = 'ga',
+  AGT = 'agt',
+  CBRN = 'cbrn',
+  RADIO = 'radio',
 }
 
-export const QuestionSchema = SchemaFactory.createForClass(Question);
+@Entity('questions')
+@Index(['type', 'number'], { unique: true })
+export class Question {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-QuestionSchema.index({ type: 1, number: 1 });
-QuestionSchema.index({ type: 1 });
+  @Column({
+    type: 'enum',
+    enum: QuizType,
+  })
+  type: QuizType;
+
+  @Column({ type: 'int' })
+  number: number;
+
+  @Column({ type: 'text' })
+  text: string;
+
+  @Column({ type: 'text', nullable: true })
+  image: string | null;
+
+  @OneToMany(() => QuestionAnswer, (answer) => answer.question, {
+    cascade: true,
+  })
+  answers: QuestionAnswer[];
+}
+
+export type CreateQuestionDto = Omit<Question, 'id'>;

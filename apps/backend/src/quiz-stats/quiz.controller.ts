@@ -25,11 +25,16 @@ export class QuizController {
     private readonly questionStatsService: QuestionStatsService,
   ) {}
 
+  @Get('count')
+  async getTotalQuestionCount() {
+    return this.questionService.getTotalQuestionCount();
+  }
+
   @Get(':questionType')
   async getQuestions(@Param('questionType') questionType: QuizType) {
     const questions = await this.questionService.getQuestions(questionType);
 
-    return questions.map((question) => question.toJSON());
+    return questions;
   }
 
   @Get(':questionType/count')
@@ -54,7 +59,7 @@ export class QuizController {
       throw new HttpException('Question not found', HttpStatus.NOT_FOUND);
     }
 
-    return question.toJSON();
+    return question;
   }
 
   @Get(':questionType/stats/count')

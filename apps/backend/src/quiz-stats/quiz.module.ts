@@ -6,16 +6,15 @@ import {
   QuestionStats,
   QuestionStatsSchema,
 } from './schemas/question-stats.schema';
-import { Question, QuestionSchema } from './schemas/question.schema';
+import { Question } from './schemas/question.schema';
 import { QuestionService } from './question.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { QuestionAnswer } from './schemas/question-answer.schema';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([Question, QuestionAnswer]),
     MongooseModule.forFeature([
-      {
-        name: Question.name,
-        schema: QuestionSchema,
-      },
       {
         name: QuestionStats.name,
         schema: QuestionStatsSchema,
