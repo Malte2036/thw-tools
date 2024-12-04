@@ -1,25 +1,19 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-import { QuizType } from './question.schema';
+import { Question } from './question.schema';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-export type QuestionStatsDocument = HydratedDocument<QuestionStats>;
-
-@Schema()
+@Entity('question_stats')
 export class QuestionStats {
-  @Prop({ required: true })
-  questionType: QuizType;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Prop({ required: true })
-  questionNumber: number;
+  @ManyToOne(() => Question, (question) => question.stats)
+  question: Question;
 
-  @Prop({ required: true })
+  @Column({ type: 'boolean' })
   correct: boolean;
 
-  @Prop({ required: true })
+  @Column({ type: 'timestamp' })
   timestamp: Date;
 }
 
-export const QuestionStatsSchema = SchemaFactory.createForClass(QuestionStats);
-
-QuestionStatsSchema.index({ questionType: 1, questionNumber: 1, correct: 1 });
-QuestionStatsSchema.index({ questionType: 1, correct: 1 });
+export type CreateQuestionStatsDto = Omit<QuestionStats, 'id'>;

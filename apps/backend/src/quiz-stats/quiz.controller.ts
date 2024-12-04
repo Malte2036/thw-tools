@@ -12,10 +12,11 @@ import {
   QuestionStatsCount,
   QuestionStatsService,
 } from './question-stats.service';
-import { QuizType } from './schemas/question.schema';
+import { Question, QuizType } from './schemas/question.schema';
 import { QuestionService } from './question.service';
 import { Throttle } from '@nestjs/throttler';
 import { ApiTags } from '@nestjs/swagger';
+import { QuestionMigrationService } from './quiz-migration';
 
 @ApiTags('quiz')
 @Controller('quiz')
@@ -23,11 +24,51 @@ export class QuizController {
   constructor(
     private readonly questionService: QuestionService,
     private readonly questionStatsService: QuestionStatsService,
+    private readonly questionMigrationService: QuestionMigrationService,
   ) {}
+
+  // @Get('migrate')
+  // async migrate() {
+  //   return this.questionMigrationService.importQuestionStatsFromJson();
+  // }
 
   @Get('count')
   async getTotalQuestionCount() {
     return this.questionService.getTotalQuestionCount();
+  }
+
+  @Post('stats/count/:questionId')
+  async addQuestionStats(
+    @Param('questionId') questionId: string,
+    @Body() data: { correct: boolean },
+  ) {
+    try {
+      await this.questionStatsService.addQuestionStats({
+        question: { id: questionId } as unknown as Question,
+        correct: data.correct,
+        timestamp: new Date(),
+      });
+
+      Logger.log(`Added question stats for question ${questionId}`);
+    } catch (error) {
+      Logger.error(
+        `Failed to add question stats for question ${questionId}`,
+        error.stack,
+      );
+      throw new HttpException(
+        'Failed to add question stats',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Get('stats/count/:questionId')
+  async getQuestionStatsCountByQuestionId(
+    @Param('questionId') questionId: string,
+  ) {
+    return this.questionStatsService.getQuestionStatsCountByQuestionId(
+      parseInt(questionId, 10),
+    );
   }
 
   @Get(':questionType')
@@ -69,26 +110,19 @@ export class QuizController {
     return this.questionStatsService.getQuestionStatsCountForType(questionType);
   }
 
-  @Get(':questionType/stats/count/:questionNumber')
-  async getQuestionStatsCountForTypeAndNumber(
-    @Param('questionType') questionType: QuizType,
-    @Param('questionNumber') questionNumber: number,
-  ): Promise<QuestionStatsCount> {
-    return this.questionStatsService.getQuestionStatsCountForType(
-      questionType,
-      questionNumber,
-    );
-  }
-
+  // Deprecated, use /quiz/stats/count/:questionId instead
   @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Post(':questionType/stats/count/:questionNumber')
-  async addQuestionStats(
+  async addQuestionStatsDeprecated(
     @Param('questionType') questionType: QuizType,
     @Param('questionNumber') questionNumber: number,
     @Body() data: { correct: boolean },
   ) {
+    Logger.warn(
+      `Deprecated endpoint /quiz/stats/count/:questionNumber, use /quiz/stats/count/:questionId instead`,
+    );
     try {
-      await this.questionStatsService.addQuestionStats(
+      await this.questionStatsService.addQuestionStatsDeprecated(
         questionType,
         questionNumber,
         data.correct,

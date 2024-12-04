@@ -6,6 +6,7 @@ import {
   Index,
 } from 'typeorm';
 import { QuestionAnswer } from './question-answer.schema';
+import { QuestionStats } from './question-stats.schema';
 
 export enum QuizType {
   GA = 'ga',
@@ -39,6 +40,11 @@ export class Question {
     cascade: true,
   })
   answers: QuestionAnswer[];
+
+  @OneToMany(() => QuestionStats, (stats) => stats.question, {
+    cascade: true,
+  })
+  stats: QuestionStats[];
 }
 
 export type CreateQuestionDto = Omit<Question, 'id'>;

@@ -17,6 +17,7 @@ import { AiModule } from './ai/ai.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Question } from './quiz-stats/schemas/question.schema';
 import { QuestionAnswer } from './quiz-stats/schemas/question-answer.schema';
+import { QuestionStats } from './quiz-stats/schemas/question-stats.schema';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { QuestionAnswer } from './quiz-stats/schemas/question-answer.schema';
       username: 'postgres',
       password: 'postgres',
       database: 'thwtools',
-      entities: [Question, QuestionAnswer],
+      entities: [Question, QuestionAnswer, QuestionStats],
       // Do not set this in production
       synchronize: true,
     }),
