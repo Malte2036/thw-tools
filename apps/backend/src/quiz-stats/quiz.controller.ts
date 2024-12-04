@@ -16,7 +16,7 @@ import { Question, QuizType } from './schemas/question.schema';
 import { QuestionService } from './question.service';
 import { Throttle } from '@nestjs/throttler';
 import { ApiTags } from '@nestjs/swagger';
-import { QuestionMigrationService } from './quiz-migration';
+// import { QuestionMigrationService } from './quiz-migration';
 
 @ApiTags('quiz')
 @Controller('quiz')
@@ -24,7 +24,6 @@ export class QuizController {
   constructor(
     private readonly questionService: QuestionService,
     private readonly questionStatsService: QuestionStatsService,
-    private readonly questionMigrationService: QuestionMigrationService,
   ) {}
 
   // @Get('migrate')
