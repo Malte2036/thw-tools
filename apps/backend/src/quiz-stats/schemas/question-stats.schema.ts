@@ -1,7 +1,15 @@
 import { Question } from './question.schema';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('question_stats')
+@Index(['question'])
+@Index(['correct'])
 export class QuestionStats {
   @PrimaryGeneratedColumn()
   id: number;
