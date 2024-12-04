@@ -1,31 +1,26 @@
 import { PUBLIC_API_URL } from '$env/static/public';
-import type { IQuestion, QuestionType } from '$lib/model/question';
+import {
+	questionSchema,
+	questionsStatsCountSchema,
+	type Question,
+	type QuestionsStatsCount,
+	type QuestionType
+} from '$lib/model/question';
+import { z } from 'zod';
 
-export type QuestionsStatsCount = {
-	questionType: QuestionType;
-	right: number;
-	wrong: number;
-};
-
-export async function getQuestionStatsCountForType(
-	questionType: QuestionType,
-	questionId?: number
-): Promise<QuestionsStatsCount> {
-	const res = await fetch(`${PUBLIC_API_URL}/quiz/${questionType}/stats/count/${questionId ?? ''}`);
+export async function getQuestionStatsCount(questionId: number): Promise<QuestionsStatsCount> {
+	const res = await fetch(`${PUBLIC_API_URL}/quiz/stats/count/${questionId}`);
 
 	if (!res.ok) {
 		throw new Error('Failed to fetch question stats count');
 	}
 
-	return await res.json();
+	const json = await res.json();
+	return questionsStatsCountSchema.parse(json);
 }
 
-export async function addQuestionStatsCountForType(
-	questionType: QuestionType,
-	questionId: number,
-	correct: boolean
-): Promise<void> {
-	const res = await fetch(`${PUBLIC_API_URL}/quiz/${questionType}/stats/count/${questionId}`, {
+export async function addQuestionStatsCount(questionId: number, correct: boolean): Promise<void> {
+	const res = await fetch(`${PUBLIC_API_URL}/quiz/stats/count/${questionId}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -40,34 +35,34 @@ export async function addQuestionStatsCountForType(
 	}
 }
 
-function mapResponseQuestion(question: any): IQuestion {
-	// fix strange answers format
-	const answers: IQuestion['answers'] = new Map();
-	for (const [key, value] of Object.entries(question.answers)) {
-		answers.set(parseInt(key), value as string);
+export async function getQuestionStatsCountForType(
+	questionType: QuestionType
+): Promise<QuestionsStatsCount> {
+	const res = await fetch(`${PUBLIC_API_URL}/quiz/${questionType}/stats/count`);
+
+	if (!res.ok) {
+		throw new Error('Failed to fetch question stats count for type');
 	}
 
-	return {
-		...question,
-		answers,
-		correctIndices: question.correctIndices.map((i: any) => parseInt(i))
-	} satisfies IQuestion;
+	const json = await res.json();
+	return questionsStatsCountSchema.parse(json);
 }
 
 export async function getQuestion(
 	questionType: QuestionType,
 	questionId: number
-): Promise<IQuestion> {
+): Promise<Question> {
 	const res = await fetch(`${PUBLIC_API_URL}/quiz/${questionType}/${questionId}`);
 
 	if (!res.ok) {
 		throw new Error('Failed to fetch question');
 	}
 
-	return mapResponseQuestion(await res.json());
+	const json = await res.json();
+	return questionSchema.parse(json);
 }
 
-export async function getQuestions(questionType: QuestionType): Promise<IQuestion[]> {
+export async function getQuestions(questionType: QuestionType): Promise<Question[]> {
 	const res = await fetch(`${PUBLIC_API_URL}/quiz/${questionType}`);
 
 	if (!res.ok) {
@@ -75,7 +70,7 @@ export async function getQuestions(questionType: QuestionType): Promise<IQuestio
 	}
 
 	const json = await res.json();
-	return json.map(mapResponseQuestion);
+	return json.map((question: Question) => questionSchema.parse(question));
 }
 
 export async function getQuestionCount(questionType: QuestionType): Promise<number> {
@@ -85,5 +80,6 @@ export async function getQuestionCount(questionType: QuestionType): Promise<numb
 		throw new Error('Failed to fetch question count');
 	}
 
-	return await res.json();
+	const json = await res.json();
+	return z.number().parse(json);
 }
