@@ -13,6 +13,8 @@ RUN npm install -g pnpm && pnpm install
 # Copy the rest of the application code
 COPY . .
 
+ENV NODE_ENV=production
+
 # Build the application
 RUN pnpm run build
 

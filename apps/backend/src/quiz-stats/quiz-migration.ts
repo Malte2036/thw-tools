@@ -112,12 +112,20 @@ export class QuestionMigrationService {
     };
 
     // Read and parse the old JSON file
-    const oldStatsData: OldQuestionStatsEntry[] = JSON.parse(
+    let oldStatsData: OldQuestionStatsEntry[] = JSON.parse(
       await readFile(inputPath, 'utf8'),
     );
 
     this.logger.log(
       `Found ${oldStatsData.length} question stats in the JSON file.`,
+    );
+
+    oldStatsData = oldStatsData.filter((stats) =>
+      Object.values(QuizType).includes(stats.questionType as QuizType),
+    );
+
+    this.logger.log(
+      `Found ${oldStatsData.length} question stats with valid type in the JSON file.`,
     );
 
     for (const oldStatsEntry of oldStatsData) {

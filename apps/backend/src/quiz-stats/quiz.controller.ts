@@ -16,7 +16,7 @@ import { Question, QuizType } from './schemas/question.schema';
 import { QuestionService } from './question.service';
 import { Throttle } from '@nestjs/throttler';
 import { ApiTags } from '@nestjs/swagger';
-// import { QuestionMigrationService } from './quiz-migration';
+import { QuestionMigrationService } from './quiz-migration';
 
 @ApiTags('quiz')
 @Controller('quiz')
@@ -24,12 +24,27 @@ export class QuizController {
   constructor(
     private readonly questionService: QuestionService,
     private readonly questionStatsService: QuestionStatsService,
+    private readonly questionMigrationService: QuestionMigrationService,
   ) {}
 
-  // @Get('migrate')
-  // async migrate() {
-  //   return this.questionMigrationService.importQuestionStatsFromJson();
-  // }
+  @Get('migrate')
+  async migrate() {
+    const startTime = new Date();
+    Logger.log('Starting migration questions');
+    await this.questionMigrationService.importQuestionsFromJson();
+    Logger.log('Migration questions completed');
+
+    Logger.log('Starting migration question stats');
+    await this.questionMigrationService.importQuestionStatsFromJson();
+    Logger.log('Migration question stats completed');
+
+    const endTime = new Date();
+    Logger.log(
+      `Migration completed in ${endTime.getTime() - startTime.getTime()}ms`,
+    );
+
+    return 'Migration completed';
+  }
 
   @Get('count')
   async getTotalQuestionCount() {
@@ -48,10 +63,10 @@ export class QuizController {
         timestamp: new Date(),
       });
 
-      Logger.log(`Added question stats for question ${questionId}`);
+      Logger.log(`Added question stats for question with id ${questionId}`);
     } catch (error) {
       Logger.error(
-        `Failed to add question stats for question ${questionId}`,
+        `Failed to add question stats for question with id ${questionId}`,
         error.stack,
       );
       throw new HttpException(

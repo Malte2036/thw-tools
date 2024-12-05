@@ -31,7 +31,7 @@ import { QuestionStats } from './quiz-stats/schemas/question-stats.schema';
       database: process.env.POSTGRES_DATABASE,
       entities: [Question, QuestionAnswer, QuestionStats],
       // Do not set this in production
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production',
     }),
     MongooseModule.forRoot(process.env.MONGODB_URI),
     ThrottlerModule.forRoot([
