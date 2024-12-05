@@ -16,7 +16,7 @@ Backend service powering [THW-Tools](https://thw-tools.de) and THW-Inventar - un
 
 - [NestJS](https://nestjs.com/) - Progressive Node.js framework
 - TypeScript
-- MongoDB
+- PostgreSQL
 - Docker
 
 ## 💻 Development
