@@ -33,5 +33,4 @@
 	}
 </script>
 
-<thw-table {header} {values} {selectedIndex} maxHeight={600} onrow-click={handleRowClick}
-></thw-table>
+<thw-table {header} {values} {selectedIndex} height={600} onrow-click={handleRowClick}></thw-table>
