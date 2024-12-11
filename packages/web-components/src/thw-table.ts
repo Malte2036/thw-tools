@@ -1,6 +1,7 @@
 import { LitElement, html, css, unsafeCSS, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { thwColors } from "./colors";
+import { virtualize } from "@lit-labs/virtualizer/virtualize.js";
 
 /**
  * A table component.
@@ -28,65 +29,93 @@ export class THWTable extends LitElement {
   static override styles = css`
     .table-wrapper {
       overflow: auto;
+
+      border-collapse: collapse;
+      border-radius: 0.5rem;
     }
     table {
       width: 100%;
-      border-collapse: collapse;
       background-color: white;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      border-radius: 0.5rem;
-    }
-    th,
-    td {
-      padding: 0.5rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    th {
-      background-color: ${unsafeCSS(thwColors[100])};
-      color: ${unsafeCSS(thwColors[900])};
-      font-weight: 600;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-    tr {
-      transition: background-color 0.2s, color 0.2s;
-    }
-    tr:hover {
-      background-color: ${unsafeCSS(thwColors[200])};
-    }
-    tr.selected {
-      background-color: ${unsafeCSS(thwColors[700])};
-      color: white;
-    }
-    th:first-child {
-      border-top-left-radius: 0.5rem;
-    }
-    th:last-child {
-      border-top-right-radius: 0.5rem;
-    }
-    tr:hover:not(.selected) td {
-      cursor: pointer;
+
+      & tr,
+      & th,
+      & td {
+        display: flex;
+      }
+
+      & th,
+      & td {
+        padding: 0.5rem 1rem;
+        width: 100%;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      & th {
+        background-color: ${unsafeCSS(thwColors[100])};
+        color: ${unsafeCSS(thwColors[900])};
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+
+        & :first-child {
+          border-top-left-radius: 0.5rem;
+        }
+        & :last-child {
+          border-top-right-radius: 0.5rem;
+        }
+      }
+      & tr {
+        width: 100%;
+        display: flex;
+        flex-align: stretch;
+        transition: background-color 0.2s, color 0.2s;
+
+        &:hover {
+          background-color: ${unsafeCSS(thwColors[200])};
+        }
+
+        &.selected {
+          background-color: ${unsafeCSS(thwColors[700])};
+          color: white;
+        }
+
+        & :hover:not(.selected) td {
+          cursor: pointer;
+        }
+      }
+
+      & tbody {
+        min-height: 250px !important;
+        width: 100%;
+        overflow: auto;
+      }
     }
   `;
 
   override render() {
     return html`
-      <div class="table-container">
-        <div
-          class="table-wrapper"
-          style=${this.maxHeight ? `max-height: ${this.maxHeight}px;` : ""}
-        >
-          <table>
-            <thead>
-              <tr>
-                ${(this.header || []).map((title) => html`<th>${title}</th>`)}
-              </tr>
-            </thead>
-            <tbody>
-              ${(this.values || []).map(
-                (row, index) => html`
+      <div
+        class="table-wrapper"
+        style=${this.maxHeight ? `max-height: ${this.maxHeight}px;` : ""}
+      >
+        <table>
+          <thead>
+            <tr>
+              ${(this.header || []).map((title) => html`<th>${title}</th>`)}
+            </tr>
+          </thead>
+          <tbody>
+            ${virtualize({
+              scroller: true,
+              items: this.values,
+              renderItem: (
+                row: (string | TemplateResult | HTMLElement)[],
+                index: number
+              ) =>
+                html`
                   <tr
                     class=${this.selectedIndex === index ? "selected" : ""}
                     @click=${() => this.handleRowClick(row, index)}
@@ -95,11 +124,10 @@ export class THWTable extends LitElement {
                       (_, i) => html`<td>${row[i]}</td>`
                     )}
                   </tr>
-                `
-              )}
-            </tbody>
-          </table>
-        </div>
+                `,
+            })}
+          </tbody>
+        </table>
       </div>
     `;
   }
