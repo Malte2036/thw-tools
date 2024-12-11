@@ -29,8 +29,6 @@ export class THWTable extends LitElement {
   static override styles = css`
     .table-wrapper {
       overflow: auto;
-      border-collapse: collapse;
-      border-radius: 0.5rem;
     }
     table {
       width: 100%;
@@ -39,6 +37,9 @@ export class THWTable extends LitElement {
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       table-layout: fixed;
       min-width: max-content;
+
+      border-collapse: collapse;
+      border-radius: 0.5rem;
 
       & tr,
       & th,
