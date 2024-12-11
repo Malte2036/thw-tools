@@ -29,7 +29,6 @@ export class THWTable extends LitElement {
   static override styles = css`
     .table-wrapper {
       overflow: auto;
-
       border-collapse: collapse;
       border-radius: 0.5rem;
     }
@@ -38,19 +37,40 @@ export class THWTable extends LitElement {
       height: 100%;
       background-color: white;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      table-layout: fixed;
+      min-width: max-content;
 
       & tr,
       & th,
       & td {
         display: flex;
+        min-width: 150px;
+        flex: 1;
       }
 
       & th,
       & td {
+        display: flex;
+        min-width: 150px;
+        flex: 1;
         padding: 0.5rem 1rem;
         width: 100%;
         text-align: left;
         border-bottom: 1px solid #e2e8f0;
+        overflow: hidden;
+
+        /* Text specific handling */
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
+        white-space: normal;
+
+        /* All content handling */
+        & > * {
+          max-width: 100%;
+          height: auto;
+          object-fit: contain;
+        }
       }
 
       & th {
@@ -60,7 +80,6 @@ export class THWTable extends LitElement {
         position: sticky;
         top: 0;
         z-index: 1;
-        white-space: nowrap;
 
         & :first-child {
           border-top-left-radius: 0.5rem;
@@ -72,7 +91,7 @@ export class THWTable extends LitElement {
       & tr {
         width: 100%;
         display: flex;
-        flex-align: stretch;
+        align-items: stretch;
         transition: background-color 0.2s, color 0.2s;
 
         &:hover {
