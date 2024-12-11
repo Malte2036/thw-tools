@@ -8,7 +8,7 @@ import { virtualize } from "@lit-labs/virtualizer/virtualize.js";
  * @param {string[]} header - The header of the table.
  * @param {(string | TemplateResult | HTMLElement)[][]} values - The values of the table.
  * @param {number | undefined} selectedIndex - The index of the selected row.
- * @param {number | undefined} maxHeight - The maximum height of the table.
+ * @param {number | undefined} height - The maximum height of the table.
  *
  * @fires {CustomEvent} row-click - Fired when a row is clicked.
  * @property {Object} event.detail
@@ -24,7 +24,7 @@ export class THWTable extends LitElement {
     | HTMLElement
   )[][] = [];
   @property({ type: Number }) selectedIndex?: number;
-  @property({ type: Number }) maxHeight?: number;
+  @property({ type: Number }) height?: number;
 
   static override styles = css`
     .table-wrapper {
@@ -35,6 +35,7 @@ export class THWTable extends LitElement {
     }
     table {
       width: 100%;
+      height: 100%;
       background-color: white;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
@@ -90,6 +91,7 @@ export class THWTable extends LitElement {
       & tbody {
         min-height: 250px !important;
         width: 100%;
+        height: 100%;
         overflow: auto;
       }
     }
@@ -99,7 +101,7 @@ export class THWTable extends LitElement {
     return html`
       <div
         class="table-wrapper"
-        style=${this.maxHeight ? `max-height: ${this.maxHeight}px;` : ""}
+        style=${this.height ? `height: ${this.height}px;` : ""}
       >
         <table>
           <thead>
