@@ -60,6 +60,7 @@ export class THWTable extends LitElement {
         position: sticky;
         top: 0;
         z-index: 1;
+        white-space: nowrap;
 
         & :first-child {
           border-top-left-radius: 0.5rem;
