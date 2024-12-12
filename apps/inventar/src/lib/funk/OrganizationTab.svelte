@@ -12,27 +12,10 @@
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import ErrorState from '$lib/ErrorDisplay.svelte';
 
-	const createImage = (user: User) => {
-		if (!user.picture) return '';
-
-		const img = document.createElement('img');
-		img.src = user.picture ?? '';
-		img.alt = userToFriendlyString(user);
-		img.style.width = '25px';
-		img.style.height = '25px';
-		img.style.borderRadius = '50%';
-		img.style.verticalAlign = 'middle';
-
-		return img;
-	};
-
 	const organisation: Organisation | null = $derived($user.organisation);
 	const memberCount = $derived($user.organisation?.members.length ?? 0);
 	const memberTableValues = $derived(
-		($user.organisation?.members ?? []).map((member) => [
-			createImage(member),
-			userToFriendlyString(member)
-		])
+		($user.organisation?.members ?? []).map((member) => [userToFriendlyString(member)])
 	);
 
 	const leaveOrg = async () => {
@@ -94,7 +77,7 @@
 			</Card>
 
 			<Card title={`Mitglieder (${memberCount})`}>
-				<Table header={['', 'Name']} values={memberTableValues} />
+				<Table header={['Name']} values={memberTableValues} />
 				<div class="mt-3">
 					<Button secondary click={leaveOrg}>Organisation verlassen</Button>
 				</div>
