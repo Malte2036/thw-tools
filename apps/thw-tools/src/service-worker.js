@@ -14,7 +14,26 @@ self.addEventListener('install', (event) => {
 	// Create a new cache and add all files to it
 	async function addFilesToCache() {
 		const cache = await caches.open(CACHE);
-		await cache.addAll(ASSETS);
+
+		// Notify clients about update start
+		const clients = await self.clients.matchAll();
+		for (const client of clients) {
+			client.postMessage({ type: 'CACHE_UPDATE_START' });
+		}
+
+		try {
+			await cache.addAll(ASSETS);
+			// Notify clients about update success
+			for (const client of clients) {
+				client.postMessage({ type: 'CACHE_UPDATE_COMPLETE' });
+			}
+		} catch (error) {
+			// Notify clients about update failure
+			for (const client of clients) {
+				client.postMessage({ type: 'CACHE_UPDATE_ERROR', error: error.message });
+			}
+			throw error;
+		}
 	}
 
 	event.waitUntil(addFilesToCache());

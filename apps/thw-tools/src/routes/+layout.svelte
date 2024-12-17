@@ -9,6 +9,7 @@
 	import Button from '$lib/Button.svelte';
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
+	import PwaUpdateNotification from '$lib/PWAUpdateNotification.svelte';
 
 	let showFeedback = false;
 	let showInstallPWAHelp = false;
@@ -26,6 +27,8 @@
 		></script>
 	{/if}
 </svelte:head>
+
+<PwaUpdateNotification />
 
 <div class="flex flex-col gap-4 justify-between min-h-screen">
 	<NavigationBar />
