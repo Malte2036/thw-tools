@@ -13,6 +13,7 @@
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 	import type { LayoutData } from './$types';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
+	import PWAUpdateNotification from '$lib/PWAUpdateNotification.svelte';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -39,6 +40,7 @@
 <div class="flex flex-col gap-4 justify-between min-h-screen">
 	<NavigationBar />
 	<Banner />
+	<PWAUpdateNotification />
 	<div class="grow">
 		{@render children?.()}
 	</div>
