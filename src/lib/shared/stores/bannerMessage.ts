@@ -7,6 +7,7 @@ export type BannerMessage = {
 		| {
 				duration: number;
 		  };
+	type?: 'info' | 'error';
 };
 
 export const bannerMessage = writable<BannerMessage | undefined>();
