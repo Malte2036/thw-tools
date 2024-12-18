@@ -45,8 +45,13 @@
 				id: device.id,
 				label: device.label
 			}));
-		} catch (err) {
-			console.error('Error loading cameras:', err);
+		} catch (error) {
+			if (typeof error === 'string' && error.includes('NotAllowedError')) {
+				permissionDenied = true;
+				console.warn('Permission denied to access camera: loading cameras failed');
+			} else {
+				console.error(error);
+			}
 		}
 	}
 
@@ -113,6 +118,7 @@
 
 			if (typeof error === 'string' && error.includes('NotAllowedError')) {
 				permissionDenied = true;
+				console.warn('Permission denied to access camera: starting scan failed');
 			} else {
 				console.error(error);
 			}
