@@ -4,6 +4,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import PermissionDeniedDialog from './PermissionDeniedDialog.svelte';
 	import { settings } from '$lib/shared/stores/settingsStore';
+	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 
 	interface Props {
 		onScan: (decodedText: string) => void;
@@ -54,6 +55,21 @@
 	async function loadCameras() {
 		try {
 			const devices = await Html5Qrcode.getCameras();
+			if (devices.length === 0) {
+				console.log('No cameras found');
+
+				$bannerMessage = {
+					message: 'Es konnte keine Kamera gefunden werden',
+					type: 'error',
+					autoDismiss: {
+						duration: 5000
+					}
+				};
+				selectCameraOpen = false;
+				cameras = [];
+				return;
+			}
+
 			cameras = devices.map((device) => ({
 				id: device.id,
 				label: device.label
