@@ -3,6 +3,7 @@
 	import { Html5Qrcode, type Html5QrcodeCameraScanConfig } from 'html5-qrcode';
 	import { onDestroy, onMount } from 'svelte';
 	import PermissionDeniedDialog from './PermissionDeniedDialog.svelte';
+	import { settings } from '$lib/shared/stores/settingsStore';
 
 	interface Props {
 		onScan: (decodedText: string) => void;
@@ -20,7 +21,6 @@
 	let selectCameraOpen = $state(false);
 	let permissionDenied = $state(false);
 	let cameras = $state<{ id: string; label: string }[]>([]);
-	let selectedCamera = $state('');
 
 	let html5Qrcode: Html5Qrcode;
 
@@ -60,13 +60,27 @@
 		selectCameraOpen = true;
 		await loadCameras();
 
-		if (cameras.length > 0 && !selectedCamera) {
-			selectedCamera = cameras[0].id;
-			await startScan();
+		const isSelectedCameraValid = cameras.find((camera) => camera.id === $settings.selectedCamera);
+
+		if (cameras.length > 0 && !isSelectedCameraValid) {
+			$settings.selectedCamera =
+				cameras.find((camera) => camera.label.includes('back'))?.id ?? cameras[0].id;
 		}
+
+		await startScan();
+	}
+
+	async function stop() {
+		selectCameraOpen = false;
+		await stopScan();
 	}
 
 	async function startScan() {
+		if (!$settings.selectedCamera) {
+			console.warn('Could not start scan, no camera selected');
+			return;
+		}
+
 		try {
 			const config: ExtendedHtml5QrcodeCameraScanConfig = {
 				fps: 10,
@@ -80,7 +94,12 @@
 			};
 
 			scanning = true;
-			await html5Qrcode.start({ deviceId: selectedCamera }, config, onScanSuccess, onScanFailure);
+			await html5Qrcode.start(
+				{ deviceId: $settings.selectedCamera },
+				config,
+				onScanSuccess,
+				onScanFailure
+			);
 		} catch (error) {
 			scanning = false;
 
@@ -107,7 +126,7 @@
 			await stopScan();
 		}
 
-		selectedCamera = newCameraId;
+		$settings.selectedCamera = newCameraId;
 		await startScan();
 	}
 
@@ -136,7 +155,7 @@
 		<div class="text-center text-gray-500">Bitte wähle eine Kamera aus dem Dropdown aus:</div>
 		<select
 			class="p-2 border rounded"
-			value={selectedCamera}
+			value={$settings.selectedCamera}
 			onchange={(e) => switchCamera(e.currentTarget.value)}
 		>
 			{#each cameras as camera}
@@ -147,7 +166,7 @@
 
 	<reader id="reader" class={`bg-gray-500 h-full w-full ${scanning ? '' : 'hidden'}`}></reader>
 	{#if scanning}
-		<Button secondary click={stopScan}>{closeButtonText}</Button>
+		<Button secondary click={stop}>{closeButtonText}</Button>
 	{:else}
 		<Button click={start}>{scanButtonText}</Button>
 	{/if}
