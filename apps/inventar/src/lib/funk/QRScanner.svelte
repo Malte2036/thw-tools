@@ -56,6 +56,15 @@
 		experimentalFeatures?: { useBarCodeDetectorIfSupported: boolean };
 	}
 
+	function getDefaultCamera() {
+		return (
+			cameras.find((camera) => camera.label.toLowerCase().includes('ultra'))?.id ??
+			cameras.find((camera) => camera.label.toLowerCase().includes('back'))?.id ??
+			cameras.find((camera) => camera.label.toLowerCase().includes('rück'))?.id ??
+			cameras[0].id
+		);
+	}
+
 	async function start() {
 		selectCameraOpen = true;
 		await loadCameras();
@@ -63,8 +72,7 @@
 		const isSelectedCameraValid = cameras.find((camera) => camera.id === $settings.selectedCamera);
 
 		if (cameras.length > 0 && !isSelectedCameraValid) {
-			$settings.selectedCamera =
-				cameras.find((camera) => camera.label.includes('back'))?.id ?? cameras[0].id;
+			$settings.selectedCamera = getDefaultCamera();
 		}
 
 		await startScan();
