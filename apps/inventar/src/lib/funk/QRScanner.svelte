@@ -17,6 +17,7 @@
 	}: Props = $props();
 
 	let scanning = $state(false);
+	let selectCameraOpen = $state(false);
 	let permissionDenied = $state(false);
 	let cameras = $state<{ id: string; label: string }[]>([]);
 	let selectedCamera = $state('');
@@ -25,7 +26,6 @@
 
 	onMount(async () => {
 		init();
-		await loadCameras();
 	});
 
 	onDestroy(() => {
@@ -45,9 +45,6 @@
 				id: device.id,
 				label: device.label
 			}));
-			if (cameras.length > 0) {
-				selectedCamera = cameras[0].id;
-			}
 		} catch (err) {
 			console.error('Error loading cameras:', err);
 		}
@@ -60,11 +57,20 @@
 	}
 
 	async function start() {
+		selectCameraOpen = true;
+		await loadCameras();
+		if (cameras.length > 0 && !selectedCamera) {
+			selectedCamera = cameras[0].id;
+			await startScan();
+		}
+	}
+
+	async function startScan() {
 		try {
 			const config: ExtendedHtml5QrcodeCameraScanConfig = {
 				fps: 10,
 				qrbox: qrboxFunction,
-				aspectRatio: 1.777778, // 16:9
+				aspectRatio: 1,
 				focusMode: 'continuous',
 				advanced: [{ zoom: 2.0 }],
 				experimentalFeatures: {
@@ -98,11 +104,10 @@
 	async function switchCamera(newCameraId: string) {
 		if (scanning) {
 			await stop();
-			selectedCamera = newCameraId;
-			await start();
-		} else {
-			selectedCamera = newCameraId;
 		}
+
+		selectedCamera = newCameraId;
+		await start();
 	}
 
 	function onScanSuccess(decodedText: string, decodedResult: any) {
@@ -126,7 +131,8 @@
 </script>
 
 <div class="flex flex-col gap-4">
-	{#if cameras.length > 1}
+	{#if selectCameraOpen}
+		<div class="text-center text-gray-500">Bitte wähle eine Kamera aus dem Dropdown aus:</div>
 		<select
 			class="p-2 border rounded"
 			value={selectedCamera}
