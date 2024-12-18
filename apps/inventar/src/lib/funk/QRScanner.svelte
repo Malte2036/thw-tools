@@ -30,7 +30,7 @@
 
 	onDestroy(() => {
 		if (scanning) {
-			stop();
+			stopScan();
 		}
 	});
 
@@ -59,6 +59,7 @@
 	async function start() {
 		selectCameraOpen = true;
 		await loadCameras();
+
 		if (cameras.length > 0 && !selectedCamera) {
 			selectedCamera = cameras[0].id;
 			await startScan();
@@ -91,7 +92,7 @@
 		}
 	}
 
-	async function stop() {
+	async function stopScan() {
 		try {
 			await html5Qrcode.stop();
 		} catch (error) {
@@ -103,11 +104,11 @@
 
 	async function switchCamera(newCameraId: string) {
 		if (scanning) {
-			await stop();
+			await stopScan();
 		}
 
 		selectedCamera = newCameraId;
-		await start();
+		await startScan();
 	}
 
 	function onScanSuccess(decodedText: string, decodedResult: any) {
@@ -146,7 +147,7 @@
 
 	<reader id="reader" class={`bg-gray-500 h-full w-full ${scanning ? '' : 'hidden'}`}></reader>
 	{#if scanning}
-		<Button secondary click={stop}>{closeButtonText}</Button>
+		<Button secondary click={stopScan}>{closeButtonText}</Button>
 	{:else}
 		<Button click={start}>{scanButtonText}</Button>
 	{/if}
