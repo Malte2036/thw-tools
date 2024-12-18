@@ -38,6 +38,19 @@
 		html5Qrcode = new Html5Qrcode('reader');
 	}
 
+	function handlePermissionError(error: unknown) {
+		if (
+			(error instanceof Error && error.name === 'NotAllowedError') ||
+			(typeof error === 'string' && error.includes('NotAllowedError'))
+		) {
+			permissionDenied = true;
+			console.warn('Permission denied to access camera');
+			return true;
+		}
+		console.error(error);
+		return false;
+	}
+
 	async function loadCameras() {
 		try {
 			const devices = await Html5Qrcode.getCameras();
@@ -46,12 +59,8 @@
 				label: device.label
 			}));
 		} catch (error) {
-			if (typeof error === 'string' && error.includes('NotAllowedError')) {
-				permissionDenied = true;
-				console.warn('Permission denied to access camera: loading cameras failed');
-			} else {
-				console.error(error);
-			}
+			selectCameraOpen = false;
+			handlePermissionError(error);
 		}
 	}
 
@@ -115,13 +124,7 @@
 			);
 		} catch (error) {
 			scanning = false;
-
-			if (typeof error === 'string' && error.includes('NotAllowedError')) {
-				permissionDenied = true;
-				console.warn('Permission denied to access camera: starting scan failed');
-			} else {
-				console.error(error);
-			}
+			handlePermissionError(error);
 		}
 	}
 
