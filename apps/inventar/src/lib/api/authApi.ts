@@ -122,6 +122,10 @@ export const getToken = async () => {
 	return await getKindeClient().getToken();
 };
 
+export const destroySession = async () => {
+	await sessionManager.destroySession();
+};
+
 export const getIdToken = async (): Promise<string> => {
 	return (await sessionManager.getSessionItem('id_token')) as string;
 };

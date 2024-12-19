@@ -1,8 +1,16 @@
 import { PUBLIC_API_URL } from '$env/static/public';
-import { getIdToken, getToken } from './authApi';
+import { destroySession, getIdToken, getToken } from './authApi';
 import { CustomError, HttpError, UnauthorizedError } from './error';
 
 const checkIfResposeIsUnauthorized = (res: Response) => {
+	if (res.status === 401) {
+		console.log('Unauthorized. Destroying session...');
+		destroySession().then(() => {
+			window.location.reload();
+		});
+
+		throw new UnauthorizedError();
+	}
 	if (res.status === 403) {
 		throw new UnauthorizedError();
 	}
