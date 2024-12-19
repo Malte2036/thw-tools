@@ -18,6 +18,8 @@
 		closeButtonText = 'Scanner schließen'
 	}: Props = $props();
 
+	let readerRef = $state<HTMLDivElement | null>(null);
+
 	let scanning = $state(false);
 	let selectCameraOpen = $state(false);
 	let permissionDenied = $state(false);
@@ -37,6 +39,12 @@
 
 	function init() {
 		html5Qrcode = new Html5Qrcode('reader');
+	}
+
+	function scrollReaderIntoView() {
+		if (readerRef) {
+			readerRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
 	}
 
 	function handlePermissionError(error: unknown) {
@@ -138,6 +146,8 @@
 				onScanSuccess,
 				onScanFailure
 			);
+
+			scrollReaderIntoView();
 		} catch (error) {
 			scanning = false;
 			handlePermissionError(error);
@@ -197,7 +207,11 @@
 		</select>
 	{/if}
 
-	<reader id="reader" class={`bg-gray-500 h-full w-full ${scanning ? '' : 'hidden'}`}></reader>
+	<reader
+		id="reader"
+		bind:this={readerRef}
+		class={`bg-gray-500 h-full w-full ${scanning ? '' : 'hidden'}`}
+	></reader>
 	{#if scanning}
 		<Button secondary click={stop}>{closeButtonText}</Button>
 	{:else}
