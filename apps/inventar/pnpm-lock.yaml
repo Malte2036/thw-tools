@@ -12,8 +12,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1
       '@malte2036/thw-tools-components':
-        specifier: 0.3.4
-        version: 0.3.4
+        specifier: 0.3.5
+        version: 0.3.5
       dexie:
         specifier: ^4.0.9
         version: 4.0.9
@@ -392,8 +392,8 @@ packages:
   '@lit/reactive-element@2.0.4':
     resolution: {integrity: sha512-GFn91inaUa2oHLak8awSIigYz0cU0Payr1rcFsrkf5OJ5eSPxElyZfKh0f2p9FsTiZWXQdWGJeXZICEfXXYSXQ==}
 
-  '@malte2036/thw-tools-components@0.3.4':
-    resolution: {integrity: sha512-in3S1j18/ShvHc/vVZaOh32iUCw6FcBU98aLdCQv+SinqLckDnTZAFyejPKbvHHgC9m1neLlTHukf3Or36KMGA==}
+  '@malte2036/thw-tools-components@0.3.5':
+    resolution: {integrity: sha512-V/Yt+HHA2g1PG6Uz0ebBRaWchpiWldmO1Zw+YX+sW3DOevITfYHA32spTdOKITAosbzQhzsq8V6Sgwj6i9mNxQ==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2179,7 +2179,7 @@ snapshots:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.2.1
 
-  '@malte2036/thw-tools-components@0.3.4':
+  '@malte2036/thw-tools-components@0.3.5':
     dependencies:
       '@lit-labs/virtualizer': 2.0.14
       lit: 3.2.0
