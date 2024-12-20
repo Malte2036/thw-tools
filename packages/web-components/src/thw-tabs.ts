@@ -43,7 +43,7 @@ export class THWTabs extends LitElement {
 
         width: fit-content;
 
-        button {
+        .tabButton {
           background-color: ${unsafeCSS(grayColors[400])};
           color: white;
 
@@ -74,7 +74,7 @@ export class THWTabs extends LitElement {
         ${this.items.map(
           (item) => html`
             <button
-              class=${this.selectedItem === item ? "selected" : ""}
+              class="tabButton ${this.selectedItem === item ? "selected" : ""}"
               @click=${() => this.selectItem(item)}
             >
               ${item}
