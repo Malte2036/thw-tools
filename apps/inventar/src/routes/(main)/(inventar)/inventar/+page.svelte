@@ -44,9 +44,22 @@
 			<LinkButton url="upload" secondary>Daten importieren</LinkButton>
 		</div>
 		<p class="text-lg">
-			Scannen Sie den QR-Code des Inventarstücks oder geben Sie die Inventarnummer manuell ein, um
+			Scanne den QR-Code des Inventarstücks oder gebe die Inventarnummer manuell ein, um
 			detaillierte Informationen abzurufen.
 		</p>
+
+		{#if inventoryItem === undefined}
+			<div class="flex flex-col gap-2 p-2">
+				<QrScanner {onScan} scanButtonText="QR-Code scannen" closeButtonText="Scanner schließen" />
+				<ManuelDeviceIdInput
+					{onScan}
+					showButtonText="Inventarnummer manuell eingeben"
+					submitButtonText="Suchen"
+				/>
+			</div>
+		{:else}
+			<InventoryDetailsDialog {inventoryItem} onClose={() => (inventoryItem = undefined)} />
+		{/if}
 	</div>
 
 	<div class="flex flex-col gap-2">
@@ -74,16 +87,3 @@
 		{/if}
 	</div>
 </div>
-
-{#if inventoryItem === undefined}
-	<div class="flex flex-col gap-2 p-2">
-		<QrScanner {onScan} scanButtonText="QR-Code scannen" closeButtonText="Scanner schließen" />
-		<ManuelDeviceIdInput
-			{onScan}
-			showButtonText="Inventarnummer manuell eingeben"
-			submitButtonText="Suchen"
-		/>
-	</div>
-{:else}
-	<InventoryDetailsDialog {inventoryItem} onClose={() => (inventoryItem = undefined)} />
-{/if}
