@@ -218,12 +218,12 @@
 		<Button secondary click={stop}>{closeButtonText}</Button>
 	{:else}
 		<Button click={start}>{scanButtonText}</Button>
-
-		<FloatingActionButton click={() => start()}>
-			<QrCodeIcon />
-		</FloatingActionButton>
 	{/if}
 </div>
+
+<FloatingActionButton click={() => start()} visible={!scanning}>
+	<QrCodeIcon />
+</FloatingActionButton>
 
 {#if permissionDenied}
 	<PermissionDeniedDialog onClose={() => (permissionDenied = false)} />
