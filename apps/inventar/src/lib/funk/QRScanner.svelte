@@ -5,6 +5,8 @@
 	import PermissionDeniedDialog from './PermissionDeniedDialog.svelte';
 	import { settings } from '$lib/shared/stores/settingsStore';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
+	import FloatingActionButton from '$lib/FloatingActionButton.svelte';
+	import QrCodeIcon from '$lib/icons/QRCodeIcon.svelte';
 
 	interface Props {
 		onScan: (decodedText: string) => void;
@@ -216,6 +218,10 @@
 		<Button secondary click={stop}>{closeButtonText}</Button>
 	{:else}
 		<Button click={start}>{scanButtonText}</Button>
+
+		<FloatingActionButton click={() => start()}>
+			<QrCodeIcon />
+		</FloatingActionButton>
 	{/if}
 </div>
 
