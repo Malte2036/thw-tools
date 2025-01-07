@@ -1,3 +1,5 @@
+import tailwindcssMotion from 'tailwindcss-motion';
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
@@ -20,5 +22,5 @@ module.exports = {
 			}
 		}
 	},
-	plugins: []
+	plugins: [tailwindcssMotion]
 };

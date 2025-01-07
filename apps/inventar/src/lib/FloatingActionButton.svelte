@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { trackEvent } from './utils';
-	import { fade } from 'svelte/transition';
 
 	interface Props {
 		click?: (() => void) | undefined;
@@ -11,18 +9,14 @@
 	}
 
 	let { click, dataUmamiEvent = undefined, children, visible = true }: Props = $props();
-
-	let mounted = $state(false);
-
-	onMount(() => {
-		mounted = true;
-	});
 </script>
 
-{#if visible && mounted}
+{#if visible}
 	<button
-		transition:fade={{ duration: 200 }}
-		class="md:hidden fixed bottom-4 right-4 bg-thw text-white border-2 border-white hover:bg-thw-900 rounded-full h-16 w-16 p-4 z-50 flex items-center justify-center"
+		class="
+		md:hidden fixed bottom-4 right-4 bg-thw text-white border-2 border-white hover:bg-thw-900 rounded-full h-16 w-16 p-4 z-50 flex items-center justify-center
+		motion-scale-in-[0.25] motion-blur-in-[10px] motion-delay-[0.25s]/blur
+		"
 		onclick={async () => {
 			if (click) click();
 			trackEvent(dataUmamiEvent);
