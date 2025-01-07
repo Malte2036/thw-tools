@@ -4,7 +4,6 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export type AnsweredCountData = {
-	questionType: QuestionType;
 	right: number;
 	wrong: number;
 };

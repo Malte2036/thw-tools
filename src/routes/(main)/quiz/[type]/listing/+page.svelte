@@ -14,14 +14,16 @@
 	let questionType: QuestionType;
 
 	$: questionType = data.questionType;
-
-	onMount(() => {
-		try {
-			getQuestionStatsCountForType(questionType).then((data) => (answeredCountData = data));
-		} catch (error) {
-			console.warn('Could not add count');
+	$: {
+		// Refetch stats when question type changes
+		if (questionType) {
+			try {
+				getQuestionStatsCountForType(questionType).then((data) => (answeredCountData = data));
+			} catch (error) {
+				console.warn('Could not add count');
+			}
 		}
-	});
+	}
 
 	function getDescriptionForQuestionType(questionType: QuestionType) {
 		const count = data.allQuestions.length;
@@ -38,30 +40,62 @@
 				return `Das Quiz besteht aus ${count} Fragen für die Ausbildung im Technischen Hilfswerk.`;
 		}
 	}
+
+	function getHeaderForQuestionType(questionType: QuestionType) {
+		switch (questionType) {
+			case QuestionType.GA:
+				return 'Grundausbildungs-Quiz';
+			case QuestionType.AGT:
+				return 'Atemschutz-Quiz';
+			case QuestionType.CBRN:
+				return 'CBRN-Quiz';
+			case QuestionType.RADIO:
+				return 'Sprechfunk-Quiz';
+			default:
+				return 'THW-Quiz';
+		}
+	}
 </script>
 
 <QuizHead questionType={data.questionType} question={undefined} />
 
-<div class="flex flex-col gap-1 m-4 text-xl">
-	<div>
-		<span>{getDescriptionForQuestionType(data.questionType)}</span>
-		<span>Klicke auf die erste Frage, um das Quiz zu starten.</span>
-	</div>
-	<div class="flex flex-col gap-1">
-		{#each data.allQuestions.sort((a, b) => a.number - b.number) as question}
-			<LinkButton
-				url={`/quiz/${data.questionType}/${question.number}`}
-				secondary
-				dataUmamiEvent={`Open ${data.questionType.toUpperCase()} Quiz Question ${question.number}`}
-			>
-				<div class="overflow-hidden whitespace-no-wrap">
-					<div>Frage {question.number}:</div>
-					<div class="truncate text-black text-sm">
-						{question.text}
+<div class="flex flex-col gap-8 px-4 py-8">
+	<header class="text-center">
+		<h1 class="text-3xl font-bold mb-4">{getHeaderForQuestionType(data.questionType)}</h1>
+		<p class="text-xl text-gray-700 mb-2">{getDescriptionForQuestionType(data.questionType)}</p>
+		<a
+			href={`/quiz/${questionType}/1`}
+			class="text-lg text-thw-600 font-medium"
+			data-umami-event={`Start ${questionType.toUpperCase()} Quiz`}
+			>Klicke auf eine Frage, um zu starten</a
+		>
+	</header>
+
+	<div class="flex flex-col gap-6">
+		<QuestionsStatistics {answeredCountData} {questionType} />
+
+		<LinkButton
+			url={`/quiz/${questionType}/1`}
+			dataUmamiEvent={`Start ${questionType.toUpperCase()} Quiz`}
+		>
+			{`${getHeaderForQuestionType(questionType)} starten`}
+		</LinkButton>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+			{#each data.allQuestions.sort((a, b) => a.number - b.number) as question}
+				<LinkButton
+					url={`/quiz/${data.questionType}/${question.number}`}
+					secondary
+					dataUmamiEvent={`Open ${data.questionType.toUpperCase()} Quiz Question ${question.number}`}
+				>
+					<div class="overflow-hidden whitespace-no-wrap">
+						<div>Frage {question.number}:</div>
+						<div class="truncate text-black text-sm">
+							{question.text}
+						</div>
 					</div>
-				</div>
-			</LinkButton>
-		{/each}
+				</LinkButton>
+			{/each}
+		</div>
 	</div>
-	<QuestionsStatistics {answeredCountData} />
 </div>
