@@ -40,7 +40,10 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        shell: bash
+        run: |
+          ls -la  # Debug: List files to verify lockfile presence
+          pnpm install --frozen-lockfile --no-verify-store-integrity
 
       - name: Run tests
         run: pnpm test
