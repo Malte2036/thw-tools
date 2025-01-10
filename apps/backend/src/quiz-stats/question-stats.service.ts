@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import {
   CreateQuestionStatsDto,
   QuestionStats,
@@ -24,6 +24,10 @@ export class QuestionStatsService {
   async getQuestionStatsCountByQuestionId(
     questionId: number,
   ): Promise<QuestionStatsCount> {
+    if (questionId < 0) {
+      return { right: 0, wrong: 0 };
+    }
+
     const result = await this.questionStatsRepository
       .createQueryBuilder('stats')
       .innerJoin('stats.question', 'question')
@@ -35,8 +39,8 @@ export class QuestionStatsService {
       .getRawOne();
 
     return {
-      right: parseInt(result.correctCount, 10) || 0,
-      wrong: parseInt(result.incorrectCount, 10) || 0,
+      right: parseInt(result?.correctCount ?? '0', 10) || 0,
+      wrong: parseInt(result?.incorrectCount ?? '0', 10) || 0,
     };
   }
 
@@ -45,7 +49,7 @@ export class QuestionStatsService {
   ): Promise<QuestionStatsCount> {
     const result = await this.questionStatsRepository
       .createQueryBuilder('stats')
-      .innerJoin('stats.question', 'question') // Join with the `Question` table
+      .innerJoin('stats.question', 'question')
       .select([
         'SUM(CASE WHEN stats.correct = true THEN 1 ELSE 0 END) AS "correctCount"',
         'SUM(CASE WHEN stats.correct = false THEN 1 ELSE 0 END) AS "incorrectCount"',
@@ -54,12 +58,19 @@ export class QuestionStatsService {
       .getRawOne();
 
     return {
-      right: parseInt(result.correctCount, 10) || 0,
-      wrong: parseInt(result.incorrectCount, 10) || 0,
+      right: parseInt(result?.correctCount ?? '0', 10) || 0,
+      wrong: parseInt(result?.incorrectCount ?? '0', 10) || 0,
     };
   }
 
   async addQuestionStats(createQuestionStatsDto: CreateQuestionStatsDto) {
+    if (
+      !createQuestionStatsDto.timestamp ||
+      isNaN(createQuestionStatsDto.timestamp.getTime())
+    ) {
+      throw new BadRequestException('Invalid timestamp');
+    }
+
     return this.questionStatsRepository.save(createQuestionStatsDto);
   }
 
@@ -73,6 +84,14 @@ export class QuestionStatsService {
       questionType,
       questionNumber,
     );
+
+    if (!question) {
+      throw new BadRequestException('Question not found');
+    }
+
+    if (!timestamp || isNaN(timestamp.getTime())) {
+      throw new BadRequestException('Invalid timestamp');
+    }
 
     const createQuestionStatsDto: CreateQuestionStatsDto = {
       correct,
