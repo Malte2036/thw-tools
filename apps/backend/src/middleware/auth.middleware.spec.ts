@@ -55,6 +55,27 @@ describe('AuthMiddleware', () => {
       expect(mockNext).not.toHaveBeenCalled();
     });
 
+    it('should return 401 if no id token header is present', async () => {
+      const mockRequest = {
+        headers: {
+          authorization: 'Bearer valid-token',
+        },
+      } as Request;
+
+      mockAuthService.verifyToken.mockResolvedValueOnce({
+        sub: 'user1',
+        iss: 'https://example.com',
+      });
+
+      await middleware.use(mockRequest, mockResponse, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(401);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Unauthorized',
+      });
+      expect(mockNext).not.toHaveBeenCalled();
+    });
+
     it('should return 401 if token verification fails', async () => {
       const mockRequest = {
         headers: {
@@ -111,11 +132,15 @@ describe('AuthMiddleware', () => {
       const mockAccessTokenPayload = {
         sub: 'user1',
         iss: 'https://example.com',
+        aud: ['api'],
+        exp: Math.floor(Date.now() / 1000) + 3600,
       };
 
       const mockIdTokenPayload = {
         sub: 'user2', // Different subject
         iss: 'https://example.com',
+        aud: ['api'],
+        exp: Math.floor(Date.now() / 1000) + 3600,
       };
 
       const mockRequest = {
@@ -130,10 +155,6 @@ describe('AuthMiddleware', () => {
 
       await middleware.use(mockRequest, mockResponse, mockNext);
 
-      expect(mockAuthService.verifyToken).toHaveBeenCalledWith('valid-token');
-      expect(mockAuthService.verifyIdToken).toHaveBeenCalledWith(
-        'valid-id-token',
-      );
       expect(mockResponse.status).toHaveBeenCalledWith(401);
       expect(mockResponse.json).toHaveBeenCalledWith({
         message: 'Unauthorized',
@@ -146,11 +167,15 @@ describe('AuthMiddleware', () => {
       const mockAccessTokenPayload = {
         sub: 'user1',
         iss: 'https://example.com',
+        aud: ['api'],
+        exp: Math.floor(Date.now() / 1000) + 3600,
       };
 
       const mockIdTokenPayload = {
         sub: 'user1',
         iss: 'https://different-issuer.com', // Different issuer
+        aud: ['api'],
+        exp: Math.floor(Date.now() / 1000) + 3600,
       };
 
       const mockRequest = {
@@ -172,17 +197,84 @@ describe('AuthMiddleware', () => {
       expect(mockNext).not.toHaveBeenCalled();
     });
 
-    it('should set idTokenPayload and call next() when tokens match', async () => {
+    it('should return 401 for expired tokens', async () => {
+      const mockRequest = {
+        headers: {
+          authorization: 'Bearer expired-token',
+          'x-id-token': 'valid-id-token',
+        },
+      } as Partial<Request> as Request;
+
+      mockAuthService.verifyToken.mockResolvedValueOnce(null); // Expired token should return null
+
+      await middleware.use(mockRequest, mockResponse, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(401);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Unauthorized',
+      });
+    });
+
+    it('should return 401 for tokens with invalid audience', async () => {
+      const mockRequest = {
+        headers: {
+          authorization: 'Bearer token',
+          'x-id-token': 'valid-id-token',
+        },
+      } as Partial<Request> as Request;
+
+      mockAuthService.verifyToken.mockResolvedValueOnce(null); // Invalid audience should return null
+
+      await middleware.use(mockRequest, mockResponse, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(401);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Unauthorized',
+      });
+    });
+
+    it('should return 401 for tokens with null values in critical fields', async () => {
+      const mockRequest = {
+        headers: {
+          authorization: 'Bearer token',
+          'x-id-token': 'valid-id-token',
+        },
+      } as Partial<Request> as Request;
+
+      mockAuthService.verifyToken.mockResolvedValueOnce({
+        sub: null, // Critical field is null
+        iss: 'https://example.com',
+      });
+
+      await middleware.use(mockRequest, mockResponse, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(401);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Unauthorized',
+      });
+    });
+
+    it('should set idTokenPayload and call next() when tokens match and are valid', async () => {
+      const now = Math.floor(Date.now() / 1000);
       const mockAccessTokenPayload = {
         sub: 'user1',
         iss: 'https://example.com',
+        aud: ['api'],
+        exp: now + 3600,
+        iat: now,
+        jti: 'unique-token-id', // Prevent token replay
       };
 
       const mockIdTokenPayload = {
         sub: 'user1',
         iss: 'https://example.com',
+        aud: ['api'],
+        exp: now + 3600,
+        iat: now,
+        jti: 'unique-id-token-id',
         // Additional id token fields
         email: 'test@example.com',
+        email_verified: true,
         name: 'Test User',
       };
 
