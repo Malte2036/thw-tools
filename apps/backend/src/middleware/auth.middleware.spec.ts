@@ -107,15 +107,15 @@ describe('AuthMiddleware', () => {
       );
     });
 
-    it('should return 401 when token JTIs do not match', async () => {
+    it('should return 401 when token and id token subjects do not match', async () => {
       const mockAccessTokenPayload = {
-        jti: 'access-token-jti',
-        // ... other payload properties
+        sub: 'user1',
+        iss: 'https://example.com',
       };
 
       const mockIdTokenPayload = {
-        jti: 'different-id-token-jti',
-        // ... other payload properties
+        sub: 'user2', // Different subject
+        iss: 'https://example.com',
       };
 
       const mockRequest = {
@@ -142,16 +142,48 @@ describe('AuthMiddleware', () => {
       expect(mockRequest['idTokenPayload']).toBeUndefined();
     });
 
-    it('should set idTokenPayload and call next() when JTIs match', async () => {
-      const mockJti = 'matching-jti';
+    it('should return 401 when token and id token issuers do not match', async () => {
       const mockAccessTokenPayload = {
-        jti: mockJti,
-        // ... other payload properties
+        sub: 'user1',
+        iss: 'https://example.com',
       };
 
       const mockIdTokenPayload = {
-        jti: mockJti,
-        // ... other payload properties
+        sub: 'user1',
+        iss: 'https://different-issuer.com', // Different issuer
+      };
+
+      const mockRequest = {
+        headers: {
+          authorization: 'Bearer valid-token',
+          'x-id-token': 'valid-id-token',
+        },
+      } as Partial<Request> as Request;
+
+      mockAuthService.verifyToken.mockResolvedValueOnce(mockAccessTokenPayload);
+      mockAuthService.verifyIdToken.mockResolvedValueOnce(mockIdTokenPayload);
+
+      await middleware.use(mockRequest, mockResponse, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(401);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Unauthorized',
+      });
+      expect(mockNext).not.toHaveBeenCalled();
+    });
+
+    it('should set idTokenPayload and call next() when tokens match', async () => {
+      const mockAccessTokenPayload = {
+        sub: 'user1',
+        iss: 'https://example.com',
+      };
+
+      const mockIdTokenPayload = {
+        sub: 'user1',
+        iss: 'https://example.com',
+        // Additional id token fields
+        email: 'test@example.com',
+        name: 'Test User',
       };
 
       const mockRequest = {

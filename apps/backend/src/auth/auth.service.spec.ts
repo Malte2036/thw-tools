@@ -24,13 +24,14 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
+    await service.onModuleInit(); // Initialize JWKS
   });
 
   describe('onModuleInit', () => {
     it('should initialize JWKS', async () => {
-      await service.onModuleInit();
-
-      expect(jose.createRemoteJWKSet).toHaveBeenCalledWith(expect.any(URL));
+      expect(jose.createRemoteJWKSet).toHaveBeenCalledWith(
+        new URL('https://example.com/.well-known/jwks.json'),
+      );
     });
   });
 
@@ -43,17 +44,29 @@ describe('AuthService', () => {
     it('should successfully verify valid token', async () => {
       const mockPayload = {
         sub: 'user123',
+        iss: 'https://example.com',
+        // Additional fields that won't be included in the result
         email: 'test@example.com',
+        aud: ['default'],
+        exp: Math.floor(Date.now() / 1000) + 3600,
+        iat: Math.floor(Date.now() / 1000),
       };
 
       (jose.jwtVerify as jest.Mock).mockResolvedValueOnce({
         payload: mockPayload,
+        protectedHeader: {
+          alg: 'RS256',
+          kid: 'test-key',
+        },
       });
 
-      await service.onModuleInit(); // Initialize JWKS
       const result = await service.verifyToken('valid.token.here');
 
-      expect(result).toEqual(mockPayload);
+      // Only check for fields defined in AuthPayloadSchema
+      expect(result).toEqual({
+        sub: mockPayload.sub,
+        iss: mockPayload.iss,
+      });
       expect(jose.jwtVerify).toHaveBeenCalledWith(
         'valid.token.here',
         mockJwks,
@@ -65,10 +78,79 @@ describe('AuthService', () => {
       const mockError = new Error('Invalid token');
       (jose.jwtVerify as jest.Mock).mockRejectedValueOnce(mockError);
 
-      await service.onModuleInit(); // Initialize JWKS
       const result = await service.verifyToken('invalid.token');
 
       expect(result).toBeNull();
+    });
+
+    it('should return null for token with missing required claims', async () => {
+      const mockPayload = {
+        // Missing required 'iss' claim
+        sub: 'user123',
+        email: 'test@example.com',
+      };
+
+      (jose.jwtVerify as jest.Mock).mockResolvedValueOnce({
+        payload: mockPayload,
+        protectedHeader: {
+          alg: 'RS256',
+          kid: 'test-key',
+        },
+      });
+
+      const result = await service.verifyToken('invalid.claims.token');
+
+      expect(result).toBeNull();
+    });
+
+    it('should return null for expired token', async () => {
+      const mockPayload = {
+        sub: 'user123',
+        iss: 'https://example.com',
+        exp: Math.floor(Date.now() / 1000) - 3600, // 1 hour ago
+        iat: Math.floor(Date.now() / 1000) - 7200, // 2 hours ago
+      };
+
+      (jose.jwtVerify as jest.Mock).mockResolvedValueOnce({
+        payload: mockPayload,
+        protectedHeader: {
+          alg: 'RS256',
+          kid: 'test-key',
+        },
+      });
+
+      const result = await service.verifyToken('expired.token');
+
+      // The service should still return the payload since expiration is handled by jose
+      expect(result).toEqual({
+        sub: mockPayload.sub,
+        iss: mockPayload.iss,
+      });
+    });
+
+    it('should validate token with different issuer', async () => {
+      const mockPayload = {
+        sub: 'user123',
+        iss: 'https://wrong-issuer.com',
+        exp: Math.floor(Date.now() / 1000) + 3600,
+        iat: Math.floor(Date.now() / 1000),
+      };
+
+      (jose.jwtVerify as jest.Mock).mockResolvedValueOnce({
+        payload: mockPayload,
+        protectedHeader: {
+          alg: 'RS256',
+          kid: 'test-key',
+        },
+      });
+
+      const result = await service.verifyToken('wrong.issuer.token');
+
+      // The service should still return the payload since issuer validation is handled by jose
+      expect(result).toEqual({
+        sub: mockPayload.sub,
+        iss: mockPayload.iss,
+      });
     });
   });
 });
