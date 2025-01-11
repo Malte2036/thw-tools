@@ -28,8 +28,6 @@
 	{/if}
 </svelte:head>
 
-<PwaUpdateNotification />
-
 <div class="flex flex-col gap-4 justify-between min-h-screen">
 	<NavigationBar />
 	<Banner />
@@ -78,6 +76,8 @@
 			})}
 		</div>
 	</div>
+
+	<PwaUpdateNotification />
 
 	{#if showFeedback}
 		<Dialog title="Feedback">
