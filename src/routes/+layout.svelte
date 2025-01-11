@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '@malte2036/thw-tools-components';
-	import { dev } from '$app/environment';
+	import { dev, version } from '$app/environment';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
 	import '../app.css';
 	import { page } from '$app/stores';
@@ -65,6 +65,17 @@
 			on:click={() => (showInstallPWAHelp = true)}
 		>
 			Als App installieren
+		</div>
+		<div class="text-gray-400">|</div>
+		<div class="text-gray-400">
+			Build {new Date(+version).toLocaleString('de-DE', {
+				year: 'numeric',
+				month: '2-digit',
+				day: '2-digit',
+				hour: '2-digit',
+				minute: '2-digit',
+				second: undefined
+			})}
 		</div>
 	</div>
 
