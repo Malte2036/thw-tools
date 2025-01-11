@@ -37,7 +37,7 @@
 		<slot />
 	</div>
 	<div class="flex flex-row justify-center gap-2 mb-3 flex-wrap px-2">
-		<div>©2024 Malte Sehmer</div>
+		<div>©2025 Malte Sehmer</div>
 		<div class="text-gray-400">|</div>
 		<a
 			data-umami-event={$page.route.id === '/impressum'

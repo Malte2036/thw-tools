@@ -7,6 +7,7 @@
 	import type { PageData } from './$types';
 	import QuestionsStatistics from '$lib/quiz/question/QuestionsStatistics.svelte';
 	import { getQuestionStatsCountForType } from '$lib/api/api';
+	import { getQuizTypeName } from '$lib/quiz/quizUtils';
 
 	export let data: PageData;
 
@@ -40,28 +41,13 @@
 				return `Das Quiz besteht aus ${count} Fragen für die Ausbildung im Technischen Hilfswerk.`;
 		}
 	}
-
-	function getHeaderForQuestionType(questionType: QuestionType) {
-		switch (questionType) {
-			case QuestionType.GA:
-				return 'Grundausbildungs-Quiz';
-			case QuestionType.AGT:
-				return 'Atemschutz-Quiz';
-			case QuestionType.CBRN:
-				return 'CBRN-Quiz';
-			case QuestionType.RADIO:
-				return 'Sprechfunk-Quiz';
-			default:
-				return 'THW-Quiz';
-		}
-	}
 </script>
 
 <QuizHead questionType={data.questionType} question={undefined} />
 
 <div class="flex flex-col gap-8 px-4 py-8">
 	<header class="text-center">
-		<h1 class="text-3xl font-bold mb-4">{getHeaderForQuestionType(data.questionType)}</h1>
+		<h1 class="text-3xl font-bold mb-4">{getQuizTypeName(data.questionType)}</h1>
 		<p class="text-xl text-gray-700 mb-2">{getDescriptionForQuestionType(data.questionType)}</p>
 		<a
 			href={`/quiz/${questionType}/1`}
@@ -78,7 +64,7 @@
 			url={`/quiz/${questionType}/1`}
 			dataUmamiEvent={`Start ${questionType.toUpperCase()} Quiz`}
 		>
-			{`${getHeaderForQuestionType(questionType)} starten`}
+			{`${getQuizTypeName(questionType)} starten`}
 		</LinkButton>
 
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
