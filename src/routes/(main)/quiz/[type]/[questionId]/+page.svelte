@@ -148,6 +148,6 @@
 				/>
 			</div>
 		</div>
-		<QuestionStatisticsForQuestion {currentQuestionAnsweredCountData} />
+		<!-- <QuestionStatisticsForQuestion {currentQuestionAnsweredCountData} /> -->
 	</div>
 </div>
