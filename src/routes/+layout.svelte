@@ -13,6 +13,8 @@
 
 	let showFeedback = false;
 	let showInstallPWAHelp = false;
+
+	let hideFooter = $page.url.pathname.includes('/quiz/');
 </script>
 
 <svelte:head>
@@ -36,48 +38,50 @@
 	<div class="flex-grow flex flex-col">
 		<slot />
 	</div>
-	<div class="flex flex-row justify-center gap-2 mb-3 flex-wrap px-2">
-		<div>©2025 Malte Sehmer</div>
-		<div class="text-gray-400">|</div>
-		<a
-			data-umami-event={$page.route.id === '/impressum'
-				? 'Close Impressum button'
-				: 'Open Impressum button'}
-			href={$page.route.id === '/impressum' ? '/' : '/impressum'}
-			class="underline">Impressum</a
-		>
-		<div class="text-gray-400">|</div>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div
-			class="underline cursor-pointer"
-			on:click={() => (showFeedback = true)}
-			data-umami-event="Open Feedback Dialog"
-		>
-			Feedback
+	{#if !hideFooter}
+		<div class="flex flex-row justify-center gap-2 mb-3 flex-wrap px-2">
+			<div>©2025 Malte Sehmer</div>
+			<div class="text-gray-400">|</div>
+			<a
+				data-umami-event={$page.route.id === '/impressum'
+					? 'Close Impressum button'
+					: 'Open Impressum button'}
+				href={$page.route.id === '/impressum' ? '/' : '/impressum'}
+				class="underline">Impressum</a
+			>
+			<div class="text-gray-400">|</div>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<div
+				class="underline cursor-pointer"
+				on:click={() => (showFeedback = true)}
+				data-umami-event="Open Feedback Dialog"
+			>
+				Feedback
+			</div>
+			<div class="text-gray-400">|</div>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<div
+				class="underline cursor-pointer"
+				data-umami-event="Open Offline Availability Dialog"
+				on:click={() => (showInstallPWAHelp = true)}
+			>
+				Als App installieren
+			</div>
+			<div class="text-gray-400">|</div>
+			<div class="text-gray-400">
+				Build {new Date(+version).toLocaleString('de-DE', {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+					hour: '2-digit',
+					minute: '2-digit',
+					second: undefined
+				})}
+			</div>
 		</div>
-		<div class="text-gray-400">|</div>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div
-			class="underline cursor-pointer"
-			data-umami-event="Open Offline Availability Dialog"
-			on:click={() => (showInstallPWAHelp = true)}
-		>
-			Als App installieren
-		</div>
-		<div class="text-gray-400">|</div>
-		<div class="text-gray-400">
-			Build {new Date(+version).toLocaleString('de-DE', {
-				year: 'numeric',
-				month: '2-digit',
-				day: '2-digit',
-				hour: '2-digit',
-				minute: '2-digit',
-				second: undefined
-			})}
-		</div>
-	</div>
+	{/if}
 
 	{#if showFeedback}
 		<Dialog title="Feedback">
