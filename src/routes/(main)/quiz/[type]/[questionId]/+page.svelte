@@ -18,6 +18,7 @@
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import type { AnsweredCountData } from './+page.server';
+	import ProgressBar from '$lib/quiz/ProgressBar.svelte';
 
 	export let data: PageData;
 
@@ -105,6 +106,10 @@
 	<div class="flex flex-col gap-16 justify-between h-full">
 		<div class="flex flex-col gap-8">
 			<div class="flex flex-col gap-2">
+				<div class="-m-4 -mt-8 w-screen">
+					<ProgressBar progress={(question.number - 1) / questionCount} />
+				</div>
+				<div class="h-6"></div>
 				<!-- <QuestionNumber questionNumber={question.number} {questionCount} {gotoQuestionNumber} /> -->
 				<div class="text-sm">Frage {question.number} von {questionCount}</div>
 				<h1
