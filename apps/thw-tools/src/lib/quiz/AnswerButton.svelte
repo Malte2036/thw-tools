@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { addQuestionStatsCount } from '$lib/api/api';
-	import Button from '$lib/Button.svelte';
-	import type { ExtendedQuestion, QuestionType } from '$lib/model/question';
+	import type { ExtendedQuestion } from '$lib/model/question';
 	import type { AnsweredCountData } from '../../routes/(main)/quiz/[type]/[questionId]/+page.server';
 
 	export let question: ExtendedQuestion;
@@ -12,8 +11,9 @@
 	export let currentQuestionAnsweredCountData: AnsweredCountData | undefined;
 </script>
 
-<Button
-	click={() => {
+<button
+	class="w-full bg-black text-white text-2xl p-2 rounded-lg font-bold"
+	on:click={() => {
 		if (revealAnswers) {
 			gotoNextQuestion();
 		} else {
@@ -35,9 +35,7 @@
 			addQuestionStatsCount(question.id, completelyRight);
 		}
 	}}
-	dataUmamiEvent={`${question.type} quiz question ${revealAnswers ? 'next question' : 'answered'}`}
+	data-umami-event={`${question.type} quiz question ${revealAnswers ? 'next question' : 'answered'}`}
 	disabled={!revealAnswers && question.checkedAnswers.length == 0}
-	>{revealAnswers
-		? `${completelyRight ? 'Richtig' : 'Falsch'} - Nächste Frage`
-		: 'Überprüfen'}</Button
->
+	>{revealAnswers ? `${completelyRight ? 'Richtig' : 'Falsch'} - Nächste Frage` : 'Überprüfen'}
+</button>
