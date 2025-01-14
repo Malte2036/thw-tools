@@ -16,7 +16,17 @@ module.exports = {
 					700: '#4c40f2',
 					800: '#1f11ee',
 					900: '#1a0ec7'
-				}
+				},
+				accent: '#EEE648',
+				correct: {
+					DEFAULT: '#24CEA6',
+					200: '#24cea640'
+				},
+				wrong: {
+					DEFAULT: '#DE5444',
+					200: '#de544440'
+				},
+				gray: '#D9D9D9'
 			},
 			fontFamily: {
 				calibri: ['Calibri', 'sans-serif']
