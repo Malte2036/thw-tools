@@ -43,13 +43,13 @@ export class THWNavigationBar extends LitElement {
       width: 100%;
       max-width: 80rem;
       margin: 0 auto;
-      padding: 0 0.5rem;
     }
 
     .nav-content {
       display: flex;
       justify-content: space-between;
       height: 4rem;
+      padding: 0 0.5rem;
     }
 
     .logo-container {
