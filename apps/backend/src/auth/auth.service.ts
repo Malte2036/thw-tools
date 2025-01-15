@@ -6,12 +6,12 @@ import {
   IdTokenPayload,
   IdTokenPayloadSchema,
 } from '../types/auth-payload';
+import { ZodError } from 'zod';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
   private jwks: ReturnType<typeof createRemoteJWKSet> | null = null;
   private readonly jwksUrl = `${process.env.KINDE_DOMAIN}/.well-known/jwks.json`;
-
   private readonly logger = new Logger(AuthService.name);
 
   async onModuleInit() {
@@ -20,48 +20,71 @@ export class AuthService implements OnModuleInit {
   }
 
   async verifyToken(token: string): Promise<AuthPayload | null> {
-    const start = Date.now();
-
-    if (!token) {
-      return null;
-    }
+    if (!token) return null;
+    const result = await this.verifyTokenWithRetry(token);
+    if (!result) return null;
 
     try {
-      const { payload } = await jwtVerify(token, this.jwks, {
-        algorithms: ['RS256'],
-      });
-
-      const elapsed = Date.now() - start;
-      if (elapsed > 500) {
-        this.logger.debug(`JWT verification took: ${elapsed}ms`);
-      }
-
-      return AuthPayloadSchema.parse(payload);
+      return AuthPayloadSchema.parse(result.payload);
     } catch (error) {
-      this.logger.error('JWT verification failed:', error);
-
+      if (error instanceof ZodError) {
+        this.logger.error('Token payload validation failed:', error.errors);
+      }
       return null;
     }
   }
 
   async verifyIdToken(idToken: string): Promise<IdTokenPayload | null> {
-    const start = Date.now();
+    const result = await this.verifyTokenWithRetry(idToken);
+    if (!result) return null;
 
     try {
-      const { payload } = await jwtVerify(idToken, this.jwks, {
-        algorithms: ['RS256'],
-      });
-
-      const elapsed = Date.now() - start;
-      if (elapsed > 500) {
-        this.logger.debug(`JWT verification took: ${elapsed}ms`);
-      }
-
-      return IdTokenPayloadSchema.parse(payload);
+      return IdTokenPayloadSchema.parse(result.payload);
     } catch (error) {
-      this.logger.error('JWT verification failed:', error);
-
+      if (error instanceof ZodError) {
+        this.logger.error('ID token payload validation failed:', error.errors);
+      }
       return null;
     }
+  }
+
+  private async verifyTokenWithRetry(
+    token: string,
+    maxRetries = 3,
+    initialDelay = 500,
+  ): Promise<{ payload: any } | null> {
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const start = Date.now();
+        const result = await jwtVerify(token, this.jwks, {
+          algorithms: ['RS256'],
+        });
+
+        const elapsed = Date.now() - start;
+        if (elapsed > 500) {
+          this.logger.debug(`JWT verification took: ${elapsed}ms`);
+        }
+
+        return result;
+      } catch (error) {
+        if (error.code === 'ERR_JWKS_TIMEOUT' && attempt < maxRetries - 1) {
+          const delay = initialDelay * Math.pow(2, attempt);
+          this.logger.warn(
+            `JWKS timeout, retrying in ${delay}ms (attempt ${attempt + 1}/${maxRetries})`,
+          );
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          continue;
+        }
+
+        this.logger.error(
+          error.code === 'ERR_JWKS_TIMEOUT'
+            ? 'JWKS request timed out after all retries'
+            : 'JWT verification failed:',
+          error,
+        );
+        return null;
+      }
+    }
+    return null;
   }
 }
