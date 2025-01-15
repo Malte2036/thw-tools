@@ -2,7 +2,7 @@
 	import { addQuestionStatsCount } from '$lib/api/api';
 	import type { ExtendedQuestion } from '$lib/model/question';
 	import type { AnsweredCountData } from '../../routes/(main)/quiz/[type]/[questionId]/+page.server';
-
+	import ArrowRightIcon from '../icons/ArrowRightIcon.svelte';
 	export let question: ExtendedQuestion;
 	export let revealAnswers: boolean;
 	export let completelyRight: boolean;
@@ -12,7 +12,7 @@
 </script>
 
 <button
-	class="w-full bg-black text-white text-2xl p-2 rounded-lg font-bold"
+	class="w-full bg-black text-white text-md p-2 rounded-lg font-bold flex items-center justify-center gap-2 cursor-pointer"
 	on:click={() => {
 		if (revealAnswers) {
 			gotoNextQuestion();
@@ -37,5 +37,9 @@
 	}}
 	data-umami-event={`${question.type} quiz question ${revealAnswers ? 'next question' : 'answered'}`}
 	disabled={!revealAnswers && question.checkedAnswers.length == 0}
-	>{revealAnswers ? `${completelyRight ? 'Richtig' : 'Falsch'} - Nächste Frage` : 'Überprüfen'}
+>
+	{revealAnswers ? `${completelyRight ? 'Richtig' : 'Falsch'} - Nächste Frage` : 'Überprüfen'}
+	<div class="h-4 w-4">
+		<ArrowRightIcon />
+	</div>
 </button>

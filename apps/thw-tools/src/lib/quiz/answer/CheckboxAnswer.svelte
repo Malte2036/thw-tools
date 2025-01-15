@@ -14,8 +14,8 @@
 	$: isWrongVariant =
 		revealAnswers && ((checked && !answer.isCorrect) || (!checked && answer.isCorrect));
 
-	$: shouldShowCheckMark = isCheckedVariant || isCorrectVariant;
-	$: shouldShowXMark = isWrongVariant;
+	$: shouldShowCheckMark = (revealAnswers && answer.isCorrect) || isCheckedVariant;
+	$: shouldShowXMark = revealAnswers && !answer.isCorrect;
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -27,6 +27,8 @@
 	class:uncheckedVariant={isUncheckedVariant}
 	class:correctVariant={isCorrectVariant}
 	class:wrongVariant={isWrongVariant}
+	class:isAnswerCorrect={revealAnswers && answer.isCorrect}
+	class:isAnswerWrong={revealAnswers && !answer.isCorrect}
 	on:click={() => {
 		changeCheckedCallback(!checked);
 		checked = !checked;
@@ -77,15 +79,24 @@
 	}
 
 	.correctVariant {
-		@apply border-correct bg-correct-200;
-
-		input {
-			@apply bg-correct border-correct;
-		}
 	}
 
 	.wrongVariant {
-		@apply border-wrong bg-wrong-200;
+		@apply border-wrong text-wrong;
+	}
+
+	.isAnswerCorrect {
+		input {
+			@apply bg-correct border-correct;
+		}
+
+		&.correctVariant {
+			@apply border-correct bg-correct-200;
+		}
+	}
+
+	.isAnswerWrong {
+		@apply line-through;
 
 		input {
 			@apply bg-wrong border-wrong;
