@@ -114,7 +114,7 @@
 				<div class="text-sm">Frage {question.number} von {questionCount}</div>
 				<h1
 					bind:this={questionTextEl}
-					class="text-3xl text-center focus:text-thw outline-none font-bold"
+					class="text-3xl text-center text-thw outline-none font-bold"
 					tabindex="-1"
 				>
 					{question.text}
