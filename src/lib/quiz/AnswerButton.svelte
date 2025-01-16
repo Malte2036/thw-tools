@@ -12,7 +12,7 @@
 </script>
 
 <button
-	class="w-full bg-black text-white text-md p-2 rounded-lg font-bold flex items-center justify-center gap-2 cursor-pointer"
+	class="w-full min-h-12 bg-black text-white text-md p-2 rounded-lg font-bold flex items-center justify-center gap-2 cursor-pointer"
 	on:click={() => {
 		if (revealAnswers) {
 			gotoNextQuestion();
