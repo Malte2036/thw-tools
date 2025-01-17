@@ -18,6 +18,7 @@
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import type { AnsweredCountData } from './+page.server';
+	import ProgressBar from '$lib/quiz/ProgressBar.svelte';
 
 	export let data: PageData;
 
@@ -101,14 +102,18 @@
 
 <QuizHead {questionType} {question} />
 
-<div class="m-4 mt-2">
-	<div class="flex flex-col gap-16 justify-between h-full">
-		<div class="flex flex-col gap-4">
+<div class="h-full flex flex-col">
+	<div class="flex-grow flex flex-col px-4">
+		<div class="flex flex-col gap-8">
 			<div class="flex flex-col gap-2">
-				<QuestionNumber questionNumber={question.number} {questionCount} {gotoQuestionNumber} />
+				<div class="-mx-4 -mt-4 w-screen">
+					<ProgressBar progress={(question.number - 1) / questionCount} />
+				</div>
+				<div class="h-6"></div>
+				<div class="text-sm">Frage {question.number} von {questionCount}</div>
 				<h1
 					bind:this={questionTextEl}
-					class="text-2xl text-center focus:text-thw outline-none font-bold"
+					class="text-3xl text-center text-thw outline-none font-bold"
 					tabindex="-1"
 				>
 					{question.text}
@@ -137,17 +142,17 @@
 					{/each}
 				</div>
 			</div>
-			<div class="mx-auto w-3/5 max-md:w-4/6">
-				<AnswerButton
-					bind:question
-					bind:answeredCountData
-					bind:completelyRight
-					bind:currentQuestionAnsweredCountData
-					bind:revealAnswers
-					{gotoNextQuestion}
-				/>
-			</div>
 		</div>
-		<!-- <QuestionStatisticsForQuestion {currentQuestionAnsweredCountData} /> -->
+		<div class="flex-grow sm:hidden"></div>
+		<div class="w-full pt-8 pb-8">
+			<AnswerButton
+				bind:question
+				bind:answeredCountData
+				bind:completelyRight
+				bind:currentQuestionAnsweredCountData
+				bind:revealAnswers
+				{gotoNextQuestion}
+			/>
+		</div>
 	</div>
 </div>
