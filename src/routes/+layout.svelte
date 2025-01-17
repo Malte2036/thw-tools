@@ -10,15 +10,21 @@
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 	import PwaUpdateNotification from '$lib/PWAUpdateNotification.svelte';
+	import { onMount } from 'svelte';
+	import { formatDate, trackIdentity } from '$lib/utils';
 
 	let showFeedback = false;
 	let showInstallPWAHelp = false;
+
+	onMount(() => {
+		trackIdentity();
+	});
 </script>
 
 <svelte:head>
 	<link rel="manifest" href="/manifest.json" />
 
-	{#if !dev}
+	{#if dev}
 		<script
 			async
 			defer
@@ -68,14 +74,7 @@
 		</div>
 		<div class="text-gray-400">|</div>
 		<div class="text-gray-400">
-			Build {new Date(+version).toLocaleString('de-DE', {
-				year: 'numeric',
-				month: '2-digit',
-				day: '2-digit',
-				hour: '2-digit',
-				minute: '2-digit',
-				second: undefined
-			})}
+			Build {formatDate(+version)}
 		</div>
 	</div>
 
