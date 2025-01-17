@@ -143,7 +143,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex-grow"></div>
+		<div class="flex-grow sm:hidden"></div>
 		<div class="w-full pt-8 pb-8">
 			<AnswerButton
 				bind:question
