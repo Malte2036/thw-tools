@@ -36,15 +36,19 @@
 >
 	<div>{answer.text}</div>
 	<div class="relative w-6 h-6 aspect-square">
+		<label class="sr-only" for="answer-checkbox">Select answer: {answer.text}</label>
 		<input
+			id="answer-checkbox"
 			type="checkbox"
 			bind:checked
+			aria-label="Select answer: {answer.text}"
 			class="absolute top-0 left-0 w-full h-full rounded-full border-gray border-2 appearance-none flex-shrink-0 cursor-pointer"
 		/>
 		{#if shouldShowXMark}
 			<div
 				class="absolute inset-0 flex items-center justify-center text-white p-1.5"
 				data-testid="x-mark"
+				aria-hidden="true"
 			>
 				<XMarkIcon />
 			</div>
@@ -53,6 +57,7 @@
 			<div
 				class="absolute inset-0 flex items-center justify-center text-white p-1.5"
 				data-testid="check-mark"
+				aria-hidden="true"
 			>
 				<CheckIcon />
 			</div>
@@ -61,6 +66,18 @@
 </div>
 
 <style lang="scss">
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
 	.uncheckedVariant {
 		@apply border-gray;
 
