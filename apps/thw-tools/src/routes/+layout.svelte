@@ -14,7 +14,7 @@
 	let showFeedback = false;
 	let showInstallPWAHelp = false;
 
-	let hideFooter = $page.url.pathname.includes('/quiz/');
+	$: hideFooter = $page.url.pathname.includes('/quiz/');
 </script>
 
 <svelte:head>
