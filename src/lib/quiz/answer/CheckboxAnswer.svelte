@@ -35,11 +35,11 @@
 	}}
 >
 	<div>{answer.text}</div>
-	<div class="relative w-6 h-6">
+	<div class="relative w-6 h-6 aspect-square">
 		<input
 			type="checkbox"
 			bind:checked
-			class="h-full aspect-square rounded-full border-gray border-2 appearance-none flex-shrink-0"
+			class="absolute top-0 left-0 w-full h-full rounded-full border-gray border-2 appearance-none flex-shrink-0 cursor-pointer"
 		/>
 		{#if shouldShowXMark}
 			<div
@@ -49,7 +49,6 @@
 				<XMarkIcon />
 			</div>
 		{/if}
-
 		{#if shouldShowCheckMark}
 			<div
 				class="absolute inset-0 flex items-center justify-center text-white p-1.5"
@@ -101,5 +100,11 @@
 		input {
 			@apply bg-wrong border-wrong;
 		}
+	}
+
+	input[type='checkbox'] {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
 	}
 </style>

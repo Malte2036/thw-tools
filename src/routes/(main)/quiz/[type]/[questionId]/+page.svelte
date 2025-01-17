@@ -106,7 +106,7 @@
 	<div class="flex flex-col gap-16 justify-between h-full">
 		<div class="flex flex-col gap-8">
 			<div class="flex flex-col gap-2">
-				<div class="-m-4 -mt-8 w-screen">
+				<div class="-m-4 -mt-7 w-screen">
 					<ProgressBar progress={(question.number - 1) / questionCount} />
 				</div>
 				<div class="h-6"></div>
