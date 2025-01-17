@@ -48,10 +48,12 @@
 </script>
 
 {#if !isHomePage}
-	<thw-navigation-bar
-		logoUrl={logo}
-		title={getCurrentTitleByPath(currentPath)}
-		{navItems}
-		{currentPath}
-	/>
+	<div class="sticky top-0 z-50 bg-white">
+		<thw-navigation-bar
+			logoUrl={logo}
+			title={getCurrentTitleByPath(currentPath)}
+			{navItems}
+			{currentPath}
+		/>
+	</div>
 {/if}

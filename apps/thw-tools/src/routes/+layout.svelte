@@ -32,7 +32,7 @@
 
 <PwaUpdateNotification />
 
-<div class="flex flex-col gap-4 justify-between min-h-screen">
+<div class="h-full flex flex-col gap-4">
 	<NavigationBar />
 	<Banner />
 	<div class="flex-grow flex flex-col">

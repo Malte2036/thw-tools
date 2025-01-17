@@ -102,15 +102,14 @@
 
 <QuizHead {questionType} {question} />
 
-<div class="m-4 mt-2">
-	<div class="flex flex-col gap-16 justify-between h-full">
+<div class="h-full flex flex-col">
+	<div class="flex-grow flex flex-col px-4">
 		<div class="flex flex-col gap-8">
 			<div class="flex flex-col gap-2">
-				<div class="-m-4 -mt-7 w-screen">
+				<div class="-mx-4 -mt-4 w-screen">
 					<ProgressBar progress={(question.number - 1) / questionCount} />
 				</div>
 				<div class="h-6"></div>
-				<!-- <QuestionNumber questionNumber={question.number} {questionCount} {gotoQuestionNumber} /> -->
 				<div class="text-sm">Frage {question.number} von {questionCount}</div>
 				<h1
 					bind:this={questionTextEl}
@@ -143,17 +142,17 @@
 					{/each}
 				</div>
 			</div>
-			<div class="w-full">
-				<AnswerButton
-					bind:question
-					bind:answeredCountData
-					bind:completelyRight
-					bind:currentQuestionAnsweredCountData
-					bind:revealAnswers
-					{gotoNextQuestion}
-				/>
-			</div>
 		</div>
-		<!-- <QuestionStatisticsForQuestion {currentQuestionAnsweredCountData} /> -->
+		<div class="flex-grow"></div>
+		<div class="w-full pt-8 pb-8">
+			<AnswerButton
+				bind:question
+				bind:answeredCountData
+				bind:completelyRight
+				bind:currentQuestionAnsweredCountData
+				bind:revealAnswers
+				{gotoNextQuestion}
+			/>
+		</div>
 	</div>
 </div>
