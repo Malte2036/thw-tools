@@ -9,8 +9,7 @@
 	} from '$lib/model/question';
 	import CheckboxAnswer from '$lib/quiz/answer/CheckboxAnswer.svelte';
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
-	import QuestionStatisticsForQuestion from '$lib/quiz/question/QuestionStatisticsForQuestion.svelte';
-	import QuestionNumber from '$lib/quiz/QuestionNumber.svelte';
+	import ProgressBar from '$lib/quiz/ProgressBar.svelte';
 	import QuizHead from '$lib/quiz/QuizHead.svelte';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import { randomInt, shuffle } from '$lib/utils';
@@ -18,7 +17,6 @@
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import type { AnsweredCountData } from './+page.server';
-	import ProgressBar from '$lib/quiz/ProgressBar.svelte';
 
 	export let data: PageData;
 
@@ -109,11 +107,10 @@
 				<div class="-mx-4 -mt-4 w-screen">
 					<ProgressBar progress={(question.number - 1) / questionCount} />
 				</div>
-				<div class="h-6"></div>
-				<div class="text-sm">Frage {question.number} von {questionCount}</div>
+				<div class="text-sm mt-4">Frage {question.number} von {questionCount}</div>
 				<h1
 					bind:this={questionTextEl}
-					class="text-3xl text-center text-thw outline-none font-bold"
+					class="text-3xl text-center text-thw outline-none font-bold break-words"
 					tabindex="-1"
 				>
 					{question.text}
@@ -123,7 +120,7 @@
 				{#if question.image}
 					<img
 						class="flex justify-center h-64 aspect-square m-4"
-						alt="Question Image"
+						alt={`Fragebild ${question.number}`}
 						src={question.image}
 					/>
 				{/if}
