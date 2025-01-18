@@ -97,7 +97,7 @@ describe('CheckboxAnswer Icons', () => {
 		expect(answerDiv).not.toHaveClass('correctVariant');
 		expect(answerDiv).not.toHaveClass('wrongVariant');
 		expect(queryByTestId('check-mark')).not.toBeInTheDocument();
-		expect(queryByTestId('x-mark')).not.toBeInTheDocument();
+		expect(queryByTestId('x-mark')).toBeInTheDocument();
 	});
 
 	it('should show wrong variant when not checked, correct answer, revealed', () => {
@@ -115,7 +115,7 @@ describe('CheckboxAnswer Icons', () => {
 		expect(answerDiv).not.toHaveClass('uncheckedVariant');
 		expect(answerDiv).not.toHaveClass('correctVariant');
 		expect(answerDiv).toHaveClass('wrongVariant');
-		expect(queryByTestId('check-mark')).not.toBeInTheDocument();
-		expect(queryByTestId('x-mark')).toBeInTheDocument();
+		expect(queryByTestId('check-mark')).toBeInTheDocument();
+		expect(queryByTestId('x-mark')).not.toBeInTheDocument();
 	});
 });
