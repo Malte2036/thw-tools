@@ -1,17 +1,9 @@
 <script lang="ts">
-	import FlaskVialIcon from '$lib/icons/FlaskVialIcon.svelte';
 	import logo from '$lib/icons/thw-mzgw.webp';
 	import LinkButton from '../lib/LinkButton.svelte';
-	import ChartSimpleIcon from '../lib/icons/ChartSimpleIcon.svelte';
-	import HearthPulseIcon from '../lib/icons/HearthPulseIcon.svelte';
-
-	import BoltIcon from '$lib/icons/BoltIcon.svelte';
-	import HammerIcon from '$lib/icons/HammerIcon.svelte';
-	import VestIcon from '$lib/icons/VestIcon.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { onMount } from 'svelte';
-	import WalkieTalkieIcon from '$lib/icons/WalkieTalkieIcon.svelte';
-	import CircleRadiationIcon from '$lib/icons/CircleRadiationIcon.svelte';
+	import { navigationItems } from '$lib/shared/navigation';
 
 	const description = {
 		headline: 'Inoffizielle Tools für THW-Helfer:',
@@ -45,70 +37,7 @@
 		}
 	});
 
-	const toolCategories = [
-		{
-			title: 'Ausbildungs-Quiz',
-			description: 'Teste und verbessere dein Wissen in verschiedenen THW-Bereichen',
-			tools: [
-				{
-					name: 'Grundausbildungs-Quiz',
-					icon: HammerIcon,
-					url: '/quiz/ga/listing/',
-					event: 'Open GA Quiz'
-				},
-				{
-					name: 'Sprechfunk-Quiz',
-					icon: WalkieTalkieIcon,
-					url: '/quiz/radio/listing/',
-					event: 'Open Radio Quiz'
-				},
-				{
-					name: 'Atemschutz-Quiz',
-					icon: ChartSimpleIcon,
-					url: '/quiz/agt/listing/',
-					event: 'Open AGT Quiz'
-				},
-				{
-					name: 'CBRN-Quiz',
-					icon: CircleRadiationIcon,
-					url: '/quiz/cbrn/listing/',
-					event: 'Open CBRN Quiz'
-				}
-			]
-		},
-		{
-			title: 'Praktische Tools',
-			description: 'Hilfreiche Werkzeuge für den THW-Alltag',
-			tools: [
-				{
-					name: 'THW Bekleidungs Rechner',
-					icon: VestIcon,
-					url: '/clothing',
-					event: 'Open THW Clothing'
-				},
-				{
-					name: 'Finnentest',
-					icon: HearthPulseIcon,
-					url: 'https://finnentest.thw-tools.de',
-					event: 'Open Finnentest',
-					external: true
-				},
-				{
-					name: 'Elektro Spannungsfall',
-					icon: BoltIcon,
-					url: 'https://elektro.thw-tools.de',
-					event: 'Open Elektro Spannungsfall',
-					external: true
-				},
-				{
-					name: 'CBRN-Schutzanzug',
-					icon: VestIcon,
-					url: '/cbrn/protective-suite',
-					event: 'Open CBRN Protective Suite'
-				}
-			]
-		}
-	];
+	const toolCategories = navigationItems;
 </script>
 
 <svelte:head>
@@ -157,9 +86,9 @@
 						</div>
 
 						<!-- Tools List -->
-						<div class="flex flex-col gap-3 flex-grow">
-							{#each category.tools as tool}
-								<LinkButton url={tool.url} blank={tool.external} dataUmamiEvent={tool.event}>
+						<div class="flex flex-col gap-3">
+							{#each category.items as tool}
+								<LinkButton url={tool.href} blank={tool.external} dataUmamiEvent={tool.event}>
 									<div class="w-6 group-hover:text-thw-600 transition-colors">
 										<svelte:component this={tool.icon} />
 									</div>
