@@ -10,6 +10,7 @@
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 	import PwaUpdateNotification from '$lib/PWAUpdateNotification.svelte';
+	import FeedbackDialog from '$lib/FeedbackDialog.svelte';
 	import { onMount } from 'svelte';
 	import { formatDate, trackIdentity } from '$lib/utils';
 
@@ -55,6 +56,12 @@
 				class="underline">Impressum</a
 			>
 			<div class="text-gray-400">|</div>
+			<a
+				data-umami-event={$page.route.id === '/faq' ? 'Close FAQ button' : 'Open FAQ button'}
+				href={$page.route.id === '/faq' ? '/' : '/faq'}
+				class="underline">FAQ</a
+			>
+			<div class="text-gray-400">|</div>
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div
@@ -82,25 +89,7 @@
 	{/if}
 
 	{#if showFeedback}
-		<Dialog title="Feedback">
-			<div slot="content">
-				<div class="flex flex-col gap-2">
-					<div>Du hast Ideen für neue Tools, weitere Quizfragen oder Feedback?</div>
-					<div>
-						Schreib mir gerne eine Direktnachricht in
-						<a
-							data-umami-event="Feedback Dialog Hermine link"
-							href="https://app.thw-messenger.de/thw/app#/contacts/profile/1990855"
-							target="_blank"
-							class="underline text-thw">Hermine</a
-						> (Malte Sehmer).
-					</div>
-				</div>
-			</div>
-			<div slot="footer">
-				<Button click={() => (showFeedback = false)}>Schließen</Button>
-			</div>
-		</Dialog>
+		<FeedbackDialog show={showFeedback} onClose={() => (showFeedback = false)} />
 	{/if}
 
 	{#if showInstallPWAHelp}
