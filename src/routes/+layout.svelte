@@ -20,7 +20,9 @@
 	onMount(() => {
 		trackIdentity();
 	});
-	$: hideFooter = $page.url.pathname.includes('/quiz/');
+
+	// hide on /quiz/{questionType}/{questionNumber}
+	$: hideFooter = /^\/quiz\/[^/]+\/\d+/.test($page.url.pathname);
 </script>
 
 <svelte:head>
@@ -44,7 +46,7 @@
 	<div class="flex-grow flex flex-col">
 		<slot />
 	</div>
-	{#if !hideFooter}
+	<div class={hideFooter ? 'sr-only' : ''}>
 		<div class="flex flex-row justify-center gap-2 mb-3 flex-wrap px-2">
 			<div>©2025 Malte Sehmer</div>
 			<div class="text-gray-400">|</div>
@@ -86,7 +88,7 @@
 				Build {formatDate(+version)}
 			</div>
 		</div>
-	{/if}
+	</div>
 
 	{#if showFeedback}
 		<FeedbackDialog onClose={() => (showFeedback = false)} />

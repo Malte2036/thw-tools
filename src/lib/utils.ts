@@ -38,8 +38,6 @@ export async function trackEvent(dataUmamiEvent: string | undefined) {
 
 export async function trackIdentity() {
 	try {
-		console.log('trackIdentity', version);
-
 		await umami.identify({
 			build: formatDate(+version)
 		});
