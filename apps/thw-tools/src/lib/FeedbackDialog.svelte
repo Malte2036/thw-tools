@@ -2,7 +2,6 @@
 	import Dialog from '$lib/Dialog.svelte';
 	import Button from '$lib/Button.svelte';
 
-	export let show = false;
 	export let onClose: () => void;
 </script>
 

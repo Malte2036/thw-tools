@@ -52,12 +52,16 @@
       '@type': 'FAQPage',
       'name': 'THW-Tools FAQ',
       'description': 'Häufig gestellte Fragen zu THW-Tools: Prüfungsfragen, Finnentest, Spannungsfall und mehr',
+      'url': 'https://thw-tools.de/faq',
+      'inLanguage': 'de',
+      'dateModified': new Date().toISOString(),
       'mainEntity': data.faqs.map(faq => ({
         '@type': 'Question',
         'name': faq.question,
         'acceptedAnswer': {
           '@type': 'Answer',
-          'text': faq.text
+          'text': faq.text.replace(/\{\{link\}\}/g, ''),
+          'url': 'https://thw-tools.de/faq#faq-' + faq.question.toLowerCase().replace(/[^a-z0-9]+/g, '-')
         }
       })),
       'publisher': {
@@ -93,43 +97,63 @@
 
 	<section class="space-y-4" aria-label="FAQ-Liste">
 		{#each data.faqs as faq, index}
-			<button
-				type="button"
-				class="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full text-left"
-				on:click={() => toggleFaq(index)}
-				aria-expanded={expandedIndex === index}
+			<article
+				class="bg-white rounded-lg shadow-md overflow-hidden"
+				id="faq-{faq.question.toLowerCase().replace(/[^a-z0-9]+/g, '-')}"
 			>
-				<div class="p-4 flex justify-between items-center hover:bg-gray-50">
-					<h2 class="text-lg font-semibold text-thw-blue-800" id="faq-{index}">{faq.question}</h2>
-					<svg
-						class="w-6 h-6 transform transition-transform duration-200 {expandedIndex === index
-							? 'rotate-180'
-							: ''}"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M19 9l-7 7-7-7"
-						/>
-					</svg>
-				</div>
+				<button
+					type="button"
+					class="w-full text-left cursor-pointer"
+					on:click={() => toggleFaq(index)}
+					aria-expanded={expandedIndex === index}
+					aria-controls="faq-content-{index}"
+					aria-label={expandedIndex === index ? 'Frage zuklappen' : 'Frage aufklappen'}
+				>
+					<div class="p-4 flex justify-between items-center hover:bg-gray-50">
+						<h2 class="text-lg font-semibold text-thw-blue-800" id="faq-question-{index}">
+							<span class="sr-only">Frage: </span>{faq.question}
+						</h2>
+						<svg
+							class="w-6 h-6 transform transition-transform duration-200 {expandedIndex === index
+								? 'rotate-180'
+								: ''}"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							aria-hidden="true"
+							role="presentation"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M19 9l-7 7-7-7"
+							/>
+						</svg>
+					</div>
+				</button>
 
 				{#if expandedIndex === index}
 					<div
 						class="p-4 bg-gray-50 border-t border-gray-100"
 						transition:fade={{ duration: 200 }}
-						aria-labelledby="faq-{index}"
+						aria-labelledby="faq-question-{index}"
+						id="faq-content-{index}"
+						role="region"
 					>
+						<span class="sr-only">Antwort: </span>
 						<p class="text-gray-700">
 							<FaqAnswer text={faq.text} links={faq.links} />
 						</p>
 					</div>
+				{:else}
+					<!-- SEO-friendly non-visible content -->
+					<div class="sr-only" aria-labelledby="faq-question-{index}" id="faq-content-seo-{index}">
+						<span class="sr-only">Antwort: </span>
+						<FaqAnswer text={faq.text} links={faq.links} />
+					</div>
 				{/if}
-			</button>
+			</article>
 		{/each}
 	</section>
 
@@ -156,5 +180,5 @@
 {/if}
 
 {#if showFeedback}
-	<FeedbackDialog show={showFeedback} onClose={() => (showFeedback = false)} />
+	<FeedbackDialog onClose={() => (showFeedback = false)} />
 {/if}
