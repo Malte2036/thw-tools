@@ -22,5 +22,7 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
-
-      - run: pnpm test
+      - name: Generate SvelteKit files
+        run: pnpm run sync
+      - name: Run tests
+        run: pnpm test
