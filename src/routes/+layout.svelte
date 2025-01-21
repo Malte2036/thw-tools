@@ -89,7 +89,7 @@
 	{/if}
 
 	{#if showFeedback}
-		<FeedbackDialog show={showFeedback} onClose={() => (showFeedback = false)} />
+		<FeedbackDialog onClose={() => (showFeedback = false)} />
 	{/if}
 
 	{#if showInstallPWAHelp}
