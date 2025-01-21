@@ -57,6 +57,10 @@ export async function GET() {
             <loc>https://thw-tools.de/clothing/</loc>
             <priority>0.8</priority>
         </url>
+        <url>
+            <loc>https://thw-tools.de/quiz/stats/</loc>
+            <priority>0.4</priority>
+        </url>
         ${quizTypeLinks.join('')}
         ${singleQuestionLinks.join('')}
       </urlset>`.trim(),
