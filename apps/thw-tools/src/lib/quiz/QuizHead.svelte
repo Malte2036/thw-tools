@@ -7,60 +7,68 @@
 	function getFriendlyType() {
 		switch (questionType) {
 			case 'ga':
-				return 'Grundausbildungs-Quiz';
+				return 'Grundausbildungs-Quiz – THW Prüfungsfragen';
 			case 'agt':
-				return 'Atemschutz-Quiz';
+				return 'Atemschutz-Quiz – THW Prüfungsfragen';
 			case 'cbrn':
-				return 'CBRN-Quiz';
+				return 'CBRN-Quiz – THW Prüfungsfragen';
 			case 'radio':
-				return 'Sprechfunk-Quiz';
+				return 'Sprechfunk-Quiz – THW Prüfungsfragen';
 			default:
-				return 'Quiz';
+				return 'THW Prüfungsfragen – Quiz';
 		}
 	}
 
 	function getTitle() {
-		return `THW-Tools: ${getFriendlyType()}${question ? ` - Frage ${question.number}` : ''}`;
+		// Beispiel: "THW-Tools: Grundausbildungs-Quiz – THW Prüfungsfragen - Frage 12"
+		return `THW-Tools: ${getFriendlyType()}${question ? ' – Frage ' + question.number : ''}`;
 	}
 
 	function getGenericDescription() {
 		switch (questionType) {
 			case 'ga':
-				return 'Das Online-Theorie-Quiz und die Prüfung für die Grundausbildung des THW bieten dir die Möglichkeit, dein Wissen über die Grundlagen des THW zu testen und aufzufrischen. Verbessere deine Kenntnisse und Sicherheit im Einsatz des THW.';
+				return 'THW-Prüfungsfragen für die Grundausbildung: Teste dein Wissen online und bereite dich optimal auf die THW-Prüfung vor.';
 			case 'agt':
-				return 'Das Online-Theorie-Quiz und die Prüfung für Atemschutzgeräteträger des THW und der Feuerwehr bieten dir die Möglichkeit, dein Wissen über den sicheren Umgang mit Atemschutzgeräten zu testen und aufzufrischen. Verbessere deine Kenntnisse und Sicherheit im Einsatz von Atemschutzgeräten.';
+				return 'THW-Prüfungsfragen für Atemschutzgeräteträger (AGT): Lerne sicher mit Atemschutzgeräten umzugehen und bestehe deine Prüfung.';
 			case 'cbrn':
-				return 'Möchtest du dein Wissen und deine Prüfungsergebnisse im sicheren Umgang mit CBRN-Gefahren verbessern? Dann ist unser Online-Theorie-Quiz und die Prüfung für CBRN-Schutzkräfte des THW und der Feuerwehr genau das Richtige für dich. Teste dein Wissen und frische es auf, um im Einsatz von CBRN-Gefahren noch sicherer zu agieren.';
+				return 'THW-Prüfungsfragen zum CBRN-Schutz: Vertiefe dein Wissen im Umgang mit CBRN-Gefahren und prüfe deinen Kenntnisstand.';
 			case 'radio':
-				return 'Das Online-Theorie-Quiz und die Prüfung für Sprechfunker des THW und der Feuerwehr bieten dir die Möglichkeit, dein Wissen über den sicheren Umgang mit Funkgeräten zu testen und aufzufrischen. Verbessere deine Kenntnisse und Sicherheit im Einsatz von Funkgeräten.';
+				return 'THW-Prüfungsfragen zum Sprechfunk: Trainiere den richtigen Umgang mit Funkgeräten und bereite dich perfekt vor.';
 			default:
-				return '';
+				return 'Inoffizielle THW-Prüfungsfragen: Teste und verbessere dein Wissen in verschiedenen Themenbereichen des THW.';
 		}
 	}
-	function getDescripton() {
-		return question
-			? `Frage ${question.number} vom ${getFriendlyType()}: ${question.text}: ${Array.from(
-					question.answers.values()
-				)
-					.map((a) => a)
-					.join(', ')}.`
-			: getGenericDescription();
+
+	function getDescription() {
+		if (question) {
+			return `THW Prüfungsfragen – ${getFriendlyType()}, Frage ${question.number}: ${
+				question.text
+			}. Antworten: ${Array.from(question.answers.values()).join(', ')}.`;
+		} else {
+			return getGenericDescription();
+		}
 	}
 </script>
 
 <svelte:head>
 	<title>{getTitle()}</title>
-	<meta name="description" content={getDescripton()} />
+
+	<!-- Meta Description -->
+	<meta name="description" content={getDescription()} />
+
+	<!-- Open Graph Tags -->
 	<meta property="og:title" content={getTitle()} />
-	<meta property="og:description" content={getDescripton()} />
+	<meta property="og:description" content={getDescription()} />
 	<meta property="og:type" content="website" />
 	<meta
 		property="og:image"
 		content="https://thw-tools.de/_app/immutable/assets/thw-mzgw.24176eee.webp"
 	/>
 	<meta property="og:locale" content="de_DE" />
+
+	<!-- Keywords -->
 	<meta
 		name="keywords"
-		content="THW, Quiz, Online-Quiz, Theorie-Quiz, Grundausbildung, Atemschutz, CBRN-Schutz, Sprechfunk, Prüfung, THW-Tools, Feuerwehr, Ausbildung, THW-Training"
+		content="THW, THW Prüfungsfragen, Grundausbildung, Atemschutz, CBRN, Sprechfunk, Online-Quiz, Theorie-Quiz, Prüfung, THW-Tools, Feuerwehr, Ausbildung, Training"
 	/>
 </svelte:head>
