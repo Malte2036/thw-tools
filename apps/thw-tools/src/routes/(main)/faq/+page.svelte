@@ -5,6 +5,7 @@
 	import FaqAnswer from '$lib/faq/FaqAnswer.svelte';
 	import InstallPwaDialog from '$lib/InstallPWADialog.svelte';
 	import FeedbackDialog from '$lib/FeedbackDialog.svelte';
+	import { version } from '$app/environment';
 
 	export let data: PageData;
 
@@ -15,6 +16,33 @@
 	function toggleFaq(index: number) {
 		expandedIndex = expandedIndex === index ? null : index;
 	}
+
+	$: jsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		name: 'THW-Tools FAQ',
+		description:
+			'Häufig gestellte Fragen zu THW-Tools: Prüfungsfragen, Finnentest, Spannungsfall und mehr',
+		url: 'https://thw-tools.de/faq',
+		inLanguage: 'de',
+		dateModified: version,
+		mainEntity: data.faqs.map((faq) => ({
+			'@type': 'Question',
+			name: faq.question,
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: faq.text.replace(/\{\{link\}\}/g, ''),
+				url:
+					'https://thw-tools.de/faq#faq-' + faq.question.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+			}
+		})),
+		publisher: {
+			'@type': 'Organization',
+			name: 'THW-Tools',
+			url: 'https://thw-tools.de',
+			logo: 'https://thw-tools.de/_app/immutable/assets/thw-mzgw.24176eee.webp'
+		}
+	};
 </script>
 
 <svelte:head>
@@ -46,32 +74,7 @@
 	/>
 	<link rel="canonical" href="https://thw-tools.de/faq" />
 
-	<script type="application/ld+json">
-    {JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      'name': 'THW-Tools FAQ',
-      'description': 'Häufig gestellte Fragen zu THW-Tools: Prüfungsfragen, Finnentest, Spannungsfall und mehr',
-      'url': 'https://thw-tools.de/faq',
-      'inLanguage': 'de',
-      'dateModified': new Date().toISOString(),
-      'mainEntity': data.faqs.map(faq => ({
-        '@type': 'Question',
-        'name': faq.question,
-        'acceptedAnswer': {
-          '@type': 'Answer',
-          'text': faq.text.replace(/\{\{link\}\}/g, ''),
-          'url': 'https://thw-tools.de/faq#faq-' + faq.question.toLowerCase().replace(/[^a-z0-9]+/g, '-')
-        }
-      })),
-      'publisher': {
-        '@type': 'Organization',
-        'name': 'THW-Tools',
-        'url': 'https://thw-tools.de',
-        'logo': 'https://thw-tools.de/_app/immutable/assets/thw-mzgw.24176eee.webp'
-      }
-    })}
-	</script>
+	{@html `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`}
 </svelte:head>
 
 <main class="container mx-auto px-4 py-8">
