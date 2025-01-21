@@ -50,6 +50,10 @@ export async function GET() {
             <priority>1.00</priority>
         </url>
         <url>
+            <loc>https://thw-tools.de/faq/</loc>
+            <priority>0.9</priority>
+        </url>
+        <url>
             <loc>https://thw-tools.de/clothing/</loc>
             <priority>0.8</priority>
         </url>
