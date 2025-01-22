@@ -6,6 +6,7 @@
 	import InstallPwaDialog from '$lib/InstallPWADialog.svelte';
 	import FeedbackDialog from '$lib/FeedbackDialog.svelte';
 	import { version } from '$app/environment';
+	import { formatDate } from '$lib/utils';
 
 	export let data: PageData;
 
@@ -20,20 +21,14 @@
 	$: jsonLd = {
 		'@context': 'https://schema.org',
 		'@type': 'FAQPage',
-		name: 'THW-Tools FAQ',
-		description:
-			'Häufig gestellte Fragen zu THW-Tools: Prüfungsfragen, Finnentest, Spannungsfall und mehr',
-		url: 'https://thw-tools.de/faq',
 		inLanguage: 'de',
-		dateModified: version,
+		dateModified: new Date(+version).toISOString().split('T')[0],
 		mainEntity: data.faqs.map((faq) => ({
 			'@type': 'Question',
 			name: faq.question,
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: faq.text.replace(/\{\{link\}\}/g, ''),
-				url:
-					'https://thw-tools.de/faq#faq-' + faq.question.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+				text: faq.text.replace(/\{\{link\}\}/g, '')
 			}
 		})),
 		publisher: {
