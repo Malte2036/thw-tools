@@ -56,7 +56,7 @@
 			.map((question, index) => ({
 				'@type': 'ListItem',
 				position: index + 1,
-				url: `https://thw-tools.de/quiz/${data.questionType}/${question.number}`
+				url: `https://thw-tools.de/quiz/${data.questionType}/${question.number}/`
 			})),
 		about: {
 			'@type': 'Thing',
@@ -88,7 +88,7 @@
 		<h1 class="text-3xl font-bold mb-4">{getQuizTypeName(data.questionType)}</h1>
 		<p class="text-xl text-gray-700 mb-2">{getDescriptionForQuestionType(data.questionType)}</p>
 		<a
-			href={`/quiz/${questionType}/1`}
+			href={`/quiz/${questionType}/1/`}
 			class="text-lg text-thw-600 font-medium"
 			data-umami-event={`Start ${questionType.toUpperCase()} Quiz`}
 			>Klicke auf eine Frage, um zu starten</a
@@ -108,7 +108,7 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2">
 			{#each data.allQuestions.sort((a, b) => a.number - b.number) as question}
 				<LinkButton
-					url={`/quiz/${data.questionType}/${question.number}`}
+					url={`/quiz/${data.questionType}/${question.number}/`}
 					secondary
 					dataUmamiEvent={`Open ${data.questionType.toUpperCase()} Quiz Question ${question.number}`}
 				>

@@ -77,7 +77,7 @@ export const navigationItems: NavigationCategory[] = [
 		items: [
 			{
 				name: 'Bekleidungsrechner',
-				href: '/clothing',
+				href: '/clothing/',
 				event: 'Open Clothing Calculator',
 				icon: VestIcon
 			},
