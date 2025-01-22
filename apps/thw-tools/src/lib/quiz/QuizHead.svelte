@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ExtendedQuestion, QuestionType } from '$lib/model/question';
+	import { version } from '$app/environment';
 
 	export let questionType: QuestionType;
 	export let question: ExtendedQuestion | undefined;
@@ -43,11 +44,60 @@
 		if (question) {
 			return `THW Prüfungsfragen – ${getFriendlyType()}, Frage ${question.number}: ${
 				question.text
-			}. Antworten: ${Array.from(question.answers.values()).join(', ')}.`;
+			}. Antworten: ${Array.from(
+				question.answers.map((a, index) => `${index + 1}: ${a.text}`).values()
+			).join(', ')}.`;
 		} else {
 			return getGenericDescription();
 		}
 	}
+
+	$: jsonLd = question
+		? {
+				'@context': 'https://schema.org',
+				'@type': 'WebPage',
+				name: getTitle(),
+				description: getDescription(),
+				inLanguage: 'de',
+				dateModified: new Date(+version).toISOString(),
+				mainEntity: {
+					'@type': 'Question',
+					name: question.text,
+					text: question.text,
+					suggestedAnswer: question.answers.map((answer, index) => ({
+						'@type': 'Answer',
+						text: answer.text,
+						position: index + 1
+					}))
+				},
+				about: {
+					'@type': 'Thing',
+					name: getFriendlyType(),
+					description: getGenericDescription()
+				},
+				audience: {
+					'@type': 'Audience',
+					audienceType: 'THW Volunteers',
+					description: 'Ehrenamtliche Helferinnen und Helfer im Technischen Hilfswerk'
+				},
+				isPartOf: {
+					'@type': 'WebSite',
+					name: 'THW-Tools',
+					url: `https://thw-tools.de/quiz/${questionType}/listing`
+				},
+				publisher: {
+					'@type': 'Organization',
+					name: 'THW-Tools',
+					url: 'https://thw-tools.de',
+					logo: {
+						'@type': 'ImageObject',
+						url: 'https://thw-tools.de/_app/immutable/assets/thw-mzgw.24176eee.webp',
+						width: '512',
+						height: '512'
+					}
+				}
+			}
+		: undefined;
 </script>
 
 <svelte:head>
@@ -71,4 +121,7 @@
 		name="keywords"
 		content="THW, THW Prüfungsfragen, Grundausbildung, Atemschutz, CBRN, Sprechfunk, Online-Quiz, Theorie-Quiz, Prüfung, THW-Tools, Feuerwehr, Ausbildung, Training"
 	/>
+	{#if jsonLd}
+		{@html `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`}
+	{/if}
 </svelte:head>

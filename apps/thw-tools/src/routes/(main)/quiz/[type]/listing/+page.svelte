@@ -8,6 +8,7 @@
 	import QuestionsStatistics from '$lib/quiz/question/QuestionsStatistics.svelte';
 	import { getQuestionStatsCountForType } from '$lib/api/api';
 	import { getQuizTypeName } from '$lib/quiz/quizUtils';
+	import { version } from '$app/environment';
 
 	export let data: PageData;
 
@@ -41,9 +42,46 @@
 				return `Das Quiz besteht aus ${count} Fragen für die Ausbildung im Technischen Hilfswerk.`;
 		}
 	}
+
+	$: jsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'ItemList',
+		name: getQuizTypeName(data.questionType),
+		description: getDescriptionForQuestionType(data.questionType),
+		inLanguage: 'de',
+		dateModified: new Date(+version).toISOString(),
+		numberOfItems: data.allQuestions.length,
+		itemListElement: data.allQuestions
+			.slice(0, 50) // Limit to first 50 items for better performance
+			.map((question, index) => ({
+				'@type': 'ListItem',
+				position: index + 1,
+				url: `https://thw-tools.de/quiz/${data.questionType}/${question.number}`
+			})),
+		about: {
+			'@type': 'Thing',
+			name: getQuizTypeName(data.questionType),
+			description: getDescriptionForQuestionType(data.questionType)
+		},
+		publisher: {
+			'@type': 'Organization',
+			name: 'THW-Tools',
+			url: 'https://thw-tools.de',
+			logo: {
+				'@type': 'ImageObject',
+				url: 'https://thw-tools.de/_app/immutable/assets/thw-mzgw.24176eee.webp',
+				width: '512',
+				height: '512'
+			}
+		}
+	};
 </script>
 
 <QuizHead questionType={data.questionType} question={undefined} />
+
+<svelte:head>
+	{@html `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`}
+</svelte:head>
 
 <div class="flex flex-col gap-8 px-4 py-8">
 	<header class="text-center">
