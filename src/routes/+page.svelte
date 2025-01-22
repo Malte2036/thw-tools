@@ -4,6 +4,7 @@
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { onMount } from 'svelte';
 	import { navigationItems } from '$lib/shared/navigation';
+	import { QuestionType } from '$lib/model/question';
 
 	const description = {
 		headline: 'Inoffizielle Tools für THW-Helfer:',
@@ -118,7 +119,8 @@
 <a href="/quiz/stats/" class="hidden" />
 <!-- svelte-ignore a11y-missing-content -->
 <a href="/faq" class="hidden" />
-{#each ['ga', 'agt', 'cbrn'] as questionType}
+
+{#each Object.values(QuestionType) as questionType}
 	<!-- svelte-ignore a11y-missing-content -->
 	<a href={`/quiz/${questionType}/`} class="hidden" />
 	<!-- svelte-ignore a11y-missing-content -->
