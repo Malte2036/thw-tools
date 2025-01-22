@@ -55,7 +55,7 @@
 	$: jsonLd = question
 		? {
 				'@context': 'https://schema.org',
-				'@type': 'WebPage',
+				'@type': 'QAPage',
 				name: getTitle(),
 				description: getDescription(),
 				inLanguage: 'de',
@@ -64,26 +64,16 @@
 					'@type': 'Question',
 					name: question.text,
 					text: question.text,
+					dateCreated: new Date(+version).toISOString(),
+					answerCount: question.answers.length,
 					suggestedAnswer: question.answers.map((answer, index) => ({
 						'@type': 'Answer',
-						text: answer.text,
-						position: index + 1
-					}))
-				},
-				about: {
-					'@type': 'Thing',
-					name: getFriendlyType(),
-					description: getGenericDescription()
-				},
-				audience: {
-					'@type': 'Audience',
-					audienceType: 'THW Volunteers',
-					description: 'Ehrenamtliche Helferinnen und Helfer im Technischen Hilfswerk'
-				},
-				isPartOf: {
-					'@type': 'WebSite',
-					name: 'THW-Tools',
-					url: `https://thw-tools.de/quiz/${questionType}/listing`
+						text: answer.text
+					})),
+					author: {
+						'@type': 'Organization',
+						name: 'THW-Tools'
+					}
 				},
 				publisher: {
 					'@type': 'Organization',
