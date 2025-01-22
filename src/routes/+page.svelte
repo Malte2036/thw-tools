@@ -115,12 +115,12 @@
 </div>
 
 <!-- svelte-ignore a11y-missing-content -->
-<a href="/quiz/stats" class="hidden" />
+<a href="/quiz/stats/" class="hidden" />
 <!-- svelte-ignore a11y-missing-content -->
 <a href="/faq" class="hidden" />
 {#each ['ga', 'agt', 'cbrn'] as questionType}
 	<!-- svelte-ignore a11y-missing-content -->
-	<a href={`/quiz/${questionType}`} class="hidden" />
+	<a href={`/quiz/${questionType}/`} class="hidden" />
 	<!-- svelte-ignore a11y-missing-content -->
-	<a href={`/quiz/${questionType}/listing`} class="hidden" />
+	<a href={`/quiz/${questionType}/listing/`} class="hidden" />
 {/each}
