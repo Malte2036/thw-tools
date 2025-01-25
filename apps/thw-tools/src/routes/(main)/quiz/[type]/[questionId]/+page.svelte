@@ -11,6 +11,7 @@
 	import AnswerButton from '$lib/quiz/AnswerButton.svelte';
 	import ProgressBar from '$lib/quiz/ProgressBar.svelte';
 	import QuizHead from '$lib/quiz/QuizHead.svelte';
+	import QuizSettingsDialog from '$lib/quiz/QuizSettingsDialog.svelte';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import { randomInt, shuffle } from '$lib/utils';
 	import type { AfterNavigate } from '@sveltejs/kit';
@@ -85,6 +86,12 @@
 		}
 	}
 
+	let showSettings = false;
+
+	function openQuizSettings() {
+		showSettings = true;
+	}
+
 	afterNavigate(async (navigation: AfterNavigate) => {
 		setTimeout(() => {
 			focusQuestionText();
@@ -107,7 +114,12 @@
 				<div class="-mx-4 -mt-4 w-screen">
 					<ProgressBar progress={(question.number - 1) / questionCount} />
 				</div>
-				<div class="text-sm mt-4">Frage {question.number} von {questionCount}</div>
+				<div class="text-sm mt-4 flex flex-row justify-between">
+					<div>Frage {question.number} von {questionCount}</div>
+					<button class="underline hover:text-thw" on:click={openQuizSettings}>
+						Einstellungen
+					</button>
+				</div>
 				<h1
 					bind:this={questionTextEl}
 					class="text-3xl text-center text-thw outline-none font-bold break-words"
@@ -153,3 +165,7 @@
 		</div>
 	</div>
 </div>
+
+{#if showSettings}
+	<QuizSettingsDialog onClose={() => (showSettings = false)} />
+{/if}
