@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { updateInventoryItemCustomData } from '$lib/api/inventoryApi';
 	import type { InventoryItem } from '$lib/api/inventoryModels';
 	import ManuelDeviceIdInput from '$lib/funk/ManuelDeviceIdInput.svelte';
 	import QrScanner from '$lib/funk/QRScanner.svelte';
@@ -25,6 +26,10 @@
 			};
 			return false;
 		}
+
+		updateInventoryItemCustomData(inventoryItem._id, {
+			lastScanned: new Date()
+		});
 		return true;
 	};
 

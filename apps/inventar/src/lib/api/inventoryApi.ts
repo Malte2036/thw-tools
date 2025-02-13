@@ -1,12 +1,14 @@
 import { updateLastFetched } from '$lib/shared/stores/apiMetaStore';
 import { inventory } from '$lib/shared/stores/inventoryStore';
 import { db } from '$lib/utils/db';
-import { apiGet, apiPostFile } from './apiGeneric';
+import { apiGet, apiPostFile, apiPatch } from './apiGeneric';
+import { type DatabaseId } from './databaseModels';
 import {
 	ImportInventoryItemsResultZodSchema,
 	InventoryItemZodSchema,
 	type ImportInventoryItemsResult,
-	type InventoryItem
+	type InventoryItem,
+	type InventoryItemCustomData
 } from './inventoryModels';
 
 export async function fetchInventoryItems(): Promise<void> {
@@ -38,18 +40,6 @@ export async function fetchInventoryItems(): Promise<void> {
 	}
 }
 
-// export async function getInventoryItemByInventarNummer(
-// 	inventarNummer: string
-// ): Promise<InventoryItem> {
-// 	return await apiGet<InventoryItem>(`/inventory/inventarNummer/${inventarNummer}`, (data) => {
-// 		const result = InventoryItemZodSchema.safeParse(data);
-// 		if (!result.success) {
-// 			console.error('Error parsing InventoryItem:', result.error);
-// 		}
-// 		return result.success;
-// 	});
-// }
-
 export async function uploadInventoryTHWInExportFile(
 	file: File
 ): Promise<ImportInventoryItemsResult> {
@@ -65,4 +55,11 @@ export async function uploadInventoryTHWInExportFile(
 		}
 	);
 	return response.data;
+}
+
+export async function updateInventoryItemCustomData(
+	inventoryItemId: DatabaseId,
+	customData: InventoryItemCustomData
+): Promise<void> {
+	await apiPatch<void>(`/inventory/${inventoryItemId}/custom-data`, customData);
 }
