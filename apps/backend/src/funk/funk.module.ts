@@ -1,39 +1,20 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { UserModule } from 'src/user/user.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { FunkController } from './funk.controller';
 import { FunkService } from './funk.service';
-import {
-  FunkItemEvent,
-  FunkItemEventSchema,
-} from './schemas/funk-item-event.schema';
-import { FunkItem, FunkItemSchema } from './schemas/funlk-item.schema';
-import { OrganisationModule } from 'src/organisation/organisation.module';
-import {
-  FunkItemEventBulk,
-  FunkItemEventBulkSchema,
-} from './schemas/funk-item-event-bulk.schema';
+import { FunkItem } from './entities/funk-item.entity';
+import { FunkItemEvent } from './entities/funk-item-event.entity';
+import { FunkItemEventBulk } from './entities/funk-item-event-bulk.entity';
+import { UserModule } from '../user/user.module';
+import { OrganisationModule } from '../organisation/organisation.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      {
-        name: FunkItem.name,
-        schema: FunkItemSchema,
-      },
-      {
-        name: FunkItemEvent.name,
-        schema: FunkItemEventSchema,
-      },
-      {
-        name: FunkItemEventBulk.name,
-        schema: FunkItemEventBulkSchema,
-      },
-    ]),
+    TypeOrmModule.forFeature([FunkItem, FunkItemEvent, FunkItemEventBulk]),
     UserModule,
     OrganisationModule,
   ],
-  providers: [FunkService],
   controllers: [FunkController],
+  providers: [FunkService],
 })
 export class FunkModule {}

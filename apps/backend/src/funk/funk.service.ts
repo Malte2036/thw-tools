@@ -1,93 +1,135 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
-import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
-import { UserDocument } from 'src/user/schemas/user.schema';
-import { FunkItemEventBulk } from './schemas/funk-item-event-bulk.schema';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../user/entities/user.entity';
+import { Organisation } from '../organisation/entities/organisation.entity';
+import { FunkItem } from './entities/funk-item.entity';
 import {
   FunkItemEvent,
   FunkItemEventType,
-} from './schemas/funk-item-event.schema';
-import { FunkItem, FunkItemDocument } from './schemas/funlk-item.schema';
+} from './entities/funk-item-event.entity';
+import { FunkItemEventBulk } from './entities/funk-item-event-bulk.entity';
+
+// MongoDB-style response type
+type MongoDBStyleFunkItemEventBulk = {
+  id: string;
+  funkItemEvents: {
+    id: string;
+    funkItem: string;
+    user: string;
+    type: string;
+    date: Date;
+  }[];
+  eventType: string;
+  batteryCount: number;
+  user: string;
+  organisation: string;
+  date: Date;
+};
 
 @Injectable()
 export class FunkService {
   constructor(
-    @InjectModel(FunkItem.name)
-    private funkItemModel: Model<FunkItem>,
-    @InjectModel(FunkItemEvent.name)
-    private funkItemEventModel: Model<FunkItemEvent>,
-    @InjectModel(FunkItemEventBulk.name)
-    private funkItemEventBulkModel: Model<FunkItemEventBulk>,
+    @InjectRepository(FunkItem)
+    private readonly funkItemRepository: Repository<FunkItem>,
+    @InjectRepository(FunkItemEvent)
+    private readonly funkItemEventRepository: Repository<FunkItemEvent>,
+    @InjectRepository(FunkItemEventBulk)
+    private readonly funkItemEventBulkRepository: Repository<FunkItemEventBulk>,
   ) {}
 
-  async getFunkItems(organisationId: mongoose.Types.ObjectId) {
-    return this.funkItemModel
-      .find({
-        organisation: organisationId,
-      })
-      .exec();
+  async getFunkItems(organisationId: string) {
+    return this.funkItemRepository.find({
+      where: { organisation: { id: organisationId } },
+      relations: ['organisation'],
+      select: {
+        organisation: {
+          id: true,
+        },
+      },
+    });
   }
 
-  async getExpandedFunkItems(organisationId: mongoose.Types.ObjectId) {
-    const funkItems = await this.getFunkItems(organisationId);
+  async getExpandedFunkItems(organisationId: string) {
+    const funkItems = await this.funkItemRepository.find({
+      where: { organisation: { id: organisationId } },
+      relations: ['organisation'],
+    });
 
-    // Fetch all last events for the items in a single query
-    const itemIds = funkItems.map((item) => item._id);
-    const lastEvents = await this.funkItemEventModel
-      .aggregate([
-        { $match: { funkItem: { $in: itemIds } } },
-        { $sort: { date: -1 } },
-        { $group: { _id: '$funkItem', lastEvent: { $first: '$$ROOT' } } },
-      ])
-      .exec();
+    // Get the latest event for each funk item
+    const lastEvents = await Promise.all(
+      funkItems.map(async (item) => {
+        const lastEvent = await this.funkItemEventRepository.findOne({
+          where: { funkItem: { id: item.id } },
+          order: { date: 'DESC' },
+          relations: ['funkItem'],
+        });
+        return { itemId: item.id, lastEvent };
+      }),
+    );
 
-    // Map last events to their respective items
+    // Create a map of item ID to last event
     const lastEventMap = new Map(
-      lastEvents.map((event) => [event._id.toString(), event.lastEvent]),
+      lastEvents.map(({ itemId, lastEvent }) => [itemId, lastEvent]),
     );
 
     return funkItems.map((item) => ({
-      ...item.toObject(),
-      lastEvent: lastEventMap.get(item._id.toString()) || null,
+      ...item,
+      lastEvent: lastEventMap.get(item.id) || null,
     }));
   }
 
-  async getFunkItemByDeviceId(
-    organisationId: mongoose.Types.ObjectId,
-    deviceId: string,
-  ) {
-    return (
-      this.funkItemModel
-        .findOne({
-          organisation: organisationId,
-          deviceId,
-        })
-        // .populate('lastUsedBy')
-        .exec()
-    );
+  async getFunkItemByDeviceId(organisationId: string, deviceId: string) {
+    return this.funkItemRepository.findOne({
+      where: {
+        organisation: { id: organisationId },
+        deviceId,
+      },
+      relations: ['organisation'],
+      select: {
+        organisation: {
+          id: true,
+        },
+      },
+    });
   }
 
-  async createFunkItem(
-    organisationId: mongoose.Types.ObjectId,
-    data: FunkItem,
-  ) {
-    if (await this.getFunkItemByDeviceId(organisationId, data.deviceId)) {
+  async createFunkItem(organisationId: string, data: Partial<FunkItem>) {
+    const existingItem = await this.getFunkItemByDeviceId(
+      organisationId,
+      data.deviceId,
+    );
+    if (existingItem) {
       Logger.warn(`Funk item with deviceId ${data.deviceId} already exists`);
-      return;
+      return existingItem;
     }
 
-    const item = new this.funkItemModel(data);
-    return item.save();
+    const item = this.funkItemRepository.create(data);
+    return this.funkItemRepository.save(item);
   }
 
-  async createFunkItemEvent(data: FunkItemEvent) {
-    const event = new this.funkItemEventModel(data);
-    return event.save();
+  async createFunkItemEvent(data: Partial<FunkItemEvent>) {
+    const event = this.funkItemEventRepository.create(data);
+    return this.funkItemEventRepository.save(event);
   }
 
-  async getFunkItemEvents(itemDoc: FunkItemDocument) {
-    return this.funkItemEventModel.find({ funkItem: itemDoc._id }).exec();
+  async getFunkItemEvents(item: FunkItem) {
+    return this.funkItemEventRepository.find({
+      where: { funkItem: { id: item.id } },
+      relations: ['user', 'funkItem'],
+      select: {
+        id: true,
+        type: true,
+        date: true,
+        user: {
+          id: true,
+        },
+        funkItem: {
+          id: true,
+        },
+      },
+      order: { date: 'DESC' },
+    });
   }
 
   async bulkCreateFunkItemEvents(
@@ -96,23 +138,22 @@ export class FunkService {
       batteryCount: number;
       eventType: FunkItemEventType;
     },
-    user: UserDocument,
-    organisation: OrganisationDocument,
+    user: User,
+    organisation: Organisation,
     date: Date,
   ): Promise<void> {
     const items = await Promise.all(
       data.deviceIds.map(async (deviceId) => {
-        let item = await this.getFunkItemByDeviceId(organisation._id, deviceId);
+        let item = await this.getFunkItemByDeviceId(organisation.id, deviceId);
         if (!item) {
           Logger.log(
             `Creating Funk item with deviceId ${deviceId}, as it does not exist`,
           );
-          item = await this.createFunkItem(organisation._id, {
+          item = await this.createFunkItem(organisation.id, {
             deviceId,
             organisation,
           });
         }
-
         return item;
       }),
     );
@@ -128,7 +169,7 @@ export class FunkService {
       ),
     );
 
-    const bulk = new this.funkItemEventBulkModel({
+    const bulk = this.funkItemEventBulkRepository.create({
       funkItemEvents: events,
       batteryCount: data.batteryCount,
       eventType: data.eventType,
@@ -136,33 +177,97 @@ export class FunkService {
       organisation,
       date,
     });
-    await bulk.save();
+    await this.funkItemEventBulkRepository.save(bulk);
   }
 
-  async getFunkItemEventBulks(
-    organisationId: mongoose.Types.ObjectId,
-  ): Promise<FunkItemEventBulk[]> {
-    return this.funkItemEventBulkModel
-      .find({ organisation: organisationId })
-      .populate({
-        path: 'funkItemEvents',
-      })
-      .exec();
+  async getFunkItemEventBulks(organisationId: string) {
+    return this.funkItemEventBulkRepository
+      .createQueryBuilder('bulk')
+      .leftJoinAndSelect('bulk.funkItemEvents', 'events')
+      .leftJoin('events.funkItem', 'funkItem')
+      .leftJoin('bulk.user', 'bulkUser')
+      .leftJoin('bulk.organisation', 'org')
+      .leftJoin('events.user', 'eventUser')
+      .select([
+        'bulk.id',
+        'bulk.eventType',
+        'bulk.batteryCount',
+        'bulk.date',
+        'bulkUser.id',
+        'org.id',
+        'events.id',
+        'events.type',
+        'events.date',
+        'eventUser.id',
+        'funkItem.id',
+      ])
+      .where('org.id = :organisationId', { organisationId })
+      .orderBy('bulk.date', 'DESC')
+      .getMany();
   }
 
-  async exportFunkItemEventBulksAsCsv(
-    organisationId: mongoose.Types.ObjectId,
-  ): Promise<string> {
-    const bulks = await this.getFunkItemEventBulks(organisationId);
+  async exportFunkItemEventBulksAsCsv(organisationId: string): Promise<string> {
+    // Get the full user data for CSV export
+    const bulks = await this.funkItemEventBulkRepository
+      .createQueryBuilder('bulk')
+      .leftJoinAndSelect('bulk.funkItemEvents', 'events')
+      .leftJoinAndSelect('events.funkItem', 'funkItem')
+      .leftJoinAndSelect('bulk.user', 'bulkUser')
+      .leftJoinAndSelect('bulk.organisation', 'org')
+      .where('org.id = :organisationId', { organisationId })
+      .orderBy('bulk.date', 'DESC')
+      .getMany();
 
     let csv = 'date,eventType,batteryCount,user,deviceIds\n';
 
     for (const bulk of bulks) {
-      csv += `${bulk.date.toISOString()},${bulk.eventType},${bulk.batteryCount},"${bulk.user.firstName} ${bulk.user.lastName} (${bulk.user.email})","${bulk.funkItemEvents
+      csv += `${bulk.date.toISOString()},${bulk.eventType},${
+        bulk.batteryCount
+      },"${bulk.user.firstName} ${bulk.user.lastName} (${
+        bulk.user.email
+      })","${bulk.funkItemEvents
         .map((event) => event.funkItem.deviceId)
         .join(', ')}"\n`;
     }
 
     return csv;
+  }
+
+  async importFunkItemsFromCsv(
+    csvContent: string,
+    organisation: Organisation,
+    user: User,
+  ): Promise<void> {
+    const lines = csvContent.split('\n');
+    // Skip header row and empty lines
+    const dataLines = lines.slice(1).filter((line) => line.trim());
+
+    for (const line of dataLines) {
+      const [dateStr, eventType, batteryCountStr, , deviceIdsStr] = line
+        .split(',')
+        .map((field) => field.trim().replace(/^"|"$/g, '')); // Remove quotes
+
+      // Skip invalid lines
+      if (!dateStr || !eventType || !deviceIdsStr) {
+        Logger.warn(`Skipping invalid CSV line: ${line}`);
+        continue;
+      }
+
+      const deviceIds = deviceIdsStr.split(',').map((id) => id.trim());
+      const date = new Date(dateStr);
+      const batteryCount = parseInt(batteryCountStr) || 0;
+
+      // Create funk items and events
+      await this.bulkCreateFunkItemEvents(
+        {
+          deviceIds,
+          batteryCount,
+          eventType: eventType as FunkItemEventType,
+        },
+        user,
+        organisation,
+        date,
+      );
+    }
   }
 }

@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('question_stats')
+@Entity({ name: 'question_stats', schema: 'quiz' })
 @Index(['question'])
 @Index(['correct'])
 export class QuestionStats {

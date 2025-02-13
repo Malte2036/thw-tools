@@ -9,22 +9,25 @@ import {
   Param,
   Post,
   Req,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { OrganisationService } from 'src/organisation/organisation.service';
-import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
-import { UserDocument } from 'src/user/schemas/user.schema';
+import { Organisation } from 'src/organisation/entities/organisation.entity';
+import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { FunkService } from './funk.service';
-import { FunkItemEventType } from './schemas/funk-item-event.schema';
+import { FunkItemEventType } from './entities/funk-item-event.entity';
 import { Request } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 export async function getUserAndOrgFromRequest(
   req: Request,
   userService: UserService,
   organisationService: OrganisationService,
-): Promise<[UserDocument | null, OrganisationDocument | null]> {
-  const user = await userService.updateOrCreateUser({
+): Promise<[User | null, Organisation | null]> {
+  const user = await userService.createOrUpdate(req.idTokenPayload.sub, {
     kindeId: req.idTokenPayload.sub,
     email: req.idTokenPayload.email,
     firstName: req.idTokenPayload.given_name,
@@ -43,7 +46,7 @@ export async function getUserAndOrgFromRequestAndThrow(
   req: Request,
   userService: UserService,
   organisationService: OrganisationService,
-): Promise<[UserDocument, OrganisationDocument]> {
+): Promise<[User, Organisation]> {
   const [user, organisation] = await getUserAndOrgFromRequest(
     req,
     userService,
@@ -83,7 +86,7 @@ export class FunkController {
       this.organisationService,
     );
 
-    return this.funkService.getFunkItems(organisation._id);
+    return this.funkService.getFunkItems(organisation.id);
   }
 
   @Post('events/bulk')
@@ -138,7 +141,7 @@ export class FunkController {
     );
 
     const item = await this.funkService.getFunkItemByDeviceId(
-      organisation._id,
+      organisation.id,
       deviceId,
     );
     if (!item) {
@@ -156,7 +159,7 @@ export class FunkController {
       this.organisationService,
     );
 
-    return this.funkService.getFunkItemEventBulks(organisation._id);
+    return this.funkService.getFunkItemEventBulks(organisation.id);
   }
 
   @Get('events/bulk/export')
@@ -168,11 +171,53 @@ export class FunkController {
       this.userService,
       this.organisationService,
     );
-    3;
+
     const csvData = await this.funkService.exportFunkItemEventBulksAsCsv(
-      organisation._id,
+      organisation.id,
     );
 
     return csvData;
+  }
+
+  @Post('import/csv')
+  @UseInterceptors(FileInterceptor('file'))
+  async importInventoryViaCsv(
+    @Req() req: Request,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const [user, organisation] = await getUserAndOrgFromRequestAndThrow(
+      req,
+      this.userService,
+      this.organisationService,
+    );
+
+    if (!file) {
+      Logger.error('No file provided');
+      throw new HttpException('No file provided', HttpStatus.BAD_REQUEST);
+    }
+
+    if (file.mimetype !== 'text/csv') {
+      Logger.error(`Invalid file type provided: ${file.mimetype}`);
+      throw new HttpException(
+        'Only CSV files are allowed',
+        HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+      );
+    }
+
+    try {
+      const csvContent = file.buffer.toString('utf-8');
+      await this.funkService.importFunkItemsFromCsv(
+        csvContent,
+        organisation,
+        user,
+      );
+      return { message: 'CSV import completed successfully' };
+    } catch (error) {
+      Logger.error('Error importing CSV:', error);
+      throw new HttpException(
+        'Error processing CSV file: ' + error.message,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

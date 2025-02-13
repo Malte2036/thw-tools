@@ -1,7 +1,6 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -15,9 +14,16 @@ import { InventoryModule } from './inventory/inventory.module';
 import { LoggingMiddleware } from './middleware/logging.middleware';
 import { AiModule } from './ai/ai.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './user/entities/user.entity';
+import { Organisation } from './organisation/entities/organisation.entity';
+import { InventoryItem } from './inventory/entities/inventory-item.entity';
+import { InventoryItemCustomData } from './inventory/entities/inventory-item-custom-data.entity';
+import { FunkItem } from './funk/entities/funk-item.entity';
+import { FunkItemEvent } from './funk/entities/funk-item-event.entity';
+import { FunkItemEventBulk } from './funk/entities/funk-item-event-bulk.entity';
 import { Question } from './quiz-stats/schemas/question.schema';
-import { QuestionAnswer } from './quiz-stats/schemas/question-answer.schema';
 import { QuestionStats } from './quiz-stats/schemas/question-stats.schema';
+import { QuestionAnswer } from './quiz-stats/schemas/question-answer.schema';
 
 @Module({
   imports: [
@@ -29,11 +35,21 @@ import { QuestionStats } from './quiz-stats/schemas/question-stats.schema';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [Question, QuestionAnswer, QuestionStats],
+      entities: [
+        User,
+        Organisation,
+        InventoryItem,
+        InventoryItemCustomData,
+        FunkItem,
+        FunkItemEvent,
+        FunkItemEventBulk,
+        Question,
+        QuestionStats,
+        QuestionAnswer,
+      ],
       // Do not set this in production
       synchronize: process.env.NODE_ENV !== 'production',
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URI),
     ThrottlerModule.forRoot([
       {
         ttl: 1,

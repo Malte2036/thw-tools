@@ -1,36 +1,52 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User } from './schemas/user.schema';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, DataSource } from 'typeorm';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  private readonly logger = new Logger(UserService.name);
   constructor(
-    @InjectModel(User.name)
-    private userModel: Model<User>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private dataSource: DataSource,
   ) {}
 
-  async updateOrCreateUser(userData: User) {
-    try {
-      const result = await this.userModel.findOneAndUpdate(
-        { kindeId: userData.kindeId },
-        { $set: userData },
-        {
-          upsert: true,
-          new: true,
-          setDefaultsOnInsert: true,
-        },
-      );
+  async findByKindeId(kindeId: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { kindeId } });
+  }
 
-      return result;
-    } catch (error) {
-      if (error.code === 11000) {
-        // Duplicate key error
-        return await this.userModel.findOne({ kindeId: userData.kindeId });
+  async findById(id: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { id } });
+  }
+
+  async createOrUpdate(
+    kindeId: string,
+    userData: Partial<User>,
+  ): Promise<User> {
+    // Use a transaction to prevent race conditions
+    return this.dataSource.transaction(async (manager) => {
+      // Lock the row if it exists
+      let user = await manager
+        .createQueryBuilder(User, 'user')
+        .setLock('pessimistic_write')
+        .where('user.kindeId = :kindeId', { kindeId })
+        .getOne();
+
+      if (!user) {
+        user = manager.create(User, {
+          kindeId,
+          ...userData,
+        });
+      } else {
+        // Update existing user
+        Object.assign(user, userData);
       }
-      this.logger.error(`Failed to upsert user: ${error.message}`);
-      throw error;
-    }
+
+      return manager.save(User, user);
+    });
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.userRepository.delete(id);
   }
 }

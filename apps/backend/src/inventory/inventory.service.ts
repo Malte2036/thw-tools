@@ -1,14 +1,15 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { parse } from 'csv-parse';
+import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
+import { InventoryItem } from './entities/inventory-item.entity';
+import { InventoryItemCustomData } from './entities/inventory-item-custom-data.entity';
+import { UpdateCustomDataDto } from './dto/update-custom-data.dto';
+import { Organisation } from '../organisation/entities/organisation.entity';
 import { z } from 'zod';
-import {
-  inventarNummerRegex,
-  InventoryItem,
-} from './schemas/inventory-item.schema';
-import mongoose, { Model } from 'mongoose';
-import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
-import { InventoryItemCustomData } from './schemas/inventory-item-custom-data.schema';
+import { parse } from 'csv-parse';
+
+// Format: XXXX-YYYYYY where X is 4 digits, Y is up to 6 digits/letters, optionally with an S prefix
+export const inventarNummerRegex = /^\d{4}-(?:S)?\d{6}$/;
 
 export const InventarCsvRowSchema = z.object({
   Ebene: z.string(),
@@ -30,64 +31,14 @@ export type InventarCsvRow = z.infer<typeof InventarCsvRowSchema>;
 @Injectable()
 export class InventoryService {
   constructor(
-    @InjectModel(InventoryItem.name)
-    private inventoryItemModel: Model<InventoryItem>,
-    @InjectModel(InventoryItemCustomData.name)
-    private inventoryItemCustomDataModel: Model<InventoryItemCustomData>,
+    @InjectRepository(InventoryItem)
+    private readonly inventoryItemRepository: Repository<InventoryItem>,
+    @InjectRepository(InventoryItemCustomData)
+    private readonly customDataRepository: Repository<InventoryItemCustomData>,
   ) {}
 
-  async getInventoryItems(organisationId: mongoose.Types.ObjectId) {
-    const items = await this.inventoryItemModel
-      .find({
-        organisation: organisationId,
-      })
-      .exec();
-
-    const customData = await this.inventoryItemCustomDataModel
-      .find({
-        inventoryItem: { $in: items.map((item) => item._id) },
-      })
-      .exec();
-
-    const customDataMap = new Map(
-      customData.map((data) => [data.inventoryItem.toString(), data]),
-    );
-
-    return items.map((item) => ({
-      ...item.toObject(),
-      customData: customDataMap.get(item._id.toString()) || null,
-    }));
-  }
-
-  async getInventoryItemById(
-    organisationId: mongoose.Types.ObjectId,
-    id: mongoose.Types.ObjectId,
-  ) {
-    const item = await this.inventoryItemModel
-      .findOne({
-        _id: id,
-        organisation: organisationId,
-      })
-      .exec();
-
-    if (!item) {
-      return null;
-    }
-
-    const customData = await this.inventoryItemCustomDataModel
-      .findOne({
-        inventoryItem: item._id,
-      })
-      .exec();
-
-    return {
-      ...item.toObject(),
-      customData: customData || null,
-    };
-  }
-
   async parseCsvData(
-    organisation: OrganisationDocument,
+    organisation: Organisation,
     file: Express.Multer.File,
   ): Promise<{
     count: number;
@@ -115,7 +66,7 @@ export class InventoryService {
             return; // Skip this row instead of rejecting the entire process
           }
 
-          records.push(row as InventarCsvRow);
+          records.push(validationResult.data);
         })
         .on('end', async () => {
           try {
@@ -132,7 +83,7 @@ export class InventoryService {
   }
 
   async processCsvData(
-    organisation: OrganisationDocument,
+    organisation: Organisation,
     records: InventarCsvRow[],
   ): Promise<{
     count: number;
@@ -171,7 +122,7 @@ export class InventoryService {
     const csvRecordToInventoryItem = (
       record: InventarCsvRow,
       einheit: string,
-    ) => {
+    ): Partial<InventoryItem> | null => {
       try {
         const ebene = parseInt(record.Ebene);
         if (isNaN(ebene)) {
@@ -188,9 +139,9 @@ export class InventoryService {
         }
 
         return {
-          organisation: organisation,
+          organisation,
           einheit,
-          ebene: ebene,
+          ebene,
           art: sanitizeValue(record.Art),
           menge: sanitizeValue(record.Menge),
           mengeIst: sanitizeValue(record['Menge Ist']),
@@ -220,7 +171,7 @@ export class InventoryService {
           sachNummer: sanitizeValue(record.Sachnummer),
           gerateNummer: sanitizeValue(record['Gerätenr.']),
           status: sanitizeValue(record.Status),
-        } satisfies InventoryItem;
+        };
       } catch (error) {
         Logger.error(
           'Error while converting CSV record to InventoryItem',
@@ -241,14 +192,14 @@ export class InventoryService {
         }
         return csvRecordToInventoryItem(record, einheit);
       })
-      .filter(Boolean);
+      .filter(Boolean) as Partial<InventoryItem>[];
 
     const einheiten = [...new Set(inventoryItems.map((item) => item.einheit))];
     Logger.debug(`Deleting existing inventory items for ${einheiten}`);
     await this.deleteAllInventoryItemsByEinheit(einheiten);
 
     Logger.debug(`Inserting ${inventoryItems.length} inventory`);
-    await this.inventoryItemModel.insertMany(inventoryItems);
+    await this.inventoryItemRepository.insert(inventoryItems);
 
     return {
       count: inventoryItems.length,
@@ -257,34 +208,55 @@ export class InventoryService {
   }
 
   deleteAllInventoryItemsByEinheit = async (einheit: string[]) => {
-    return this.inventoryItemModel.deleteMany({ einheit: { $in: einheit } });
+    return this.inventoryItemRepository.delete({ einheit: In(einheit) });
   };
 
+  async findAll(): Promise<InventoryItem[]> {
+    return this.inventoryItemRepository.find({
+      relations: ['organisation', 'customData'],
+      select: {
+        organisation: {
+          id: true,
+        },
+      },
+    });
+  }
+
+  async findOne(id: string): Promise<InventoryItem> {
+    return this.inventoryItemRepository.findOne({
+      where: { id },
+      relations: ['organisation', 'customData'],
+    });
+  }
+
   async updateCustomData(
-    inventoryItemId: mongoose.Types.ObjectId,
-    customData: Partial<Pick<InventoryItemCustomData, 'lastScanned' | 'note'>>,
-  ) {
-    const existingCustomData = await this.inventoryItemCustomDataModel.findOne({
-      inventoryItem: inventoryItemId,
+    id: string,
+    updateCustomDataDto: UpdateCustomDataDto,
+  ): Promise<InventoryItemCustomData> {
+    const inventoryItem = await this.inventoryItemRepository.findOne({
+      where: { id },
+      relations: ['customData'],
     });
 
-    if (existingCustomData) {
-      // Update existing custom data
-      return this.inventoryItemCustomDataModel
-        .findByIdAndUpdate(
-          existingCustomData._id,
-          { $set: customData },
-          { new: true },
-        )
-        .exec();
+    if (!inventoryItem) {
+      throw new HttpException('Inventory item not found', HttpStatus.NOT_FOUND);
     }
 
-    // Create new custom data
-    const newCustomData = new this.inventoryItemCustomDataModel({
-      inventoryItem: inventoryItemId,
-      ...customData,
-    });
+    if (!inventoryItem.customData) {
+      const customData = this.customDataRepository.create({
+        ...updateCustomDataDto,
+        inventoryItem,
+      });
+      return this.customDataRepository.save(customData);
+    }
 
-    return newCustomData.save();
+    await this.customDataRepository.update(
+      inventoryItem.customData.id,
+      updateCustomDataDto,
+    );
+
+    return this.customDataRepository.findOne({
+      where: { id: inventoryItem.customData.id },
+    });
   }
 }

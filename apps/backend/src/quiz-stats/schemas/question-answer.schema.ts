@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Question } from './question.schema';
 
-@Entity('question_answers')
+@Entity({ name: 'question_answers', schema: 'quiz' })
 export class QuestionAnswer {
   @PrimaryGeneratedColumn()
   id: number;

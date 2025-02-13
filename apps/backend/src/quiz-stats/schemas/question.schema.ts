@@ -15,7 +15,7 @@ export enum QuizType {
   RADIO = 'radio',
 }
 
-@Entity('questions')
+@Entity({ name: 'questions', schema: 'quiz' })
 @Index(['type', 'number'], { unique: true })
 export class Question {
   @PrimaryGeneratedColumn()
