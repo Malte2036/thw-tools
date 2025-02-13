@@ -1,4 +1,4 @@
-import type { Organisation, User } from '$lib/api/organisationModels';
+import type { Organisation, User, UserId } from '$lib/api/organisationModels';
 import { writable } from 'svelte/store';
 
 export type UserData = {
@@ -14,5 +14,5 @@ export const user = writable<UserData>({
 
 export const getOrganisationUserByInternalId = (
 	{ organisation }: UserData,
-	internalId: string
-): User | undefined => organisation?.members?.find((user) => user._id === internalId);
+	internalId: UserId
+): User | undefined => organisation?.members?.find((user) => user.id === internalId);

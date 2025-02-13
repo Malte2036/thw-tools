@@ -21,7 +21,7 @@
 
 	let { event, deviceId, isSelected, item, secondary = false }: Props = $props();
 
-	const eventUser = getOrganisationUserByInternalId($user, event.user);
+	const eventUser = getOrganisationUserByInternalId($user, event.user.id);
 
 	let itemType: string | undefined = $state(undefined);
 

@@ -1,5 +1,6 @@
 import { apiGet, apiGetFile, apiPost } from './apiGeneric';
 import {
+	FunkItemEventBulkSchema,
 	FunkItemEventSchema,
 	FunkItemSchema,
 	type FunkItem,
@@ -22,17 +23,6 @@ export async function getFunkItems(): Promise<FunkItem[]> {
 	return response.data;
 }
 
-export async function getFunkItem(deviceId: string): Promise<FunkItem> {
-	const response = await apiGet<FunkItem>(`/funk/${deviceId}`, (data) => {
-		const result = FunkItemSchema.safeParse(data);
-		if (!result.success) {
-			console.error('Error parsing FunkItem:', result.error);
-		}
-		return result.success;
-	});
-	return response.data;
-}
-
 export async function bulkCreateFunkItemEvents(
 	deviceIds: FunkItemDeviceId[],
 	batteryCount: number,
@@ -45,7 +35,7 @@ export async function bulkCreateFunkItemEvents(
 	});
 }
 
-export async function getFunkItemEvents(deviceId: string): Promise<FunkItemEvent[]> {
+export async function getFunkItemEvents(deviceId: FunkItemDeviceId): Promise<FunkItemEvent[]> {
 	const response = await apiGet<FunkItemEvent[]>(`/funk/${deviceId}/events`, (data) =>
 		data.every((d) => {
 			const result = FunkItemEventSchema.safeParse(d);
@@ -61,7 +51,8 @@ export async function getFunkItemEvents(deviceId: string): Promise<FunkItemEvent
 export async function getFunkItemEventBulks(): Promise<FunkItemEventBulk[]> {
 	const response = await apiGet<FunkItemEventBulk[]>(`/funk/events/bulk`, (data) =>
 		data.every((d) => {
-			const result = FunkItemEventSchema.safeParse(d);
+			const result = FunkItemEventBulkSchema.safeParse(d);
+
 			if (!result.success) {
 				console.error('Error parsing FunkItemEventBulk:', result.error, d);
 			}

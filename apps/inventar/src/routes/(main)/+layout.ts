@@ -38,7 +38,7 @@ export const load = (async ({ url }) => {
 						item: item,
 						lastEvent: getLastFunkItemEventByFunkItemInternalId(
 							{ funkItems: items, funkItemEventBulks: bulks },
-							item._id
+							item.id
 						)
 					}))
 					.sort((a, b) => {

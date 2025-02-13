@@ -1,18 +1,28 @@
-import { z } from 'zod';
+import { BRAND, z } from 'zod';
 import { dateToFriendlyString, searchStringIsInArray } from '$lib/utils';
-import type { User } from './organisationModels';
+import { UserIdSchema, type User } from './organisationModels';
 
 export const inventarNummerRegex = /^\d{4}-S?\d{6}$/;
 export const InventarNummer = z
 	.string()
 	.regex(inventarNummerRegex, 'Invalid inventar number format');
 
-export type FunkItemDeviceId = string;
+export type FunkItemId = string & BRAND<'FunkItemId'>;
+export const FunkItemIdSchema = z.string().brand<'FunkItemId'>();
+
+export type FunkItemDeviceId = string & BRAND<'FunkItemDeviceId'>;
+export const FunkItemDeviceIdSchema = z.string().brand<'FunkItemDeviceId'>();
+
+export type FunkItemEventId = string & BRAND<'FunkItemEventId'>;
+export const FunkItemEventIdSchema = z.string().brand<'FunkItemEventId'>();
+
+export type FunkItemEventBulkId = string & BRAND<'FunkItemEventBulkId'>;
+export const FunkItemEventBulkIdSchema = z.string().brand<'FunkItemEventBulkId'>();
 
 export const FunkItemSchema = z.object({
-	_id: z.string(),
-	deviceId: InventarNummer,
-	lastEvent: z.string().optional()
+	id: FunkItemIdSchema,
+	deviceId: FunkItemDeviceIdSchema,
+	lastEvent: FunkItemEventIdSchema.optional()
 });
 
 export type FunkItem = z.infer<typeof FunkItemSchema>;
@@ -20,9 +30,13 @@ export type FunkItem = z.infer<typeof FunkItemSchema>;
 export type FunkItemEventType = 'borrowed' | 'returned';
 
 export const FunkItemEventSchema = z.object({
-	_id: z.string(),
-	funkItem: z.string().optional(),
-	user: z.string(),
+	id: FunkItemEventIdSchema,
+	funkItem: z.object({
+		id: FunkItemIdSchema
+	}),
+	user: z.object({
+		id: UserIdSchema
+	}),
 	type: z.enum(['borrowed', 'returned']).default('borrowed'),
 	date: z.string()
 });
@@ -30,19 +44,17 @@ export const FunkItemEventSchema = z.object({
 export type FunkItemEvent = z.infer<typeof FunkItemEventSchema>;
 
 export const FunkItemEventBulkSchema = z.object({
-	_id: z.string(),
+	id: FunkItemEventBulkIdSchema,
 	funkItemEvents: z.array(FunkItemEventSchema),
 	batteryCount: z.number(),
 	eventType: z.enum(['borrowed', 'returned']),
-	user: z.string(),
+	user: z.object({
+		id: UserIdSchema
+	}),
 	date: z.string()
 });
 
 export type FunkItemEventBulk = z.infer<typeof FunkItemEventBulkSchema>;
-
-export function validateFunkItemDeviceId(deviceId: string): boolean {
-	return InventarNummer.safeParse(deviceId).success;
-}
 
 export function eventTypeToFriendlyString(eventType: FunkItemEventType): string {
 	switch (eventType) {

@@ -8,6 +8,7 @@
 		show = false;
 	}
 
+	// @ts-ignore
 	var dismissTimer: NodeJS.Timeout | undefined;
 
 	bannerMessage.subscribe((value) => {

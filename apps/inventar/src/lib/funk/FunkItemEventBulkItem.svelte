@@ -18,7 +18,7 @@
 
 	let { bulk }: Props = $props();
 
-	const bulkUser = getOrganisationUserByInternalId($user, bulk.user);
+	const bulkUser = getOrganisationUserByInternalId($user, bulk.user.id);
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -50,20 +50,10 @@
 				{batteryCountToFriendlyString(bulk.batteryCount)}
 			</li>
 			<li>
-				{#await $funk.funkItems then funkItems}
-					{bulk.funkItemEvents
-						.map(
-							(event) =>
-								getFunkItemByInternalId(
-									{
-										funkItems
-									},
-									event.funkItem
-								)?.deviceId
-						)
-						.sort()
-						.join(', ')}
-				{/await}
+				{bulk.funkItemEvents
+					.map((event) => getFunkItemByInternalId($funk, event.funkItem.id)?.deviceId)
+					.sort()
+					.join(', ')}
 			</li>
 		</ul>
 	</div>

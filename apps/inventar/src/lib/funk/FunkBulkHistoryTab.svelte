@@ -14,7 +14,7 @@
 	const getInventarItems = (bulk: FunkItemEventBulk) => {
 		return (
 			$funk.funkItems?.filter((item) =>
-				bulk.funkItemEvents.some((event) => event.funkItem === item._id)
+				bulk.funkItemEvents.some((event) => event.funkItem.id === item.id)
 			) ?? []
 		);
 	};
@@ -26,7 +26,7 @@
 					isSearchStringInFunkItemEventBulk(
 						searchTerm,
 						item,
-						getOrganisationUserByInternalId($user, item.user),
+						getOrganisationUserByInternalId($user, item.user.id),
 						getInventarItems(item).map((item) => item.deviceId)
 					)
 				)
@@ -35,7 +35,6 @@
 </script>
 
 <div class="flex flex-col gap-2">
-
 	<div class="flex flex-col gap-2">
 		<Input placeholder="Historie durchsuchen..." bind:inputValue={searchTerm} />
 		{#if filteredBulks}

@@ -27,7 +27,7 @@
 			return false;
 		}
 
-		updateInventoryItemCustomData(inventoryItem._id, {
+		updateInventoryItemCustomData(inventoryItem.id, {
 			lastScanned: new Date()
 		});
 		return true;

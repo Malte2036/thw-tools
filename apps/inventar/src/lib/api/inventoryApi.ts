@@ -2,13 +2,13 @@ import { updateLastFetched } from '$lib/shared/stores/apiMetaStore';
 import { inventory } from '$lib/shared/stores/inventoryStore';
 import { db } from '$lib/utils/db';
 import { apiGet, apiPostFile, apiPatch } from './apiGeneric';
-import { type DatabaseId } from './databaseModels';
 import {
 	ImportInventoryItemsResultZodSchema,
 	InventoryItemZodSchema,
 	type ImportInventoryItemsResult,
 	type InventoryItem,
-	type InventoryItemCustomData
+	type InventoryItemCustomData,
+	type InventoryItemId
 } from './inventoryModels';
 
 export async function fetchInventoryItems(): Promise<void> {
@@ -58,7 +58,7 @@ export async function uploadInventoryTHWInExportFile(
 }
 
 export async function updateInventoryItemCustomData(
-	inventoryItemId: DatabaseId,
+	inventoryItemId: InventoryItemId,
 	customData: InventoryItemCustomData
 ): Promise<void> {
 	await apiPatch<void>(`/inventory/${inventoryItemId}/custom-data`, customData);

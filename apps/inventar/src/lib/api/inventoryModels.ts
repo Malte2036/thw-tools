@@ -1,18 +1,23 @@
-import { z } from 'zod';
-import { DatabaseIdSchema } from './databaseModels';
+import { BRAND, z } from 'zod';
+import { OrganisationIdSchema } from './organisationModels';
 
 const inventarNummerRegex = /^[A-Za-z0-9-]+$/; // Assuming this is the regex pattern
 
+export type InventoryItemId = string & BRAND<'InventoryItemId'>;
+export const InventoryItemIdSchema = z.string().brand<'InventoryItemId'>();
+
 export const InventoryItemCustomDataSchema = z.object({
 	lastScanned: z.coerce.date().optional(),
-	note: z.string().max(1000).optional()
+	note: z.string().max(1000).nullable().optional()
 });
 
 export type InventoryItemCustomData = z.infer<typeof InventoryItemCustomDataSchema>;
 
 export const InventoryItemZodSchema = z.object({
-	_id: DatabaseIdSchema,
-	organisation: z.string(),
+	id: InventoryItemIdSchema,
+	organisation: z.object({
+		id: OrganisationIdSchema
+	}),
 	einheit: z.string(),
 	ebene: z.number().int(),
 	art: z.string().nullable().optional(),

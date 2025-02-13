@@ -1,4 +1,11 @@
-import type { FunkItem, FunkItemEvent, FunkItemEventBulk } from '$lib/api/funkModels';
+import type {
+	FunkItem,
+	FunkItemDeviceId,
+	FunkItemEvent,
+	FunkItemEventBulk,
+	FunkItemEventId,
+	FunkItemId
+} from '$lib/api/funkModels';
 import { writable } from 'svelte/store';
 
 export type FunkData = {
@@ -12,29 +19,29 @@ export const funk = writable<FunkData>({
 	funkItemEventBulks: null
 });
 
-export const getFunkItemByInternalId = ({ funkItems }: FunkData, internalId: string) =>
-	funkItems?.find((item) => item._id === internalId);
+export const getFunkItemByInternalId = ({ funkItems }: FunkData, internalId: FunkItemId) =>
+	funkItems?.find((item) => item.id === internalId);
 
-export const getFunkItemByDeviceId = ({ funkItems }: FunkData, deviceId: string) =>
+export const getFunkItemByDeviceId = ({ funkItems }: FunkData, deviceId: FunkItemDeviceId) =>
 	funkItems?.find((item) => item.deviceId === deviceId);
 
 export const getFunkItemEventByInternalId = (
 	{ funkItemEventBulks }: FunkData,
-	internalId: string
+	internalId: FunkItemEventId
 ): FunkItemEvent | undefined =>
 	funkItemEventBulks
 		?.flatMap((bulk) => bulk.funkItemEvents)
-		.find((event) => event._id === internalId);
+		.find((event) => event.id === internalId);
 
 export const getLastFunkItemEventByFunkItemInternalId = (
 	{ funkItemEventBulks }: FunkData,
-	funkItemId: string
+	funkItemId: FunkItemId
 ): FunkItemEvent | undefined => {
 	if (!funkItemEventBulks) return undefined;
 
 	const events = funkItemEventBulks.flatMap((bulk) => bulk.funkItemEvents);
 
-	const filteredEvents = events.filter((event) => event.funkItem === funkItemId);
+	const filteredEvents = events.filter((event) => event.funkItem.id === funkItemId);
 
 	if (filteredEvents.length === 0) return undefined;
 
@@ -54,7 +61,7 @@ export const getAllFunkItemEventsByFunkItemDeviceId = (
 	return events
 		.map((event) => ({
 			event,
-			deviceId: event.funkItem && getFunkItemByInternalId(funkData, event.funkItem)?.deviceId
+			deviceId: event.funkItem && getFunkItemByInternalId(funkData, event.funkItem.id)?.deviceId
 		}))
 		.filter((event) => event.deviceId === deviceId)
 		.map((event) => event.event);

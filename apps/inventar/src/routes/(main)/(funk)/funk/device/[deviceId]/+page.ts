@@ -1,4 +1,6 @@
 import { isAuthenticated, login } from '$lib/api/authApi';
+import { FunkItemDeviceIdSchema } from '$lib/api/funkModels';
+import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
 export const ssr = false;
@@ -15,12 +17,12 @@ export const load = (async ({ url, params }) => {
 		return EMPTY;
 	}
 
-	const deviceId = params.deviceId;
-	if (!deviceId) {
-		throw new Error('No deviceId provided');
+	const deviceId = FunkItemDeviceIdSchema.safeParse(params.deviceId);
+	if (!deviceId.success) {
+		throw error(404, 'Device not found');
 	}
 
 	return {
-		deviceId
+		deviceId: deviceId.data
 	};
 }) satisfies PageLoad;

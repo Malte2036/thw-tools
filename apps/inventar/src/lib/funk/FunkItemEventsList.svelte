@@ -34,7 +34,7 @@
 			isSearchStringInFunkItemEvent(
 				search,
 				event,
-				getOrganisationUserByInternalId($user, event.user)
+				getOrganisationUserByInternalId($user, event.user.id)
 			)
 		);
 	};
@@ -70,7 +70,7 @@
 			{#if events.length === 0}
 				<p>Keine Ereignisse vorhanden.</p>
 			{:else}
-				{#each filteredEvents as event (event._id)}
+				{#each filteredEvents as event (event.id)}
 					<InventarItemEventItem {event} {deviceId} item={undefined} isSelected={false} secondary />
 				{/each}
 			{/if}

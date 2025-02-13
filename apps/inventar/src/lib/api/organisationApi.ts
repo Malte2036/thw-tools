@@ -7,8 +7,6 @@ export async function getOrganisationForUser(): Promise<Organisation> {
 		if (!result.success) {
 			console.error('Error parsing Organisation:', result.error);
 		}
-		console.log('Organisation:', result.data);
-
 		return result.success;
 	});
 
