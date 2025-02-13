@@ -1,19 +1,17 @@
 <script lang="ts">
 	import '@malte2036/thw-tools-components';
 
-	import { dev } from '$app/environment';
+	import { dev, version } from '$app/environment';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
 
-	import '../app.css';
-	import { page } from '$app/stores';
-	import Header from './Header.svelte';
 	import Banner from '$lib/Banner.svelte';
-	import Dialog from '$lib/Dialog.svelte';
 	import Button from '$lib/Button.svelte';
+	import Dialog from '$lib/Dialog.svelte';
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
-	import type { LayoutData } from './$types';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 	import PWAUpdateNotification from '$lib/PWAUpdateNotification.svelte';
+	import { dateToFriendlyString } from '$lib/utils';
+	import '../app.css';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -71,6 +69,10 @@
 			onclick={() => (showInstallPWAHelp = true)}
 		>
 			Als App installieren
+		</div>
+		<div class="text-gray-400">|</div>
+		<div class="text-gray-400">
+			Build {dateToFriendlyString(new Date(+version))}
 		</div>
 	</div>
 
