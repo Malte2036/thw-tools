@@ -8,12 +8,25 @@
 	import { searchStringIsInArray } from '$lib/utils';
 	import { apiMeta } from '$lib/shared/stores/apiMetaStore';
 	import { inventory } from '$lib/shared/stores/inventoryStore';
+	import { visibleInventoryColumns } from '$lib/shared/stores/inventoryColumnStore';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import type { SvelteComponent } from 'svelte';
+	import InventorySettingsDialog from '$lib/inventar/InventorySettingsDialog.svelte';
+
+	type TableCell =
+		| string
+		| HTMLElement
+		| SvelteComponent
+		| {
+				component: typeof SvelteComponent;
+				props: Record<string, any>;
+		  };
 
 	let searchTerm = $state('');
 	let selectedEinheit = $state($page.url.searchParams.get('einheit') || 'all');
 	let filteredItems = $state<InventoryItem[]>([]);
+	let showSettings = $state(false);
 
 	let lastFetchedStr = $derived(
 		$apiMeta.lastFetched['inventory']?.toLocaleString('de-DE', {
@@ -26,34 +39,44 @@
 		})
 	);
 
-	const tableHeader = [
-		'Inventar-Nr.',
-		'Einheit',
-		'Ausstattung',
-		'Art',
-		'Menge (Soll/Ist)',
-		'Verfügbar',
-		'Hersteller',
-		'Typ',
-		'Sach-Nr.',
-		'Gerät-Nr.',
-		'Status'
+	const allColumns = [
+		{ id: 'inventarNummer', label: 'Inventar-Nr.' },
+		{ id: 'einheit', label: 'Einheit' },
+		{ id: 'ausstattung', label: 'Ausstattung' },
+		{ id: 'art', label: 'Art' },
+		{ id: 'menge', label: 'Menge (Soll/Ist)' },
+		{ id: 'verfuegbar', label: 'Verfügbar' },
+		{ id: 'hersteller', label: 'Hersteller' },
+		{ id: 'typ', label: 'Typ' },
+		{ id: 'sachNummer', label: 'Sach-Nr.' },
+		{ id: 'gerateNummer', label: 'Gerät-Nr.' },
+		{ id: 'status', label: 'Status' }
 	];
 
-	const getTableValues = (items: InventoryItem[]) => {
-		return items.map((item) => [
-			item.inventarNummer || '-',
-			item.einheit,
-			item.ausstattung,
-			item.art || '-',
-			item.menge ? `${item.menge} / ${item.mengeIst ?? 0}` : '-',
-			item.verfuegbar || '-',
-			item.hersteller || '-',
-			item.typ || '-',
-			item.sachNummer || '-',
-			item.gerateNummer || '-',
-			item.status || '-'
-		]);
+	let tableHeader = $derived(
+		allColumns.filter((col) => $visibleInventoryColumns.includes(col.id)).map((col) => col.label)
+	);
+
+	const getTableValues = (items: InventoryItem[]): TableCell[][] => {
+		return items.map((item) => {
+			const allValues: TableCell[] = [
+				String(item.inventarNummer || '-'),
+				String(item.einheit),
+				String(item.ausstattung),
+				String(item.art || '-'),
+				item.menge ? `${String(item.menge)} / ${String(item.mengeIst ?? 0)}` : '-',
+				String(item.verfuegbar || '-'),
+				String(item.hersteller || '-'),
+				String(item.typ || '-'),
+				String(item.sachNummer || '-'),
+				String(item.gerateNummer || '-'),
+				String(item.status || '-')
+			];
+
+			return allValues.filter((_, index) =>
+				$visibleInventoryColumns.includes(allColumns[index].id)
+			);
+		});
 	};
 
 	const getEinheiten = () => {
@@ -108,6 +131,20 @@
 		goto(url.toString(), { replaceState: true });
 	};
 
+	const toggleColumn = (columnId: string) => {
+		visibleInventoryColumns.update((columns) => {
+			if (columns.includes(columnId)) {
+				if (columns.length > 1) {
+					// Prevent hiding all columns
+					return columns.filter((id) => id !== columnId);
+				}
+			} else {
+				return [...columns, columnId];
+			}
+			return columns;
+		});
+	};
+
 	$effect(() => {
 		filteredItems = filterItems($inventory.inventoryItems);
 	});
@@ -117,9 +154,16 @@
 	<LinkButton url="../" secondary>Zurück zur Inventar-Übersicht</LinkButton>
 
 	<div class="flex flex-col gap-2">
-		<div class="flex items-center gap-2">
-			<h1 class="text-2xl font-bold">OV Inventar Liste</h1>
-			<span class="bg-thw-300 text-xs px-2 py-1 rounded-full">Beta</span>
+		<div class="flex justify-between gap-2">
+			<div class="flex items-center gap-2">
+				<h1 class="text-2xl font-bold">OV Inventar Liste</h1>
+				<span class="bg-thw-300 text-xs px-2 py-1 rounded-full">Beta</span>
+			</div>
+			<div>
+				<button class="underline hover:text-thw" on:click={() => (showSettings = true)}>
+					Einstellungen
+				</button>
+			</div>
 		</div>
 		<p class="text-lg">Übersicht aller Inventar-Items im System.</p>
 	</div>
@@ -136,7 +180,7 @@
 		<LoadingSpinner />
 	{:else}
 		<div class="flex flex-col gap-4">
-			<div class="flex flex-col md:flex-row items-center gap-4">
+			<div class="flex flex-col md:flex-row items-start gap-4">
 				<div class="w-full md:w-64">
 					<Select
 						options={getEinheiten()}
@@ -168,3 +212,12 @@
 		</div>
 	{/if}
 </div>
+
+{#if showSettings}
+	<InventorySettingsDialog
+		columns={allColumns}
+		visibleColumns={$visibleInventoryColumns}
+		onToggleColumn={toggleColumn}
+		onClose={() => (showSettings = false)}
+	/>
+{/if}
