@@ -222,10 +222,21 @@ export class InventoryService {
     });
   }
 
-  async findOne(id: string): Promise<InventoryItem> {
+  async findOneByOrganisation(
+    id: string,
+    organisationId: string,
+  ): Promise<InventoryItem> {
     return this.inventoryItemRepository.findOne({
-      where: { id },
+      where: { id, organisation: { id: organisationId } },
       relations: ['organisation', 'customData'],
+    });
+  }
+
+  async findAllByOrganisation(
+    organisationId: string,
+  ): Promise<InventoryItem[]> {
+    return this.inventoryItemRepository.find({
+      where: { organisation: { id: organisationId } },
     });
   }
 

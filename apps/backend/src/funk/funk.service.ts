@@ -10,23 +10,6 @@ import {
 } from './entities/funk-item-event.entity';
 import { FunkItemEventBulk } from './entities/funk-item-event-bulk.entity';
 
-// MongoDB-style response type
-type MongoDBStyleFunkItemEventBulk = {
-  id: string;
-  funkItemEvents: {
-    id: string;
-    funkItem: string;
-    user: string;
-    type: string;
-    date: Date;
-  }[];
-  eventType: string;
-  batteryCount: number;
-  user: string;
-  organisation: string;
-  date: Date;
-};
-
 @Injectable()
 export class FunkService {
   constructor(
@@ -231,43 +214,5 @@ export class FunkService {
     }
 
     return csv;
-  }
-
-  async importFunkItemsFromCsv(
-    csvContent: string,
-    organisation: Organisation,
-    user: User,
-  ): Promise<void> {
-    const lines = csvContent.split('\n');
-    // Skip header row and empty lines
-    const dataLines = lines.slice(1).filter((line) => line.trim());
-
-    for (const line of dataLines) {
-      const [dateStr, eventType, batteryCountStr, , deviceIdsStr] = line
-        .split(',')
-        .map((field) => field.trim().replace(/^"|"$/g, '')); // Remove quotes
-
-      // Skip invalid lines
-      if (!dateStr || !eventType || !deviceIdsStr) {
-        Logger.warn(`Skipping invalid CSV line: ${line}`);
-        continue;
-      }
-
-      const deviceIds = deviceIdsStr.split(',').map((id) => id.trim());
-      const date = new Date(dateStr);
-      const batteryCount = parseInt(batteryCountStr) || 0;
-
-      // Create funk items and events
-      await this.bulkCreateFunkItemEvents(
-        {
-          deviceIds,
-          batteryCount,
-          eventType: eventType as FunkItemEventType,
-        },
-        user,
-        organisation,
-        date,
-      );
-    }
   }
 }

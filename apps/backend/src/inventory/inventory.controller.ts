@@ -20,7 +20,10 @@ import { Request } from 'express';
 import { InventoryService } from './inventory.service';
 import { InventoryItem } from './entities/inventory-item.entity';
 import { InventoryItemCustomData } from './entities/inventory-item-custom-data.entity';
-import { UpdateCustomDataDto } from './dto/update-custom-data.dto';
+import {
+  UpdateCustomDataDto,
+  UpdateCustomDataSchema,
+} from './dto/update-custom-data.dto';
 import { getUserAndOrgFromRequestAndThrow } from 'src/funk/funk.controller';
 import { UserService } from 'src/user/user.service';
 import { OrganisationService } from 'src/organisation/organisation.service';
@@ -35,13 +38,42 @@ export class InventoryController {
   ) {}
 
   @Get()
-  async findAll(): Promise<InventoryItem[]> {
-    return this.inventoryService.findAll();
+  async findAll(@Req() req: Request): Promise<InventoryItem[]> {
+    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
+      req,
+      this.userService,
+      this.organisationService,
+    );
+    Logger.log('Getting inventory items');
+    return this.inventoryService.findAllByOrganisation(organisation.id);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<InventoryItem> {
-    return this.inventoryService.findOne(id);
+  async findOne(
+    @Req() req: Request,
+    @Param('id') id: string,
+  ): Promise<InventoryItem> {
+    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
+      req,
+      this.userService,
+      this.organisationService,
+    );
+
+    if (!id) {
+      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST);
+    }
+
+    Logger.log(`Getting inventory item by ID: ${id}`);
+    const item = await this.inventoryService.findOneByOrganisation(
+      id,
+      organisation.id,
+    );
+
+    if (!item) {
+      throw new HttpException('Inventory item not found', HttpStatus.NOT_FOUND);
+    }
+
+    return item;
   }
 
   @Post('import/csv')
@@ -80,9 +112,49 @@ export class InventoryController {
 
   @Patch(':id/custom-data')
   async updateCustomData(
+    @Req() req: Request,
     @Param('id') id: string,
-    @Body() updateCustomDataDto: UpdateCustomDataDto,
-  ): Promise<InventoryItemCustomData> {
-    return this.inventoryService.updateCustomData(id, updateCustomDataDto);
+    @Body() rawCustomData: unknown,
+  ): Promise<{ id: string; customData: InventoryItemCustomData }> {
+    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
+      req,
+      this.userService,
+      this.organisationService,
+    );
+
+    if (!id) {
+      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST);
+    }
+
+    Logger.log(`Updating custom data for inventory item by ID: ${id}`);
+
+    const validationResult = UpdateCustomDataSchema.safeParse(rawCustomData);
+    if (!validationResult.success) {
+      throw new HttpException(
+        {
+          message: 'Invalid custom data format',
+          errors: validationResult.error.errors,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const item = await this.inventoryService.findOneByOrganisation(
+      id,
+      organisation.id,
+    );
+    if (!item) {
+      throw new HttpException('Inventory item not found', HttpStatus.NOT_FOUND);
+    }
+
+    const updatedCustomData = await this.inventoryService.updateCustomData(
+      id,
+      validationResult.data,
+    );
+
+    return {
+      id: item.id,
+      customData: updatedCustomData,
+    };
   }
 }

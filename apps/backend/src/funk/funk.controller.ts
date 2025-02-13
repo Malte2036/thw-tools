@@ -178,46 +178,4 @@ export class FunkController {
 
     return csvData;
   }
-
-  @Post('import/csv')
-  @UseInterceptors(FileInterceptor('file'))
-  async importInventoryViaCsv(
-    @Req() req: Request,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    const [user, organisation] = await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-
-    if (!file) {
-      Logger.error('No file provided');
-      throw new HttpException('No file provided', HttpStatus.BAD_REQUEST);
-    }
-
-    if (file.mimetype !== 'text/csv') {
-      Logger.error(`Invalid file type provided: ${file.mimetype}`);
-      throw new HttpException(
-        'Only CSV files are allowed',
-        HttpStatus.UNSUPPORTED_MEDIA_TYPE,
-      );
-    }
-
-    try {
-      const csvContent = file.buffer.toString('utf-8');
-      await this.funkService.importFunkItemsFromCsv(
-        csvContent,
-        organisation,
-        user,
-      );
-      return { message: 'CSV import completed successfully' };
-    } catch (error) {
-      Logger.error('Error importing CSV:', error);
-      throw new HttpException(
-        'Error processing CSV file: ' + error.message,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
 }

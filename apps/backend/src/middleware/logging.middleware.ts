@@ -10,7 +10,7 @@ export class LoggingMiddleware implements NestMiddleware {
 
     res.on('finish', () => {
       const elapsed = Date.now() - start;
-      if (elapsed > 0) {
+      if (elapsed > 500) {
         // Log if response time exceeds 500ms (customizable)
         this.logger.warn(`${req.method} ${req.originalUrl} took ${elapsed}ms`);
       }
