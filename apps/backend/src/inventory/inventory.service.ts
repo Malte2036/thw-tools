@@ -8,6 +8,7 @@ import {
 } from './schemas/inventory-item.schema';
 import mongoose, { Model } from 'mongoose';
 import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
+import { InventoryItemCustomData } from './schemas/inventory-item-custom-data.schema';
 
 export const InventarCsvRowSchema = z.object({
   Ebene: z.string(),
@@ -31,26 +32,58 @@ export class InventoryService {
   constructor(
     @InjectModel(InventoryItem.name)
     private inventoryItemModel: Model<InventoryItem>,
+    @InjectModel(InventoryItemCustomData.name)
+    private inventoryItemCustomDataModel: Model<InventoryItemCustomData>,
   ) {}
 
   async getInventoryItems(organisationId: mongoose.Types.ObjectId) {
-    return this.inventoryItemModel
+    const items = await this.inventoryItemModel
       .find({
         organisation: organisationId,
       })
       .exec();
-  }
 
-  async getInventoryItemByInventarNummer(
-    organisationId: mongoose.Types.ObjectId,
-    inventarNummer: string,
-  ) {
-    return this.inventoryItemModel
-      .findOne({
-        organisation: organisationId,
-        inventarNummer,
+    const customData = await this.inventoryItemCustomDataModel
+      .find({
+        inventoryItem: { $in: items.map((item) => item._id) },
       })
       .exec();
+
+    const customDataMap = new Map(
+      customData.map((data) => [data.inventoryItem.toString(), data]),
+    );
+
+    return items.map((item) => ({
+      ...item.toObject(),
+      customData: customDataMap.get(item._id.toString()) || null,
+    }));
+  }
+
+  async getInventoryItemById(
+    organisationId: mongoose.Types.ObjectId,
+    id: mongoose.Types.ObjectId,
+  ) {
+    const item = await this.inventoryItemModel
+      .findOne({
+        _id: id,
+        organisation: organisationId,
+      })
+      .exec();
+
+    if (!item) {
+      return null;
+    }
+
+    const customData = await this.inventoryItemCustomDataModel
+      .findOne({
+        inventoryItem: item._id,
+      })
+      .exec();
+
+    return {
+      ...item.toObject(),
+      customData: customData || null,
+    };
   }
 
   async parseCsvData(
@@ -226,4 +259,32 @@ export class InventoryService {
   deleteAllInventoryItemsByEinheit = async (einheit: string[]) => {
     return this.inventoryItemModel.deleteMany({ einheit: { $in: einheit } });
   };
+
+  async updateCustomData(
+    inventoryItemId: mongoose.Types.ObjectId,
+    customData: Partial<Pick<InventoryItemCustomData, 'lastScanned' | 'note'>>,
+  ) {
+    const existingCustomData = await this.inventoryItemCustomDataModel.findOne({
+      inventoryItem: inventoryItemId,
+    });
+
+    if (existingCustomData) {
+      // Update existing custom data
+      return this.inventoryItemCustomDataModel
+        .findByIdAndUpdate(
+          existingCustomData._id,
+          { $set: customData },
+          { new: true },
+        )
+        .exec();
+    }
+
+    // Create new custom data
+    const newCustomData = new this.inventoryItemCustomDataModel({
+      inventoryItem: inventoryItemId,
+      ...customData,
+    });
+
+    return newCustomData.save();
+  }
 }

@@ -8,6 +8,8 @@ import {
   InventoryItemSchema,
 } from './schemas/inventory-item.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { InventoryItemCustomDataSchema } from './schemas/inventory-item-custom-data.schema';
+import { InventoryItemCustomData } from './schemas/inventory-item-custom-data.schema';
 
 @Module({
   imports: [
@@ -15,6 +17,10 @@ import { MongooseModule } from '@nestjs/mongoose';
       {
         name: InventoryItem.name,
         schema: InventoryItemSchema,
+      },
+      {
+        name: InventoryItemCustomData.name,
+        schema: InventoryItemCustomDataSchema,
       },
     ]),
     UserModule,
