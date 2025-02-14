@@ -139,22 +139,11 @@ export class InventoryController {
       );
     }
 
-    const item = await this.inventoryService.findOneByOrganisation(
-      id,
-      organisation.id,
-    );
-    if (!item) {
-      throw new HttpException('Inventory item not found', HttpStatus.NOT_FOUND);
-    }
-
-    const updatedCustomData = await this.inventoryService.updateCustomData(
+    const updatedItem = await this.inventoryService.updateCustomData(
       id,
       validationResult.data,
     );
 
-    return {
-      id: item.id,
-      customData: updatedCustomData,
-    };
+    return updatedItem;
   }
 }

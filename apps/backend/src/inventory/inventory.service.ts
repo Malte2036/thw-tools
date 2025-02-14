@@ -243,7 +243,7 @@ export class InventoryService {
   async updateCustomData(
     id: string,
     updateCustomDataDto: UpdateCustomDataDto,
-  ): Promise<InventoryItemCustomData> {
+  ): Promise<InventoryItem> {
     const inventoryItem = await this.inventoryItemRepository.findOne({
       where: { id },
       relations: ['customData'],
@@ -258,16 +258,17 @@ export class InventoryService {
         ...updateCustomDataDto,
         inventoryItem,
       });
-      return this.customDataRepository.save(customData);
+      await this.customDataRepository.save(customData);
+    } else {
+      await this.customDataRepository.update(
+        inventoryItem.customData.id,
+        updateCustomDataDto,
+      );
     }
 
-    await this.customDataRepository.update(
-      inventoryItem.customData.id,
-      updateCustomDataDto,
+    return this.findOneByOrganisation(
+      inventoryItem.id,
+      inventoryItem.organisation.id,
     );
-
-    return this.customDataRepository.findOne({
-      where: { id: inventoryItem.customData.id },
-    });
   }
 }
