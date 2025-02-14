@@ -211,8 +211,12 @@ export class InventoryService {
     return this.inventoryItemRepository.delete({ einheit: In(einheit) });
   };
 
-  async findAll(): Promise<InventoryItem[]> {
-    return this.inventoryItemRepository.find({
+  async findOneByOrganisation(
+    id: string,
+    organisationId: string,
+  ): Promise<InventoryItem> {
+    return this.inventoryItemRepository.findOne({
+      where: { id, organisation: { id: organisationId } },
       relations: ['organisation', 'customData'],
       select: {
         organisation: {
@@ -222,21 +226,17 @@ export class InventoryService {
     });
   }
 
-  async findOneByOrganisation(
-    id: string,
-    organisationId: string,
-  ): Promise<InventoryItem> {
-    return this.inventoryItemRepository.findOne({
-      where: { id, organisation: { id: organisationId } },
-      relations: ['organisation', 'customData'],
-    });
-  }
-
   async findAllByOrganisation(
     organisationId: string,
   ): Promise<InventoryItem[]> {
     return this.inventoryItemRepository.find({
       where: { organisation: { id: organisationId } },
+      relations: ['organisation', 'customData'],
+      select: {
+        organisation: {
+          id: true,
+        },
+      },
     });
   }
 
