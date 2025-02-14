@@ -15,7 +15,7 @@ export class InventoryItem {
   id: string;
 
   @ManyToOne(() => Organisation, { nullable: false })
-  @JoinColumn({ name: 'organisation_id' })
+  @JoinColumn({ name: 'organisationId' })
   organisation: Organisation;
 
   @Column({ type: 'varchar', nullable: false })
@@ -62,6 +62,6 @@ export class InventoryItem {
     (customData) => customData.inventoryItem,
     { cascade: true },
   )
-  @JoinColumn({ name: 'custom_data_id' })
+  @JoinColumn({ name: 'customDataId' })
   customData: InventoryItemCustomData;
 }
