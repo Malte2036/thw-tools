@@ -3,8 +3,8 @@ import { inventory } from '$lib/shared/stores/inventoryStore';
 import { db } from '$lib/utils/db';
 import { apiGet, apiPostFile, apiPatch } from './apiGeneric';
 import {
-	ImportInventoryItemsResultZodSchema,
-	InventoryItemZodSchema,
+	ImportInventoryItemsResultSchema,
+	InventoryItemSchema,
 	type ImportInventoryItemsResult,
 	type InventoryItem,
 	type InventoryItemCustomData,
@@ -13,7 +13,7 @@ import {
 
 export async function fetchInventoryItems(): Promise<void> {
 	const fetchPromise = apiGet<InventoryItem[]>('/inventory', (data) => {
-		const result = InventoryItemZodSchema.array().safeParse(data);
+		const result = InventoryItemSchema.array().safeParse(data);
 		if (!result.success) {
 			console.error('Error parsing InventoryItem[]:', result.error);
 		}
@@ -47,7 +47,7 @@ export async function uploadInventoryTHWInExportFile(
 		'/inventory/import/csv',
 		file,
 		(data) => {
-			const result = ImportInventoryItemsResultZodSchema.safeParse(data);
+			const result = ImportInventoryItemsResultSchema.safeParse(data);
 			if (!result.success) {
 				console.error('Error parsing ImportInventoryItemsResult:', result.error);
 			}

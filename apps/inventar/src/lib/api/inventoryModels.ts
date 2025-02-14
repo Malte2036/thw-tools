@@ -13,7 +13,7 @@ export const InventoryItemCustomDataSchema = z.object({
 
 export type InventoryItemCustomData = z.infer<typeof InventoryItemCustomDataSchema>;
 
-export const InventoryItemZodSchema = z.object({
+export const InventoryItemSchema = z.object({
 	id: InventoryItemIdSchema,
 	organisation: z.object({
 		id: OrganisationIdSchema
@@ -38,11 +38,11 @@ export const InventoryItemZodSchema = z.object({
 	customData: InventoryItemCustomDataSchema.nullable().optional()
 });
 
-export type InventoryItem = z.infer<typeof InventoryItemZodSchema>;
+export type InventoryItem = z.infer<typeof InventoryItemSchema>;
 
-export const ImportInventoryItemsResultZodSchema = z.object({
+export const ImportInventoryItemsResultSchema = z.object({
 	count: z.number().int(),
 	einheiten: z.string().array()
 });
 
-export type ImportInventoryItemsResult = z.infer<typeof ImportInventoryItemsResultZodSchema>;
+export type ImportInventoryItemsResult = z.infer<typeof ImportInventoryItemsResultSchema>;
