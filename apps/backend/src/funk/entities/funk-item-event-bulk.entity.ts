@@ -11,7 +11,7 @@ import { User } from '../../user/entities/user.entity';
 import { FunkItemEvent, FunkItemEventType } from './funk-item-event.entity';
 import { Organisation } from '../../organisation/entities/organisation.entity';
 
-@Entity({ name: 'funk_item_event_bulks' })
+@Entity({ name: 'funk_item_event_bulks', schema: 'inventory' })
 @Index(['organisation', 'date'])
 export class FunkItemEventBulk {
   @PrimaryGeneratedColumn('uuid')
@@ -20,8 +20,8 @@ export class FunkItemEventBulk {
   @ManyToMany(() => FunkItemEvent)
   @JoinTable({
     name: 'funk_item_event_bulk_events',
-    joinColumn: { name: 'bulk_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'event_id', referencedColumnName: 'id' },
+    joinColumn: { name: 'bulkId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'eventId', referencedColumnName: 'id' },
   })
   funkItemEvents: FunkItemEvent[];
 

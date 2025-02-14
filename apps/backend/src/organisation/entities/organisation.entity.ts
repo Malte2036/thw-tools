@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 
-@Entity({ name: 'organisations' })
+@Entity({ name: 'organisations', schema: 'inventory' })
 export class Organisation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -21,8 +21,8 @@ export class Organisation {
   @ManyToMany(() => User)
   @JoinTable({
     name: 'organisation_members',
-    joinColumn: { name: 'organisation_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    joinColumn: { name: 'organisationId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
   })
   members: User[];
 }

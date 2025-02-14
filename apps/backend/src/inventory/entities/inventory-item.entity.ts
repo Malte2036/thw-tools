@@ -9,10 +9,7 @@ import {
 import { Organisation } from 'src/organisation/entities/organisation.entity';
 import { InventoryItemCustomData } from './inventory-item-custom-data.entity';
 
-/**
- * Represents an inventory item in the system.
- */
-@Entity({ name: 'inventory_items' })
+@Entity({ name: 'inventory_items', schema: 'inventory' })
 export class InventoryItem {
   @PrimaryGeneratedColumn('uuid')
   id: string;

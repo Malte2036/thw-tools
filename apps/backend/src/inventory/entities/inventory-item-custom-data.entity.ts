@@ -4,7 +4,7 @@ import { InventoryItem } from './inventory-item.entity';
 /**
  * Represents additional custom data associated with an inventory item.
  */
-@Entity({ name: 'inventory_item_custom_data' })
+@Entity({ name: 'inventory_item_custom_data', schema: 'inventory' })
 export class InventoryItemCustomData {
   @PrimaryGeneratedColumn('uuid')
   id: string;

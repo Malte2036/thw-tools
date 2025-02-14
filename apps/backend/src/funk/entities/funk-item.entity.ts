@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Organisation } from '../../organisation/entities/organisation.entity';
 
-@Entity({ name: 'funk_items' })
+@Entity({ name: 'funk_items', schema: 'inventory' })
 @Index(['deviceId', 'organisation'], { unique: true })
 export class FunkItem {
   @PrimaryGeneratedColumn('uuid')

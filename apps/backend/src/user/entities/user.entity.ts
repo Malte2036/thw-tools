@@ -3,7 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 /**
  * Represents a user in the system.
  */
-@Entity({ name: 'users' })
+@Entity({ name: 'users', schema: 'inventory' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;

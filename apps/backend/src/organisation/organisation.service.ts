@@ -13,11 +13,14 @@ export class OrganisationService {
   ) {}
 
   async getPrimaryOrganisationsForUser(userId: string) {
-    return this.organisationRepository
-      .createQueryBuilder('organisation')
-      .innerJoinAndSelect('organisation.members', 'member')
-      .where('member.id = :userId', { userId })
-      .getOne();
+    return this.organisationRepository.findOne({
+      where: {
+        members: {
+          id: userId,
+        },
+      },
+      relations: ['members'],
+    });
   }
 
   async addUserToOrganisation(user: User, inviteCode: string) {

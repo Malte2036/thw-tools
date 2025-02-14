@@ -10,7 +10,7 @@ import { User } from '../../user/entities/user.entity';
 
 export type FunkItemEventType = 'borrowed' | 'returned';
 
-@Entity({ name: 'funk_item_events' })
+@Entity({ name: 'funk_item_events', schema: 'inventory' })
 @Index(['funkItem', 'date'])
 export class FunkItemEvent {
   @PrimaryGeneratedColumn('uuid')
