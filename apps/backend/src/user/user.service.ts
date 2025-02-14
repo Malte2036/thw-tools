@@ -23,7 +23,6 @@ export class UserService {
     kindeId: string,
     userData: Partial<User>,
   ): Promise<User> {
-    // Use a transaction to prevent race conditions
     return this.dataSource.transaction(async (manager) => {
       // Lock the row if it exists
       let user = await manager
@@ -33,12 +32,8 @@ export class UserService {
         .getOne();
 
       if (!user) {
-        user = manager.create(User, {
-          kindeId,
-          ...userData,
-        });
+        user = manager.create(User, { kindeId, ...userData });
       } else {
-        // Update existing user
         Object.assign(user, userData);
       }
 

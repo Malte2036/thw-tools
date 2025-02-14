@@ -35,6 +35,7 @@ import { QuestionAnswer } from './quiz-stats/schemas/question-answer.schema';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
+      schema: 'public',
       entities: [
         User,
         Organisation,
