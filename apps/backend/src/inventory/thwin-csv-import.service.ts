@@ -6,20 +6,50 @@ import { parse } from 'csv-parse';
 // Format: XXXX-YYYYYY where X is 4 digits, Y is up to 6 digits/letters, optionally with an S prefix
 export const inventarNummerRegex = /^\d{4}-(?:S)?\d{6}$/;
 
+const getKeyFromDelimitedString = (
+  str: string,
+  delimiter: string,
+  index: number,
+) => {
+  const split = str.split(delimiter);
+  if (split.length <= index) {
+    return null;
+  }
+
+  return split[index].trim();
+};
+
+const sanitizeValue = (value: any) => {
+  if (typeof value === 'string') {
+    const res = value.trim();
+    if (res.length === 0) {
+      return null;
+    }
+
+    if (res.startsWith('-')) {
+      return sanitizeValue(res.substring(1));
+    }
+
+    return res;
+  }
+
+  return value;
+};
+
 const transformString = (val: string | null | undefined) =>
-  val?.trim() === '' || !val ? null : val.trim();
+  sanitizeValue(val) === null ? null : String(sanitizeValue(val));
 
 const transformNumber = (val: string | null | undefined) => {
   if (!val || val.trim() === '') return null;
   // Replace German number format
-  const normalized = val.trim().replace(',', '.');
-  const num = parseFloat(normalized);
+  const normalized = sanitizeValue(val.trim().replace(',', '.'));
+  const num = parseFloat(String(normalized));
   return isNaN(num) ? null : num;
 };
 
 const transformInteger = (val: string | null | undefined) => {
   if (!val || val.trim() === '') return null;
-  const num = parseInt(val.trim());
+  const num = parseInt(String(sanitizeValue(val.trim())));
   return isNaN(num) ? null : num;
 };
 
@@ -47,7 +77,7 @@ export interface CsvImportResult {
 }
 
 @Injectable()
-export class CsvImportService {
+export class ThwinCsvImportService {
   async parseCsvFile(file: Express.Multer.File): Promise<InventarCsvRow[]> {
     const records: InventarCsvRow[] = [];
 
@@ -100,10 +130,21 @@ export class CsvImportService {
         }
 
         try {
-          const ausstattungParts =
-            record['Ausstattung | Hersteller | Typ']
-              ?.split('|')
-              .map(transformString) ?? [];
+          const ausstattung = getKeyFromDelimitedString(
+            record['Ausstattung | Hersteller | Typ'] ?? '',
+            '|',
+            0,
+          );
+          const hersteller = getKeyFromDelimitedString(
+            record['Ausstattung | Hersteller | Typ'] ?? '',
+            '|',
+            1,
+          );
+          const typ = getKeyFromDelimitedString(
+            record['Ausstattung | Hersteller | Typ'] ?? '',
+            '|',
+            2,
+          );
 
           return {
             organisationId: organisation.id,
@@ -113,9 +154,9 @@ export class CsvImportService {
             menge: record.Menge,
             mengeIst: record['Menge Ist'],
             verfuegbar: record.Verfügbar,
-            ausstattung: ausstattungParts[0] ?? null,
-            hersteller: ausstattungParts[1] ?? null,
-            typ: ausstattungParts[2] ?? null,
+            ausstattung,
+            hersteller,
+            typ,
             inventarNummer: record['Inventar Nr']?.match(inventarNummerRegex)
               ? record['Inventar Nr']
               : null,

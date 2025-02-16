@@ -2,13 +2,18 @@ import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import type { Organisation, InventoryItem } from '@prisma/client';
 import { UpdateCustomDataDto } from './dto/update-custom-data.dto';
-import { CsvImportService, CsvImportResult } from './csv-import.service';
+import {
+  ThwinCsvImportService,
+  CsvImportResult,
+} from './thwin-csv-import.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class InventoryService {
   constructor(
     private prisma: PrismaService,
-    private csvImportService: CsvImportService,
+    private userService: UserService,
+    private csvImportService: ThwinCsvImportService,
   ) {}
 
   async parseCsvData(
