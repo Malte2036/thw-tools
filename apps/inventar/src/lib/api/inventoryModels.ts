@@ -6,7 +6,9 @@ const inventarNummerRegex = /^[A-Za-z0-9-]+$/; // Assuming this is the regex pat
 export type InventoryItemId = string & BRAND<'InventoryItemId'>;
 export const InventoryItemIdSchema = z.string().brand<'InventoryItemId'>();
 
+export const InventoryItemCustomDataIdSchema = z.string().brand<'InventoryItemCustomDataId'>();
 export const InventoryItemCustomDataSchema = z.object({
+	id: InventoryItemCustomDataIdSchema,
 	lastScanned: z.coerce.date().optional(),
 	note: z.string().max(1000).nullable().optional()
 });
@@ -15,9 +17,7 @@ export type InventoryItemCustomData = z.infer<typeof InventoryItemCustomDataSche
 
 export const InventoryItemSchema = z.object({
 	id: InventoryItemIdSchema,
-	organisation: z.object({
-		id: OrganisationIdSchema
-	}),
+	organisationId: OrganisationIdSchema,
 	einheit: z.string(),
 	ebene: z.number().int(),
 	art: z.string().nullable().optional(),
@@ -35,6 +35,7 @@ export const InventoryItemSchema = z.object({
 	sachNummer: z.string().nullable().optional(),
 	gerateNummer: z.string().nullable().optional(),
 	status: z.string().nullable().optional(),
+	customDataId: InventoryItemCustomDataIdSchema.nullable().optional(),
 	customData: InventoryItemCustomDataSchema.nullable().optional()
 });
 
