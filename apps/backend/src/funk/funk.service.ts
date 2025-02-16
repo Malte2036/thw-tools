@@ -165,26 +165,7 @@ export class FunkService {
       include: {
         events: {
           include: {
-            event: {
-              include: {
-                funkItem: true,
-                user: {
-                  select: {
-                    id: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        user: {
-          select: {
-            id: true,
-          },
-        },
-        organisation: {
-          select: {
-            id: true,
+            event: true,
           },
         },
       },
