@@ -102,7 +102,7 @@ export class InventoryController {
     );
 
     const res = await this.inventoryService.parseCsvData(organisation, file);
-    Logger.log('Processed CSV data', res);
+    Logger.log('Processed CSV data');
     return res;
   }
 
