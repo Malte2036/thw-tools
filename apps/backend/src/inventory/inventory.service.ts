@@ -58,11 +58,6 @@ export class InventoryService {
     return this.prisma.inventoryItem.findMany({
       where: { organisationId },
       include: {
-        organisation: {
-          select: {
-            id: true,
-          },
-        },
         customData: true,
       },
     });
