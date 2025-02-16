@@ -15,6 +15,8 @@ COPY . .
 
 ENV NODE_ENV=production
 
+RUN npx prisma generate
+
 # Build the application
 RUN pnpm run build
 
