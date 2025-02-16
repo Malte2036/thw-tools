@@ -83,6 +83,28 @@ docker build -t thw-tools-backend .
 docker run -p 3000:3000 thw-tools-backend
 ```
 
+### Production Migrations
+
+To run database migrations in production:
+
+1. Get the container name:
+
+```bash
+docker ps
+```
+
+2. Access the running container:
+
+```bash
+docker exec -it <your-container-name> sh
+```
+
+3. Run Prisma migrations:
+
+```bash
+npx prisma migrate deploy
+```
+
 ## 📚 Documentation
 
 API documentation is available at `/api/docs` when running the server.
