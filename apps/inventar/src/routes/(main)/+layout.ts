@@ -44,8 +44,8 @@ export const load = (async ({ url }) => {
 						)
 					}))
 					.sort((a, b) => {
-						const dateA = a.lastEvent ? new Date(a.lastEvent.event.date).getTime() : 0;
-						const dateB = b.lastEvent ? new Date(b.lastEvent.event.date).getTime() : 0;
+						const dateA = a.lastEvent ? new Date(a.lastEvent.date).getTime() : 0;
+						const dateB = b.lastEvent ? new Date(b.lastEvent.date).getTime() : 0;
 						return dateB - dateA;
 					})
 					.map((item) => item.item),

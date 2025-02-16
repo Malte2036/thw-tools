@@ -34,7 +34,7 @@
 			isSearchStringInFunkItemEvent(
 				search,
 				event,
-				getOrganisationMemberByInternalId($user, event.event.userId)?.user
+				getOrganisationMemberByInternalId($user, event.userId)?.user
 			)
 		);
 	};
@@ -49,7 +49,7 @@
 
 		const data = await getFunkItemEvents(deviceId);
 
-		data.sort((a, b) => new Date(b.event.date).getTime() - new Date(a.event.date).getTime());
+		data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 		events = data;
 	}
 
@@ -70,7 +70,7 @@
 			{#if events.length === 0}
 				<p>Keine Ereignisse vorhanden.</p>
 			{:else}
-				{#each filteredEvents as event (event.eventId)}
+				{#each filteredEvents as event (event.id)}
 					<InventarItemEventItem {event} {deviceId} item={undefined} isSelected={false} secondary />
 				{/each}
 			{/if}

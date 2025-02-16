@@ -35,16 +35,14 @@
 					searchedDeviceId,
 					data.item,
 					data.lastEvent,
-					getOrganisationMemberByInternalId($user, data.lastEvent.event.userId)?.user
+					getOrganisationMemberByInternalId($user, data.lastEvent.userId)?.user
 				)
 			) ?? []
 	);
 
-	let borrowedItems = $derived(
-		filteredItems.filter((data) => data?.lastEvent?.event.type === 'borrowed')
-	);
+	let borrowedItems = $derived(filteredItems.filter((data) => data?.lastEvent.type === 'borrowed'));
 	let availableItems = $derived(
-		filteredItems.filter((data) => data?.lastEvent?.event.type === 'returned')
+		filteredItems.filter((data) => data?.lastEvent.type === 'returned')
 	);
 </script>
 

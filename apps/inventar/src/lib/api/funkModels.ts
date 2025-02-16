@@ -30,22 +30,26 @@ export type FunkItem = z.infer<typeof FunkItemSchema>;
 export type FunkItemEventType = 'borrowed' | 'returned';
 
 export const FunkItemEventSchema = z.object({
-	eventId: FunkItemEventIdSchema,
-	bulkId: FunkItemEventBulkIdSchema,
-	event: z.object({
-		id: FunkItemEventIdSchema,
-		funkItemId: FunkItemIdSchema,
-		userId: UserIdSchema,
-		type: z.enum(['borrowed', 'returned']).default('borrowed'),
-		date: z.string()
-	})
+	id: FunkItemEventIdSchema,
+	funkItemId: FunkItemIdSchema,
+	userId: UserIdSchema,
+	type: z.enum(['borrowed', 'returned']).default('borrowed'),
+	date: z.string()
 });
 
 export type FunkItemEvent = z.infer<typeof FunkItemEventSchema>;
 
+export const FunkItemEventBulkEntrySchema = z.object({
+	eventId: FunkItemEventIdSchema,
+	bulkId: FunkItemEventBulkIdSchema,
+	event: FunkItemEventSchema
+});
+
+export type FunkItemEventBulkEntry = z.infer<typeof FunkItemEventBulkEntrySchema>;
+
 export const FunkItemEventBulkSchema = z.object({
 	id: FunkItemEventBulkIdSchema,
-	events: z.array(FunkItemEventSchema),
+	events: z.array(FunkItemEventBulkEntrySchema),
 	batteryCount: z.number(),
 	eventType: z.enum(['borrowed', 'returned']),
 	userId: UserIdSchema,
@@ -130,7 +134,7 @@ export function isSearchStringInFunkItemEvent(
 ): boolean {
 	return searchStringIsInArray(searchString.trim(), [
 		eventUser && userToFriendlyString(eventUser),
-		dateToFriendlyString(new Date(event.event.date)),
-		eventTypeToFriendlyString(event.event.type)
+		dateToFriendlyString(new Date(event.date)),
+		eventTypeToFriendlyString(event.type)
 	]);
 }

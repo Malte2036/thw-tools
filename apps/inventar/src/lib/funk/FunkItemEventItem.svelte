@@ -20,7 +20,7 @@
 
 	let { event, deviceId, isSelected, item, secondary = false }: Props = $props();
 
-	const eventUser = getOrganisationMemberByInternalId($user, event.event.userId)?.user;
+	const eventUser = getOrganisationMemberByInternalId($user, event.userId)?.user;
 
 	let itemType: string | undefined = $state(undefined);
 
@@ -39,16 +39,16 @@
 	class:selectedItem={isSelected}
 	href={`/funk/device/${deviceId}`}
 >
-	<div class="text-2xl">{eventTypeToEmoji(event.event.type)}</div>
+	<div class="text-2xl">{eventTypeToEmoji(event.type)}</div>
 	<div class="flex flex-col gap-0 w-full">
 		<div class="flex flex-row gap-2 justify-between w-full">
 			<div class="text-nowrap font-bold">{deviceId}</div>
 			<div class="flex gap-1">
 				<div
 					class="rounded-xl text-sm px-2 h-min bg-green-200 whitespace-nowrap"
-					class:isBorrowed={event.event.type === 'borrowed'}
+					class:isBorrowed={event.type === 'borrowed'}
 				>
-					{itemType ?? eventTypeToFriendlyString(event.event.type)}
+					{itemType ?? eventTypeToFriendlyString(event.type)}
 				</div>
 			</div>
 		</div>
@@ -62,7 +62,7 @@
 				</span>
 				{' am '}
 				<span>
-					{dateToFriendlyString(new Date(event.event.date))}
+					{dateToFriendlyString(new Date(event.date))}
 				</span>
 			</div>
 		</div>
