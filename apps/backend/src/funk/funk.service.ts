@@ -15,13 +15,6 @@ export class FunkService {
   async getFunkItems(organisationId: string) {
     return this.prisma.funkItem.findMany({
       where: { organisationId },
-      include: {
-        organisation: {
-          select: {
-            id: true,
-          },
-        },
-      },
     });
   }
 
@@ -30,13 +23,6 @@ export class FunkService {
       where: {
         organisationId,
         deviceId,
-      },
-      include: {
-        organisation: {
-          select: {
-            id: true,
-          },
-        },
       },
     });
   }
@@ -59,13 +45,6 @@ export class FunkService {
         deviceId: data.deviceId,
         organisationId,
       },
-      include: {
-        organisation: {
-          select: {
-            id: true,
-          },
-        },
-      },
     });
   }
 
@@ -78,18 +57,6 @@ export class FunkService {
   async getFunkItemEvents(item: FunkItem) {
     return this.prisma.funkItemEvent.findMany({
       where: { funkItemId: item.id },
-      include: {
-        user: {
-          select: {
-            id: true,
-          },
-        },
-        funkItem: {
-          select: {
-            id: true,
-          },
-        },
-      },
       orderBy: { date: 'desc' },
     });
   }
