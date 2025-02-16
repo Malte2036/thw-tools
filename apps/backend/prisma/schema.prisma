@@ -9,7 +9,19 @@ datasource db {
   schemas  = ["public", "inventory"]
 }
 
-// Quiz schema (public)
+//
+// PUBLIC SCHEMA - Quiz Models
+//
+enum QuizType {
+  ga
+  agt
+  cbrn
+  radio
+
+  @@map("quiz_type")
+  @@schema("public")
+}
+
 model Question {
   id      Int              @id @default(autoincrement())
   type    QuizType
@@ -19,18 +31,19 @@ model Question {
   answers QuestionAnswer[]
   stats   QuestionStats[]
 
-  @@unique([type, number], map: "IDX_question_type_number")
+  @@unique([type, number])
   @@map("questions")
   @@schema("public")
 }
 
 model QuestionAnswer {
-  id        Int      @id @default(autoincrement())
-  text      String   @db.Text
-  isCorrect Boolean
+  id         Int      @id @default(autoincrement())
+  text       String   @db.Text
+  isCorrect  Boolean
   questionId Int
-  question  Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
+  @@index([questionId])
   @@map("question_answers")
   @@schema("public")
 }
@@ -48,37 +61,28 @@ model QuestionStats {
   @@schema("public")
 }
 
-enum QuizType {
-  ga
-  agt
-  cbrn
-  radio
-
-  @@map("quiz_type")
-  @@schema("public")
-}
-
-// Core schema (inventory)
+//
+// INVENTORY SCHEMA - Core Models
+//
 model User {
-  id                String                @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(uuid()) @db.Uuid
-  kindeId           String               @unique(map: "UQ_4de10777c43acf165e02782b618") @db.VarChar
-  email             String?              @db.VarChar
-  firstName         String?              @db.VarChar
-  lastName          String?              @db.VarChar
-  picture           String?              @db.VarChar
+  id                String                @id @default(uuid()) @db.Uuid
+  kindeId           String               @unique @db.VarChar(255)
+  email             String?              @db.VarChar(255)
+  firstName         String?              @db.VarChar(100)
+  lastName          String?              @db.VarChar(100)
+  picture           String?              @db.VarChar(1000)
   eventBulks        FunkItemEventBulk[]
   funkItemEvents    FunkItemEvent[]
   organisations     OrganisationMember[]
 
-  @@index([kindeId], map: "IDX_4de10777c43acf165e02782b61")
   @@map("users")
   @@schema("inventory")
 }
 
 model Organisation {
-  id                String                @id(map: "PK_7bf54cba378d5b2f1d4c10ef4df") @default(uuid()) @db.Uuid
-  name              String               @db.VarChar
-  inviteCode        String               @unique(map: "UQ_f7c29efe391219ff62cd0390623") @db.VarChar
+  id                String                @id @default(uuid()) @db.Uuid
+  name              String               @db.VarChar(255)
+  inviteCode        String               @unique @db.VarChar(50)
   eventBulks        FunkItemEventBulk[]
   funkItems         FunkItem[]
   inventoryItems    InventoryItem[]
@@ -91,29 +95,18 @@ model Organisation {
 model OrganisationMember {
   organisationId String       @db.Uuid
   userId        String       @db.Uuid
-  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade, map: "FK_4441d3205f3198802398a15e567")
-  organisation  Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade, map: "FK_5abe5b0a1d4f49c3935be315896")
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organisation  Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
 
-  @@id([organisationId, userId], map: "PK_31c59fd239370273eaebae47286")
-  @@index([userId], map: "IDX_4441d3205f3198802398a15e56")
-  @@index([organisationId], map: "IDX_5abe5b0a1d4f49c3935be31589")
+  @@id([organisationId, userId])
+  @@index([userId])
   @@map("organisation_members")
   @@schema("inventory")
 }
 
-// Funk schema (inventory)
-model FunkItem {
-  id            String          @id(map: "PK_4018f31dcfa717cce5e1c63c95e") @default(uuid()) @db.Uuid
-  deviceId      String         @db.VarChar
-  organisationId String        @db.Uuid
-  events        FunkItemEvent[]
-  organisation  Organisation   @relation(fields: [organisationId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a171aa88c450ece840e031d055e")
-
-  @@unique([deviceId, organisationId], map: "IDX_2b2b93c6e6d4ce9336d9dfd45a")
-  @@map("funk_items")
-  @@schema("inventory")
-}
-
+//
+// INVENTORY SCHEMA - Funk Models
+//
 enum FunkItemEventType {
   borrowed
   returned
@@ -122,33 +115,45 @@ enum FunkItemEventType {
   @@schema("inventory")
 }
 
+model FunkItem {
+  id            String          @id @default(uuid()) @db.Uuid
+  deviceId      String         @db.VarChar(100)
+  organisationId String        @db.Uuid
+  events        FunkItemEvent[]
+  organisation  Organisation   @relation(fields: [organisationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([deviceId, organisationId])
+  @@map("funk_items")
+  @@schema("inventory")
+}
+
 model FunkItemEvent {
-  id            String                  @id(map: "PK_fb2bee4ee4c31d14b2c904abf99") @default(uuid()) @db.Uuid
+  id            String                  @id @default(uuid()) @db.Uuid
   type          FunkItemEventType
   date          DateTime                @default(now()) @db.Timestamp(6)
   funkItemId    String                  @db.Uuid
   userId        String                  @db.Uuid
   bulkEvents    FunkItemEventBulkEvent[]
-  funkItem      FunkItem               @relation(fields: [funkItemId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ba49abe2ebe730facad537e18ec")
-  user          User                   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_cc83c2dc763d279bf242f7fddb6")
+  funkItem      FunkItem               @relation(fields: [funkItemId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user          User                   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@index([funkItemId, date], map: "IDX_a03810bb1dbfb743062c5252c3")
+  @@index([funkItemId, date])
   @@map("funk_item_events")
   @@schema("inventory")
 }
 
 model FunkItemEventBulk {
-  id            String                  @id(map: "PK_4b609ea84dc00cc7b09094f1f47") @default(uuid()) @db.Uuid
+  id            String                  @id @default(uuid()) @db.Uuid
   eventType     FunkItemEventType
   batteryCount  Int                     @default(0)
   date          DateTime                @default(now()) @db.Timestamp(6)
   userId        String                  @db.Uuid
   organisationId String                 @db.Uuid
   events        FunkItemEventBulkEvent[]
-  user          User                    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_6eab85aafc800335fbb7cd820f6")
-  organisation  Organisation           @relation(fields: [organisationId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_efc4f393db82fef35416923830c")
+  user          User                    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  organisation  Organisation           @relation(fields: [organisationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@index([organisationId, date], map: "IDX_f39cc7f4cd7e50e0ef8b88951c")
+  @@index([organisationId, date])
   @@map("funk_item_event_bulks")
   @@schema("inventory")
 }
@@ -156,45 +161,47 @@ model FunkItemEventBulk {
 model FunkItemEventBulkEvent {
   bulkId  String           @db.Uuid
   eventId String           @db.Uuid
-  bulk    FunkItemEventBulk @relation(fields: [bulkId], references: [id], onDelete: Cascade, map: "FK_4ff567fb9c4a09fae13bcbc7dd3")
-  event   FunkItemEvent    @relation(fields: [eventId], references: [id], onDelete: Cascade, map: "FK_9af286bc003b40828e1ae893cab")
+  bulk    FunkItemEventBulk @relation(fields: [bulkId], references: [id], onDelete: Cascade)
+  event   FunkItemEvent    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-  @@id([bulkId, eventId], map: "PK_f72bada2a3ce312defcf9f9bcec")
-  @@index([bulkId], map: "IDX_4ff567fb9c4a09fae13bcbc7dd")
-  @@index([eventId], map: "IDX_9af286bc003b40828e1ae893ca")
+  @@id([bulkId, eventId])
   @@map("funk_item_event_bulk_events")
   @@schema("inventory")
 }
 
-// Inventory schema (inventory)
+//
+// INVENTORY SCHEMA - Inventory Models
+//
 model InventoryItem {
-  id            String                   @id(map: "PK_cf2f451407242e132547ac19169") @default(uuid()) @db.Uuid
-  einheit       String                   @db.VarChar
-  ebene         Int
-  art           String?                  @db.VarChar
-  menge         Float?
-  mengeIst      Float?
-  verfuegbar    Float?
-  ausstattung   String                   @db.VarChar
-  hersteller    String?                  @db.VarChar
-  typ           String?                  @db.VarChar
-  inventarNummer String?                 @db.VarChar
-  sachNummer    String?                  @db.VarChar
-  gerateNummer  String?                  @db.VarChar
-  status        String?                  @db.VarChar
-  organisationId String                  @db.Uuid
-  customDataId  String?                  @unique(map: "REL_430e647b0479b7dd3030d29d2d") @db.Uuid
-  customData    InventoryItemCustomData? @relation(fields: [customDataId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_430e647b0479b7dd3030d29d2d8")
-  organisation  Organisation            @relation(fields: [organisationId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_4ae968223e9cbad14d439d71b45")
+  id             String                   @id @default(uuid()) @db.Uuid
+  einheit        String                   @db.VarChar(100)
+  ebene          Int
+  art            String?                  @db.VarChar(100)
+  menge          Float?                   @db.DoublePrecision
+  mengeIst       Float?                   @db.DoublePrecision
+  verfuegbar     Float?                   @db.DoublePrecision
+  ausstattung    String                   @db.VarChar(255)
+  hersteller     String?                  @db.VarChar(100)
+  typ            String?                  @db.VarChar(100)
+  inventarNummer String?                  @db.VarChar(50)
+  sachNummer     String?                  @db.VarChar(50)
+  gerateNummer   String?                  @db.VarChar(50)
+  status         String?                  @db.VarChar(50)
+  organisationId String                   @db.Uuid
+  customDataId   String?                  @unique @db.Uuid
+  customData     InventoryItemCustomData? @relation(fields: [customDataId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  organisation   Organisation            @relation(fields: [organisationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
+  @@index([organisationId])
+  @@index([einheit])
   @@map("inventory_items")
   @@schema("inventory")
 }
 
 model InventoryItemCustomData {
-  id          String        @id(map: "PK_76e2636d847c4125f6eec1af659") @default(uuid()) @db.Uuid
-  lastScanned DateTime?     @db.Timestamp(6)
-  note        String?       @db.VarChar(1000)
+  id          String         @id @default(uuid()) @db.Uuid
+  lastScanned DateTime?      @db.Timestamp(6)
+  note        String?        @db.VarChar(1000)
   item        InventoryItem?
 
   @@map("inventory_item_custom_data")
