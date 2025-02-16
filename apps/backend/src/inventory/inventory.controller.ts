@@ -44,34 +44,6 @@ export class InventoryController {
     return this.inventoryService.findAllByOrganisation(organisation.id);
   }
 
-  @Get(':id')
-  async findOne(
-    @Req() req: Request,
-    @Param('id') id: string,
-  ): Promise<InventoryItem> {
-    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-
-    if (!id) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST);
-    }
-
-    Logger.log(`Getting inventory item by ID: ${id}`);
-    const item = await this.inventoryService.findOneByOrganisation(
-      id,
-      organisation.id,
-    );
-
-    if (!item) {
-      throw new HttpException('Inventory item not found', HttpStatus.NOT_FOUND);
-    }
-
-    return item;
-  }
-
   @Post('import/csv')
   @UseInterceptors(FileInterceptor('file'))
   async importInventoryViaCsv(

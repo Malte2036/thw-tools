@@ -40,23 +40,6 @@ export class InventoryService {
     });
   };
 
-  async findOneByOrganisation(
-    id: string,
-    organisationId: string,
-  ): Promise<InventoryItem> {
-    return this.prisma.inventoryItem.findFirst({
-      where: { id, organisationId },
-      include: {
-        organisation: {
-          select: {
-            id: true,
-          },
-        },
-        customData: true,
-      },
-    });
-  }
-
   async findAllByOrganisation(
     organisationId: string,
   ): Promise<InventoryItem[]> {
