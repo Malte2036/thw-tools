@@ -49,7 +49,13 @@ cp .env.example .env
 # Edit .env with your settings
 ```
 
-4. Start development server
+4. Generate and run database migrations
+
+```bash
+npx prisma migrate dev
+```
+
+5. Start development server
 
 ```bash
 pnpm run start:dev
@@ -71,6 +77,9 @@ pnpm run test:cov     # Generate test coverage
 # Build
 pnpm run build        # Build for production
 pnpm run start:prod   # Start production server
+
+# Database
+npx prisma migrate dev # Generate and apply new migrations
 ```
 
 ### Docker

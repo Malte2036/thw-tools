@@ -6,11 +6,11 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["public", "inventory"]
+  schemas  = ["quiz", "inventory"]
 }
 
 //
-// PUBLIC SCHEMA - Quiz Models
+// QUIZ SCHEMA - Quiz Models
 //
 enum QuizType {
   ga
@@ -19,7 +19,7 @@ enum QuizType {
   radio
 
   @@map("quiz_type")
-  @@schema("public")
+  @@schema("quiz")
 }
 
 model Question {
@@ -33,7 +33,7 @@ model Question {
 
   @@unique([type, number])
   @@map("questions")
-  @@schema("public")
+  @@schema("quiz")
 }
 
 model QuestionAnswer {
@@ -45,7 +45,7 @@ model QuestionAnswer {
 
   @@index([questionId])
   @@map("question_answers")
-  @@schema("public")
+  @@schema("quiz")
 }
 
 model QuestionStats {
@@ -58,7 +58,7 @@ model QuestionStats {
   @@index([questionId])
   @@index([correct])
   @@map("question_stats")
-  @@schema("public")
+  @@schema("quiz")
 }
 
 //
