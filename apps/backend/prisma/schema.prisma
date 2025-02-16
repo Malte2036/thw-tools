@@ -114,9 +114,17 @@ model FunkItem {
   @@schema("inventory")
 }
 
+enum FunkItemEventType {
+  borrowed
+  returned
+
+  @@map("funk_item_event_type")
+  @@schema("inventory")
+}
+
 model FunkItemEvent {
   id            String                  @id(map: "PK_fb2bee4ee4c31d14b2c904abf99") @default(uuid()) @db.Uuid
-  type          String                  @db.VarChar
+  type          FunkItemEventType
   date          DateTime                @default(now()) @db.Timestamp(6)
   funkItemId    String                  @db.Uuid
   userId        String                  @db.Uuid
@@ -131,7 +139,7 @@ model FunkItemEvent {
 
 model FunkItemEventBulk {
   id            String                  @id(map: "PK_4b609ea84dc00cc7b09094f1f47") @default(uuid()) @db.Uuid
-  eventType     String                  @db.VarChar
+  eventType     FunkItemEventType
   batteryCount  Int                     @default(0)
   date          DateTime                @default(now()) @db.Timestamp(6)
   userId        String                  @db.Uuid
