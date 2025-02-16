@@ -118,7 +118,7 @@
 			<div class="flex gap-2 items-center">
 				<div>{scannedDeviceId.deviceId}</div>
 				{#if scannedDeviceId.lastEvent}
-					<InventarItemEventTypeBadge type={scannedDeviceId.lastEvent.type} />
+					<InventarItemEventTypeBadge type={scannedDeviceId.lastEvent.event.type} />
 				{/if}
 			</div>
 		{/each}
@@ -135,13 +135,13 @@
 	<div class="flex gap-2 w-full justify-between">
 		<Button
 			secondary={scannedDeviceIds.every(
-				(scannedDeviceId) => scannedDeviceId.lastEvent?.type === 'returned'
+				(scannedDeviceId) => scannedDeviceId.lastEvent?.event.type === 'returned'
 			)}
 			click={() => submit('returned')}>Zurückgeben</Button
 		>
 		<Button
 			secondary={scannedDeviceIds.every(
-				(scannedDeviceId) => scannedDeviceId.lastEvent?.type === 'borrowed'
+				(scannedDeviceId) => scannedDeviceId.lastEvent?.event.type === 'borrowed'
 			)}
 			click={() => submit('borrowed')}>Ausleihen</Button
 		>

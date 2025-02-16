@@ -3,7 +3,7 @@
 
 	import Input from '$lib/Input.svelte';
 	import { funk } from '$lib/shared/stores/funkStore';
-	import { getOrganisationUserByInternalId, user } from '$lib/shared/stores/userStore';
+	import { getOrganisationMemberByInternalId, user } from '$lib/shared/stores/userStore';
 	import { isSearchStringInFunkItemEventBulk, type FunkItemEventBulk } from '../api/funkModels';
 	import InventarItemEventBulkItem from './FunkItemEventBulkItem.svelte';
 
@@ -14,7 +14,7 @@
 	const getInventarItems = (bulk: FunkItemEventBulk) => {
 		return (
 			$funk.funkItems?.filter((item) =>
-				bulk.funkItemEvents.some((event) => event.funkItem.id === item.id)
+				bulk.events.some((event) => event.event.funkItemId === item.id)
 			) ?? []
 		);
 	};
@@ -26,7 +26,7 @@
 					isSearchStringInFunkItemEventBulk(
 						searchTerm,
 						item,
-						getOrganisationUserByInternalId($user, item.user.id),
+						getOrganisationMemberByInternalId($user, item.userId)?.user,
 						getInventarItems(item).map((item) => item.deviceId)
 					)
 				)

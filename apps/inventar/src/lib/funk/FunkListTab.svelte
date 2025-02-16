@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Input from '$lib/Input.svelte';
 	import { funk, getLastFunkItemEventByFunkItemInternalId } from '$lib/shared/stores/funkStore';
-	import { getOrganisationUserByInternalId, user } from '$lib/shared/stores/userStore';
+	import { getOrganisationMemberByInternalId, user } from '$lib/shared/stores/userStore';
 	import {
 		eventTypeToFriendlyString,
 		isSearchStringInFunkItem,
@@ -35,16 +35,16 @@
 					searchedDeviceId,
 					data.item,
 					data.lastEvent,
-					getOrganisationUserByInternalId($user, data.lastEvent.user.id)
+					getOrganisationMemberByInternalId($user, data.lastEvent.event.userId)?.user
 				)
 			) ?? []
 	);
 
 	let borrowedItems = $derived(
-		filteredItems.filter((data) => data?.lastEvent?.type === 'borrowed')
+		filteredItems.filter((data) => data?.lastEvent?.event.type === 'borrowed')
 	);
 	let availableItems = $derived(
-		filteredItems.filter((data) => data?.lastEvent?.type === 'returned')
+		filteredItems.filter((data) => data?.lastEvent?.event.type === 'returned')
 	);
 </script>
 

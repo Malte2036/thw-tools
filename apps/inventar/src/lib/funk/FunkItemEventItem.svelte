@@ -1,15 +1,14 @@
 <script lang="ts">
-	import { getOrganisationUserByInternalId } from '$lib/shared/stores/userStore';
+	import { getOrganisationMemberByInternalId, user } from '$lib/shared/stores/userStore';
 	import { dateToFriendlyString } from '$lib/utils';
+	import { db } from '$lib/utils/db';
 	import {
 		eventTypeToEmoji,
+		eventTypeToFriendlyString,
 		type FunkItem,
 		type FunkItemDeviceId,
 		type FunkItemEvent
 	} from '../api/funkModels';
-	import { user } from '$lib/shared/stores/userStore';
-	import { eventTypeToFriendlyString } from '../api/funkModels';
-	import { db } from '$lib/utils/db';
 
 	interface Props {
 		event: FunkItemEvent;
@@ -21,7 +20,7 @@
 
 	let { event, deviceId, isSelected, item, secondary = false }: Props = $props();
 
-	const eventUser = getOrganisationUserByInternalId($user, event.user.id);
+	const eventUser = getOrganisationMemberByInternalId($user, event.event.userId)?.user;
 
 	let itemType: string | undefined = $state(undefined);
 
@@ -40,16 +39,16 @@
 	class:selectedItem={isSelected}
 	href={`/funk/device/${deviceId}`}
 >
-	<div class="text-2xl">{eventTypeToEmoji(event.type)}</div>
+	<div class="text-2xl">{eventTypeToEmoji(event.event.type)}</div>
 	<div class="flex flex-col gap-0 w-full">
 		<div class="flex flex-row gap-2 justify-between w-full">
 			<div class="text-nowrap font-bold">{deviceId}</div>
 			<div class="flex gap-1">
 				<div
 					class="rounded-xl text-sm px-2 h-min bg-green-200 whitespace-nowrap"
-					class:isBorrowed={event.type === 'borrowed'}
+					class:isBorrowed={event.event.type === 'borrowed'}
 				>
-					{itemType ?? eventTypeToFriendlyString(event.type)}
+					{itemType ?? eventTypeToFriendlyString(event.event.type)}
 				</div>
 			</div>
 		</div>
@@ -63,7 +62,7 @@
 				</span>
 				{' am '}
 				<span>
-					{dateToFriendlyString(new Date(event.date))}
+					{dateToFriendlyString(new Date(event.event.date))}
 				</span>
 			</div>
 		</div>

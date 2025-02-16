@@ -20,7 +20,8 @@
 	const getBorrowedDevicesCount = () => {
 		return (
 			$funk.funkItems?.filter(
-				(item) => getLastFunkItemEventByFunkItemInternalId($funk, item.id)?.type === 'borrowed'
+				(item) =>
+					getLastFunkItemEventByFunkItemInternalId($funk, item.id)?.event.type === 'borrowed'
 			).length ?? 0
 		);
 	};
