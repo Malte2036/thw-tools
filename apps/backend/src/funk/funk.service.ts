@@ -1,83 +1,50 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../user/entities/user.entity';
-import { Organisation } from '../organisation/entities/organisation.entity';
-import { FunkItem } from './entities/funk-item.entity';
-import {
-  FunkItemEvent,
+import type {
+  FunkItem,
   FunkItemEventType,
-} from './entities/funk-item-event.entity';
-import { FunkItemEventBulk } from './entities/funk-item-event-bulk.entity';
+  Organisation,
+  Prisma,
+  User,
+} from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class FunkService {
-  constructor(
-    @InjectRepository(FunkItem)
-    private readonly funkItemRepository: Repository<FunkItem>,
-    @InjectRepository(FunkItemEvent)
-    private readonly funkItemEventRepository: Repository<FunkItemEvent>,
-    @InjectRepository(FunkItemEventBulk)
-    private readonly funkItemEventBulkRepository: Repository<FunkItemEventBulk>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async getFunkItems(organisationId: string) {
-    return this.funkItemRepository.find({
-      where: { organisation: { id: organisationId } },
-      relations: ['organisation'],
-      select: {
+    return this.prisma.funkItem.findMany({
+      where: { organisationId },
+      include: {
         organisation: {
-          id: true,
+          select: {
+            id: true,
+          },
         },
       },
     });
-  }
-
-  async getExpandedFunkItems(organisationId: string) {
-    const funkItems = await this.funkItemRepository.find({
-      where: { organisation: { id: organisationId } },
-      relations: ['organisation'],
-    });
-
-    // Get the latest event for each funk item
-    const lastEvents = await Promise.all(
-      funkItems.map(async (item) => {
-        const lastEvent = await this.funkItemEventRepository.findOne({
-          where: { funkItem: { id: item.id } },
-          order: { date: 'DESC' },
-          relations: ['funkItem'],
-        });
-        return { itemId: item.id, lastEvent };
-      }),
-    );
-
-    // Create a map of item ID to last event
-    const lastEventMap = new Map(
-      lastEvents.map(({ itemId, lastEvent }) => [itemId, lastEvent]),
-    );
-
-    return funkItems.map((item) => ({
-      ...item,
-      lastEvent: lastEventMap.get(item.id) || null,
-    }));
   }
 
   async getFunkItemByDeviceId(organisationId: string, deviceId: string) {
-    return this.funkItemRepository.findOne({
+    return this.prisma.funkItem.findFirst({
       where: {
-        organisation: { id: organisationId },
+        organisationId,
         deviceId,
       },
-      relations: ['organisation'],
-      select: {
+      include: {
         organisation: {
-          id: true,
+          select: {
+            id: true,
+          },
         },
       },
     });
   }
 
-  async createFunkItem(organisationId: string, data: Partial<FunkItem>) {
+  async createFunkItem(
+    organisationId: string,
+    data: Prisma.FunkItemCreateInput,
+  ) {
     const existingItem = await this.getFunkItemByDeviceId(
       organisationId,
       data.deviceId,
@@ -87,31 +54,43 @@ export class FunkService {
       return existingItem;
     }
 
-    const item = this.funkItemRepository.create(data);
-    return this.funkItemRepository.save(item);
+    return this.prisma.funkItem.create({
+      data: {
+        deviceId: data.deviceId,
+        organisationId,
+      },
+      include: {
+        organisation: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
   }
 
-  async createFunkItemEvent(data: Partial<FunkItemEvent>) {
-    const event = this.funkItemEventRepository.create(data);
-    return this.funkItemEventRepository.save(event);
+  async createFunkItemEvent(data: Prisma.FunkItemEventCreateInput) {
+    return this.prisma.funkItemEvent.create({
+      data,
+    });
   }
 
   async getFunkItemEvents(item: FunkItem) {
-    return this.funkItemEventRepository.find({
-      where: { funkItem: { id: item.id } },
-      relations: ['user', 'funkItem'],
-      select: {
-        id: true,
-        type: true,
-        date: true,
+    return this.prisma.funkItemEvent.findMany({
+      where: { funkItemId: item.id },
+      include: {
         user: {
-          id: true,
+          select: {
+            id: true,
+          },
         },
         funkItem: {
-          id: true,
+          select: {
+            id: true,
+          },
         },
       },
-      order: { date: 'DESC' },
+      orderBy: { date: 'desc' },
     });
   }
 
@@ -134,7 +113,11 @@ export class FunkService {
           );
           item = await this.createFunkItem(organisation.id, {
             deviceId,
-            organisation,
+            organisation: {
+              connect: {
+                id: organisation.id,
+              },
+            },
           });
         }
         return item;
@@ -145,61 +128,93 @@ export class FunkService {
       items.map((item) =>
         this.createFunkItemEvent({
           date,
-          funkItem: item,
-          user,
+          funkItem: {
+            connect: {
+              id: item.id,
+            },
+          },
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
           type: data.eventType,
         }),
       ),
     );
 
-    const bulk = this.funkItemEventBulkRepository.create({
-      funkItemEvents: events,
-      batteryCount: data.batteryCount,
-      eventType: data.eventType,
-      user,
-      organisation,
-      date,
+    await this.prisma.funkItemEventBulk.create({
+      data: {
+        eventType: data.eventType,
+        batteryCount: data.batteryCount,
+        userId: user.id,
+        organisationId: organisation.id,
+        date,
+        events: {
+          create: events.map((event) => ({
+            eventId: event.id,
+          })),
+        },
+      },
     });
-    await this.funkItemEventBulkRepository.save(bulk);
   }
 
   async getFunkItemEventBulks(organisationId: string) {
-    return this.funkItemEventBulkRepository
-      .createQueryBuilder('bulk')
-      .leftJoinAndSelect('bulk.funkItemEvents', 'events')
-      .leftJoin('events.funkItem', 'funkItem')
-      .leftJoin('bulk.user', 'bulkUser')
-      .leftJoin('bulk.organisation', 'org')
-      .leftJoin('events.user', 'eventUser')
-      .select([
-        'bulk.id',
-        'bulk.eventType',
-        'bulk.batteryCount',
-        'bulk.date',
-        'bulkUser.id',
-        'org.id',
-        'events.id',
-        'events.type',
-        'events.date',
-        'eventUser.id',
-        'funkItem.id',
-      ])
-      .where('org.id = :organisationId', { organisationId })
-      .orderBy('bulk.date', 'DESC')
-      .getMany();
+    return this.prisma.funkItemEventBulk.findMany({
+      where: { organisationId },
+      include: {
+        events: {
+          include: {
+            event: {
+              include: {
+                funkItem: true,
+                user: {
+                  select: {
+                    id: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+          },
+        },
+        organisation: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      orderBy: { date: 'desc' },
+    });
   }
 
   async exportFunkItemEventBulksAsCsv(organisationId: string): Promise<string> {
-    // Get the full user data for CSV export
-    const bulks = await this.funkItemEventBulkRepository
-      .createQueryBuilder('bulk')
-      .leftJoinAndSelect('bulk.funkItemEvents', 'events')
-      .leftJoinAndSelect('events.funkItem', 'funkItem')
-      .leftJoinAndSelect('bulk.user', 'bulkUser')
-      .leftJoinAndSelect('bulk.organisation', 'org')
-      .where('org.id = :organisationId', { organisationId })
-      .orderBy('bulk.date', 'DESC')
-      .getMany();
+    const bulks = await this.prisma.funkItemEventBulk.findMany({
+      where: { organisationId },
+      include: {
+        events: {
+          include: {
+            event: {
+              include: {
+                funkItem: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { date: 'desc' },
+    });
 
     let csv = 'date,eventType,batteryCount,user,deviceIds\n';
 
@@ -208,8 +223,8 @@ export class FunkService {
         bulk.batteryCount
       },"${bulk.user.firstName} ${bulk.user.lastName} (${
         bulk.user.email
-      })","${bulk.funkItemEvents
-        .map((event) => event.funkItem.deviceId)
+      })","${bulk.events
+        .map((bulkEvent) => bulkEvent.event.funkItem.deviceId)
         .join(', ')}"\n`;
     }
 

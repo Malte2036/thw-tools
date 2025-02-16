@@ -1,20 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { FunkController } from './funk.controller';
 import { FunkService } from './funk.service';
-import { FunkItem } from './entities/funk-item.entity';
-import { FunkItemEvent } from './entities/funk-item-event.entity';
-import { FunkItemEventBulk } from './entities/funk-item-event-bulk.entity';
+import { FunkController } from './funk.controller';
+import { PrismaModule } from '../prisma/prisma.module';
 import { UserModule } from '../user/user.module';
 import { OrganisationModule } from '../organisation/organisation.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([FunkItem, FunkItemEvent, FunkItemEventBulk]),
-    UserModule,
-    OrganisationModule,
-  ],
+  imports: [PrismaModule, UserModule, OrganisationModule],
   controllers: [FunkController],
   providers: [FunkService],
+  exports: [FunkService],
 })
 export class FunkModule {}

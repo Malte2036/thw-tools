@@ -9,18 +9,13 @@ import {
   Param,
   Post,
   Req,
-  UploadedFile,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { OrganisationService } from 'src/organisation/organisation.service';
-import { Organisation } from 'src/organisation/entities/organisation.entity';
-import { User } from 'src/user/entities/user.entity';
-import { UserService } from 'src/user/user.service';
-import { FunkService } from './funk.service';
-import { FunkItemEventType } from './entities/funk-item-event.entity';
+import type { FunkItemEventType, Organisation, User } from '@prisma/client';
 import { Request } from 'express';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { OrganisationService } from '../organisation/organisation.service';
+import { UserService } from '../user/user.service';
+import { FunkService } from './funk.service';
 
 export async function getUserAndOrgFromRequest(
   req: Request,

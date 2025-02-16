@@ -1,47 +1,42 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
-import { User } from './entities/user.entity';
+import { PrismaService } from '../prisma/prisma.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    private dataSource: DataSource,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async findByKindeId(kindeId: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { kindeId } });
+    return this.prisma.user.findUnique({ where: { kindeId } });
   }
 
   async findById(id: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { id } });
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   async createOrUpdate(
     kindeId: string,
     userData: Partial<User>,
   ): Promise<User> {
-    return this.dataSource.transaction(async (manager) => {
-      // Lock the row if it exists
-      let user = await manager
-        .createQueryBuilder(User, 'user')
-        .setLock('pessimistic_write')
-        .where('user.kindeId = :kindeId', { kindeId })
-        .getOne();
+    return this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({
+        where: { kindeId },
+      });
 
       if (!user) {
-        user = manager.create(User, { kindeId, ...userData });
-      } else {
-        Object.assign(user, userData);
+        return tx.user.create({
+          data: { kindeId, ...userData },
+        });
       }
 
-      return manager.save(User, user);
+      return tx.user.update({
+        where: { id: user.id },
+        data: userData,
+      });
     });
   }
 
   async remove(id: string): Promise<void> {
-    await this.userRepository.delete(id);
+    await this.prisma.user.delete({ where: { id } });
   }
 }

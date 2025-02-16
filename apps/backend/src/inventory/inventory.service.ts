@@ -1,10 +1,7 @@
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
-import { InventoryItem } from './entities/inventory-item.entity';
-import { InventoryItemCustomData } from './entities/inventory-item-custom-data.entity';
+import { PrismaService } from '../prisma/prisma.service';
+import type { Organisation, InventoryItem, Prisma } from '@prisma/client';
 import { UpdateCustomDataDto } from './dto/update-custom-data.dto';
-import { Organisation } from '../organisation/entities/organisation.entity';
 import { z } from 'zod';
 import { parse } from 'csv-parse';
 
@@ -30,12 +27,7 @@ export type InventarCsvRow = z.infer<typeof InventarCsvRowSchema>;
 
 @Injectable()
 export class InventoryService {
-  constructor(
-    @InjectRepository(InventoryItem)
-    private readonly inventoryItemRepository: Repository<InventoryItem>,
-    @InjectRepository(InventoryItemCustomData)
-    private readonly customDataRepository: Repository<InventoryItemCustomData>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async parseCsvData(
     organisation: Organisation,
@@ -122,7 +114,7 @@ export class InventoryService {
     const csvRecordToInventoryItem = (
       record: InventarCsvRow,
       einheit: string,
-    ): Partial<InventoryItem> | null => {
+    ): Prisma.InventoryItemCreateManyInput => {
       try {
         const ebene = parseInt(record.Ebene);
         if (isNaN(ebene)) {
@@ -139,7 +131,7 @@ export class InventoryService {
         }
 
         return {
-          organisation,
+          organisationId: organisation.id,
           einheit,
           ebene,
           art: sanitizeValue(record.Art),
@@ -192,14 +184,16 @@ export class InventoryService {
         }
         return csvRecordToInventoryItem(record, einheit);
       })
-      .filter(Boolean) as Partial<InventoryItem>[];
+      .filter(Boolean) as Prisma.InventoryItemCreateManyInput[];
 
     const einheiten = [...new Set(inventoryItems.map((item) => item.einheit))];
     Logger.debug(`Deleting existing inventory items for ${einheiten}`);
     await this.deleteAllInventoryItemsByEinheit(einheiten);
 
     Logger.debug(`Inserting ${inventoryItems.length} inventory`);
-    await this.inventoryItemRepository.insert(inventoryItems);
+    await this.prisma.inventoryItem.createMany({
+      data: inventoryItems,
+    });
 
     return {
       count: inventoryItems.length,
@@ -208,20 +202,24 @@ export class InventoryService {
   }
 
   deleteAllInventoryItemsByEinheit = async (einheit: string[]) => {
-    return this.inventoryItemRepository.delete({ einheit: In(einheit) });
+    return this.prisma.inventoryItem.deleteMany({
+      where: { einheit: { in: einheit } },
+    });
   };
 
   async findOneByOrganisation(
     id: string,
     organisationId: string,
   ): Promise<InventoryItem> {
-    return this.inventoryItemRepository.findOne({
-      where: { id, organisation: { id: organisationId } },
-      relations: ['organisation', 'customData'],
-      select: {
+    return this.prisma.inventoryItem.findFirst({
+      where: { id, organisationId },
+      include: {
         organisation: {
-          id: true,
+          select: {
+            id: true,
+          },
         },
+        customData: true,
       },
     });
   }
@@ -229,13 +227,15 @@ export class InventoryService {
   async findAllByOrganisation(
     organisationId: string,
   ): Promise<InventoryItem[]> {
-    return this.inventoryItemRepository.find({
-      where: { organisation: { id: organisationId } },
-      relations: ['organisation', 'customData'],
-      select: {
+    return this.prisma.inventoryItem.findMany({
+      where: { organisationId },
+      include: {
         organisation: {
-          id: true,
+          select: {
+            id: true,
+          },
         },
+        customData: true,
       },
     });
   }
@@ -244,9 +244,11 @@ export class InventoryService {
     id: string,
     updateCustomDataDto: UpdateCustomDataDto,
   ): Promise<InventoryItem> {
-    const inventoryItem = await this.inventoryItemRepository.findOne({
+    const inventoryItem = await this.prisma.inventoryItem.findFirst({
       where: { id },
-      relations: ['customData'],
+      include: {
+        customData: true,
+      },
     });
 
     if (!inventoryItem) {
@@ -254,21 +256,31 @@ export class InventoryService {
     }
 
     if (!inventoryItem.customData) {
-      const customData = this.customDataRepository.create({
-        ...updateCustomDataDto,
-        inventoryItem,
+      // Create new custom data if it doesn't exist
+      return this.prisma.inventoryItem.update({
+        where: { id },
+        data: {
+          customData: {
+            create: updateCustomDataDto,
+          },
+        },
+        include: {
+          customData: true,
+        },
       });
-      await this.customDataRepository.save(customData);
-    } else {
-      await this.customDataRepository.update(
-        inventoryItem.customData.id,
-        updateCustomDataDto,
-      );
     }
 
-    return this.findOneByOrganisation(
-      inventoryItem.id,
-      inventoryItem.organisation.id,
-    );
+    // Update existing custom data
+    return this.prisma.inventoryItem.update({
+      where: { id },
+      data: {
+        customData: {
+          update: updateCustomDataDto,
+        },
+      },
+      include: {
+        customData: true,
+      },
+    });
   }
 }

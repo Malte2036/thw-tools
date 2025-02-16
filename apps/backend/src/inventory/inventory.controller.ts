@@ -18,12 +18,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { InventoryService } from './inventory.service';
-import { InventoryItem } from './entities/inventory-item.entity';
-import { InventoryItemCustomData } from './entities/inventory-item-custom-data.entity';
-import {
-  UpdateCustomDataDto,
-  UpdateCustomDataSchema,
-} from './dto/update-custom-data.dto';
+import type { InventoryItem, InventoryItemCustomData } from '@prisma/client';
+import { UpdateCustomDataSchema } from './dto/update-custom-data.dto';
 import { getUserAndOrgFromRequestAndThrow } from 'src/funk/funk.controller';
 import { UserService } from 'src/user/user.service';
 import { OrganisationService } from 'src/organisation/organisation.service';
@@ -115,8 +111,8 @@ export class InventoryController {
     @Req() req: Request,
     @Param('id') id: string,
     @Body() rawCustomData: unknown,
-  ): Promise<{ id: string; customData: InventoryItemCustomData }> {
-    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
+  ): Promise<InventoryItem> {
+    await getUserAndOrgFromRequestAndThrow(
       req,
       this.userService,
       this.organisationService,
