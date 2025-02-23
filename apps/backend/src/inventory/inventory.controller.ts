@@ -63,7 +63,7 @@ export class InventoryController {
 
   @Patch(':id/custom-data')
   async updateCustomData(
-    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
+    @GetUserAndOrgOrThrow() [user]: [User, Organisation],
     @Param('id') id: string,
     @Body() rawCustomData: unknown,
   ): Promise<InventoryItem> {
@@ -71,7 +71,9 @@ export class InventoryController {
       throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST);
     }
 
-    Logger.log(`Updating custom data for inventory item by ID: ${id}`);
+    Logger.log(
+      `Updating custom data for inventory item ${id} for user ${user.id}`,
+    );
 
     const validationResult = UpdateCustomDataSchema.safeParse(rawCustomData);
     if (!validationResult.success) {
