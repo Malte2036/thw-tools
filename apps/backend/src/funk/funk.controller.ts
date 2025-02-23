@@ -9,12 +9,13 @@ import {
   Param,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import type { FunkItemEventType, Organisation, User } from '@prisma/client';
 import { Request } from 'express';
 import { FunkService } from './funk.service';
-import { GetUserAndOrgOrThrow } from '../shared/user-org/user-org.decorator';
+import { EnsureUserAndOrgGuard } from '../shared/user-org/ensure-user-org.guard';
 
 @ApiTags('funk')
 @Controller('funk')
@@ -22,21 +23,22 @@ export class FunkController {
   constructor(private readonly funkService: FunkService) {}
 
   @Get()
-  async getFunkItems(
-    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
-  ) {
-    return this.funkService.getFunkItems(organisation.id);
+  @UseGuards(EnsureUserAndOrgGuard)
+  async findAll(@Req() req: Request) {
+    Logger.log('Getting funk items');
+    return this.funkService.getFunkItems(req.organisation.id);
   }
 
   @Post('events/bulk')
+  @UseGuards(EnsureUserAndOrgGuard)
   async bulkCreateFunkItemEvents(
+    @Req() req: Request,
     @Body()
     body: {
       deviceIds: string[];
       batteryCount: number;
       eventType: FunkItemEventType;
     },
-    @GetUserAndOrgOrThrow() [user, organisation]: [User, Organisation],
   ) {
     Logger.log(
       `Bulk creating funk item events with type ${body.eventType} for devices ${body.deviceIds.join(', ')}`,
@@ -54,8 +56,8 @@ export class FunkController {
 
     await this.funkService.bulkCreateFunkItemEvents(
       body,
-      user,
-      organisation,
+      req.user,
+      req.organisation,
       new Date(),
     );
 
@@ -63,12 +65,13 @@ export class FunkController {
   }
 
   @Get(':deviceId/events')
+  @UseGuards(EnsureUserAndOrgGuard)
   async getFunkItemEvents(
+    @Req() req: Request,
     @Param('deviceId') deviceId: string,
-    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
   ) {
     const item = await this.funkService.getFunkItemByDeviceId(
-      organisation.id,
+      req.organisation.id,
       deviceId,
     );
     if (!item) {
@@ -79,20 +82,18 @@ export class FunkController {
   }
 
   @Get('events/bulk')
-  async getFunkItemEventBulks(
-    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
-  ) {
-    return this.funkService.getFunkItemEventBulks(organisation.id);
+  @UseGuards(EnsureUserAndOrgGuard)
+  async getFunkItemEventBulks(@Req() req: Request) {
+    return this.funkService.getFunkItemEventBulks(req.organisation.id);
   }
 
   @Get('events/bulk/export')
+  @UseGuards(EnsureUserAndOrgGuard)
   @Header('Content-Type', 'text/csv')
   @Header('Content-Disposition', 'attachment; filename="funk_item_events.csv"')
-  async exportFunkItemEventBulksAsCsv(
-    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
-  ) {
+  async exportFunkItemEventBulksAsCsv(@Req() req: Request) {
     const csvData = await this.funkService.exportFunkItemEventBulksAsCsv(
-      organisation.id,
+      req.organisation.id,
     );
 
     return csvData;

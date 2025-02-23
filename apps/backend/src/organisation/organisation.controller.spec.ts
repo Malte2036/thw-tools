@@ -3,6 +3,7 @@ import { OrganisationController } from './organisation.controller';
 import { OrganisationService } from './organisation.service';
 import { Logger, HttpException } from '@nestjs/common';
 import type { User, Organisation, OrganisationMember } from '@prisma/client';
+import { createMockRequest } from '../test/mock-request.helper';
 
 describe('OrganisationController', () => {
   let controller: OrganisationController;
@@ -36,10 +37,10 @@ describe('OrganisationController', () => {
     const mockOrganisationService = {
       getPrimaryOrganisationsForUser: jest
         .fn()
-        .mockReturnValue(Promise.resolve()),
-      addUserToOrganisation: jest.fn().mockReturnValue(Promise.resolve()),
-      createOrganisation: jest.fn().mockReturnValue(Promise.resolve()),
-      leaveOrganisation: jest.fn().mockReturnValue(Promise.resolve()),
+        .mockResolvedValue(mockOrganisation),
+      addUserToOrganisation: jest.fn().mockResolvedValue(undefined),
+      createOrganisation: jest.fn().mockResolvedValue(mockOrganisation),
+      leaveOrganisation: jest.fn().mockResolvedValue(undefined),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -60,84 +61,81 @@ describe('OrganisationController', () => {
     jest.spyOn(Logger, 'warn').mockImplementation(() => undefined);
   });
 
-  describe('getOrganisationsForUser', () => {
-    it('should return the organisation', async () => {
-      const result = await controller.getOrganisationsForUser([
-        mockUser,
-        mockOrganisation,
-      ]);
-      expect(result).toBe(mockOrganisation);
+  it('should return organisation for authenticated user', async () => {
+    const mockRequest = createMockRequest({
+      user: mockUser as User,
+      organisation: mockOrganisation as Organisation,
     });
+
+    const result = await controller.getOrganisationsForUser(mockRequest);
+    expect(result).toBe(mockOrganisation);
   });
 
-  describe('joinOrganisation', () => {
-    it('should throw if user already has an organisation', async () => {
-      await expect(
-        controller.joinOrganisation([mockUser, mockOrganisation], {
-          inviteCode: 'invite-123',
-        }),
-      ).rejects.toThrow(HttpException);
+  it('should handle joining an organisation', async () => {
+    const mockRequest = createMockRequest({
+      user: mockUser,
+      organisation: null,
     });
 
-    it('should join organisation with valid invite code', async () => {
-      service.getPrimaryOrganisationsForUser.mockResolvedValue(
-        mockOrganisation,
-      );
+    await controller.joinOrganisation(mockRequest, { inviteCode: 'test-code' });
 
-      const result = await controller.joinOrganisation([mockUser, null], {
-        inviteCode: 'invite-123',
-      });
-
-      expect(service.addUserToOrganisation).toHaveBeenCalledWith(
-        mockUser,
-        'invite-123',
-      );
-      expect(result).toBe(mockOrganisation);
-    });
+    expect(service.addUserToOrganisation).toHaveBeenCalledWith(
+      mockUser,
+      'test-code',
+    );
   });
 
-  describe('createOrganisation', () => {
-    it('should throw if user not found', async () => {
-      await expect(
-        controller.createOrganisation([null, null], { name: 'Test Org' }),
-      ).rejects.toThrow(HttpException);
+  it('should prevent joining when already in organisation', async () => {
+    const mockRequest = createMockRequest({
+      user: mockUser,
+      organisation: mockOrganisation,
     });
 
-    it('should throw if user already has an organisation', async () => {
-      await expect(
-        controller.createOrganisation([mockUser, mockOrganisation], {
-          name: 'Test Org',
-        }),
-      ).rejects.toThrow(HttpException);
-    });
-
-    it('should create organisation successfully', async () => {
-      service.createOrganisation.mockResolvedValue(mockOrganisation);
-
-      const result = await controller.createOrganisation([mockUser, null], {
-        name: 'Test Org',
-      });
-
-      expect(service.createOrganisation).toHaveBeenCalledWith(
-        'Test Org',
-        mockUser,
-      );
-      expect(result).toBe(mockOrganisation);
-    });
+    await expect(
+      controller.joinOrganisation(mockRequest, { inviteCode: 'test-code' }),
+    ).rejects.toThrow(HttpException);
   });
 
-  describe('leaveOrganisation', () => {
-    it('should leave organisation successfully', async () => {
-      const result = await controller.leaveOrganisation([
-        mockUser,
-        mockOrganisation,
-      ]);
-
-      expect(service.leaveOrganisation).toHaveBeenCalledWith(
-        mockUser,
-        mockOrganisation,
-      );
-      expect(result).toEqual({});
+  it('should handle creating an organisation', async () => {
+    const mockRequest = createMockRequest({
+      user: mockUser,
+      organisation: null,
     });
+
+    const result = await controller.createOrganisation(mockRequest, {
+      name: 'Test Org',
+    });
+
+    expect(service.createOrganisation).toHaveBeenCalledWith(
+      'Test Org',
+      mockUser,
+    );
+    expect(result).toBe(mockOrganisation);
+  });
+
+  it('should prevent creating when already in organisation', async () => {
+    const mockRequest = createMockRequest({
+      user: mockUser,
+      organisation: mockOrganisation,
+    });
+
+    await expect(
+      controller.createOrganisation(mockRequest, { name: 'Test Org' }),
+    ).rejects.toThrow(HttpException);
+  });
+
+  it('should handle leaving an organisation', async () => {
+    const mockRequest = createMockRequest({
+      user: mockUser,
+      organisation: mockOrganisation,
+    });
+
+    const result = await controller.leaveOrganisation(mockRequest);
+
+    expect(service.leaveOrganisation).toHaveBeenCalledWith(
+      mockUser,
+      mockOrganisation,
+    );
+    expect(result).toEqual({});
   });
 });

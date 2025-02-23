@@ -7,18 +7,19 @@ import {
   Param,
   Post,
   Body,
-  Put,
-  Delete,
   UseInterceptors,
   UploadedFile,
   Patch,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import type { InventoryItem, Organisation, User } from '@prisma/client';
+import type { InventoryItem } from '@prisma/client';
 import { UpdateCustomDataSchema } from './dto/update-custom-data.dto';
-import { GetUserAndOrgOrThrow } from '../shared/user-org/user-org.decorator';
 import { InventoryService } from './inventory.service';
+import { EnsureUserAndOrgGuard } from '../shared/user-org/ensure-user-org.guard';
+import { Request } from 'express';
 
 @ApiTags('inventory')
 @Controller('inventory')
@@ -26,17 +27,17 @@ export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
   @Get()
-  async findAll(
-    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
-  ): Promise<InventoryItem[]> {
+  @UseGuards(EnsureUserAndOrgGuard)
+  async findAll(@Req() req: Request) {
     Logger.log('Getting inventory items');
-    return this.inventoryService.findAllByOrganisation(organisation.id);
+    return this.inventoryService.findAllByOrganisation(req.organisation.id);
   }
 
   @Post('import/csv')
+  @UseGuards(EnsureUserAndOrgGuard)
   @UseInterceptors(FileInterceptor('file'))
   async importInventoryViaCsv(
-    @GetUserAndOrgOrThrow() [user, organisation]: [User, Organisation],
+    @Req() req: Request,
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) {
@@ -53,17 +54,21 @@ export class InventoryController {
     }
 
     Logger.log(
-      `User ${user.id} is importing inventory, with file ${file.originalname}`,
+      `User ${req.user.id} is importing inventory, with file ${file.originalname}`,
     );
 
-    const res = await this.inventoryService.parseCsvData(organisation, file);
+    const res = await this.inventoryService.parseCsvData(
+      req.organisation,
+      file,
+    );
     Logger.log('Processed CSV data');
     return res;
   }
 
   @Patch(':id/custom-data')
+  @UseGuards(EnsureUserAndOrgGuard)
   async updateCustomData(
-    @GetUserAndOrgOrThrow() [user]: [User, Organisation],
+    @Req() req: Request,
     @Param('id') id: string,
     @Body() rawCustomData: unknown,
   ): Promise<InventoryItem> {
@@ -72,7 +77,7 @@ export class InventoryController {
     }
 
     Logger.log(
-      `Updating custom data for inventory item ${id} for user ${user.id}`,
+      `Updating custom data for inventory item ${id} for user ${req.user.id}`,
     );
 
     const validationResult = UpdateCustomDataSchema.safeParse(rawCustomData);

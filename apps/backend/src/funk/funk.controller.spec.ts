@@ -10,6 +10,8 @@ import {
   FunkItemEventType,
   FunkItemEventBulk,
 } from '@prisma/client';
+import { Request } from 'express';
+import { createMockRequest } from '../test/mock-request.helper';
 
 describe('FunkController', () => {
   let controller: FunkController;
@@ -113,10 +115,12 @@ describe('FunkController', () => {
     it('should return funk items for organisation', async () => {
       funkService.getFunkItems.mockResolvedValue(mockFunkItems);
 
-      const result = await controller.getFunkItems([
-        mockUser,
-        mockOrganisation,
-      ]);
+      const mockRequest = createMockRequest({
+        user: mockUser as User,
+        organisation: mockOrganisation as Organisation,
+      });
+
+      const result = await controller.findAll(mockRequest);
 
       expect(result).toEqual(mockFunkItems);
       expect(funkService.getFunkItems).toHaveBeenCalledWith(
@@ -136,10 +140,12 @@ describe('FunkController', () => {
       jest.spyOn(Logger, 'log').mockImplementation();
       funkService.bulkCreateFunkItemEvents.mockResolvedValue();
 
-      await controller.bulkCreateFunkItemEvents(mockEventData, [
-        mockUser,
-        mockOrganisation,
-      ]);
+      const mockRequest = createMockRequest({
+        user: mockUser as User,
+        organisation: mockOrganisation as Organisation,
+      });
+
+      await controller.bulkCreateFunkItemEvents(mockRequest, mockEventData);
 
       expect(funkService.bulkCreateFunkItemEvents).toHaveBeenCalledWith(
         mockEventData,
@@ -159,10 +165,13 @@ describe('FunkController', () => {
       };
 
       await expect(
-        controller.bulkCreateFunkItemEvents(invalidData, [
-          mockUser,
-          mockOrganisation,
-        ]),
+        controller.bulkCreateFunkItemEvents(
+          createMockRequest({
+            user: mockUser as User,
+            organisation: mockOrganisation as Organisation,
+          }),
+          invalidData,
+        ),
       ).rejects.toThrow(HttpException);
     });
   });
@@ -175,10 +184,12 @@ describe('FunkController', () => {
       funkService.getFunkItemByDeviceId.mockResolvedValue(mockFunkItem);
       funkService.getFunkItemEvents.mockResolvedValue(mockFunkEvents);
 
-      const result = await controller.getFunkItemEvents(deviceId, [
-        mockUser,
-        mockOrganisation,
-      ]);
+      const mockRequest = createMockRequest({
+        user: mockUser as User,
+        organisation: mockOrganisation as Organisation,
+      });
+
+      const result = await controller.getFunkItemEvents(mockRequest, deviceId);
 
       expect(result).toEqual(mockFunkEvents);
       expect(funkService.getFunkItemByDeviceId).toHaveBeenCalledWith(
@@ -190,8 +201,13 @@ describe('FunkController', () => {
     it('should throw NotFound for invalid device', async () => {
       funkService.getFunkItemByDeviceId.mockResolvedValue(null);
 
+      const mockRequest = createMockRequest({
+        user: mockUser as User,
+        organisation: mockOrganisation as Organisation,
+      });
+
       await expect(
-        controller.getFunkItemEvents(deviceId, [mockUser, mockOrganisation]),
+        controller.getFunkItemEvents(mockRequest, deviceId),
       ).rejects.toThrow(HttpException);
     });
   });
@@ -200,10 +216,12 @@ describe('FunkController', () => {
     it('should return event bulks for organisation', async () => {
       funkService.getFunkItemEventBulks.mockResolvedValue(mockEventBulks);
 
-      const result = await controller.getFunkItemEventBulks([
-        mockUser,
-        mockOrganisation,
-      ]);
+      const mockRequest = createMockRequest({
+        user: mockUser as User,
+        organisation: mockOrganisation as Organisation,
+      });
+
+      const result = await controller.getFunkItemEventBulks(mockRequest);
 
       expect(result).toEqual(mockEventBulks);
       expect(funkService.getFunkItemEventBulks).toHaveBeenCalledWith(
@@ -219,13 +237,34 @@ describe('FunkController', () => {
     it('should return CSV data for event bulks', async () => {
       funkService.exportFunkItemEventBulksAsCsv.mockResolvedValue(mockCsvData);
 
-      const result = await controller.exportFunkItemEventBulksAsCsv([
-        mockUser,
-        mockOrganisation,
-      ]);
+      const mockRequest = createMockRequest({
+        user: mockUser as User,
+        organisation: mockOrganisation as Organisation,
+      });
+
+      const result =
+        await controller.exportFunkItemEventBulksAsCsv(mockRequest);
 
       expect(result).toBe(mockCsvData);
       expect(funkService.exportFunkItemEventBulksAsCsv).toHaveBeenCalledWith(
+        mockOrganisation.id,
+      );
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return funk items for organisation', async () => {
+      const mockRequest = createMockRequest({
+        user: mockUser,
+        organisation: mockOrganisation,
+      });
+
+      funkService.getFunkItems.mockResolvedValue(mockFunkItems);
+
+      const result = await controller.findAll(mockRequest);
+
+      expect(result).toEqual(mockFunkItems);
+      expect(funkService.getFunkItems).toHaveBeenCalledWith(
         mockOrganisation.id,
       );
     });

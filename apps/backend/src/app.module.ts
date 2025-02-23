@@ -14,6 +14,7 @@ import { InventoryModule } from './inventory/inventory.module';
 import { LoggingMiddleware } from './middleware/logging.middleware';
 import { AiModule } from './ai/ai.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { UserOrgMiddleware } from './shared/user-org/user-org.middleware';
 
 @Module({
   imports: [
@@ -45,7 +46,7 @@ import { PrismaModule } from './prisma/prisma.module';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(AuthMiddleware)
+      .apply(AuthMiddleware, UserOrgMiddleware)
       .forRoutes('/funk', '/inventory', '/organisations');
 
     consumer
