@@ -1,16 +1,19 @@
 -- CreateSchema
 CREATE SCHEMA IF NOT EXISTS "inventory";
 
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "quiz";
+
 -- CreateEnum
-CREATE TYPE "public"."quiz_type" AS ENUM ('ga', 'agt', 'cbrn', 'radio');
+CREATE TYPE "quiz"."quiz_type" AS ENUM ('ga', 'agt', 'cbrn', 'radio');
 
 -- CreateEnum
 CREATE TYPE "inventory"."funk_item_event_type" AS ENUM ('borrowed', 'returned');
 
 -- CreateTable
-CREATE TABLE "public"."questions" (
+CREATE TABLE "quiz"."questions" (
     "id" SERIAL NOT NULL,
-    "type" "public"."quiz_type" NOT NULL,
+    "type" "quiz"."quiz_type" NOT NULL,
     "number" INTEGER NOT NULL,
     "text" TEXT NOT NULL,
     "image" TEXT,
@@ -19,7 +22,7 @@ CREATE TABLE "public"."questions" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."question_answers" (
+CREATE TABLE "quiz"."question_answers" (
     "id" SERIAL NOT NULL,
     "text" TEXT NOT NULL,
     "isCorrect" BOOLEAN NOT NULL,
@@ -29,7 +32,7 @@ CREATE TABLE "public"."question_answers" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."question_stats" (
+CREATE TABLE "quiz"."question_stats" (
     "id" SERIAL NOT NULL,
     "correct" BOOLEAN NOT NULL,
     "timestamp" TIMESTAMP(6) NOT NULL,
@@ -139,16 +142,7 @@ CREATE TABLE "inventory"."inventory_item_custom_data" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "questions_type_number_key" ON "public"."questions"("type", "number");
-
--- CreateIndex
-CREATE INDEX "question_answers_questionId_idx" ON "public"."question_answers"("questionId");
-
--- CreateIndex
-CREATE INDEX "question_stats_questionId_idx" ON "public"."question_stats"("questionId");
-
--- CreateIndex
-CREATE INDEX "question_stats_correct_idx" ON "public"."question_stats"("correct");
+CREATE UNIQUE INDEX "questions_type_number_key" ON "quiz"."questions"("type", "number");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_kindeId_key" ON "inventory"."users"("kindeId");
@@ -157,31 +151,16 @@ CREATE UNIQUE INDEX "users_kindeId_key" ON "inventory"."users"("kindeId");
 CREATE UNIQUE INDEX "organisations_inviteCode_key" ON "inventory"."organisations"("inviteCode");
 
 -- CreateIndex
-CREATE INDEX "organisation_members_userId_idx" ON "inventory"."organisation_members"("userId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "funk_items_deviceId_organisationId_key" ON "inventory"."funk_items"("deviceId", "organisationId");
-
--- CreateIndex
-CREATE INDEX "funk_item_events_funkItemId_date_idx" ON "inventory"."funk_item_events"("funkItemId", "date");
-
--- CreateIndex
-CREATE INDEX "funk_item_event_bulks_organisationId_date_idx" ON "inventory"."funk_item_event_bulks"("organisationId", "date");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "inventory_items_customDataId_key" ON "inventory"."inventory_items"("customDataId");
 
--- CreateIndex
-CREATE INDEX "inventory_items_organisationId_idx" ON "inventory"."inventory_items"("organisationId");
-
--- CreateIndex
-CREATE INDEX "inventory_items_einheit_idx" ON "inventory"."inventory_items"("einheit");
+-- AddForeignKey
+ALTER TABLE "quiz"."question_answers" ADD CONSTRAINT "question_answers_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "quiz"."questions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."question_answers" ADD CONSTRAINT "question_answers_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "public"."questions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "public"."question_stats" ADD CONSTRAINT "question_stats_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "public"."questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "quiz"."question_stats" ADD CONSTRAINT "question_stats_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "quiz"."questions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "inventory"."organisation_members" ADD CONSTRAINT "organisation_members_userId_fkey" FOREIGN KEY ("userId") REFERENCES "inventory"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -190,19 +169,19 @@ ALTER TABLE "inventory"."organisation_members" ADD CONSTRAINT "organisation_memb
 ALTER TABLE "inventory"."organisation_members" ADD CONSTRAINT "organisation_members_organisationId_fkey" FOREIGN KEY ("organisationId") REFERENCES "inventory"."organisations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "inventory"."funk_items" ADD CONSTRAINT "funk_items_organisationId_fkey" FOREIGN KEY ("organisationId") REFERENCES "inventory"."organisations"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "inventory"."funk_items" ADD CONSTRAINT "funk_items_organisationId_fkey" FOREIGN KEY ("organisationId") REFERENCES "inventory"."organisations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "inventory"."funk_item_events" ADD CONSTRAINT "funk_item_events_funkItemId_fkey" FOREIGN KEY ("funkItemId") REFERENCES "inventory"."funk_items"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "inventory"."funk_item_events" ADD CONSTRAINT "funk_item_events_funkItemId_fkey" FOREIGN KEY ("funkItemId") REFERENCES "inventory"."funk_items"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "inventory"."funk_item_events" ADD CONSTRAINT "funk_item_events_userId_fkey" FOREIGN KEY ("userId") REFERENCES "inventory"."users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "inventory"."funk_item_events" ADD CONSTRAINT "funk_item_events_userId_fkey" FOREIGN KEY ("userId") REFERENCES "inventory"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "inventory"."funk_item_event_bulks" ADD CONSTRAINT "funk_item_event_bulks_userId_fkey" FOREIGN KEY ("userId") REFERENCES "inventory"."users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "inventory"."funk_item_event_bulks" ADD CONSTRAINT "funk_item_event_bulks_userId_fkey" FOREIGN KEY ("userId") REFERENCES "inventory"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "inventory"."funk_item_event_bulks" ADD CONSTRAINT "funk_item_event_bulks_organisationId_fkey" FOREIGN KEY ("organisationId") REFERENCES "inventory"."organisations"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "inventory"."funk_item_event_bulks" ADD CONSTRAINT "funk_item_event_bulks_organisationId_fkey" FOREIGN KEY ("organisationId") REFERENCES "inventory"."organisations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "inventory"."funk_item_event_bulk_events" ADD CONSTRAINT "funk_item_event_bulk_events_bulkId_fkey" FOREIGN KEY ("bulkId") REFERENCES "inventory"."funk_item_event_bulks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -211,7 +190,7 @@ ALTER TABLE "inventory"."funk_item_event_bulk_events" ADD CONSTRAINT "funk_item_
 ALTER TABLE "inventory"."funk_item_event_bulk_events" ADD CONSTRAINT "funk_item_event_bulk_events_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "inventory"."funk_item_events"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "inventory"."inventory_items" ADD CONSTRAINT "inventory_items_customDataId_fkey" FOREIGN KEY ("customDataId") REFERENCES "inventory"."inventory_item_custom_data"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "inventory"."inventory_items" ADD CONSTRAINT "inventory_items_customDataId_fkey" FOREIGN KEY ("customDataId") REFERENCES "inventory"."inventory_item_custom_data"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "inventory"."inventory_items" ADD CONSTRAINT "inventory_items_organisationId_fkey" FOREIGN KEY ("organisationId") REFERENCES "inventory"."organisations"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "inventory"."inventory_items" ADD CONSTRAINT "inventory_items_organisationId_fkey" FOREIGN KEY ("organisationId") REFERENCES "inventory"."organisations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -43,7 +43,6 @@ model QuestionAnswer {
   questionId Int
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
-  @@index([questionId])
   @@map("question_answers")
   @@schema("quiz")
 }
@@ -53,10 +52,8 @@ model QuestionStats {
   correct    Boolean
   timestamp  DateTime @db.Timestamp(6)
   questionId Int
-  question   Question @relation(fields: [questionId], references: [id])
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
-  @@index([questionId])
-  @@index([correct])
   @@map("question_stats")
   @@schema("quiz")
 }
@@ -99,7 +96,6 @@ model OrganisationMember {
   organisation  Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
 
   @@id([organisationId, userId])
-  @@index([userId])
   @@map("organisation_members")
   @@schema("inventory")
 }
@@ -120,7 +116,7 @@ model FunkItem {
   deviceId      String         @db.VarChar(100)
   organisationId String        @db.Uuid
   events        FunkItemEvent[]
-  organisation  Organisation   @relation(fields: [organisationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  organisation  Organisation   @relation(fields: [organisationId], references: [id])
 
   @@unique([deviceId, organisationId])
   @@map("funk_items")
@@ -134,10 +130,9 @@ model FunkItemEvent {
   funkItemId    String                  @db.Uuid
   userId        String                  @db.Uuid
   bulkEvents    FunkItemEventBulkEvent[]
-  funkItem      FunkItem               @relation(fields: [funkItemId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user          User                   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  funkItem      FunkItem               @relation(fields: [funkItemId], references: [id])
+  user          User                   @relation(fields: [userId], references: [id])
 
-  @@index([funkItemId, date])
   @@map("funk_item_events")
   @@schema("inventory")
 }
@@ -150,10 +145,9 @@ model FunkItemEventBulk {
   userId        String                  @db.Uuid
   organisationId String                 @db.Uuid
   events        FunkItemEventBulkEvent[]
-  user          User                    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  organisation  Organisation           @relation(fields: [organisationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user          User                    @relation(fields: [userId], references: [id])
+  organisation  Organisation           @relation(fields: [organisationId], references: [id])
 
-  @@index([organisationId, date])
   @@map("funk_item_event_bulks")
   @@schema("inventory")
 }
@@ -189,11 +183,9 @@ model InventoryItem {
   status         String?                  @db.VarChar(50)
   organisationId String                   @db.Uuid
   customDataId   String?                  @unique @db.Uuid
-  customData     InventoryItemCustomData? @relation(fields: [customDataId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  organisation   Organisation            @relation(fields: [organisationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  customData     InventoryItemCustomData? @relation(fields: [customDataId], references: [id], onDelete: SetNull)
+  organisation   Organisation            @relation(fields: [organisationId], references: [id])
 
-  @@index([organisationId])
-  @@index([einheit])
   @@map("inventory_items")
   @@schema("inventory")
 }
