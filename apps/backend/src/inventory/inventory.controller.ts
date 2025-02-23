@@ -11,35 +11,24 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
-  Req,
   Patch,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
-import { InventoryService } from './inventory.service';
-import type { InventoryItem, InventoryItemCustomData } from '@prisma/client';
+import type { InventoryItem, Organisation, User } from '@prisma/client';
 import { UpdateCustomDataSchema } from './dto/update-custom-data.dto';
-import { getUserAndOrgFromRequestAndThrow } from 'src/funk/funk.controller';
-import { UserService } from 'src/user/user.service';
-import { OrganisationService } from 'src/organisation/organisation.service';
+import { GetUserAndOrgOrThrow } from '../shared/user-org/user-org.decorator';
+import { InventoryService } from './inventory.service';
 
 @ApiTags('inventory')
 @Controller('inventory')
 export class InventoryController {
-  constructor(
-    private readonly inventoryService: InventoryService,
-    private readonly userService: UserService,
-    private readonly organisationService: OrganisationService,
-  ) {}
+  constructor(private readonly inventoryService: InventoryService) {}
 
   @Get()
-  async findAll(@Req() req: Request): Promise<InventoryItem[]> {
-    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
-    );
+  async findAll(
+    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
+  ): Promise<InventoryItem[]> {
     Logger.log('Getting inventory items');
     return this.inventoryService.findAllByOrganisation(organisation.id);
   }
@@ -47,15 +36,9 @@ export class InventoryController {
   @Post('import/csv')
   @UseInterceptors(FileInterceptor('file'))
   async importInventoryViaCsv(
-    @Req() req: Request,
+    @GetUserAndOrgOrThrow() [user, organisation]: [User, Organisation],
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const [user, organisation] = await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-
     if (!file) {
       Logger.error('No file provided');
       throw new HttpException('No file provided', HttpStatus.BAD_REQUEST);
@@ -80,16 +63,10 @@ export class InventoryController {
 
   @Patch(':id/custom-data')
   async updateCustomData(
-    @Req() req: Request,
+    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
     @Param('id') id: string,
     @Body() rawCustomData: unknown,
   ): Promise<InventoryItem> {
-    await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-
     if (!id) {
       throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST);
     }

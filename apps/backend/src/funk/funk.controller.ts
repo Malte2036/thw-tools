@@ -13,74 +13,18 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import type { FunkItemEventType, Organisation, User } from '@prisma/client';
 import { Request } from 'express';
-import { OrganisationService } from '../organisation/organisation.service';
-import { UserService } from '../user/user.service';
 import { FunkService } from './funk.service';
-
-export async function getUserAndOrgFromRequest(
-  req: Request,
-  userService: UserService,
-  organisationService: OrganisationService,
-): Promise<[User | null, Organisation | null]> {
-  const user = await userService.createOrUpdate(req.idTokenPayload.sub, {
-    kindeId: req.idTokenPayload.sub,
-    email: req.idTokenPayload.email,
-    firstName: req.idTokenPayload.given_name,
-    lastName: req.idTokenPayload.family_name,
-    picture: req.idTokenPayload.picture,
-  });
-
-  const organisation = await organisationService.getPrimaryOrganisationsForUser(
-    user.id,
-  );
-
-  return [user, organisation];
-}
-
-export async function getUserAndOrgFromRequestAndThrow(
-  req: Request,
-  userService: UserService,
-  organisationService: OrganisationService,
-): Promise<[User, Organisation]> {
-  const [user, organisation] = await getUserAndOrgFromRequest(
-    req,
-    userService,
-    organisationService,
-  );
-
-  if (!user) {
-    Logger.warn('User not found');
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-  }
-
-  if (!organisation) {
-    throw new HttpException(
-      'Organisation for user not found',
-      HttpStatus.NOT_FOUND,
-    );
-  }
-
-  return [user, organisation];
-}
+import { GetUserAndOrgOrThrow } from '../shared/user-org/user-org.decorator';
 
 @ApiTags('funk')
 @Controller('funk')
 export class FunkController {
-  constructor(
-    private readonly funkService: FunkService,
-
-    private readonly userService: UserService,
-    private readonly organisationService: OrganisationService,
-  ) {}
+  constructor(private readonly funkService: FunkService) {}
 
   @Get()
-  async getFunkItems(@Req() req: Request) {
-    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-
+  async getFunkItems(
+    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
+  ) {
     return this.funkService.getFunkItems(organisation.id);
   }
 
@@ -92,7 +36,7 @@ export class FunkController {
       batteryCount: number;
       eventType: FunkItemEventType;
     },
-    @Req() req: Request,
+    @GetUserAndOrgOrThrow() [user, organisation]: [User, Organisation],
   ) {
     Logger.log(
       `Bulk creating funk item events with type ${body.eventType} for devices ${body.deviceIds.join(', ')}`,
@@ -108,12 +52,6 @@ export class FunkController {
       throw new HttpException('Invalid body', HttpStatus.BAD_REQUEST);
     }
 
-    const [user, organisation] = await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-
     await this.funkService.bulkCreateFunkItemEvents(
       body,
       user,
@@ -127,14 +65,8 @@ export class FunkController {
   @Get(':deviceId/events')
   async getFunkItemEvents(
     @Param('deviceId') deviceId: string,
-    @Req() req: Request,
+    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
   ) {
-    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-
     const item = await this.funkService.getFunkItemByDeviceId(
       organisation.id,
       deviceId,
@@ -147,26 +79,18 @@ export class FunkController {
   }
 
   @Get('events/bulk')
-  async getFunkItemEventBulks(@Req() req: Request) {
-    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-
+  async getFunkItemEventBulks(
+    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
+  ) {
     return this.funkService.getFunkItemEventBulks(organisation.id);
   }
 
   @Get('events/bulk/export')
   @Header('Content-Type', 'text/csv')
   @Header('Content-Disposition', 'attachment; filename="funk_item_events.csv"')
-  async exportFunkItemEventBulksAsCsv(@Req() req: Request) {
-    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-
+  async exportFunkItemEventBulksAsCsv(
+    @GetUserAndOrgOrThrow() [, organisation]: [User, Organisation],
+  ) {
     const csvData = await this.funkService.exportFunkItemEventBulksAsCsv(
       organisation.id,
     );
