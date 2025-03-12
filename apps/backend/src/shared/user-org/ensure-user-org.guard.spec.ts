@@ -1,10 +1,12 @@
 import { ExecutionContext } from '@nestjs/common';
-import { EnsureUserAndOrgGuard } from './ensure-user-org.guard';
+import { EnsureUserAndOrgGuard, SKIP_ORG_CHECK } from './ensure-user-org.guard';
 import { HttpException } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 
 describe('EnsureUserAndOrgGuard', () => {
   let guard: EnsureUserAndOrgGuard;
   let mockContext: ExecutionContext;
+  let reflector: Reflector;
 
   const mockUser = {
     id: '1',
@@ -18,10 +20,13 @@ describe('EnsureUserAndOrgGuard', () => {
   };
 
   beforeEach(() => {
-    guard = new EnsureUserAndOrgGuard();
+    reflector = new Reflector();
+    guard = new EnsureUserAndOrgGuard(reflector);
   });
 
   it('should allow access when user and organisation exist', () => {
+    jest.spyOn(reflector, 'get').mockReturnValue(false);
+
     mockContext = {
       switchToHttp: () => ({
         getRequest: () => ({
@@ -29,12 +34,15 @@ describe('EnsureUserAndOrgGuard', () => {
           organisation: mockOrg,
         }),
       }),
-    } as ExecutionContext;
+      getHandler: () => ({}),
+    } as unknown as ExecutionContext;
 
     expect(guard.canActivate(mockContext)).toBe(true);
   });
 
   it('should throw when user is missing', () => {
+    jest.spyOn(reflector, 'get').mockReturnValue(false);
+
     mockContext = {
       switchToHttp: () => ({
         getRequest: () => ({
@@ -42,12 +50,15 @@ describe('EnsureUserAndOrgGuard', () => {
           organisation: mockOrg,
         }),
       }),
-    } as ExecutionContext;
+      getHandler: () => ({}),
+    } as unknown as ExecutionContext;
 
     expect(() => guard.canActivate(mockContext)).toThrow(HttpException);
   });
 
-  it('should throw when organisation is missing', () => {
+  it('should throw when organisation is missing and org check is not skipped', () => {
+    jest.spyOn(reflector, 'get').mockReturnValue(false);
+
     mockContext = {
       switchToHttp: () => ({
         getRequest: () => ({
@@ -55,22 +66,44 @@ describe('EnsureUserAndOrgGuard', () => {
           organisation: null,
         }),
       }),
-    } as ExecutionContext;
+      getHandler: () => ({}),
+    } as unknown as ExecutionContext;
 
     expect(() => guard.canActivate(mockContext)).toThrow(HttpException);
   });
 
+  it('should allow access when organisation is missing but org check is skipped', () => {
+    jest.spyOn(reflector, 'get').mockReturnValue(true);
+
+    mockContext = {
+      switchToHttp: () => ({
+        getRequest: () => ({
+          user: mockUser,
+          organisation: null,
+        }),
+      }),
+      getHandler: () => ({}),
+    } as unknown as ExecutionContext;
+
+    expect(guard.canActivate(mockContext)).toBe(true);
+  });
+
   it('should throw when request object is missing', () => {
+    jest.spyOn(reflector, 'get').mockReturnValue(false);
+
     mockContext = {
       switchToHttp: () => ({
         getRequest: () => undefined,
       }),
-    } as ExecutionContext;
+      getHandler: () => ({}),
+    } as unknown as ExecutionContext;
 
     expect(() => guard.canActivate(mockContext)).toThrow(HttpException);
   });
 
-  it('should throw with correct status code and message', () => {
+  it('should throw with correct status code and message for missing user', () => {
+    jest.spyOn(reflector, 'get').mockReturnValue(false);
+
     mockContext = {
       switchToHttp: () => ({
         getRequest: () => ({
@@ -78,28 +111,39 @@ describe('EnsureUserAndOrgGuard', () => {
           organisation: mockOrg,
         }),
       }),
-    } as ExecutionContext;
+      getHandler: () => ({}),
+    } as unknown as ExecutionContext;
 
     try {
       guard.canActivate(mockContext);
       fail('Should have thrown an error');
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
-      expect(error.getStatus()).toBe(403);
-      expect(error.message).toBe('User or organisation not found');
+      expect(error.getStatus()).toBe(404);
+      expect(error.message).toBe('User not found');
     }
   });
 
-  it('should throw when both user and organisation are null', () => {
+  it('should throw with correct status code and message for missing organisation', () => {
+    jest.spyOn(reflector, 'get').mockReturnValue(false);
+
     mockContext = {
       switchToHttp: () => ({
         getRequest: () => ({
-          user: null,
+          user: mockUser,
           organisation: null,
         }),
       }),
-    } as ExecutionContext;
+      getHandler: () => ({}),
+    } as unknown as ExecutionContext;
 
-    expect(() => guard.canActivate(mockContext)).toThrow(HttpException);
+    try {
+      guard.canActivate(mockContext);
+      fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).toBeInstanceOf(HttpException);
+      expect(error.getStatus()).toBe(404);
+      expect(error.message).toBe('Organisation not found');
+    }
   });
 });

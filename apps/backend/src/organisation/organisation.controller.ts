@@ -12,7 +12,10 @@ import {
 import { OrganisationService } from './organisation.service';
 import { ApiTags } from '@nestjs/swagger';
 import type { User, Organisation } from '@prisma/client';
-import { EnsureUserAndOrgGuard } from '../shared/user-org/ensure-user-org.guard';
+import {
+  EnsureUserAndOrgGuard,
+  SkipOrgCheck,
+} from '../shared/user-org/ensure-user-org.guard';
 import { Request } from 'express';
 
 @ApiTags('organisations')
@@ -23,6 +26,7 @@ export class OrganisationController {
   @Get('me')
   @UseGuards(EnsureUserAndOrgGuard)
   async getOrganisationsForUser(@Req() req: Request) {
+    console.log('req.organisation', req.organisation);
     return req.organisation;
   }
 
@@ -54,6 +58,7 @@ export class OrganisationController {
 
   @Post()
   @UseGuards(EnsureUserAndOrgGuard)
+  @SkipOrgCheck()
   async createOrganisation(
     @Req() req: Request,
     @Body() data: { name: string },
