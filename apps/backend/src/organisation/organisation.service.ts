@@ -1,29 +1,41 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import {
-  Organisation,
-  OrganisationDocument,
-} from './schemas/organisation.schema';
-import { Model } from 'mongoose';
-import { User, UserDocument } from 'src/user/schemas/user.schema';
+import { PrismaService } from '../prisma/prisma.service';
+import type { User, Organisation } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
 @Injectable()
 export class OrganisationService {
-  constructor(
-    @InjectModel(Organisation.name)
-    private OrganisationModel: Model<Organisation>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async getPrimaryOrganisationsForUser(userId: string) {
-    return this.OrganisationModel.findOne({
-      members: userId,
-    }).populate('members');
+    return this.prisma.organisation.findFirst({
+      where: {
+        members: {
+          some: {
+            userId,
+          },
+        },
+      },
+      include: {
+        members: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
   }
 
   async addUserToOrganisation(user: User, inviteCode: string) {
-    const organisation = await this.OrganisationModel.findOne({
-      inviteCode,
+    const organisation = await this.prisma.organisation.findUnique({
+      where: { inviteCode },
+      include: {
+        members: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
 
     if (!organisation) {
@@ -33,28 +45,48 @@ export class OrganisationService {
       );
     }
 
-    organisation.members.push(user);
-    await organisation.save();
+    if (organisation.members.some((member) => member.userId === user.id)) {
+      throw new HttpException(
+        'User already a member of this organisation',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.prisma.organisationMember.create({
+      data: {
+        userId: user.id,
+        organisationId: organisation.id,
+      },
+    });
   }
 
   async createOrganisation(name: string, user: User) {
-    const organisation = new this.OrganisationModel({
-      name,
-      members: [user],
-      inviteCode: randomUUID(),
+    return this.prisma.organisation.create({
+      data: {
+        name,
+        inviteCode: randomUUID(),
+        members: {
+          create: {
+            userId: user.id,
+          },
+        },
+      },
+      include: {
+        members: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
-
-    await organisation.save();
-    return organisation;
   }
 
-  async leaveOrganisation(
-    user: UserDocument,
-    organisation: OrganisationDocument,
-  ) {
-    await this.OrganisationModel.updateOne(
-      { _id: organisation._id },
-      { $pull: { members: user._id } },
-    );
+  async leaveOrganisation(user: User, organisation: Organisation) {
+    await this.prisma.organisationMember.deleteMany({
+      where: {
+        userId: user.id,
+        organisationId: organisation.id,
+      },
+    });
   }
 }

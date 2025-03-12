@@ -1,11 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import {
-  CreateQuestionStatsDto,
-  QuestionStats,
-} from './schemas/question-stats.schema';
-import { QuizType } from './schemas/question.schema';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { PrismaService } from '../prisma/prisma.service';
+import { QuizType } from '@prisma/client';
 import { QuestionService } from './question.service';
 
 export type QuestionStatsCount = {
@@ -17,8 +12,7 @@ export type QuestionStatsCount = {
 export class QuestionStatsService {
   constructor(
     private questionService: QuestionService,
-    @InjectRepository(QuestionStats)
-    private questionStatsRepository: Repository<QuestionStats>,
+    private prisma: PrismaService,
   ) {}
 
   async getQuestionStatsCountByQuestionId(
@@ -28,50 +22,65 @@ export class QuestionStatsService {
       return { right: 0, wrong: 0 };
     }
 
-    const result = await this.questionStatsRepository
-      .createQueryBuilder('stats')
-      .innerJoin('stats.question', 'question')
-      .select([
-        'SUM(CASE WHEN stats.correct = true THEN 1 ELSE 0 END) AS "correctCount"',
-        'SUM(CASE WHEN stats.correct = false THEN 1 ELSE 0 END) AS "incorrectCount"',
-      ])
-      .where('question.id = :questionId', { questionId })
-      .getRawOne();
+    const result = await this.prisma.questionStats.groupBy({
+      by: ['correct'],
+      where: {
+        questionId,
+      },
+      _count: {
+        correct: true,
+      },
+    });
+
+    const correctCount = result.find((r) => r.correct)?._count.correct ?? 0;
+    const incorrectCount = result.find((r) => !r.correct)?._count.correct ?? 0;
 
     return {
-      right: parseInt(result?.correctCount ?? '0', 10) || 0,
-      wrong: parseInt(result?.incorrectCount ?? '0', 10) || 0,
+      right: correctCount,
+      wrong: incorrectCount,
     };
   }
 
   async getQuestionStatsCountForType(
     questionType: QuizType,
   ): Promise<QuestionStatsCount> {
-    const result = await this.questionStatsRepository
-      .createQueryBuilder('stats')
-      .innerJoin('stats.question', 'question')
-      .select([
-        'SUM(CASE WHEN stats.correct = true THEN 1 ELSE 0 END) AS "correctCount"',
-        'SUM(CASE WHEN stats.correct = false THEN 1 ELSE 0 END) AS "incorrectCount"',
-      ])
-      .where('question.type = :questionType', { questionType })
-      .getRawOne();
+    const result = await this.prisma.questionStats.groupBy({
+      by: ['correct'],
+      where: {
+        question: {
+          type: questionType,
+        },
+      },
+      _count: {
+        correct: true,
+      },
+    });
+
+    const correctCount = result.find((r) => r.correct)?._count.correct ?? 0;
+    const incorrectCount = result.find((r) => !r.correct)?._count.correct ?? 0;
 
     return {
-      right: parseInt(result?.correctCount ?? '0', 10) || 0,
-      wrong: parseInt(result?.incorrectCount ?? '0', 10) || 0,
+      right: correctCount,
+      wrong: incorrectCount,
     };
   }
 
-  async addQuestionStats(createQuestionStatsDto: CreateQuestionStatsDto) {
-    if (
-      !createQuestionStatsDto.timestamp ||
-      isNaN(createQuestionStatsDto.timestamp.getTime())
-    ) {
+  async addQuestionStats(data: {
+    questionId: number;
+    correct: boolean;
+    timestamp: Date;
+  }) {
+    if (!data.timestamp || isNaN(data.timestamp.getTime())) {
       throw new BadRequestException('Invalid timestamp');
     }
 
-    return this.questionStatsRepository.save(createQuestionStatsDto);
+    return this.prisma.questionStats.create({
+      data: {
+        correct: data.correct,
+        timestamp: data.timestamp,
+        questionId: data.questionId,
+      },
+    });
   }
 
   async addQuestionStatsDeprecated(
@@ -93,12 +102,12 @@ export class QuestionStatsService {
       throw new BadRequestException('Invalid timestamp');
     }
 
-    const createQuestionStatsDto: CreateQuestionStatsDto = {
-      correct,
-      timestamp,
-      question,
-    };
-
-    return this.questionStatsRepository.save(createQuestionStatsDto);
+    return this.prisma.questionStats.create({
+      data: {
+        correct,
+        timestamp,
+        questionId: question.id,
+      },
+    });
   }
 }

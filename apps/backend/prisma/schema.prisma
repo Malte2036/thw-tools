@@ -1,0 +1,201 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["quiz", "inventory"]
+}
+
+//
+// QUIZ SCHEMA - Quiz Models
+//
+enum QuizType {
+  ga
+  agt
+  cbrn
+  radio
+
+  @@map("quiz_type")
+  @@schema("quiz")
+}
+
+model Question {
+  id      Int              @id @default(autoincrement())
+  type    QuizType
+  number  Int
+  text    String          @db.Text
+  image   String?         @db.Text
+  answers QuestionAnswer[]
+  stats   QuestionStats[]
+
+  @@unique([type, number])
+  @@map("questions")
+  @@schema("quiz")
+}
+
+model QuestionAnswer {
+  id         Int      @id @default(autoincrement())
+  text       String   @db.Text
+  isCorrect  Boolean
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("question_answers")
+  @@schema("quiz")
+}
+
+model QuestionStats {
+  id         Int      @id @default(autoincrement())
+  correct    Boolean
+  timestamp  DateTime @db.Timestamp(6)
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("question_stats")
+  @@schema("quiz")
+}
+
+//
+// INVENTORY SCHEMA - Core Models
+//
+model User {
+  id                String                @id @default(uuid()) @db.Uuid
+  kindeId           String               @unique @db.VarChar(255)
+  email             String?              @db.VarChar(255)
+  firstName         String?              @db.VarChar(100)
+  lastName          String?              @db.VarChar(100)
+  picture           String?              @db.VarChar(1000)
+  eventBulks        FunkItemEventBulk[]
+  funkItemEvents    FunkItemEvent[]
+  organisations     OrganisationMember[]
+
+  @@map("users")
+  @@schema("inventory")
+}
+
+model Organisation {
+  id                String                @id @default(uuid()) @db.Uuid
+  name              String               @db.VarChar(255)
+  inviteCode        String               @unique @db.VarChar(50)
+  eventBulks        FunkItemEventBulk[]
+  funkItems         FunkItem[]
+  inventoryItems    InventoryItem[]
+  members           OrganisationMember[]
+
+  @@map("organisations")
+  @@schema("inventory")
+}
+
+model OrganisationMember {
+  organisationId String       @db.Uuid
+  userId        String       @db.Uuid
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organisation  Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+
+  @@id([organisationId, userId])
+  @@map("organisation_members")
+  @@schema("inventory")
+}
+
+//
+// INVENTORY SCHEMA - Funk Models
+//
+enum FunkItemEventType {
+  borrowed
+  returned
+
+  @@map("funk_item_event_type")
+  @@schema("inventory")
+}
+
+model FunkItem {
+  id            String          @id @default(uuid()) @db.Uuid
+  deviceId      String         @db.VarChar(100)
+  organisationId String        @db.Uuid
+  events        FunkItemEvent[]
+  organisation  Organisation   @relation(fields: [organisationId], references: [id])
+
+  @@unique([deviceId, organisationId])
+  @@map("funk_items")
+  @@schema("inventory")
+}
+
+model FunkItemEvent {
+  id            String                  @id @default(uuid()) @db.Uuid
+  type          FunkItemEventType
+  date          DateTime                @default(now()) @db.Timestamp(6)
+  funkItemId    String                  @db.Uuid
+  userId        String                  @db.Uuid
+  bulkEvents    FunkItemEventBulkEvent[]
+  funkItem      FunkItem               @relation(fields: [funkItemId], references: [id])
+  user          User                   @relation(fields: [userId], references: [id])
+
+  @@map("funk_item_events")
+  @@schema("inventory")
+}
+
+model FunkItemEventBulk {
+  id            String                  @id @default(uuid()) @db.Uuid
+  eventType     FunkItemEventType
+  batteryCount  Int                     @default(0)
+  date          DateTime                @default(now()) @db.Timestamp(6)
+  userId        String                  @db.Uuid
+  organisationId String                 @db.Uuid
+  events        FunkItemEventBulkEvent[]
+  user          User                    @relation(fields: [userId], references: [id])
+  organisation  Organisation           @relation(fields: [organisationId], references: [id])
+
+  @@map("funk_item_event_bulks")
+  @@schema("inventory")
+}
+
+model FunkItemEventBulkEvent {
+  bulkId  String           @db.Uuid
+  eventId String           @db.Uuid
+  bulk    FunkItemEventBulk @relation(fields: [bulkId], references: [id], onDelete: Cascade)
+  event   FunkItemEvent    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@id([bulkId, eventId])
+  @@map("funk_item_event_bulk_events")
+  @@schema("inventory")
+}
+
+//
+// INVENTORY SCHEMA - Inventory Models
+//
+model InventoryItem {
+  id             String                   @id @default(uuid()) @db.Uuid
+  einheit        String                   @db.VarChar(100)
+  ebene          Int
+  art            String?                  @db.VarChar(100)
+  menge          Float?                   @db.DoublePrecision
+  mengeIst       Float?                   @db.DoublePrecision
+  verfuegbar     Float?                   @db.DoublePrecision
+  ausstattung    String                   @db.VarChar(255)
+  hersteller     String?                  @db.VarChar(100)
+  typ            String?                  @db.VarChar(100)
+  inventarNummer String?                  @db.VarChar(50)
+  sachNummer     String?                  @db.VarChar(50)
+  gerateNummer   String?                  @db.VarChar(50)
+  status         String?                  @db.VarChar(50)
+  organisationId String                   @db.Uuid
+  customDataId   String?                  @unique @db.Uuid
+  customData     InventoryItemCustomData? @relation(fields: [customDataId], references: [id], onDelete: SetNull)
+  organisation   Organisation            @relation(fields: [organisationId], references: [id])
+
+  @@map("inventory_items")
+  @@schema("inventory")
+}
+
+model InventoryItemCustomData {
+  id          String         @id @default(uuid()) @db.Uuid
+  lastScanned DateTime?      @db.Timestamp(6)
+  note        String?        @db.VarChar(1000)
+  item        InventoryItem?
+
+  @@map("inventory_item_custom_data")
+  @@schema("inventory")
+} 

@@ -1,44 +1,36 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { QuestionStatsService } from './question-stats.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { QuestionStats } from './schemas/question-stats.schema';
-import { Repository } from 'typeorm';
+import { PrismaService } from '../prisma/prisma.service';
+import { QuizType } from '@prisma/client';
 import { QuestionService } from './question.service';
-import { Question, QuizType } from './schemas/question.schema';
 import { BadRequestException } from '@nestjs/common';
 
 describe('QuestionStatsService', () => {
   let service: QuestionStatsService;
-  let repository: Repository<QuestionStats>;
+  let prisma: PrismaService;
   let questionService: QuestionService;
 
-  const mockQuestion: Question = {
+  const mockQuestion = {
     id: 1,
-    type: QuizType.GA,
+    type: QuizType.ga,
     number: 1,
     text: 'Test question?',
     image: null,
     answers: [],
-    stats: [],
   };
 
-  const mockQuestionStats: QuestionStats = {
+  const mockQuestionStats = {
     id: 1,
-    question: mockQuestion,
+    questionId: mockQuestion.id,
     correct: true,
     timestamp: new Date(),
   };
 
-  const mockQueryBuilder = {
-    innerJoin: jest.fn().mockReturnThis(),
-    select: jest.fn().mockReturnThis(),
-    where: jest.fn().mockReturnThis(),
-    getRawOne: jest.fn(),
-  };
-
-  const mockRepository = {
-    save: jest.fn(),
-    createQueryBuilder: jest.fn().mockReturnValue(mockQueryBuilder),
+  const mockPrisma = {
+    questionStats: {
+      groupBy: jest.fn(),
+      create: jest.fn(),
+    },
   };
 
   const mockQuestionService = {
@@ -50,8 +42,8 @@ describe('QuestionStatsService', () => {
       providers: [
         QuestionStatsService,
         {
-          provide: getRepositoryToken(QuestionStats),
-          useValue: mockRepository,
+          provide: PrismaService,
+          useValue: mockPrisma,
         },
         {
           provide: QuestionService,
@@ -61,9 +53,7 @@ describe('QuestionStatsService', () => {
     }).compile();
 
     service = module.get<QuestionStatsService>(QuestionStatsService);
-    repository = module.get<Repository<QuestionStats>>(
-      getRepositoryToken(QuestionStats),
-    );
+    prisma = module.get<PrismaService>(PrismaService);
     questionService = module.get<QuestionService>(QuestionService);
   });
 
@@ -77,12 +67,12 @@ describe('QuestionStatsService', () => {
 
   describe('getQuestionStatsCountByQuestionId', () => {
     it('should return stats count for a specific question', async () => {
-      const mockResult = {
-        correctCount: '3',
-        incorrectCount: '2',
-      };
+      const mockResult = [
+        { correct: true, _count: { correct: 3 } },
+        { correct: false, _count: { correct: 2 } },
+      ];
 
-      mockQueryBuilder.getRawOne.mockResolvedValue(mockResult);
+      mockPrisma.questionStats.groupBy.mockResolvedValue(mockResult);
 
       const result = await service.getQuestionStatsCountByQuestionId(1);
 
@@ -90,29 +80,15 @@ describe('QuestionStatsService', () => {
         right: 3,
         wrong: 2,
       });
-      expect(repository.createQueryBuilder).toHaveBeenCalledWith('stats');
+      expect(prisma.questionStats.groupBy).toHaveBeenCalledWith({
+        by: ['correct'],
+        where: { questionId: 1 },
+        _count: { correct: true },
+      });
     });
 
     it('should return zero counts when no stats exist', async () => {
-      mockQueryBuilder.getRawOne.mockResolvedValue({
-        correctCount: null,
-        incorrectCount: null,
-      });
-
-      const result = await service.getQuestionStatsCountByQuestionId(1);
-
-      expect(result).toEqual({
-        right: 0,
-        wrong: 0,
-      });
-    });
-
-    // Edge case: Malformed stat counts
-    it('should handle malformed stat counts', async () => {
-      mockQueryBuilder.getRawOne.mockResolvedValue({
-        correctCount: 'invalid',
-        incorrectCount: 'NaN',
-      });
+      mockPrisma.questionStats.groupBy.mockResolvedValue([]);
 
       const result = await service.getQuestionStatsCountByQuestionId(1);
 
@@ -130,34 +106,40 @@ describe('QuestionStatsService', () => {
         right: 0,
         wrong: 0,
       });
-      expect(repository.createQueryBuilder).not.toHaveBeenCalled();
+      expect(prisma.questionStats.groupBy).not.toHaveBeenCalled();
     });
   });
 
   describe('getQuestionStatsCountForType', () => {
     it('should return stats count for a question type', async () => {
-      const mockResult = {
-        correctCount: '5',
-        incorrectCount: '3',
-      };
+      const mockResult = [
+        { correct: true, _count: { correct: 5 } },
+        { correct: false, _count: { correct: 3 } },
+      ];
 
-      mockQueryBuilder.getRawOne.mockResolvedValue(mockResult);
+      mockPrisma.questionStats.groupBy.mockResolvedValue(mockResult);
 
-      const result = await service.getQuestionStatsCountForType(QuizType.GA);
+      const result = await service.getQuestionStatsCountForType(QuizType.ga);
 
       expect(result).toEqual({
         right: 5,
         wrong: 3,
       });
+      expect(prisma.questionStats.groupBy).toHaveBeenCalledWith({
+        by: ['correct'],
+        where: {
+          question: {
+            type: QuizType.ga,
+          },
+        },
+        _count: { correct: true },
+      });
     });
 
     it('should return zero counts when no stats exist for type', async () => {
-      mockQueryBuilder.getRawOne.mockResolvedValue({
-        correctCount: null,
-        incorrectCount: null,
-      });
+      mockPrisma.questionStats.groupBy.mockResolvedValue([]);
 
-      const result = await service.getQuestionStatsCountForType(QuizType.CBRN);
+      const result = await service.getQuestionStatsCountForType(QuizType.cbrn);
 
       expect(result).toEqual({
         right: 0,
@@ -167,12 +149,14 @@ describe('QuestionStatsService', () => {
 
     // Edge case: Very large numbers
     it('should handle very large numbers', async () => {
-      mockQueryBuilder.getRawOne.mockResolvedValue({
-        correctCount: '9999999999',
-        incorrectCount: '9999999999',
-      });
+      const mockResult = [
+        { correct: true, _count: { correct: 9999999999 } },
+        { correct: false, _count: { correct: 9999999999 } },
+      ];
 
-      const result = await service.getQuestionStatsCountForType(QuizType.GA);
+      mockPrisma.questionStats.groupBy.mockResolvedValue(mockResult);
+
+      const result = await service.getQuestionStatsCountForType(QuizType.ga);
 
       expect(result).toEqual({
         right: 9999999999,
@@ -182,25 +166,27 @@ describe('QuestionStatsService', () => {
   });
 
   describe('addQuestionStats', () => {
-    it('should save new question stats', async () => {
+    it('should create new question stats', async () => {
       const createDto = {
-        question: mockQuestion,
+        questionId: 1,
         correct: true,
         timestamp: new Date(),
       };
 
-      mockRepository.save.mockResolvedValue(mockQuestionStats);
+      mockPrisma.questionStats.create.mockResolvedValue(mockQuestionStats);
 
       const result = await service.addQuestionStats(createDto);
 
       expect(result).toEqual(mockQuestionStats);
-      expect(repository.save).toHaveBeenCalledWith(createDto);
+      expect(prisma.questionStats.create).toHaveBeenCalledWith({
+        data: createDto,
+      });
     });
 
     // Edge case: Invalid timestamp
     it('should handle invalid timestamp', async () => {
       const createDto = {
-        question: mockQuestion,
+        questionId: 1,
         correct: true,
         timestamp: new Date('invalid date'),
       };
@@ -216,12 +202,12 @@ describe('QuestionStatsService', () => {
       futureDate.setFullYear(futureDate.getFullYear() + 1);
 
       const createDto = {
-        question: mockQuestion,
+        questionId: 1,
         correct: true,
         timestamp: futureDate,
       };
 
-      mockRepository.save.mockResolvedValue({
+      mockPrisma.questionStats.create.mockResolvedValue({
         ...mockQuestionStats,
         timestamp: futureDate,
       });
@@ -232,54 +218,50 @@ describe('QuestionStatsService', () => {
   });
 
   describe('addQuestionStatsDeprecated', () => {
-    it('should save new question stats using deprecated method', async () => {
+    it('should create new question stats using deprecated method', async () => {
       const timestamp = new Date();
       mockQuestionService.getQuestion.mockResolvedValue(mockQuestion);
-      mockRepository.save.mockResolvedValue(mockQuestionStats);
+      mockPrisma.questionStats.create.mockResolvedValue(mockQuestionStats);
 
       const result = await service.addQuestionStatsDeprecated(
-        QuizType.GA,
+        QuizType.ga,
         1,
         true,
         timestamp,
       );
 
       expect(result).toEqual(mockQuestionStats);
-      expect(questionService.getQuestion).toHaveBeenCalledWith(QuizType.GA, 1);
-      expect(repository.save).toHaveBeenCalledWith({
-        question: mockQuestion,
-        correct: true,
-        timestamp,
+      expect(questionService.getQuestion).toHaveBeenCalledWith(QuizType.ga, 1);
+      expect(prisma.questionStats.create).toHaveBeenCalledWith({
+        data: {
+          correct: true,
+          timestamp,
+          questionId: mockQuestion.id,
+        },
       });
     });
 
-    it('should handle question not found scenario', async () => {
+    // Edge case: Question not found
+    it('should throw error when question not found', async () => {
       mockQuestionService.getQuestion.mockResolvedValue(null);
 
       await expect(
-        service.addQuestionStatsDeprecated(QuizType.GA, 999, true, new Date()),
+        service.addQuestionStatsDeprecated(QuizType.ga, 999, true, new Date()),
       ).rejects.toThrow(BadRequestException);
     });
 
-    // Edge case: Multiple concurrent stats for same question
-    it('should handle multiple concurrent stats for same question', async () => {
-      const timestamp = new Date();
+    // Edge case: Invalid timestamp
+    it('should throw error with invalid timestamp', async () => {
       mockQuestionService.getQuestion.mockResolvedValue(mockQuestion);
 
-      // Simulate concurrent saves
-      const promises = [
-        service.addQuestionStatsDeprecated(QuizType.GA, 1, true, timestamp),
-        service.addQuestionStatsDeprecated(QuizType.GA, 1, false, timestamp),
-      ];
-
-      mockRepository.save
-        .mockResolvedValueOnce({ ...mockQuestionStats, correct: true })
-        .mockResolvedValueOnce({ ...mockQuestionStats, correct: false });
-
-      const results = await Promise.all(promises);
-      expect(results).toHaveLength(2);
-      expect(results[0].correct).toBe(true);
-      expect(results[1].correct).toBe(false);
+      await expect(
+        service.addQuestionStatsDeprecated(
+          QuizType.ga,
+          1,
+          true,
+          new Date('invalid'),
+        ),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });

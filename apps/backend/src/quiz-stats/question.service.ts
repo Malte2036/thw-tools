@@ -1,39 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Question, QuizType } from './schemas/question.schema';
+import { PrismaService } from '../prisma/prisma.service';
+import { QuizType } from '@prisma/client';
 
 @Injectable()
 export class QuestionService {
-  constructor(
-    @InjectRepository(Question)
-    private questionRepository: Repository<Question>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async getQuestions(questionType: QuizType): Promise<Question[]> {
-    return this.questionRepository.find({
+  async getQuestions(questionType: QuizType) {
+    return this.prisma.question.findMany({
       where: {
         type: questionType,
       },
-      relations: ['answers'],
+      include: {
+        answers: true,
+      },
     });
   }
 
-  async getQuestion(
-    questionType: QuizType,
-    questionNumber: number,
-  ): Promise<Question | null> {
-    return this.questionRepository.findOne({
+  async getQuestion(questionType: QuizType, questionNumber: number) {
+    return this.prisma.question.findFirst({
       where: {
         type: questionType,
         number: questionNumber,
       },
-      relations: ['answers'],
+      include: {
+        answers: true,
+      },
     });
   }
 
   async getQuestionCount(questionType: QuizType): Promise<number> {
-    return this.questionRepository.count({
+    return this.prisma.question.count({
       where: {
         type: questionType,
       },
@@ -41,6 +38,6 @@ export class QuestionService {
   }
 
   async getTotalQuestionCount(): Promise<number> {
-    return this.questionRepository.count();
+    return this.prisma.question.count();
   }
 }

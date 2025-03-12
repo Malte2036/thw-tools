@@ -49,7 +49,13 @@ cp .env.example .env
 # Edit .env with your settings
 ```
 
-4. Start development server
+4. Generate and run database migrations
+
+```bash
+npx prisma migrate dev
+```
+
+5. Start development server
 
 ```bash
 pnpm run start:dev
@@ -71,6 +77,9 @@ pnpm run test:cov     # Generate test coverage
 # Build
 pnpm run build        # Build for production
 pnpm run start:prod   # Start production server
+
+# Database
+npx prisma migrate dev # Generate and apply new migrations
 ```
 
 ### Docker
@@ -81,6 +90,28 @@ docker build -t thw-tools-backend .
 
 # Run container
 docker run -p 3000:3000 thw-tools-backend
+```
+
+### Production Migrations
+
+To run database migrations in production:
+
+1. Get the container name:
+
+```bash
+docker ps
+```
+
+2. Access the running container:
+
+```bash
+docker exec -it <your-container-name> sh
+```
+
+3. Run Prisma migrations:
+
+```bash
+npx prisma migrate deploy
 ```
 
 ## 📚 Documentation

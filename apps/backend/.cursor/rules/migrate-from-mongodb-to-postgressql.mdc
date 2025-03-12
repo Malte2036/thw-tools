@@ -1,0 +1,220 @@
+---
+description: 
+globs: *
+---
+
+# Inventory Items SQL Migration Plan
+
+This document outlines a detailed plan to migrate inventory items from MongoDB to PostgreSQL in a proper SQL-like format. The migration is designed to be consistent with the recently migrated question stats module. The plan covers analysis, design, implementation, and testing while ensuring proper maintainability, consistency, and adherence to NestJS best practices.
+
+---
+
+## 1. Overview
+
+The goal is to move from a MongoDB schema using Mongoose models to a relational PostgreSQL schema using TypeORM. The migration will focus on two main entities:
+
+- **InventoryItem**: Contains core inventory details and references the owning organisation.
+- **InventoryItemCustomData**: Holds supplementary information (e.g., last scanned date, note) for an inventory item in a one-to-one relationship.
+
+This structure aligns with the design and separation of concerns seen in the migrated question stats module.
+
+---
+
+## 2. Analysis & Planning
+
+- **Review Existing Models**:  
+  Assess the current MongoDB schemas for both inventory items and their custom data. Identify all fields including relationships to external entities (for example, linking to Organisation).
+
+- **Define SQL Data Types**:  
+  Map the MongoDB data types to SQL types. Use appropriate types for strings, numbers, dates, and references. For instance:
+  - Use `varchar` for string-based fields.
+  - Use `int` or `float` for numeric values.
+  - Use `timestamp` for date values.
+  
+- **Relationship Design**:  
+  Establish foreign key relationships for linking to the Organisation entity and a one-to-one relationship between InventoryItem and InventoryItemCustomData.
+
+---
+
+## 3. Database Schema & Entity Design
+
+### InventoryItem Entity
+
+This entity represents the core inventory item with its properties and references the organisation as well as its custom data.
+
+```typescript:src/inventory/entities/inventory-item.entity.ts
+  import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
+  import { Organisation } from 'src/organisation/entities/organisation.entity';
+  import { InventoryItemCustomData } from './inventory-item-custom-data.entity';
+
+  /**
+   * Represents an inventory item.
+   */
+  @Entity({ name: 'inventory_items' })
+  export class InventoryItem {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @ManyToOne(() => Organisation, { nullable: false })
+    organisation: Organisation;
+
+    @Column({ type: 'varchar' })
+    unit: string;
+
+    @Column({ type: 'int' })
+    level: number;
+
+    @Column({ type: 'varchar', nullable: true })
+    type: string;
+
+    @Column({ type: 'float', nullable: true })
+    quantity: number;
+
+    @Column({ type: 'float', nullable: true })
+    actualQuantity: number;
+
+    @Column({ type: 'float', nullable: true })
+    available: number;
+
+    @Column({ type: 'varchar', nullable: true })
+    equipment: string;
+
+    @Column({ type: 'varchar', nullable: true })
+    manufacturer: string;
+
+    @Column({ type: 'varchar', nullable: true })
+    model: string;
+
+    @Column({ type: 'varchar', nullable: true })
+    inventoryNumber: string;
+
+    @Column({ type: 'varchar', nullable: true })
+    assetNumber: string;
+
+    @Column({ type: 'varchar', nullable: true })
+    deviceNumber: string;
+
+    @Column({ type: 'varchar', nullable: true })
+    status: string;
+
+    @OneToOne(() => InventoryItemCustomData, customData => customData.inventoryItem, { cascade: true })
+    @JoinColumn()
+    customData: InventoryItemCustomData;
+  }
+```
+
+### InventoryItemCustomData Entity
+
+This entity captures the additional custom data that is associated with an inventory item.
+
+```typescript:src/inventory/entities/inventory-item-custom-data.entity.ts
+  import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+  import { InventoryItem } from './inventory-item.entity';
+
+  /**
+   * Represents additional custom data associated with an inventory item.
+   */
+  @Entity({ name: 'inventory_item_custom_data' })
+  export class InventoryItemCustomData {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @OneToOne(() => InventoryItem, inventoryItem => inventoryItem.customData)
+    inventoryItem: InventoryItem;
+
+    @Column({ type: 'timestamp', nullable: true })
+    lastScanned: Date;
+
+    @Column({ type: 'varchar', length: 1000, nullable: true })
+    note: string;
+  }
+```
+
+---
+
+## 4. Service Layer & Repository Refactoring
+
+- **Refactor Services**:  
+  Replace the Mongoose-based `InventoryService` with a new service that employs the TypeORM repository pattern.  
+  - Rewrite data queries (e.g., find, insert, update) using TypeORM methods.
+  - Ensure proper handling and synchronization of the relationship between `InventoryItem` and `InventoryItemCustomData`.
+
+- **Update Controllers & DTOs**:  
+  Adapt controllers to work with the new SQL-based service layer. Update DTOs as necessary so that input validation remains consistent using `class-validator`.
+
+  **Suggested commit message:**  
+  ✨ Implement new SQL-based Inventory Entities for inventory items
+
+---
+
+## 5. Data Migration Strategy
+
+- **Migration Script**:  
+  Develop a dedicated migration script that bridges MongoDB and PostgreSQL during the transition period. Steps include:
+  - Connect to MongoDB using existing Mongoose models and fetch all inventory items and related custom data.
+  - Transform the data (type conversions, error handling, mapping fields correctly).
+  - Insert records into PostgreSQL using the new TypeORM entities.
+  - Execute the migration within database transactions to ensure atomicity and data consistency.
+
+- **Dual-Write Approach (Optional)**:  
+  Alternatively, consider running both databases in parallel and performing dual writes during a transitional phase. This approach minimizes downtime and allows rollback if issues arise.
+
+  **Suggested commit message:**  
+  🔨 Add migration script to transfer inventory data from MongoDB to PostgreSQL
+
+---
+
+## 6. Testing & Quality Assurance
+
+- **Integration Testing**:  
+  Develop end-to-end tests for the migration logic to ensure that:
+  - All inventory data is correctly transformed and inserted into PostgreSQL.
+  - Business rules and data integrity are preserved.
+  
+- **Staging Environment**:  
+  Run the migration in a staging environment before deploying to production. Validate the correctness of data and the performance of the new SQL queries.
+
+- **Post-Migration Testing**:  
+  Ensure that the API endpoints for inventory items work as expected and that the new service layer is fully integrated.
+
+---
+
+## 7. Deployment & Cutover
+
+- **Deployment Plan**:  
+  Finalize the migration and make configuration changes to fully switch from Mongoose to TypeORM for inventory items.
+  - Prepare clear rollback strategies and documentation.
+  - Schedule the cutover during a low-traffic window to minimize impact.
+
+- **Cleanup**:  
+  Remove obsolete MongoDB-specific code once the migration is successfully completed.
+
+  **Suggested commit message:**  
+  🚀 Deploy updated inventory module using PostgreSQL
+
+---
+
+## 8. Documentation & Training
+
+- **Update API Documentation**:  
+  Revise the Swagger documentation to reflect the new SQL-based endpoints and data models.
+  
+- **Team Communication & Training**:  
+  Ensure that all development and support teams are informed about the new system architecture and any changes in operational procedures.
+
+---
+
+## 9. Effort Estimation
+
+- **Entity Design & Service Refactoring**: Approximately 3–5 days.
+- **Migration Script Development & Testing**: Approximately 2–4 days.
+- **Integration Testing & Staging Deployment**: Approximately 2–4 days.
+- **Total Estimated Time**: 1–2 weeks (depending on data size and environment complexity).
+
+---
+
+## Conclusion
+
+The migration from MongoDB to PostgreSQL for handling inventory items involves creating two main entities: `InventoryItem` and `InventoryItemCustomData`. This approach is consistent with the already migrated question stats module and adheres to clean, modular NestJS design principles. By carefully planning, executing, and testing the migration, you can ensure a smooth transition with minimal disruption to production.
+
+This plan should provide ample guidance for a successful migration while maintaining consistency and ease of maintenance in the codebase.

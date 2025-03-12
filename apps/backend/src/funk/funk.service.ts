@@ -1,93 +1,64 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
-import { OrganisationDocument } from 'src/organisation/schemas/organisation.schema';
-import { UserDocument } from 'src/user/schemas/user.schema';
-import { FunkItemEventBulk } from './schemas/funk-item-event-bulk.schema';
-import {
-  FunkItemEvent,
+import type {
+  FunkItem,
   FunkItemEventType,
-} from './schemas/funk-item-event.schema';
-import { FunkItem, FunkItemDocument } from './schemas/funlk-item.schema';
+  Organisation,
+  Prisma,
+  User,
+} from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class FunkService {
-  constructor(
-    @InjectModel(FunkItem.name)
-    private funkItemModel: Model<FunkItem>,
-    @InjectModel(FunkItemEvent.name)
-    private funkItemEventModel: Model<FunkItemEvent>,
-    @InjectModel(FunkItemEventBulk.name)
-    private funkItemEventBulkModel: Model<FunkItemEventBulk>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async getFunkItems(organisationId: mongoose.Types.ObjectId) {
-    return this.funkItemModel
-      .find({
-        organisation: organisationId,
-      })
-      .exec();
+  async getFunkItems(organisationId: string) {
+    return this.prisma.funkItem.findMany({
+      where: { organisationId },
+    });
   }
 
-  async getExpandedFunkItems(organisationId: mongoose.Types.ObjectId) {
-    const funkItems = await this.getFunkItems(organisationId);
-
-    // Fetch all last events for the items in a single query
-    const itemIds = funkItems.map((item) => item._id);
-    const lastEvents = await this.funkItemEventModel
-      .aggregate([
-        { $match: { funkItem: { $in: itemIds } } },
-        { $sort: { date: -1 } },
-        { $group: { _id: '$funkItem', lastEvent: { $first: '$$ROOT' } } },
-      ])
-      .exec();
-
-    // Map last events to their respective items
-    const lastEventMap = new Map(
-      lastEvents.map((event) => [event._id.toString(), event.lastEvent]),
-    );
-
-    return funkItems.map((item) => ({
-      ...item.toObject(),
-      lastEvent: lastEventMap.get(item._id.toString()) || null,
-    }));
-  }
-
-  async getFunkItemByDeviceId(
-    organisationId: mongoose.Types.ObjectId,
-    deviceId: string,
-  ) {
-    return (
-      this.funkItemModel
-        .findOne({
-          organisation: organisationId,
-          deviceId,
-        })
-        // .populate('lastUsedBy')
-        .exec()
-    );
+  async getFunkItemByDeviceId(organisationId: string, deviceId: string) {
+    return this.prisma.funkItem.findFirst({
+      where: {
+        organisationId,
+        deviceId,
+      },
+    });
   }
 
   async createFunkItem(
-    organisationId: mongoose.Types.ObjectId,
-    data: FunkItem,
+    organisationId: string,
+    data: Prisma.FunkItemCreateInput,
   ) {
-    if (await this.getFunkItemByDeviceId(organisationId, data.deviceId)) {
+    const existingItem = await this.getFunkItemByDeviceId(
+      organisationId,
+      data.deviceId,
+    );
+    if (existingItem) {
       Logger.warn(`Funk item with deviceId ${data.deviceId} already exists`);
-      return;
+      return existingItem;
     }
 
-    const item = new this.funkItemModel(data);
-    return item.save();
+    return this.prisma.funkItem.create({
+      data: {
+        deviceId: data.deviceId,
+        organisationId,
+      },
+    });
   }
 
-  async createFunkItemEvent(data: FunkItemEvent) {
-    const event = new this.funkItemEventModel(data);
-    return event.save();
+  async createFunkItemEvent(data: Prisma.FunkItemEventCreateInput) {
+    return this.prisma.funkItemEvent.create({
+      data,
+    });
   }
 
-  async getFunkItemEvents(itemDoc: FunkItemDocument) {
-    return this.funkItemEventModel.find({ funkItem: itemDoc._id }).exec();
+  async getFunkItemEvents(item: FunkItem) {
+    return this.prisma.funkItemEvent.findMany({
+      where: { funkItemId: item.id },
+      orderBy: { date: 'desc' },
+    });
   }
 
   async bulkCreateFunkItemEvents(
@@ -96,23 +67,26 @@ export class FunkService {
       batteryCount: number;
       eventType: FunkItemEventType;
     },
-    user: UserDocument,
-    organisation: OrganisationDocument,
+    user: User,
+    organisation: Organisation,
     date: Date,
   ): Promise<void> {
     const items = await Promise.all(
       data.deviceIds.map(async (deviceId) => {
-        let item = await this.getFunkItemByDeviceId(organisation._id, deviceId);
+        let item = await this.getFunkItemByDeviceId(organisation.id, deviceId);
         if (!item) {
           Logger.log(
             `Creating Funk item with deviceId ${deviceId}, as it does not exist`,
           );
-          item = await this.createFunkItem(organisation._id, {
+          item = await this.createFunkItem(organisation.id, {
             deviceId,
-            organisation,
+            organisation: {
+              connect: {
+                id: organisation.id,
+              },
+            },
           });
         }
-
         return item;
       }),
     );
@@ -121,45 +95,84 @@ export class FunkService {
       items.map((item) =>
         this.createFunkItemEvent({
           date,
-          funkItem: item,
-          user,
+          funkItem: {
+            connect: {
+              id: item.id,
+            },
+          },
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
           type: data.eventType,
         }),
       ),
     );
 
-    const bulk = new this.funkItemEventBulkModel({
-      funkItemEvents: events,
-      batteryCount: data.batteryCount,
-      eventType: data.eventType,
-      user,
-      organisation,
-      date,
+    await this.prisma.funkItemEventBulk.create({
+      data: {
+        eventType: data.eventType,
+        batteryCount: data.batteryCount,
+        userId: user.id,
+        organisationId: organisation.id,
+        date,
+        events: {
+          create: events.map((event) => ({
+            eventId: event.id,
+          })),
+        },
+      },
     });
-    await bulk.save();
   }
 
-  async getFunkItemEventBulks(
-    organisationId: mongoose.Types.ObjectId,
-  ): Promise<FunkItemEventBulk[]> {
-    return this.funkItemEventBulkModel
-      .find({ organisation: organisationId })
-      .populate({
-        path: 'funkItemEvents',
-      })
-      .exec();
+  async getFunkItemEventBulks(organisationId: string) {
+    return this.prisma.funkItemEventBulk.findMany({
+      where: { organisationId },
+      include: {
+        events: {
+          include: {
+            event: true,
+          },
+        },
+      },
+      orderBy: { date: 'desc' },
+    });
   }
 
-  async exportFunkItemEventBulksAsCsv(
-    organisationId: mongoose.Types.ObjectId,
-  ): Promise<string> {
-    const bulks = await this.getFunkItemEventBulks(organisationId);
+  async exportFunkItemEventBulksAsCsv(organisationId: string): Promise<string> {
+    const bulks = await this.prisma.funkItemEventBulk.findMany({
+      where: { organisationId },
+      include: {
+        events: {
+          include: {
+            event: {
+              include: {
+                funkItem: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { date: 'desc' },
+    });
 
     let csv = 'date,eventType,batteryCount,user,deviceIds\n';
 
     for (const bulk of bulks) {
-      csv += `${bulk.date.toISOString()},${bulk.eventType},${bulk.batteryCount},"${bulk.user.firstName} ${bulk.user.lastName} (${bulk.user.email})","${bulk.funkItemEvents
-        .map((event) => event.funkItem.deviceId)
+      csv += `${bulk.date.toISOString()},${bulk.eventType},${
+        bulk.batteryCount
+      },"${bulk.user.firstName} ${bulk.user.lastName} (${
+        bulk.user.email
+      })","${bulk.events
+        .map((bulkEvent) => bulkEvent.event.funkItem.deviceId)
         .join(', ')}"\n`;
     }
 

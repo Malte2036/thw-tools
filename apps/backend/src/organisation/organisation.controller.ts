@@ -7,33 +7,23 @@ import {
   Logger,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { OrganisationService } from './organisation.service';
-import { UserService } from 'src/user/user.service';
 import { ApiTags } from '@nestjs/swagger';
-import {
-  getUserAndOrgFromRequest,
-  getUserAndOrgFromRequestAndThrow,
-} from 'src/funk/funk.controller';
+import type { User, Organisation } from '@prisma/client';
+import { EnsureUserAndOrgGuard } from '../shared/user-org/ensure-user-org.guard';
 import { Request } from 'express';
 
 @ApiTags('organisations')
 @Controller('organisations')
 export class OrganisationController {
-  constructor(
-    private readonly organisationService: OrganisationService,
-
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly organisationService: OrganisationService) {}
 
   @Get('me')
+  @UseGuards(EnsureUserAndOrgGuard)
   async getOrganisationsForUser(@Req() req: Request) {
-    const [, organisation] = await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-    return organisation;
+    return req.organisation;
   }
 
   @Post('join')
@@ -41,47 +31,35 @@ export class OrganisationController {
     @Req() req: Request,
     @Body() data: { inviteCode: string },
   ) {
-    const [user, organisation] = await getUserAndOrgFromRequest(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-
-    if (organisation) {
-      Logger.warn(`User ${user.id} is already a member of an organisation`);
+    if (req.organisation) {
+      Logger.warn(`User ${req.user.id} is already a member of an organisation`);
       throw new HttpException(
         'User is already a member of an organisation',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    await this.organisationService.addUserToOrganisation(user, data.inviteCode);
+    await this.organisationService.addUserToOrganisation(
+      req.user,
+      data.inviteCode,
+    );
     Logger.log(
-      `User ${user.id} joined organisation with invite code ${data.inviteCode}`,
+      `User ${req.user.id} joined organisation with invite code ${data.inviteCode}`,
     );
 
     return await this.organisationService.getPrimaryOrganisationsForUser(
-      user.id,
+      req.user.id,
     );
   }
 
   @Post()
+  @UseGuards(EnsureUserAndOrgGuard)
   async createOrganisation(
     @Req() req: Request,
     @Body() data: { name: string },
   ) {
-    const [user, organisation] = await getUserAndOrgFromRequest(
-      req,
-      this.userService,
-      this.organisationService,
-    );
-
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-
-    if (organisation) {
-      Logger.warn(`User ${user.id} is already a member of an organisation`);
+    if (req.organisation) {
+      Logger.warn(`User ${req.user.id} is already a member of an organisation`);
       throw new HttpException(
         'User is already a member of an organisation',
         HttpStatus.BAD_REQUEST,
@@ -90,24 +68,22 @@ export class OrganisationController {
 
     const createdOrg = await this.organisationService.createOrganisation(
       data.name,
-      user,
+      req.user,
     );
 
-    Logger.log(`User ${user.id} created organisation ${createdOrg.id}`);
+    Logger.log(`User ${req.user.id} created organisation ${createdOrg.id}`);
 
     return createdOrg;
   }
 
   @Post('leave')
+  @UseGuards(EnsureUserAndOrgGuard)
   async leaveOrganisation(@Req() req: Request) {
-    const [user, organisation] = await getUserAndOrgFromRequestAndThrow(
-      req,
-      this.userService,
-      this.organisationService,
+    await this.organisationService.leaveOrganisation(
+      req.user,
+      req.organisation,
     );
-
-    await this.organisationService.leaveOrganisation(user, organisation);
-    Logger.log(`User ${user.id} left organisation ${organisation.id}`);
+    Logger.log(`User ${req.user.id} left organisation ${req.organisation.id}`);
 
     return {};
   }

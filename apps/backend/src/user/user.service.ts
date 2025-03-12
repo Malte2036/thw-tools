@@ -1,36 +1,31 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User } from './schemas/user.schema';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  private readonly logger = new Logger(UserService.name);
-  constructor(
-    @InjectModel(User.name)
-    private userModel: Model<User>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async updateOrCreateUser(userData: User) {
-    try {
-      const result = await this.userModel.findOneAndUpdate(
-        { kindeId: userData.kindeId },
-        { $set: userData },
-        {
-          upsert: true,
-          new: true,
-          setDefaultsOnInsert: true,
-        },
-      );
+  async findByKindeId(kindeId: string): Promise<User | null> {
+    return this.prisma.user.findUnique({ where: { kindeId } });
+  }
 
-      return result;
-    } catch (error) {
-      if (error.code === 11000) {
-        // Duplicate key error
-        return await this.userModel.findOne({ kindeId: userData.kindeId });
-      }
-      this.logger.error(`Failed to upsert user: ${error.message}`);
-      throw error;
-    }
+  async findById(id: string): Promise<User | null> {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+
+  async createOrUpdate(
+    kindeId: string,
+    userData: Partial<User>,
+  ): Promise<User> {
+    return this.prisma.user.upsert({
+      where: { kindeId },
+      create: { kindeId, ...userData },
+      update: userData,
+    });
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.prisma.user.delete({ where: { id } });
   }
 }
