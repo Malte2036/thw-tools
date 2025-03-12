@@ -10,7 +10,7 @@
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { user } from '$lib/shared/stores/userStore';
 
-	import { getOrganisationUserByInternalId } from '$lib/shared/stores/userStore';
+	import { getOrganisationMemberByInternalId } from '$lib/shared/stores/userStore';
 
 	interface Props {
 		bulk: FunkItemEventBulk;
@@ -18,7 +18,7 @@
 
 	let { bulk }: Props = $props();
 
-	const bulkUser = getOrganisationUserByInternalId($user, bulk.user);
+	const bulkUser = getOrganisationMemberByInternalId($user, bulk.userId)?.user;
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -50,20 +50,10 @@
 				{batteryCountToFriendlyString(bulk.batteryCount)}
 			</li>
 			<li>
-				{#await $funk.funkItems then funkItems}
-					{bulk.funkItemEvents
-						.map(
-							(event) =>
-								getFunkItemByInternalId(
-									{
-										funkItems
-									},
-									event.funkItem
-								)?.deviceId
-						)
-						.sort()
-						.join(', ')}
-				{/await}
+				{bulk.events
+					.map((event) => getFunkItemByInternalId($funk, event.event.funkItemId)?.deviceId)
+					.sort()
+					.join(', ')}
 			</li>
 		</ul>
 	</div>

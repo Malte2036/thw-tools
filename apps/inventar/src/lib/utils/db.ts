@@ -7,7 +7,6 @@ export class AppDatabase extends Dexie {
 	// Declare implicit table properties
 	inventoryItems!: Dexie.Table<
 		InventoryItem & {
-			_id?: number;
 			timestamp: number;
 		},
 		number
@@ -18,8 +17,8 @@ export class AppDatabase extends Dexie {
 
 		// Define tables and indexes
 		this.version(1).stores({
-			// Primary key _id (++), indexed by timestamp
-			inventoryItems: '++_id, timestamp, inventarNummer, einheit'
+			// Primary key id , indexed by timestamp
+			inventoryItems: 'id, timestamp, inventarNummer, einheit'
 		});
 	}
 

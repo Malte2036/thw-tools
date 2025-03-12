@@ -14,7 +14,7 @@
 	import {
 		batteryCountToFriendlyString,
 		eventTypeToFriendlyString,
-		validateFunkItemDeviceId,
+		FunkItemDeviceIdSchema,
 		type FunkItemDeviceId,
 		type FunkItemEvent,
 		type FunkItemEventType
@@ -39,9 +39,9 @@
 			return;
 		}
 
-		decodedText = decodedText.trim();
+		const parsed = FunkItemDeviceIdSchema.safeParse(decodedText.trim());
 
-		if (!validateFunkItemDeviceId(decodedText)) {
+		if (!parsed.success) {
 			$bannerMessage = {
 				message: `Ungültige Geräte-ID: ${decodedText}`,
 				autoDismiss: {
@@ -56,12 +56,12 @@
 			return;
 		}
 
-		const existingItem = getFunkItemByDeviceId($funk, decodedText);
+		const existingItem = getFunkItemByDeviceId($funk, parsed.data);
 		const lastEvent =
-			existingItem && getLastFunkItemEventByFunkItemInternalId($funk, existingItem._id);
+			existingItem && getLastFunkItemEventByFunkItemInternalId($funk, existingItem.id);
 
 		scannedDeviceIds = scannedDeviceIds.concat({
-			deviceId: decodedText,
+			deviceId: parsed.data,
 			lastEvent
 		});
 
@@ -70,7 +70,7 @@
 		}
 
 		$bannerMessage = {
-			message: `Gerät mit der ID ${decodedText} gescannt.`,
+			message: `Gerät mit der ID ${parsed.data} gescannt.`,
 			autoDismiss: {
 				duration: 5 * 1000
 			}

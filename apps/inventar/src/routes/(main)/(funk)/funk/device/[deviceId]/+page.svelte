@@ -12,5 +12,11 @@
 
 <div class="flex flex-col gap-2 p-4">
 	<LinkButton url="/funk">Zurück zur Funkgeräteliste</LinkButton>
-	<FunkItemEventsList deviceId={data.deviceId ?? ''} />
+	{#if data.deviceId}
+		<FunkItemEventsList deviceId={data.deviceId} />
+	{:else}
+		<div>
+			<h1>Das Gerät wurde nicht gefunden.</h1>
+		</div>
+	{/if}
 </div>

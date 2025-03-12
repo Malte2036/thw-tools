@@ -1,4 +1,11 @@
-import type { FunkItem, FunkItemEvent, FunkItemEventBulk } from '$lib/api/funkModels';
+import type {
+	FunkItem,
+	FunkItemDeviceId,
+	FunkItemEvent,
+	FunkItemEventBulk,
+	FunkItemEventId,
+	FunkItemId
+} from '$lib/api/funkModels';
 import { writable } from 'svelte/store';
 
 export type FunkData = {
@@ -12,35 +19,36 @@ export const funk = writable<FunkData>({
 	funkItemEventBulks: null
 });
 
-export const getFunkItemByInternalId = ({ funkItems }: FunkData, internalId: string) =>
-	funkItems?.find((item) => item._id === internalId);
+export const getFunkItemByInternalId = ({ funkItems }: FunkData, internalId: FunkItemId) =>
+	funkItems?.find((item) => item.id === internalId);
 
-export const getFunkItemByDeviceId = ({ funkItems }: FunkData, deviceId: string) =>
+export const getFunkItemByDeviceId = ({ funkItems }: FunkData, deviceId: FunkItemDeviceId) =>
 	funkItems?.find((item) => item.deviceId === deviceId);
 
 export const getFunkItemEventByInternalId = (
 	{ funkItemEventBulks }: FunkData,
-	internalId: string
+	internalId: FunkItemEventId
 ): FunkItemEvent | undefined =>
-	funkItemEventBulks
-		?.flatMap((bulk) => bulk.funkItemEvents)
-		.find((event) => event._id === internalId);
+	funkItemEventBulks?.flatMap((bulk) => bulk.events).find((event) => event.eventId === internalId)
+		?.event;
 
 export const getLastFunkItemEventByFunkItemInternalId = (
 	{ funkItemEventBulks }: FunkData,
-	funkItemId: string
+	funkItemId: FunkItemId
 ): FunkItemEvent | undefined => {
 	if (!funkItemEventBulks) return undefined;
 
-	const events = funkItemEventBulks.flatMap((bulk) => bulk.funkItemEvents);
+	const events = funkItemEventBulks.flatMap((bulk) => bulk.events);
 
-	const filteredEvents = events.filter((event) => event.funkItem === funkItemId);
+	const filteredEvents = events.filter((event) => event.event.funkItemId === funkItemId);
 
 	if (filteredEvents.length === 0) return undefined;
 
-	filteredEvents.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+	filteredEvents.sort(
+		(a, b) => new Date(b.event.date).getTime() - new Date(a.event.date).getTime()
+	);
 
-	return filteredEvents[0];
+	return filteredEvents[0].event;
 };
 
 export const getAllFunkItemEventsByFunkItemDeviceId = (
@@ -49,13 +57,15 @@ export const getAllFunkItemEventsByFunkItemDeviceId = (
 ): FunkItemEvent[] => {
 	if (!funkData.funkItemEventBulks) return [];
 
-	const events = funkData.funkItemEventBulks.flatMap((bulk) => bulk.funkItemEvents);
+	const events = funkData.funkItemEventBulks.flatMap((bulk) => bulk.events);
 
 	return events
 		.map((event) => ({
 			event,
-			deviceId: event.funkItem && getFunkItemByInternalId(funkData, event.funkItem)?.deviceId
+			deviceId:
+				event.event.funkItemId &&
+				getFunkItemByInternalId(funkData, event.event.funkItemId)?.deviceId
 		}))
 		.filter((event) => event.deviceId === deviceId)
-		.map((event) => event.event);
+		.map((event) => event.event.event);
 };

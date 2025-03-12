@@ -15,7 +15,7 @@
 	const organisation: Organisation | null = $derived($user.organisation);
 	const memberCount = $derived($user.organisation?.members.length ?? 0);
 	const memberTableValues = $derived(
-		($user.organisation?.members ?? []).map((member) => [userToFriendlyString(member)])
+		($user.organisation?.members ?? []).map((member) => [userToFriendlyString(member.user)])
 	);
 
 	const leaveOrg = async () => {

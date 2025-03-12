@@ -17,6 +17,7 @@ export async function trackEvent(dataUmamiEvent: string | undefined) {
 	if (!dataUmamiEvent) return;
 
 	try {
+		// @ts-ignore
 		await umami.track(dataUmamiEvent);
 	} catch (error) {
 		console.warn(`Failed to track event "${dataUmamiEvent}"`);

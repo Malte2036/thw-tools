@@ -1,15 +1,14 @@
 <script lang="ts">
-	import { getOrganisationUserByInternalId } from '$lib/shared/stores/userStore';
+	import { getOrganisationMemberByInternalId, user } from '$lib/shared/stores/userStore';
 	import { dateToFriendlyString } from '$lib/utils';
+	import { db } from '$lib/utils/db';
 	import {
 		eventTypeToEmoji,
+		eventTypeToFriendlyString,
 		type FunkItem,
 		type FunkItemDeviceId,
 		type FunkItemEvent
 	} from '../api/funkModels';
-	import { user } from '$lib/shared/stores/userStore';
-	import { eventTypeToFriendlyString } from '../api/funkModels';
-	import { db } from '$lib/utils/db';
 
 	interface Props {
 		event: FunkItemEvent;
@@ -21,7 +20,7 @@
 
 	let { event, deviceId, isSelected, item, secondary = false }: Props = $props();
 
-	const eventUser = getOrganisationUserByInternalId($user, event.user);
+	const eventUser = getOrganisationMemberByInternalId($user, event.userId)?.user;
 
 	let itemType: string | undefined = $state(undefined);
 

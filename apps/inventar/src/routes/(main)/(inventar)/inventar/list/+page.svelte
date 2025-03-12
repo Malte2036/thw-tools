@@ -160,7 +160,7 @@
 				<span class="bg-thw-300 text-xs px-2 py-1 rounded-full">Beta</span>
 			</div>
 			<div>
-				<button class="underline hover:text-thw" on:click={() => (showSettings = true)}>
+				<button class="underline hover:text-thw" onclick={() => (showSettings = true)}>
 					Einstellungen
 				</button>
 			</div>

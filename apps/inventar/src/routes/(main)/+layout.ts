@@ -27,7 +27,9 @@ export const load = (async ({ url }) => {
 
 	return {
 		organisation: getOrganisationForUser().then((org) => {
-			org.members.sort((a, b) => userToFriendlyString(a).localeCompare(userToFriendlyString(b)));
+			org.members.sort((a, b) =>
+				userToFriendlyString(a.user).localeCompare(userToFriendlyString(b.user))
+			);
 			return org;
 		}),
 		inventoryItems: fetchInventoryItems(),
@@ -38,7 +40,7 @@ export const load = (async ({ url }) => {
 						item: item,
 						lastEvent: getLastFunkItemEventByFunkItemInternalId(
 							{ funkItems: items, funkItemEventBulks: bulks },
-							item._id
+							item.id
 						)
 					}))
 					.sort((a, b) => {
