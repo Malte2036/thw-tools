@@ -28,7 +28,7 @@
 			<div>Diese Seite kann als App offline heruntergeladen werden.</div>
 			<div>
 				{#if visibleOS === 'iOS'}
-					Klicken Sie dazu in Safari auf das Teilen-Symbol und wähle "Zum Home-Bildschirm".
+					Klicke dazu in Safari auf das Teilen-Symbol und wähle "Zum Home-Bildschirm".
 				{:else}
 					Klicke dazu im Android Chrome Browser auf das Menü und wähle "Als App installieren".
 				{/if}

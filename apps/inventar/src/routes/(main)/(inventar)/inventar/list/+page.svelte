@@ -349,7 +349,7 @@
 					/>
 				</svg>
 				<p class="text-xl text-gray-600 font-medium">Keine Inventar-Items gefunden.</p>
-				<p class="text-gray-500 mt-2">Bitte passen Sie Ihre Filterkriterien an.</p>
+				<p class="text-gray-500 mt-2">Bitte passe Deine Filterkriterien an.</p>
 			</div>
 		{:else}
 			<div class="overflow-x-auto bg-white rounded-lg border border-gray-200">

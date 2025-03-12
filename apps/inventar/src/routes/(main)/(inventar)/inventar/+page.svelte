@@ -181,7 +181,7 @@
 										/>
 									</div>
 									<div class="p-1.5 text-xs text-gray-500 bg-gray-50 border-t border-gray-200">
-										Klicken Sie auf eine Einheit, um die zugehörigen Inventarstücke anzuzeigen.
+										Klicke auf eine Einheit, um die zugehörigen Inventarstücke anzuzeigen.
 									</div>
 								</div>
 
