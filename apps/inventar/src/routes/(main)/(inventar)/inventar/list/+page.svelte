@@ -208,65 +208,87 @@
 	});
 </script>
 
-<div class="p-2 flex flex-col gap-4">
-	<LinkButton url="../" secondary>Zurück zur Inventar-Übersicht</LinkButton>
+<div class="px-4 py-6">
+	<div class="mb-6">
+		<LinkButton url="../" secondary>
+			<span class="flex items-center">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-4 w-4 mr-2"
+					viewBox="0 0 20 20"
+					fill="currentColor"
+				>
+					<path
+						fill-rule="evenodd"
+						d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+				Zurück zur Inventar-Übersicht
+			</span>
+		</LinkButton>
+	</div>
 
-	<div class="flex flex-col gap-2">
-		<div class="flex justify-between gap-2">
-			<h1 class="text-2xl font-bold">Inventar Liste</h1>
-			<div class="flex items-center gap-2">
-				{#if lastScanAfter || lastScanBefore || lastScanNever === 'true'}
-					<div class="text-xs bg-thw-100 text-thw-700 px-2 py-1 rounded-full">
-						Datum Filter aktiv
-					</div>
-				{/if}
-				<button class="underline hover:text-thw" onclick={() => (showSettings = true)}>
+	<div class="bg-white rounded-lg shadow-md p-6 mb-6">
+		<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+			<div>
+				<h1 class="text-3xl font-bold text-thw-700">Inventar Liste</h1>
+				<p class="text-gray-600 mt-1">Übersicht aller Inventar-Items im System.</p>
+			</div>
+			<div class="flex items-center gap-3">
+				<div class="text-sm text-gray-500">
+					<span class="font-medium">Letztes Update:</span>
+					{lastFetchedStr}
+				</div>
+				<button
+					class="flex items-center gap-1 bg-thw-100 text-thw-700 px-3 py-2 rounded-md hover:bg-thw-200 transition-colors font-medium"
+					onclick={() => (showSettings = true)}
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-5 w-5"
+						viewBox="0 0 20 20"
+						fill="currentColor"
+					>
+						<path
+							fill-rule="evenodd"
+							d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+							clip-rule="evenodd"
+						/>
+					</svg>
 					Filter
 				</button>
 			</div>
 		</div>
-		<p class="text-lg">Übersicht aller Inventar-Items im System.</p>
-	</div>
 
-	<div class="text-sm text-gray-500 mb-4">
-		Last updated: {lastFetchedStr}
-	</div>
-
-	{#if $inventory.fetching}
-		<LoadingSpinner />
-	{/if}
-
-	{#if $inventory.inventoryItems === null}
-		<LoadingSpinner />
-	{:else}
-		<div class="flex flex-col gap-4">
-			<div class="flex flex-col md:flex-row items-start gap-4">
-				<div class="w-full md:w-64">
-					<Select
-						options={getEinheiten()}
-						selected={selectedEinheit}
-						onSelect={handleEinheitChange}
-						label="Einheit Filter"
-					/>
-				</div>
-				<div class="w-full">
-					<Input
-						inputValue={searchTerm}
-						onInput={handleSearch}
-						placeholder="Suche nach Inventarnummer, Ausstattung, etc."
-						label="Suche"
-					/>
-				</div>
+		<div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+			<div class="md:col-span-1">
+				<Select
+					options={getEinheiten()}
+					selected={selectedEinheit}
+					onSelect={handleEinheitChange}
+					label="Einheit Filter"
+				/>
 			</div>
+			<div class="md:col-span-4">
+				<Input
+					inputValue={searchTerm}
+					onInput={handleSearch}
+					placeholder="Suche nach Inventarnummer, Ausstattung, etc."
+					label="Suche"
+				/>
+			</div>
+		</div>
 
-			{#if lastScanAfter || lastScanBefore || lastScanNever === 'true'}
-				<div class="flex flex-wrap gap-2 text-sm items-center">
-					<div class="font-bold">Aktive Filter:</div>
+		{#if lastScanAfter || lastScanBefore || lastScanNever === 'true'}
+			<div class="bg-thw-50 border border-thw-100 rounded-md p-3 mb-6">
+				<div class="flex flex-wrap gap-2 items-center">
+					<div class="font-bold text-thw-800">Aktive Filter:</div>
 					{#if lastScanNever === 'true'}
-						<div class="bg-thw-100 text-thw-700 px-2 py-1 rounded-full flex items-center gap-1">
+						<div class="bg-thw-100 text-thw-700 px-3 py-1.5 rounded-full flex items-center gap-2">
 							<span>Nur Items ohne Scan</span>
 							<button
-								class="text-thw-700 hover:text-thw-900"
+								class="text-thw-700 hover:text-thw-900 h-5 w-5 flex items-center justify-center rounded-full hover:bg-thw-200 transition-colors"
 								onclick={() => handleLastScanFilterChange('never', 'false')}
 							>
 								✕
@@ -274,11 +296,11 @@
 						</div>
 					{:else}
 						{#if lastScanAfter}
-							<div class="bg-thw-100 text-thw-700 px-2 py-1 rounded-full flex items-center gap-1">
+							<div class="bg-thw-100 text-thw-700 px-3 py-1.5 rounded-full flex items-center gap-2">
 								<span>Letzter Scan nach: {new Date(lastScanAfter).toLocaleDateString('de-DE')}</span
 								>
 								<button
-									class="text-thw-700 hover:text-thw-900"
+									class="text-thw-700 hover:text-thw-900 h-5 w-5 flex items-center justify-center rounded-full hover:bg-thw-200 transition-colors"
 									onclick={() => handleLastScanFilterChange('after', '')}
 								>
 									✕
@@ -286,11 +308,11 @@
 							</div>
 						{/if}
 						{#if lastScanBefore}
-							<div class="bg-thw-100 text-thw-700 px-2 py-1 rounded-full flex items-center gap-1">
+							<div class="bg-thw-100 text-thw-700 px-3 py-1.5 rounded-full flex items-center gap-2">
 								<span>Letzter Scan vor: {new Date(lastScanBefore).toLocaleDateString('de-DE')}</span
 								>
 								<button
-									class="text-thw-700 hover:text-thw-900"
+									class="text-thw-700 hover:text-thw-900 h-5 w-5 flex items-center justify-center rounded-full hover:bg-thw-200 transition-colors"
 									onclick={() => handleLastScanFilterChange('before', '')}
 								>
 									✕
@@ -299,20 +321,48 @@
 						{/if}
 					{/if}
 				</div>
-			{/if}
+			</div>
+		{/if}
 
-			{#if filteredItems.length === 0}
-				<p class="text-lg text-gray-500">Keine Inventar-Items gefunden.</p>
-			{:else}
-				<div class="overflow-x-auto">
-					<Table header={tableHeader} values={getTableValues(filteredItems)} />
-				</div>
-				<div class="text-gray-500">
-					Zeige {filteredItems.length} von {$inventory.inventoryItems.length} Items
-				</div>
-			{/if}
-		</div>
-	{/if}
+		{#if $inventory.fetching}
+			<div class="flex justify-center py-12">
+				<LoadingSpinner />
+			</div>
+		{:else if $inventory.inventoryItems === null}
+			<div class="flex justify-center py-12">
+				<LoadingSpinner />
+			</div>
+		{:else if filteredItems.length === 0}
+			<div class="bg-gray-50 rounded-lg p-12 text-center">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-16 w-16 mx-auto text-gray-400 mb-4"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+					/>
+				</svg>
+				<p class="text-xl text-gray-600 font-medium">Keine Inventar-Items gefunden.</p>
+				<p class="text-gray-500 mt-2">Bitte passen Sie Ihre Filterkriterien an.</p>
+			</div>
+		{:else}
+			<div class="overflow-x-auto bg-white rounded-lg border border-gray-200">
+				<Table header={tableHeader} values={getTableValues(filteredItems)} />
+			</div>
+			<div class="text-gray-500 text-sm mt-3 flex justify-between items-center">
+				<span
+					>Zeige <span class="font-medium">{filteredItems.length}</span> von
+					<span class="font-medium">{$inventory.inventoryItems.length}</span> Items</span
+				>
+			</div>
+		{/if}
+	</div>
 </div>
 
 {#if showSettings}
