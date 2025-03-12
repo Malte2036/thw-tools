@@ -66,6 +66,21 @@ export class AppDatabase extends Dexie {
 	async isDbEmpty(): Promise<boolean> {
 		return (await this.inventoryItems.count()) === 0;
 	}
+
+	/**
+	 * Update an inventory item with new data
+	 * Used after API updates to keep local DB in sync
+	 */
+	async updateInventoryItem(updatedItem: InventoryItem): Promise<void> {
+		// Preserve the original timestamp to avoid triggering unnecessary UI updates
+		const existingItem = await this.inventoryItems.get(updatedItem.id);
+		const timestamp = existingItem?.timestamp || Date.now();
+
+		await this.inventoryItems.put({
+			...updatedItem,
+			timestamp
+		});
+	}
 }
 
 export const db = new AppDatabase();

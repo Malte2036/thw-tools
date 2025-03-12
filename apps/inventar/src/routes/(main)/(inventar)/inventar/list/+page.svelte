@@ -49,8 +49,9 @@
 		{ id: 'hersteller', label: 'Hersteller' },
 		{ id: 'typ', label: 'Typ' },
 		{ id: 'sachNummer', label: 'Sach-Nr.' },
-		{ id: 'gerateNummer', label: 'Gerät-Nr.' },
-		{ id: 'status', label: 'Status' }
+		{ id: 'gerateNummer', label: 'Geräte-Nr.' },
+		{ id: 'status', label: 'Status' },
+		{ id: 'lastScanned', label: 'Letzter Scan' }
 	];
 
 	let tableHeader = $derived(
@@ -70,7 +71,17 @@
 				String(item.typ || '-'),
 				String(item.sachNummer || '-'),
 				String(item.gerateNummer || '-'),
-				String(item.status || '-')
+				String(item.status || '-'),
+				item.customData?.lastScanned
+					? new Date(item.customData.lastScanned).toLocaleString('de-DE', {
+							hour: '2-digit',
+							minute: '2-digit',
+							second: '2-digit',
+							day: '2-digit',
+							month: '2-digit',
+							year: 'numeric'
+						})
+					: '-'
 			];
 
 			return allValues.filter((_, index) =>

@@ -59,7 +59,22 @@ export async function uploadInventoryTHWInExportFile(
 
 export async function updateInventoryItemCustomData(
 	inventoryItemId: InventoryItemId,
-	customData: InventoryItemCustomData
+	customData: Partial<InventoryItemCustomData>
 ): Promise<void> {
-	await apiPatch<void>(`/inventory/${inventoryItemId}/custom-data`, customData);
+	const response = await apiPatch<InventoryItem>(
+		`/inventory/${inventoryItemId}/custom-data`,
+		customData,
+		(data) => {
+			const result = InventoryItemSchema.safeParse(data);
+			if (!result.success) {
+				console.error('Error parsing InventoryItem:', result.error);
+			}
+			return result.success;
+		}
+	);
+
+	// Update the item in the local database to keep it in sync
+	if (response.data) {
+		await db.updateInventoryItem(response.data);
+	}
 }
