@@ -71,7 +71,7 @@
 					event: 'Open Funkliste'
 				},
 				{
-					name: 'OV Inventar (Beta)',
+					name: 'OV Inventar',
 					icon: WarehouseIcon,
 					url: '/inventar/',
 					event: 'Open OV Inventar'

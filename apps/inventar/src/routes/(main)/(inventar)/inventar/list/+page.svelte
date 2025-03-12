@@ -28,6 +28,9 @@
 
 	let searchTerm = $state('');
 	let selectedEinheit = $state($page.url.searchParams.get('einheit') || 'all');
+	let lastScanAfter = $state($page.url.searchParams.get('lastScanAfter') || '');
+	let lastScanBefore = $state($page.url.searchParams.get('lastScanBefore') || '');
+	let lastScanNever = $state($page.url.searchParams.get('lastScanNever') || 'false');
 	let filteredItems = $state<InventoryItem[]>([]);
 	let showSettings = $state(false);
 
@@ -112,7 +115,32 @@
 				searchTerm === '' || searchStringIsInArray(searchTerm, searchableValues);
 			const matchesEinheit = selectedEinheit === 'all' || item.einheit === selectedEinheit;
 
-			return matchesSearch && matchesEinheit;
+			// Filter by lastScanned date
+			let matchesLastScanAfter = true;
+			let matchesLastScanBefore = true;
+			let matchesLastScanNever = true;
+
+			// Check for "never scanned" filter
+			if (lastScanNever === 'true') {
+				return matchesSearch && matchesEinheit && !item.customData?.lastScanned;
+			}
+
+			// Get the item date, treating empty lastScanned as timestamp 0
+			const itemDate = item.customData?.lastScanned
+				? new Date(item.customData.lastScanned)
+				: new Date(0);
+
+			if (lastScanAfter) {
+				const afterDate = new Date(lastScanAfter);
+				matchesLastScanAfter = itemDate >= afterDate;
+			}
+
+			if (lastScanBefore) {
+				const beforeDate = new Date(lastScanBefore);
+				matchesLastScanBefore = itemDate <= beforeDate;
+			}
+
+			return matchesSearch && matchesEinheit && matchesLastScanAfter && matchesLastScanBefore;
 		});
 	};
 
@@ -128,6 +156,35 @@
 			url.searchParams.delete('einheit');
 		} else {
 			url.searchParams.set('einheit', value);
+		}
+		goto(url.toString(), { replaceState: true });
+	};
+
+	const handleLastScanFilterChange = (type: 'after' | 'before' | 'never', value: string) => {
+		if (type === 'after') {
+			lastScanAfter = value;
+		} else if (type === 'before') {
+			lastScanBefore = value;
+		} else if (type === 'never') {
+			lastScanNever = value;
+			// Clear other date filters if "never scanned" is enabled
+			if (value === 'true') {
+				lastScanAfter = '';
+				lastScanBefore = '';
+			}
+		}
+
+		// Update URL params
+		const url = new URL(window.location.href);
+		if (value) {
+			url.searchParams.set(
+				`lastScan${type === 'after' ? 'After' : type === 'before' ? 'Before' : 'Never'}`,
+				value
+			);
+		} else {
+			url.searchParams.delete(
+				`lastScan${type === 'after' ? 'After' : type === 'before' ? 'Before' : 'Never'}`
+			);
 		}
 		goto(url.toString(), { replaceState: true });
 	};
@@ -158,9 +215,13 @@
 		<div class="flex justify-between gap-2">
 			<div class="flex items-center gap-2">
 				<h1 class="text-2xl font-bold">OV Inventar Liste</h1>
-				<span class="bg-thw-300 text-xs px-2 py-1 rounded-full">Beta</span>
 			</div>
-			<div>
+			<div class="flex items-center gap-2">
+				{#if lastScanAfter || lastScanBefore || lastScanNever === 'true'}
+					<div class="text-xs bg-thw-100 text-thw-700 px-2 py-1 rounded-full">
+						Datum Filter aktiv
+					</div>
+				{/if}
 				<button class="underline hover:text-thw" onclick={() => (showSettings = true)}>
 					Einstellungen
 				</button>
@@ -200,6 +261,48 @@
 				</div>
 			</div>
 
+			{#if lastScanAfter || lastScanBefore || lastScanNever === 'true'}
+				<div class="flex flex-wrap gap-2 text-sm items-center">
+					<div class="font-bold">Aktive Filter:</div>
+					{#if lastScanNever === 'true'}
+						<div class="bg-thw-100 text-thw-700 px-2 py-1 rounded-full flex items-center gap-1">
+							<span>Nur Items ohne Scan</span>
+							<button
+								class="text-thw-700 hover:text-thw-900"
+								onclick={() => handleLastScanFilterChange('never', 'false')}
+							>
+								✕
+							</button>
+						</div>
+					{:else}
+						{#if lastScanAfter}
+							<div class="bg-thw-100 text-thw-700 px-2 py-1 rounded-full flex items-center gap-1">
+								<span>Letzter Scan nach: {new Date(lastScanAfter).toLocaleDateString('de-DE')}</span
+								>
+								<button
+									class="text-thw-700 hover:text-thw-900"
+									onclick={() => handleLastScanFilterChange('after', '')}
+								>
+									✕
+								</button>
+							</div>
+						{/if}
+						{#if lastScanBefore}
+							<div class="bg-thw-100 text-thw-700 px-2 py-1 rounded-full flex items-center gap-1">
+								<span>Letzter Scan vor: {new Date(lastScanBefore).toLocaleDateString('de-DE')}</span
+								>
+								<button
+									class="text-thw-700 hover:text-thw-900"
+									onclick={() => handleLastScanFilterChange('before', '')}
+								>
+									✕
+								</button>
+							</div>
+						{/if}
+					{/if}
+				</div>
+			{/if}
+
 			{#if filteredItems.length === 0}
 				<p class="text-lg text-gray-500">Keine Inventar-Items gefunden.</p>
 			{:else}
@@ -220,5 +323,9 @@
 		visibleColumns={$visibleInventoryColumns}
 		onToggleColumn={toggleColumn}
 		onClose={() => (showSettings = false)}
+		{lastScanAfter}
+		{lastScanBefore}
+		{lastScanNever}
+		onLastScanFilterChange={handleLastScanFilterChange}
 	/>
 {/if}

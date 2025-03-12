@@ -42,7 +42,6 @@
 	<div class="flex flex-col gap-2">
 		<div class="flex items-center gap-2">
 			<h1 class="text-2xl font-bold">Inventarverwaltung</h1>
-			<span class="bg-thw-300 text-xs px-2 py-1 rounded-full">Beta</span>
 		</div>
 		<div class="flex gap-2">
 			<LinkButton url="list">Inventarliste</LinkButton>
