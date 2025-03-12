@@ -8,7 +8,10 @@
 	import { searchStringIsInArray } from '$lib/utils';
 	import { apiMeta } from '$lib/shared/stores/apiMetaStore';
 	import { inventory } from '$lib/shared/stores/inventoryStore';
-	import { visibleInventoryColumns } from '$lib/shared/stores/inventoryColumnStore';
+	import {
+		inventoryColumns,
+		visibleInventoryColumns
+	} from '$lib/shared/stores/inventoryColumnStore';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import type { SvelteComponent } from 'svelte';
@@ -39,23 +42,10 @@
 		})
 	);
 
-	const allColumns = [
-		{ id: 'inventarNummer', label: 'Inventar-Nr.' },
-		{ id: 'einheit', label: 'Einheit' },
-		{ id: 'ausstattung', label: 'Ausstattung' },
-		{ id: 'art', label: 'Art' },
-		{ id: 'menge', label: 'Menge (Soll/Ist)' },
-		{ id: 'verfuegbar', label: 'Verfügbar' },
-		{ id: 'hersteller', label: 'Hersteller' },
-		{ id: 'typ', label: 'Typ' },
-		{ id: 'sachNummer', label: 'Sach-Nr.' },
-		{ id: 'gerateNummer', label: 'Geräte-Nr.' },
-		{ id: 'status', label: 'Status' },
-		{ id: 'lastScanned', label: 'Letzter Scan' }
-	];
-
 	let tableHeader = $derived(
-		allColumns.filter((col) => $visibleInventoryColumns.includes(col.id)).map((col) => col.label)
+		inventoryColumns
+			.filter((col) => $visibleInventoryColumns.includes(col.id))
+			.map((col) => col.label)
 	);
 
 	const getTableValues = (items: InventoryItem[]): TableCell[][] => {
@@ -85,7 +75,7 @@
 			];
 
 			return allValues.filter((_, index) =>
-				$visibleInventoryColumns.includes(allColumns[index].id)
+				$visibleInventoryColumns.includes(inventoryColumns[index].id)
 			);
 		});
 	};
@@ -226,7 +216,7 @@
 
 {#if showSettings}
 	<InventorySettingsDialog
-		columns={allColumns}
+		columns={inventoryColumns}
 		visibleColumns={$visibleInventoryColumns}
 		onToggleColumn={toggleColumn}
 		onClose={() => (showSettings = false)}

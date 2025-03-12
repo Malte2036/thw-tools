@@ -9,7 +9,7 @@ export class AppDatabase extends Dexie {
 		InventoryItem & {
 			timestamp: number;
 		},
-		number
+		string
 	>;
 
 	constructor() {
@@ -76,9 +76,18 @@ export class AppDatabase extends Dexie {
 		const existingItem = await this.inventoryItems.get(updatedItem.id);
 		const timestamp = existingItem?.timestamp || Date.now();
 
-		await this.inventoryItems.put({
-			...updatedItem,
-			timestamp
+		// Use a transaction to ensure atomicity and allow rollback on error
+		await this.transaction('rw', this.inventoryItems, async () => {
+			// First delete the existing item to prevent duplicates
+			if (existingItem) {
+				await this.inventoryItems.delete(updatedItem.id);
+			}
+
+			// Then add the updated item
+			await this.inventoryItems.add({
+				...updatedItem,
+				timestamp
+			});
 		});
 	}
 }

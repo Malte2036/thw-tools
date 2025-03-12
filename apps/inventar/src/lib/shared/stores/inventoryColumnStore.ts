@@ -1,23 +1,26 @@
 import { browser } from '$app/environment';
 import { writable, type Writable } from 'svelte/store';
 
-const defaultColumns = [
-	'inventarNummer',
-	'einheit',
-	'ausstattung',
-	'art',
-	'menge',
-	'verfuegbar',
-	'hersteller',
-	'typ',
-	'sachNummer',
-	'gerateNummer',
-	'status'
+export const inventoryColumns: { id: string; label: string }[] = [
+	{ id: 'inventarNummer', label: 'Inventar-Nr.' },
+	{ id: 'einheit', label: 'Einheit' },
+	{ id: 'ausstattung', label: 'Ausstattung' },
+	{ id: 'art', label: 'Art' },
+	{ id: 'menge', label: 'Menge (Soll/Ist)' },
+	{ id: 'verfuegbar', label: 'Verfügbar' },
+	{ id: 'hersteller', label: 'Hersteller' },
+	{ id: 'typ', label: 'Typ' },
+	{ id: 'sachNummer', label: 'Sach-Nr.' },
+	{ id: 'gerateNummer', label: 'Geräte-Nr.' },
+	{ id: 'status', label: 'Status' },
+	{ id: 'lastScanned', label: 'Letzter Scan' }
 ];
 
 const localStorageKey = 'visible-inventory-columns';
 
 function getSavedColumns(): string[] {
+	const defaultColumns = inventoryColumns.map((column) => column.id);
+
 	if (!browser) return defaultColumns;
 
 	const stored = localStorage.getItem(localStorageKey);
