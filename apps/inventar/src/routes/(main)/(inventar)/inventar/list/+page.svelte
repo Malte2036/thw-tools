@@ -15,7 +15,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import type { SvelteComponent } from 'svelte';
-	import InventorySettingsDialog from '$lib/inventar/InventorySettingsDialog.svelte';
+	import InventoryFilterDialog from '$lib/inventar/InventoryFilterDialog.svelte';
 
 	type TableCell =
 		| string
@@ -221,7 +221,7 @@
 					</div>
 				{/if}
 				<button class="underline hover:text-thw" onclick={() => (showSettings = true)}>
-					Einstellungen
+					Filter
 				</button>
 			</div>
 		</div>
@@ -316,7 +316,7 @@
 </div>
 
 {#if showSettings}
-	<InventorySettingsDialog
+	<InventoryFilterDialog
 		columns={inventoryColumns}
 		visibleColumns={$visibleInventoryColumns}
 		onToggleColumn={toggleColumn}

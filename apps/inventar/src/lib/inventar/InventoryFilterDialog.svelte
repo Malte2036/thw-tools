@@ -33,7 +33,7 @@
 	};
 </script>
 
-<Dialog title="Inventar Einstellungen">
+<Dialog title="Inventar Filter">
 	<div slot="content" class="flex flex-col gap-4">
 		<div class="text-sm text-gray-600">
 			Hier kannst du einstellen, welche Spalten in der Tabelle angezeigt werden sollen.
