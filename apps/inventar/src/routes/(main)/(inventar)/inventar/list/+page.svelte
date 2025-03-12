@@ -213,9 +213,7 @@
 
 	<div class="flex flex-col gap-2">
 		<div class="flex justify-between gap-2">
-			<div class="flex items-center gap-2">
-				<h1 class="text-2xl font-bold">OV Inventar Liste</h1>
-			</div>
+			<h1 class="text-2xl font-bold">Inventar Liste</h1>
 			<div class="flex items-center gap-2">
 				{#if lastScanAfter || lastScanBefore || lastScanNever === 'true'}
 					<div class="text-xs bg-thw-100 text-thw-700 px-2 py-1 rounded-full">
