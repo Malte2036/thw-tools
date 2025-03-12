@@ -1,0 +1,1 @@
+<thw-external-icon />

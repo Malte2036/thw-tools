@@ -1,0 +1,21 @@
+name: Sync to OpenCoDE
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    if: github.repository == 'malte2036/thw-tools'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: 'main'
+      - name: git-sync
+        run: |
+          git remote add opencode https://OC000040588602:${{ secrets.GITLAB_OPENCODE_PERSONAL_ACCESS_TOKEN }}@gitlab.opencode.de/technisches-hilfswerk/maltes-testuntergruppe/thw-tools.git
+          git push opencode -f

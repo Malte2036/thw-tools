@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /impressum/
+Sitemap: https://thw-tools.de/sitemap.xml

@@ -1,0 +1,810 @@
+{
+	"name": "CSA KSF 2 Tesimax",
+	"data": [
+		{
+			"Chemisches Produkt": "Acetaldehyd",
+			"CAS-Nr.": "75-07-0",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Aceton",
+			"CAS-Nr.": "67-64-1",
+			"Permetation ASTM F 109": 244,
+			"Permeation EN ISO 6529 Minuten": 478,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "Acetonitril",
+			"CAS-Nr.": "75-05-8",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Acrylaldehyd",
+			"CAS-Nr.": "107-02-8",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Acrylamid (50%)",
+			"CAS-Nr.": "79-06-1",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Acrylnitril",
+			"CAS-Nr.": "107-13-1",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Allylalkohol",
+			"CAS-Nr.": "107-18-6",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Allylchlorid",
+			"CAS-Nr.": "107-05-1",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Ameisens\u00e4ure (96%)",
+			"CAS-Nr.": "64-18-6",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Ammoniak",
+			"CAS-Nr.": "7664-41-7",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Ammoniumhydroxid (30%)",
+			"CAS-Nr.": "1336-21-6",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Anilin",
+			"CAS-Nr.": "62-53-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "nthracen (ges\u00e4ttigte Toluoll\u00f6sung)",
+			"CAS-Nr.": "120-12-7",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Antimonpentachlorid",
+			"CAS-Nr.": "7647-18-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "\u00c4thanolamid",
+			"CAS-Nr.": "141-43-5",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 360,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "\u00c4thoxy\u00e4thylacetat 2-",
+			"CAS-Nr.": "111-15-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "\u00c4thylacetat",
+			"CAS-Nr.": "141-78-6",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "\u00c4thylendiamin",
+			"CAS-Nr.": "107-15-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "\u00c4thylenglykol",
+			"CAS-Nr.": "107-21-1",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Benzin, verbleit",
+			"CAS-Nr.": "86290-81-5",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Benzin, bleifrei",
+			"CAS-Nr.": "8006-61-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Benznitril",
+			"CAS-Nr.": "100-47-0",
+			"Permetation ASTM F 109": 455,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Benzol",
+			"CAS-Nr.": "71-43-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Brom",
+			"CAS-Nr.": "7726-95-6",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 150,
+			"Permeation EN ISO 6529 Klasse": 4
+		},
+		{
+			"Chemisches Produkt": "Butanon",
+			"CAS-Nr.": "78-93-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Butyl\u00e4ther n-",
+			"CAS-Nr.": "142-96-1",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Chlor",
+			"CAS-Nr.": "7782-50-5",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Chlor\u00e4thanol 2-",
+			"CAS-Nr.": "107-07-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Chlorbenzol",
+			"CAS-Nr.": "108-90-7",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 90,
+			"Permeation EN ISO 6529 Klasse": 3
+		},
+		{
+			"Chemisches Produkt": "Chloressigs\u00e4ure",
+			"CAS-Nr.": "79-11-8",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Chloroform",
+			"CAS-Nr.": "67-66-3",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 360,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "Chlormethylmethylether",
+			"CAS-Nr.": "107-30-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Chroms\u00e4ure \u2013 ges\u00e4ttigte L\u00f6sung von Chrom (VI) in 96% Schwefels\u00e4ure",
+			"CAS-Nr.": "1333-82-0",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Cyclohexan",
+			"CAS-Nr.": "110-82-7",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Di(2-\u00e4thylhexyl)phthalat",
+			"CAS-Nr.": "117-81-7",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Dibrom\u00e4than",
+			"CAS-Nr.": "106-93-4",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Dibrommethan",
+			"CAS-Nr.": "74-95-3",
+			"Permetation ASTM F 109": 312,
+			"Permeation EN ISO 6529 Minuten": 312,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "Dichlormethan",
+			"CAS-Nr.": "75-09-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Dimethylacetamin N, N-",
+			"CAS-Nr.": "127-19-5",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Dim\u00e4thylamin",
+			"CAS-Nr.": "109-89-7",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Dimethylformamid N, N-",
+			"CAS-Nr.": "68-12-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Dimethylnitrosamin",
+			"CAS-Nr.": "62-75-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Dimethylsulfid",
+			"CAS-Nr.": "75-18-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Dioxan 1, 4-",
+			"CAS-Nr.": "123-91-1",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Epichlorhydrin",
+			"CAS-Nr.": "106-89-8",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Essigs\u00e4ure (eiskalt)",
+			"CAS-Nr.": "64-19-7",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Essigs\u00e4ureamylester n-",
+			"CAS-Nr.": "628-63-7",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Fluorbenzol",
+			"CAS-Nr.": "462-06-6",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Fluorwasserstoff (50%)",
+			"CAS-Nr.": "7664-39-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Fluorwasserstoff (70%)",
+			"CAS-Nr.": "7664-39-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Formaldehyd (37%)",
+			"CAS-Nr.": "50-00-0",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Furaldehyd 2-",
+			"CAS-Nr.": "98-01-1",
+			"Permetation ASTM F 109": 137,
+			"Permeation EN ISO 6529 Minuten": 398,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "Hexamethylen-1,6-diisocyanat",
+			"CAS-Nr.": "822-06-0",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Hexan n-",
+			"CAS-Nr.": "110-54-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Heiz\u00f6l",
+			"CAS-Nr.": "70892-10-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Hydrazin",
+			"CAS-Nr.": "302-01-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Hydrazinmonohydrat",
+			"CAS-Nr.": "7803-57-8",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Isophthaloylchlorid (IOPC) (45\u00b0C)",
+			"CAS-Nr.": "99-63-8",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Isopropylalkohol",
+			"CAS-Nr.": "67-63-0",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Javel (50\u00b0C)",
+			"CAS-Nr.": "7681-52-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Kaliumchromat (ges\u00e4ttigte L\u00f6sung)",
+			"CAS-Nr.": "7789-00-6",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Kaliumhydroxid (23%)",
+			"CAS-Nr.": "1310-58-3",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 270,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "Kaliumhydroxid (50%)",
+			"CAS-Nr.": "1310-58-3",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 270,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "Kerosin (Jet-Treibstoff)",
+			"CAS-Nr.": "8008-20-8",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Kreosot\u00f6l",
+			"CAS-Nr.": "8001-58-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Kresol o-",
+			"CAS-Nr.": "95-48-7",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Methanol",
+			"CAS-Nr.": "67-56-1",
+			"Permetation ASTM F 109": 361,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Methylisobutylketon",
+			"CAS-Nr.": "108-10-1",
+			"Permetation ASTM F 109": 11,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Methylisocyanat",
+			"CAS-Nr.": "624-83-9",
+			"Permetation ASTM F 109": 9,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Methyl-tert-Butyl\u00e4ther",
+			"CAS-Nr.": "1634-04-4",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Methylvinylketon",
+			"CAS-Nr.": "78-94-4",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Monobutylzinnchlorid (MBTCL)",
+			"CAS-Nr.": "1118-46-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Naphthalin",
+			"CAS-Nr.": "91-20-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Natriumcyanat (45%)",
+			"CAS-Nr.": "143-33-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Natriumhydroxid (50%)",
+			"CAS-Nr.": "1310-73-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Natriumhydroxid (konzentriert)",
+			"CAS-Nr.": "1310-73-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Natriumhypochlorit (30% Chlor)",
+			"CAS-Nr.": "7681-52-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Nitrobenzol",
+			"CAS-Nr.": "98-95-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Phenol (85%)",
+			"CAS-Nr.": "108-95-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Phosphors\u00e4ure (85%)",
+			"CAS-Nr.": "7664-38-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Phosphortrichlorid",
+			"CAS-Nr.": "7719-12-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Phosphoryltrichlorid",
+			"CAS-Nr.": "10025-87-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Polychloriertes Biphenyl (PCB) in \u00d6l f\u00fcr Transformatoren",
+			"CAS-Nr.": "11097-69-1",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Potassium Carbonate",
+			"CAS-Nr.": "584-08-7",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 330,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "Potassium Chloride",
+			"CAS-Nr.": "7447-40-7",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 360,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "Propylenoxid 1, 2-",
+			"CAS-Nr.": "75-56-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Quecksilber",
+			"CAS-Nr.": "7439-97-6",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 270,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "Quecksilber(II)chlorid (ges\u00e4ttigte L\u00f6sung)",
+			"CAS-Nr.": "7487-94-7",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Salpeters\u00e4ure (70%)",
+			"CAS-Nr.": "7697-37-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Salpeters\u00e4ure (>90%, rot rauchend)",
+			"CAS-Nr.": "7697-37-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Salzs\u00e4ure (37%)",
+			"CAS-Nr.": "7647-01-0",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Schwefeldioxid",
+			"CAS-Nr.": "7446-09-5",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Schwefelkohlenstoff",
+			"CAS-Nr.": "75-15-0",
+			"Permetation ASTM F 109": 77,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Schwefels\u00e4ure (93%)",
+			"CAS-Nr.": "7664-93-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Schwefels\u00e4ure (95%)",
+			"CAS-Nr.": "7664-93-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Schwefels\u00e4ure (95%)",
+			"CAS-Nr.": "7664-93-9",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 210,
+			"Permeation EN ISO 6529 Klasse": 4
+		},
+		{
+			"Chemisches Produkt": "Sodium Sulfide",
+			"CAS-Nr.": "1313-82-2",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 180,
+			"Permeation EN ISO 6529 Klasse": 4
+		},
+		{
+			"Chemisches Produkt": "Stickstoffdioxid",
+			"CAS-Nr.": "10102-44-0",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Styroloxid",
+			"CAS-Nr.": "96-09-3",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Tetrachlor\u00e4thylen 1, 1, 2, 2-",
+			"CAS-Nr.": "127-18-4",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Tetrachlorbiphenol 2, 2', 6, 6'-",
+			"CAS-Nr.": "79-95-8",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Tetrachlorkohlenstoff",
+			"CAS-Nr.": "56-23-5",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Tetrahydrofuran",
+			"CAS-Nr.": "109-99-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Titantetrachlorid",
+			"CAS-Nr.": "7550-45-0",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 150,
+			"Permeation EN ISO 6529 Klasse": 4
+		},
+		{
+			"Chemisches Produkt": "Tributylzinnchlorid",
+			"CAS-Nr.": "1461-22-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Trichlorbenzol 1, 2, 4-",
+			"CAS-Nr.": "120-82-1",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 300,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "Trichloressigs\u00e4ure",
+			"CAS-Nr.": "76-03-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Trifluoressigs\u00e4ure",
+			"CAS-Nr.": "76-05-1",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Trimethylchinon",
+			"CAS-Nr.": "935-92-2",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Toluidin o-",
+			"CAS-Nr.": "95-53-4",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Toluol",
+			"CAS-Nr.": "108-88-3",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 360,
+			"Permeation EN ISO 6529 Klasse": 5
+		},
+		{
+			"Chemisches Produkt": "Toluol-2,4-diisocyanat",
+			"CAS-Nr.": "584-84-9",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Vinylacetat",
+			"CAS-Nr.": "108-05-4",
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		},
+		{
+			"Chemisches Produkt": "Wasserstoffperoxid (70%)",
+			"CAS-Nr.": "7722-84-1",
+			"Permetation ASTM F 109": null,
+			"Permeation EN ISO 6529 Minuten": 90,
+			"Permeation EN ISO 6529 Klasse": 3
+		},
+		{
+			"Chemisches Produkt": "Zweikomponentenkleber EPO 3 Harder und Epopox AF",
+			"CAS-Nr.": null,
+			"Permetation ASTM F 109": 480,
+			"Permeation EN ISO 6529 Minuten": 480,
+			"Permeation EN ISO 6529 Klasse": 6
+		}
+	]
+}
