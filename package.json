@@ -17,7 +17,10 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules",
-    "format": "prettier --write \"**/*.{ts,tsx,md,svelte,js,jsx,json}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md,svelte,js,jsx,json}\"",
+    "prisma:generate": "cd apps/backend && pnpm prisma generate",
+    "prisma:migrate:dev": "cd apps/backend && pnpm prisma migrate dev",
+    "prisma:studio": "cd apps/backend && pnpm prisma studio"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
