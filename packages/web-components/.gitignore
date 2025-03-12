@@ -1,0 +1,9 @@
+.idea
+.git
+build
+node_modules
+.DS_Store
+dist/
+types/
+.history
+*.log

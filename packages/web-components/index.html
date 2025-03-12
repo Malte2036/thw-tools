@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>THW Tools Web Components</title>
+    <script type="module" src="/src/index.ts"></script>
+  </head>
+  <body>
+    <div>
+      <h1>THW Navigation Bar</h1>
+      <thw-navigation-bar
+        id="nav-bar"
+        title="THW Tools"
+        currentPath="/dashboard"
+      ></thw-navigation-bar>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const navBar = document.getElementById("nav-bar");
+        navBar.navItems = [
+          {
+            title: "Main Menu",
+            items: [
+              { name: "Dashboard", href: "/dashboard" },
+              { name: "Profile", href: "/profile" },
+              { name: "Settings", href: "/settings" },
+            ],
+          },
+          {
+            title: "Random",
+            external: true,
+            items: [
+              {
+                name: "Documentation",
+                href: "https://example.com/docs",
+                external: true,
+              },
+              {
+                name: "GitHub",
+                href: "https://github.com/example/repo",
+                external: true,
+              },
+            ],
+          },
+        ];
+      });
+    </script>
+    <div>
+      <h1>THW Button</h1>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem">
+        <div>
+          <h2>style:</h2>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 1rem;
+              width: 20rem;
+            "
+          >
+            <thw-button>Primary Button</thw-button>
+            <thw-button type="secondary">Secondary Button</thw-button>
+          </div>
+        </div>
+        <div>
+          <h2>size</h2>
+          <div style="display: flex; flex-direction: column; gap: 1rem">
+            <thw-button size="small">Small Button</thw-button>
+            <thw-button size="medium">Medium Button</thw-button>
+            <thw-button size="large">Large Button</thw-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h1>THW Tabs</h1>
+      <thw-tabs
+        id="tabs"
+        items='["Dashboard", "User", "Tab 3"]'
+        initialSelected="User"
+      ></thw-tabs>
+    </div>
+    <div>
+      <h1>THW Dialog</h1>
+      <thw-button id="toggle-dialog-button">Toggle Dialog</thw-button>
+      <thw-dialog id="dialog" header="Test Dialog" hidden>
+        <div slot="content">
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
+            qu Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
+            qu Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
+            qu Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
+            qu Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
+            qu Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
+            qu Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
+            qu Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptates, quos, quas, quod quia quibusdam quae quidem quae quidem
+            qu
+          </p>
+        </div>
+        <slot slot="footer">
+          <thw-button type="secondary">Close</thw-button>
+          <thw-button>Okay</thw-button>
+        </slot>
+      </thw-dialog>
+    </div>
+    <div>
+      <h1>THW Loading Spinner</h1>
+      <thw-loading-spinner></thw-loading-spinner>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get the dialog element
+        const dialog = document.getElementById("dialog");
+        dialog.onOutsideClick = () => {
+          console.log("outside click");
+          dialog.hidden = true;
+        };
+
+        // Get the toggle button element
+        const toggleButton = document.getElementById("toggle-dialog-button");
+
+        // Add a click event listener to the toggle button
+        toggleButton.addEventListener("click", function () {
+          // Toggle the visibility of the dialog by adding or removing the 'hidden' attribute
+          dialog.hidden = !dialog.hidden;
+        });
+
+        // Get the tabs element
+        const tabs = document.getElementById("tabs");
+
+        // Define the onSelect function
+        tabs.onSelect = (item) => {
+          console.log("Selected tab:", item);
+        };
+      });
+    </script>
+    <div>
+      <h1>THW Error Display</h1>
+      <thw-error-display
+        id="error-display"
+        label="Error Example"
+      ></thw-error-display>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Define the error object
+        const httpError = {
+          message: "Failed to fetch data",
+          status: 404,
+          statusText: "Not Found",
+        };
+
+        // Get the error display element
+        const errorDisplay = document.getElementById("error-display");
+
+        // Set the error property of the error display element
+        errorDisplay.error = httpError;
+      });
+    </script>
+    <div>
+      <h1>THW Table</h1>
+      <thw-table id="example-table"></thw-table>
+    </div>
+    <script type="module">
+      import { html } from "lit";
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const table = document.getElementById("example-table");
+
+        // Set the header and values properties
+        table.height = 600;
+        table.header = ["", "Name", "Age", "Occupation", "Test1", "Test2"];
+        table.values = [
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Alice",
+            "30",
+            "Engineer",
+            "Test1",
+            "Test2",
+          ],
+          ["", "Bob", "25", "Designer", "Test1", "Test2"],
+          ["", "Charlie", "35", "Teacher", "Test1", "Test2"],
+          ["", "David", "28", "Developer", "Test1", "Test2"],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Eva",
+            "22",
+            "Artist",
+            "Test1",
+            "Test2",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Frank",
+            "40",
+            "Manager",
+            "Test1",
+            "Test2",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Alice",
+            "30",
+            "Engineer",
+            "Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1",
+            "Test2",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Bob",
+            "25",
+            "Designer",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Charlie",
+            "35",
+            "Teacher",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "David",
+            "28",
+            "Developer",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Eva",
+            "22",
+            "Artist",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Frank",
+            "40",
+            "Manager",
+          ],
+          ["", "Alice", "30", "Engineer"],
+          ["", "Bob", "25", "Designer"],
+          ["", "Charlie", "35", "Teacher"],
+          ["", "David", "28", "Developer"],
+          ["", "Eva", "22", "Artist"],
+          ["", "Frank", "40", "Manager"],
+          ["", "Alice", "30", "Engineer"],
+          ["", "Bob", "25", "Designer"],
+          ["", "Charlie", "35", "Teacher"],
+          ["", "David", "28", "Developer"],
+          ["", "Eva", "22", "Artist"],
+          ["", "Frank", "40", "Manager"],
+          ["", "Alice", "30", "Engineer"],
+          ["", "Bob", "25", "Designer"],
+          ["", "Charlie", "35", "Teacher"],
+          ["", "David", "28", "Developer"],
+          ["", "Eva", "22", "Artist"],
+          ["", "Frank", "40", "Manager"],
+          ["", "Alice", "30", "Engineer"],
+          ["", "Bob", "25", "Designer"],
+          ["", "Charlie", "35", "Teacher"],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "David",
+            "28",
+            "Developer",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Eva",
+            "22",
+            "Artist",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Frank",
+            "40",
+            "Manager",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Alice",
+            "30",
+            "Engineer",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Bob",
+            "25",
+            "Designer",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "Charlie",
+            "35",
+            "Teacher",
+          ],
+          [
+            html`<img
+              src="https://picsum.photos/200/300"
+              alt="random image"
+            />`,
+            "David",
+            "28",
+            "Developer",
+          ],
+          ["", "Eva", "22", "Artist"],
+          ["", "Frank", "40", "Manager"],
+        ];
+
+        table.addEventListener("row-click", (event) => {
+          const { row, index } = event.detail;
+          console.log("Clicked row:", row, "at index:", index);
+        });
+      });
+    </script>
+  </body>
+</html>
