@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import { writable, type Writable } from 'svelte/store';
 
-export const inventoryColumns: { id: string; label: string }[] = [
+export const inventoryColumns = [
 	{ id: 'inventarNummer', label: 'Inventar-Nr.' },
 	{ id: 'einheit', label: 'Einheit' },
 	{ id: 'ausstattung', label: 'Ausstattung' },
@@ -14,7 +14,7 @@ export const inventoryColumns: { id: string; label: string }[] = [
 	{ id: 'gerateNummer', label: 'Geräte-Nr.' },
 	{ id: 'status', label: 'Status' },
 	{ id: 'lastScanned', label: 'Letzter Scan' }
-];
+] as const;
 
 const localStorageKey = 'visible-inventory-columns';
 
@@ -49,3 +49,7 @@ export const visibleInventoryColumns: Writable<string[]> = writable<string[]>(
 		return unsubscribe;
 	}
 );
+
+export const resetVisibleInventoryColumns = () => {
+	visibleInventoryColumns.set(inventoryColumns.map((column) => column.id));
+};
