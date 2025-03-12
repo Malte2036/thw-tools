@@ -221,9 +221,6 @@ importers:
 
   apps/thw-tools:
     dependencies:
-      '@malte2036/thw-tools-components':
-        specifier: ^0.3.6
-        version: 0.3.6
       zod:
         specifier: ^3.23.8
         version: 3.24.2
@@ -1044,9 +1041,6 @@ packages:
 
   '@malte2036/thw-tools-components@0.3.5':
     resolution: {integrity: sha512-V/Yt+HHA2g1PG6Uz0ebBRaWchpiWldmO1Zw+YX+sW3DOevITfYHA32spTdOKITAosbzQhzsq8V6Sgwj6i9mNxQ==}
-
-  '@malte2036/thw-tools-components@0.3.6':
-    resolution: {integrity: sha512-JOzffVEzRoUMGplMkReeUNZpL8BQCq9sabNlfvD8ssz60HiEiVhwnWw1ExEpOG9uquzr8qfv3AWz41dCnM3ozA==}
 
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
@@ -5749,11 +5743,6 @@ snapshots:
   '@lukeed/csprng@1.1.0': {}
 
   '@malte2036/thw-tools-components@0.3.5':
-    dependencies:
-      '@lit-labs/virtualizer': 2.1.0
-      lit: 3.2.1
-
-  '@malte2036/thw-tools-components@0.3.6':
     dependencies:
       '@lit-labs/virtualizer': 2.1.0
       lit: 3.2.1

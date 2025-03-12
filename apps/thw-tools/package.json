@@ -5,6 +5,7 @@
 	"scripts": {
 		"preinstall": "npx only-allow pnpm",
 		"dev": "vite dev",
+		"prebuild": "cd ../../packages/web-components && pnpm build",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -15,7 +16,6 @@
 		"sync": "svelte-kit sync"
 	},
 	"dependencies": {
-		"@malte2036/thw-tools-components": "^0.3.6",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
