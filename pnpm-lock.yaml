@@ -129,9 +129,6 @@ importers:
       '@kinde-oss/kinde-typescript-sdk':
         specifier: ^2.9.1
         version: 2.9.1
-      '@malte2036/thw-tools-components':
-        specifier: 0.3.5
-        version: 0.3.5
       dexie:
         specifier: ^4.0.9
         version: 4.0.11
@@ -1038,9 +1035,6 @@ packages:
   '@lukeed/csprng@1.1.0':
     resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
     engines: {node: '>=8'}
-
-  '@malte2036/thw-tools-components@0.3.5':
-    resolution: {integrity: sha512-V/Yt+HHA2g1PG6Uz0ebBRaWchpiWldmO1Zw+YX+sW3DOevITfYHA32spTdOKITAosbzQhzsq8V6Sgwj6i9mNxQ==}
 
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
@@ -5741,11 +5735,6 @@ snapshots:
       call-bind: 1.0.8
 
   '@lukeed/csprng@1.1.0': {}
-
-  '@malte2036/thw-tools-components@0.3.5':
-    dependencies:
-      '@lit-labs/virtualizer': 2.1.0
-      lit: 3.2.1
 
   '@microsoft/tsdoc@0.15.1': {}
 
