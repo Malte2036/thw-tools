@@ -1,0 +1,73 @@
+---
+description:  This rule should be applied whenever suggesting or generating code for any frontend application in this monorepo (thw-tools, inventar) that involves UI components. Apply these guidelines when: - Creating new frontend components - Modifying existing components that use shared UI elements - Implementing new features that require UI components - Refactoring UI code to improve consistency - Suggesting component usage patterns or examples
+globs: *.svelte
+alwaysApply: false
+---
+
+The component library in `packages/web-components` provides reusable UI components for all frontend applications in the monorepo. Follow these guidelines when using shared components:
+
+#### Importing Components
+
+Import components using the configured path alias:
+
+```typescript
+// Import a specific component
+import { Button } from '@web-components/Button';
+import { Card } from '@web-components/Card';
+
+// Import multiple components
+import { Button, Input, Select } from '@web-components/forms';
+```
+
+#### Component Props and Types
+
+Always use TypeScript interfaces for component props:
+
+```typescript
+  // Use the component with proper typing
+  import { Button, type ButtonProps } from '@web-components/Button';
+
+  // Example usage in a Svelte component
+  <Button
+    variant="primary"
+    size="md"
+    disabled={isLoading}
+    on:click={handleClick}
+  >
+    Submit
+  </Button>
+```
+
+#### Styling Guidelines
+
+- Don't override component styles directly; use the provided props for customization
+- For layout adjustments, wrap components in layout containers
+- Use the theme variables defined in the component library
+
+#### Creating New Shared Components
+
+When creating new components for the shared library:
+
+1. Follow the established naming conventions
+2. Include comprehensive TypeScript types
+3. Write unit tests for all components
+4. Document usage examples in component comments
+5. Ensure components work across all frontend applications
+
+#### Cursor Rule for LLM
+
+
+This rule should be applied whenever suggesting or generating code for any frontend application in this monorepo (thw-tools, inventar) that involves UI components. Apply these guidelines when:
+- Creating new frontend components
+- Modifying existing components that use shared UI elements
+- Implementing new features that require UI components
+- Refactoring UI code to improve consistency
+- Suggesting component usage patterns or examples
+
+When suggesting code that uses shared components:
+
+- Always import from `@web-components/[ComponentName]`
+- Use proper TypeScript typing for all component props
+- Follow the component API as defined in the component library
+- Suggest using composition over direct style overrides
+- Recommend the most appropriate component for the use case
