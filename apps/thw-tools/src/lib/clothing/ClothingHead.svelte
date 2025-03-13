@@ -2,7 +2,11 @@
 	import type { ClothingSizesTable } from './clothing';
 	import { clothingNameToFriendlyName } from './clothingConstantUtils';
 
-	export let table: ClothingSizesTable | undefined = undefined;
+	interface Props {
+		table?: ClothingSizesTable | undefined;
+	}
+
+	let { table = undefined }: Props = $props();
 	let title = `THW-Tools: ${
 		table ? clothingNameToFriendlyName(table.name) + ' - ' : ''
 	}MEA Bekleidungsrechner`;

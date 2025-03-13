@@ -106,7 +106,7 @@ describe('calculateMatchingClothingSizeForTable', () => {
 
 		const size: ClothingSizes = {
 			id: 1,
-			size: 94,
+			size: '94',
 			height: { min: 180, max: 184 },
 			chestCircumference: undefined,
 			waistCircumference: { min: 84, max: 87 },
@@ -136,7 +136,7 @@ describe('calculateMatchingClothingSizeForTable', () => {
 
 		const size: ClothingSizes = {
 			id: 1,
-			size: 98,
+			size: '98',
 			height: { min: 183, max: 187 },
 			chestCircumference: { min: 99, max: 102 },
 			waistCircumference: { min: 89, max: 92 },
@@ -167,7 +167,7 @@ describe('calculateMatchingClothingSizeForTable', () => {
 
 		const size: ClothingSizes = {
 			id: 1,
-			size: 98,
+			size: '98',
 			height: { min: 183, max: 187 },
 			chestCircumference: { min: 99, max: 102 },
 			waistCircumference: { min: 89, max: 92 },

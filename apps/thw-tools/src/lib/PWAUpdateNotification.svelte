@@ -3,7 +3,7 @@
 	import { bannerMessage } from './shared/stores/bannerMessage';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 
-	let updateStatus: 'idle' | 'updating' | 'ready' | 'error' = 'idle';
+	let updateStatus: 'idle' | 'updating' | 'ready' | 'error' = $state('idle');
 	let registration: ServiceWorkerRegistration | undefined = undefined;
 
 	onMount(async () => {

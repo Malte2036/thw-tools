@@ -1,5 +1,9 @@
 <script lang="ts">
-	export let progress: number;
+	interface Props {
+		progress: number;
+	}
+
+	let { progress }: Props = $props();
 </script>
 
 <div class="w-full h-2 bg-gray">

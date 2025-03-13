@@ -1,37 +1,47 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Input from '$lib/Input.svelte';
 	import Table from '$lib/Table.svelte';
 	import type { ProtectiveSuite, ProtectiveSuiteData } from '$lib/cbrn/ProtectiveSuite';
 
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	let protectiveSuiteSearchValue = '';
-	let selectedProtectiveSuite: ProtectiveSuite | undefined = undefined;
+	let { data }: Props = $props();
 
-	$: {
+	let protectiveSuiteSearchValue = $state('');
+	let selectedProtectiveSuite: ProtectiveSuite | undefined = $state(undefined);
+
+	run(() => {
 		if (protectiveSuiteSearchValue !== '') {
 			selectedProtectiveSuite = undefined;
 		}
-	}
+	});
 
-	let filteredProtectiveSuites: ProtectiveSuite[] = [];
+	let filteredProtectiveSuites: ProtectiveSuite[] = $state([]);
 
-	$: filteredProtectiveSuites = data.allProtectiveSuites.filter((value) =>
-		value.name.toLowerCase().includes(protectiveSuiteSearchValue.toLowerCase())
-	);
+	run(() => {
+		filteredProtectiveSuites = data.allProtectiveSuites.filter((value) =>
+			value.name.toLowerCase().includes(protectiveSuiteSearchValue.toLowerCase())
+		);
+	});
 
-	let substanceSearchValue = '';
+	let substanceSearchValue = $state('');
 
-	let filteredSubstances: ProtectiveSuiteData[] = [];
+	let filteredSubstances: ProtectiveSuiteData[] = $state([]);
 
-	$: filteredSubstances =
-		selectedProtectiveSuite?.data?.filter(
-			(value) =>
-				value['Chemisches Produkt']?.toLowerCase().includes(substanceSearchValue.toLowerCase()) ||
-				value['CAS-Nr.']?.toLowerCase().includes(substanceSearchValue.toLowerCase())
-		) ?? [];
+	run(() => {
+		filteredSubstances =
+			selectedProtectiveSuite?.data?.filter(
+				(value) =>
+					value['Chemisches Produkt']?.toLowerCase().includes(substanceSearchValue.toLowerCase()) ||
+					value['CAS-Nr.']?.toLowerCase().includes(substanceSearchValue.toLowerCase())
+			) ?? [];
+	});
 </script>
 
 <div class="m-4 flex flex-col gap-8">

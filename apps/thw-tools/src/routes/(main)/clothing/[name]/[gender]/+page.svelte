@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import type { PageData } from './$types';
 	import Table from '$lib/Table.svelte';
 	import {
@@ -29,23 +31,27 @@
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	let visibleData: 'table' | 'deviationResults' =
-		browser && $page.url.searchParams.get('visibleData') === 'deviationResults'
+		$state(browser && $page.url.searchParams.get('visibleData') === 'deviationResults'
 			? 'deviationResults'
-			: 'table';
+			: 'table');
 
 	let calculationResult: {
 		sizes: MatchingClothingSizeTable[];
 		missingMeasurements: Map<ClothingName, HumanMeasurement[]>;
-	} = {
+	} = $state({
 		sizes: [],
 		missingMeasurements: new Map()
-	};
+	});
 
-	let selectedSize: string | undefined;
-	let matchingSizeTable: MatchingClothingSizeTable | undefined;
+	let selectedSize: string | undefined = $state();
+	let matchingSizeTable: MatchingClothingSizeTable | undefined = $state();
 
 	function calculate(input: ClothingInputValue) {
 		calculationResult = calculateMatchingClothingSizesForInput(input, data.tables);
@@ -67,9 +73,6 @@
 		return size.clothingSize.size;
 	}
 
-	$: $clothingInput.gender &&
-		$clothingInput.gender != data.table.gender &&
-		pushToOtherGender($clothingInput.gender);
 
 	function pushToOtherGender(gender: HumanGender) {
 		if (!browser) return;
@@ -80,7 +83,6 @@
 		}
 	}
 
-	$: calculate($clothingInput);
 
 	function getTableValues() {
 		const table = data.table;
@@ -102,6 +104,14 @@
 			value.insideLegLength ? `${value.insideLegLength.min} - ${value.insideLegLength.max}` : ''
 		]);
 	}
+	run(() => {
+		$clothingInput.gender &&
+			$clothingInput.gender != data.table.gender &&
+			pushToOtherGender($clothingInput.gender);
+	});
+	run(() => {
+		calculate($clothingInput);
+	});
 </script>
 
 <ClothingHead table={data.table} />

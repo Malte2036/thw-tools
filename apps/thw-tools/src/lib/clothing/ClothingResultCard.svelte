@@ -15,11 +15,19 @@
 	} from './clothingConstantUtils';
 	import { getTableLink, isDeviationAcceptable } from './clothingUtils';
 
-	export let clothingSizesTable: ClothingSizesTable;
-	export let matchingClothingSize: MatchingClothingSize;
-	export let showButton = true;
+	interface Props {
+		clothingSizesTable: ClothingSizesTable;
+		matchingClothingSize: MatchingClothingSize;
+		showButton?: boolean;
+		missingMeasurements?: Map<ClothingName, HumanMeasurement[]>;
+	}
 
-	export let missingMeasurements: Map<ClothingName, HumanMeasurement[]> = new Map();
+	let {
+		clothingSizesTable,
+		matchingClothingSize,
+		showButton = true,
+		missingMeasurements = new Map()
+	}: Props = $props();
 
 	function sizeToString(
 		humanMeasurement: HumanMeasurement,

@@ -13,16 +13,21 @@
 	import FeedbackDialog from '$lib/FeedbackDialog.svelte';
 	import { onMount } from 'svelte';
 	import { formatDate, trackIdentity } from '$lib/utils';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
 
-	let showFeedback = false;
-	let showInstallPWAHelp = false;
+	let { children }: Props = $props();
+
+	let showFeedback = $state(false);
+	let showInstallPWAHelp = $state(false);
 
 	onMount(() => {
 		trackIdentity();
 	});
 
 	// hide on /quiz/{questionType}/{questionNumber}
-	$: hideFooter = /^\/quiz\/[^/]+\/\d+/.test($page.url.pathname);
+	let hideFooter = $derived(/^\/quiz\/[^/]+\/\d+/.test($page.url.pathname));
 </script>
 
 <svelte:head>
@@ -44,7 +49,7 @@
 	<NavigationBar />
 	<Banner />
 	<div class="flex-grow flex flex-col">
-		<slot />
+		{@render children?.()}
 	</div>
 	<div class={hideFooter ? 'sr-only' : ''}>
 		<div class="flex flex-row justify-center gap-2 mb-3 flex-wrap px-2">
@@ -64,22 +69,22 @@
 				class="underline">FAQ</a
 			>
 			<div class="text-gray-400">|</div>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
 				class="underline cursor-pointer"
-				on:click={() => (showFeedback = true)}
+				onclick={() => (showFeedback = true)}
 				data-umami-event="Open Feedback Dialog"
 			>
 				Feedback
 			</div>
 			<div class="text-gray-400">|</div>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
 				class="underline cursor-pointer"
 				data-umami-event="Open Offline Availability Dialog"
-				on:click={() => (showInstallPWAHelp = true)}
+				onclick={() => (showInstallPWAHelp = true)}
 			>
 				Als App installieren
 			</div>

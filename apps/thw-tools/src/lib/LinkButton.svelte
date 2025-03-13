@@ -2,11 +2,23 @@
 	import Button from './Button.svelte';
 	import { trackEvent } from './utils';
 
-	export let url: string | URL;
-	export let blank = false;
-	export let secondary = false;
-	export let disabled = false;
-	export let dataUmamiEvent: string | undefined = undefined;
+	interface Props {
+		url: string | URL;
+		blank?: boolean;
+		secondary?: boolean;
+		disabled?: boolean;
+		dataUmamiEvent?: string | undefined;
+		children?: import('svelte').Snippet;
+	}
+
+	let {
+		url,
+		blank = false,
+		secondary = false,
+		disabled = false,
+		dataUmamiEvent = undefined,
+		children
+	}: Props = $props();
 </script>
 
 <a
@@ -15,9 +27,9 @@
 	rel={blank ? 'noreffer' : undefined}
 	class="w-full h-full"
 	tabindex="-1"
-	on:click={() => trackEvent(dataUmamiEvent)}
+	onclick={() => trackEvent(dataUmamiEvent)}
 >
 	<Button {secondary} {disabled}>
-		<slot />
+		{@render children?.()}
 	</Button>
 </a>

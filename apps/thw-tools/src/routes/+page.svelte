@@ -91,7 +91,7 @@
 							{#each category.items as tool}
 								<LinkButton url={tool.href} blank={tool.external} dataUmamiEvent={tool.event}>
 									<div class="w-6 group-hover:text-thw-600 transition-colors">
-										<svelte:component this={tool.icon} />
+										<tool.icon />
 									</div>
 									<div class="font-bold flex-grow text-left">{tool.name}</div>
 									{#if tool.external}
@@ -115,14 +115,14 @@
 	</div>
 </div>
 
-<!-- svelte-ignore a11y-missing-content -->
-<a href="/quiz/stats/" class="hidden" />
-<!-- svelte-ignore a11y-missing-content -->
-<a href="/faq" class="hidden" />
+<!-- svelte-ignore a11y_missing_content -->
+<a href="/quiz/stats/" class="hidden"></a>
+<!-- svelte-ignore a11y_missing_content -->
+<a href="/faq" class="hidden"></a>
 
 {#each Object.values(QuestionType) as questionType}
-	<!-- svelte-ignore a11y-missing-content -->
-	<a href={`/quiz/${questionType}/`} class="hidden" />
-	<!-- svelte-ignore a11y-missing-content -->
-	<a href={`/quiz/${questionType}/listing/`} class="hidden" />
+	<!-- svelte-ignore a11y_missing_content -->
+	<a href={`/quiz/${questionType}/`} class="hidden"></a>
+	<!-- svelte-ignore a11y_missing_content -->
+	<a href={`/quiz/${questionType}/listing/`} class="hidden"></a>
 {/each}

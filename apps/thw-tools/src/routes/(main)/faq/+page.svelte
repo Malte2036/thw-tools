@@ -8,17 +8,21 @@
 	import { version } from '$app/environment';
 	import { formatDate } from '$lib/utils';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	let expandedIndex: number | null = null;
-	let showInstallPWAHelp = false;
-	let showFeedback = false;
+	let { data }: Props = $props();
+
+	let expandedIndex: number | null = $state(null);
+	let showInstallPWAHelp = $state(false);
+	let showFeedback = $state(false);
 
 	function toggleFaq(index: number) {
 		expandedIndex = expandedIndex === index ? null : index;
 	}
 
-	$: jsonLd = {
+	let jsonLd = $derived({
 		'@context': 'https://schema.org',
 		'@type': 'FAQPage',
 		inLanguage: 'de',
@@ -37,7 +41,7 @@
 			url: 'https://thw-tools.de',
 			logo: 'https://thw-tools.de/_app/immutable/assets/thw-mzgw.24176eee.webp'
 		}
-	};
+	});
 </script>
 
 <svelte:head>
@@ -102,7 +106,7 @@
 				<button
 					type="button"
 					class="w-full text-left cursor-pointer"
-					on:click={() => toggleFaq(index)}
+					onclick={() => toggleFaq(index)}
 					aria-expanded={expandedIndex === index}
 					aria-controls="faq-content-{index}"
 					aria-label={expandedIndex === index ? 'Frage zuklappen' : 'Frage aufklappen'}
@@ -166,7 +170,7 @@
 		</div>
 		<p class="text-gray-600">
 			Hast du Feedback oder Vorschläge?
-			<button class="text-thw-blue-800 hover:underline" on:click={() => (showFeedback = true)}>
+			<button class="text-thw-blue-800 hover:underline" onclick={() => (showFeedback = true)}>
 				Kontaktiere mich
 			</button>
 		</p>

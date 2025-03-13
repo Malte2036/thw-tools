@@ -3,23 +3,30 @@
 	import CheckIcon from '$lib/icons/CheckIcon.svelte';
 	import type { QuestionAnswer } from '$lib/model/question';
 
-	export let answer: QuestionAnswer;
-	export let checked: boolean;
-	export let revealAnswers: boolean;
-	export let changeCheckedCallback: (value: boolean) => void;
+	interface Props {
+		answer: QuestionAnswer;
+		checked: boolean;
+		revealAnswers: boolean;
+		changeCheckedCallback: (value: boolean) => void;
+	}
 
-	$: isCheckedVariant = checked && !revealAnswers;
-	$: isUncheckedVariant = !checked && (!revealAnswers || (!answer.isCorrect && revealAnswers));
-	$: isCorrectVariant = revealAnswers && checked && answer.isCorrect;
-	$: isWrongVariant =
-		revealAnswers && ((checked && !answer.isCorrect) || (!checked && answer.isCorrect));
+	let { answer, checked, revealAnswers, changeCheckedCallback }: Props = $props();
 
-	$: shouldShowCheckMark = (revealAnswers && answer.isCorrect) || isCheckedVariant;
-	$: shouldShowXMark = revealAnswers && !answer.isCorrect;
+	let isCheckedVariant = $derived(checked && !revealAnswers);
+	let isUncheckedVariant = $derived(
+		!checked && (!revealAnswers || (!answer.isCorrect && revealAnswers))
+	);
+	let isCorrectVariant = $derived(revealAnswers && checked && answer.isCorrect);
+	let isWrongVariant = $derived(
+		revealAnswers && ((checked && !answer.isCorrect) || (!checked && answer.isCorrect))
+	);
+
+	let shouldShowCheckMark = $derived((revealAnswers && answer.isCorrect) || isCheckedVariant);
+	let shouldShowXMark = $derived(revealAnswers && !answer.isCorrect);
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	data-testid="answer-container"
 	class="transition-colors hover:cursor-pointer flex justify-between p-2 items-center rounded-lg border-2 border-gray text-xl"
@@ -29,9 +36,8 @@
 	class:wrongVariant={isWrongVariant}
 	class:isAnswerCorrect={revealAnswers && answer.isCorrect}
 	class:isAnswerWrong={revealAnswers && !answer.isCorrect}
-	on:click={() => {
+	onclick={() => {
 		changeCheckedCallback(!checked);
-		checked = !checked;
 	}}
 >
 	<div>{answer.text}</div>

@@ -5,35 +5,23 @@
 	import ClothingInfo from '$lib/clothing/ClothingInfo.svelte';
 	import ClothingResultCard from '$lib/clothing/ClothingResultCard.svelte';
 	import ClothingSizesInput from '$lib/clothing/ClothingSizesInput.svelte';
-	import type {
-		ClothingName,
-		HumanMeasurement,
-		MatchingClothingSizeTable
-	} from '$lib/clothing/clothing';
 	import { convertClothingResultsToCSV, exportCSVFile } from '$lib/clothing/clothingExport';
-	import type { ClothingInputValue } from '$lib/clothing/clothingInputStore';
 	import { clothingInput } from '$lib/clothing/clothingInputStore';
 	import { calculateMatchingClothingSizesForInput } from '$lib/clothing/clothingUtils';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
-
-	let calculationResult: {
-		sizes: MatchingClothingSizeTable[];
-		missingMeasurements: Map<ClothingName, HumanMeasurement[]>;
-	} = {
-		sizes: [],
-		missingMeasurements: new Map()
-	};
-
-	function calculate(input: ClothingInputValue) {
-		calculationResult = calculateMatchingClothingSizesForInput(input, data.tables);
+	interface Props {
+		data: PageData;
 	}
 
-	$: calculate($clothingInput);
+	let { data }: Props = $props();
 
-	let isExporting = false;
+	let calculationResult = $derived(
+		calculateMatchingClothingSizesForInput($clothingInput, data.tables)
+	);
+
+	let isExporting = $state(false);
 
 	function showExportDialog() {
 		isExporting = true;

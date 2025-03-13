@@ -3,11 +3,15 @@
 	import type { AnsweredCountData } from '../../../routes/(main)/quiz/[type]/[questionId]/+page.server';
 	import { formatAccuracy, formatNumber, getQuizTypeName } from '$lib/quiz/quizUtils';
 
-	export let answeredCountData: AnsweredCountData | undefined;
-	export let questionType: QuestionType;
+	interface Props {
+		answeredCountData: AnsweredCountData | undefined;
+		questionType: QuestionType;
+	}
 
-	$: totalAnswered = answeredCountData ? answeredCountData.right + answeredCountData.wrong : 0;
-	$: correctPercentage = totalAnswered > 0 ? (answeredCountData!.right / totalAnswered) * 100 : 0;
+	let { answeredCountData, questionType }: Props = $props();
+
+	let totalAnswered = $derived(answeredCountData ? answeredCountData.right + answeredCountData.wrong : 0);
+	let correctPercentage = $derived(totalAnswered > 0 ? (answeredCountData!.right / totalAnswered) * 100 : 0);
 </script>
 
 <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
@@ -39,7 +43,7 @@
 			<div
 				class="bg-thw h-2.5 rounded-full transition-all duration-500"
 				style="width: {correctPercentage}%"
-			/>
+			></div>
 		</div>
 		<p class="text-center text-sm text-gray-600 mt-1">
 			Durchschnittlich wurden {formatAccuracy(correctPercentage)} aller

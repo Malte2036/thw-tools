@@ -10,17 +10,40 @@ import type {
 import { getMeasurementTolerance } from './clothingConstantUtils';
 import type { ClothingInputValue } from './clothingInputStore';
 
+function transformInputValue(value: any): number | undefined {
+	if (value === undefined || value === null) return undefined;
+
+	if (typeof value === 'number') {
+		return value;
+	}
+
+	if (typeof value === 'string') {
+		if (value.length === 0) return undefined;
+
+		return Number(value);
+	}
+
+	console.warn(`Invalid input value: ${value}`);
+	return undefined;
+}
+
+function transformClothingInput(
+	input: ClothingInputValue
+): Record<HumanMeasurement, number | undefined> {
+	return {
+		height: transformInputValue(input.height),
+		chestCircumference: transformInputValue(input.chest),
+		waistCircumference: transformInputValue(input.waist),
+		hipCircumference: transformInputValue(input.hip),
+		insideLegLength: transformInputValue(input.insideLegLength)
+	};
+}
+
 export function calculateMatchingClothingSizesForInput(
 	input: ClothingInputValue,
 	tables: ClothingSizesTable[]
 ) {
-	const inputData: Record<HumanMeasurement, number | undefined> = {
-		height: input.height.length > 0 ? Number(input.height) : undefined,
-		chestCircumference: input.chest.length > 0 ? Number(input.chest) : undefined,
-		waistCircumference: input.waist.length > 0 ? Number(input.waist) : undefined,
-		hipCircumference: input.hip.length > 0 ? Number(input.hip) : undefined,
-		insideLegLength: input.insideLegLength.length > 0 ? Number(input.insideLegLength) : undefined
-	};
+	const inputData = transformClothingInput(input);
 
 	const missingMeasurements = getMissingMeasurements(tables, inputData);
 

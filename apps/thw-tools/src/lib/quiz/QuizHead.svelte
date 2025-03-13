@@ -2,8 +2,12 @@
 	import type { ExtendedQuestion, QuestionType } from '$lib/model/question';
 	import { version } from '$app/environment';
 
-	export let questionType: QuestionType;
-	export let question: ExtendedQuestion | undefined;
+	interface Props {
+		questionType: QuestionType;
+		question: ExtendedQuestion | undefined;
+	}
+
+	let { questionType, question }: Props = $props();
 
 	function getFriendlyType() {
 		switch (questionType) {
@@ -52,7 +56,7 @@
 		}
 	}
 
-	$: jsonLd = question
+	let jsonLd = $derived(question
 		? {
 				'@context': 'https://schema.org',
 				'@type': 'QAPage',
@@ -87,7 +91,7 @@
 					}
 				}
 			}
-		: undefined;
+		: undefined);
 </script>
 
 <svelte:head>

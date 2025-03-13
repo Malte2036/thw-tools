@@ -2,7 +2,11 @@
 	import type { QuestionType } from '$lib/model/question';
 	import type { AnsweredCountData } from '../../../routes/(main)/quiz/[type]/[questionId]/+page.server';
 
-	export let currentQuestionAnsweredCountData: AnsweredCountData | undefined;
+	interface Props {
+		currentQuestionAnsweredCountData: AnsweredCountData | undefined;
+	}
+
+	let { currentQuestionAnsweredCountData }: Props = $props();
 
 	function getQuizTypeName(type: QuestionType) {
 		switch (type) {
@@ -19,13 +23,13 @@
 		}
 	}
 
-	$: currentTotal = currentQuestionAnsweredCountData
+	let currentTotal = $derived(currentQuestionAnsweredCountData
 		? currentQuestionAnsweredCountData.right + currentQuestionAnsweredCountData.wrong
-		: 0;
-	$: currentCorrectPercentage =
-		currentTotal > 0
+		: 0);
+	let currentCorrectPercentage =
+		$derived(currentTotal > 0
 			? ((currentQuestionAnsweredCountData!.right / currentTotal) * 100).toFixed(1)
-			: undefined;
+			: undefined);
 </script>
 
 <div class="flex flex-col gap-4">
@@ -36,7 +40,7 @@
 				<div
 					class="bg-thw h-2.5 rounded-full transition-all duration-500"
 					style="width: {currentCorrectPercentage ?? 0}%"
-				/>
+				></div>
 			</div>
 			<span class="text-sm text-gray-600 whitespace-nowrap font-medium">
 				<span class="inline-block min-w-[4ch] text-right">{currentCorrectPercentage ?? ''}</span>%

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { afterNavigate, goto } from '$app/navigation';
 	import { getQuestionStatsCount, getQuestionStatsCountForType } from '$lib/api/api';
 	import type {
@@ -19,13 +21,18 @@
 	import type { PageData } from './$types';
 	import type { AnsweredCountData } from './+page.server';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	let question: ExtendedQuestion;
-	let shuffledAnswers: QuestionAnswer[];
-	let questionType: QuestionType;
-	let answeredCountData: AnsweredCountData | undefined;
-	let currentQuestionAnsweredCountData: AnsweredCountData | undefined;
+	let { data }: Props = $props();
+
+	let question: ExtendedQuestion | undefined = $state();
+	let checkedAnswers: number[] = $state([]);
+	let shuffledAnswers: QuestionAnswer[] | undefined = $state();
+	let questionType: QuestionType = $derived(data.questionType);
+	let answeredCountData: AnsweredCountData | undefined = $state();
+	let currentQuestionAnsweredCountData: AnsweredCountData | undefined = $state();
 
 	function setQuestion(q: Question) {
 		revealAnswers = false;
@@ -34,6 +41,7 @@
 			...q,
 			checkedAnswers: []
 		};
+		checkedAnswers = [];
 
 		shuffledAnswers = shuffle(Array.from(q.answers));
 
@@ -47,21 +55,28 @@
 		}
 	}
 
-	$: questionType = data.questionType;
-	$: setQuestion(data.question);
-	$: questionCount = data.questionCount;
+	$effect(() => {
+		setQuestion(data.question);
+	});
+	let questionCount = $derived(data.questionCount);
 
-	let revealAnswers = false;
+	let revealAnswers = $state(false);
 
-	let completelyRight = false;
+	let completelyRight = $state(false);
 
-	$: completelyRight =
-		JSON.stringify(
-			question.answers
-				.filter((a) => a.isCorrect)
-				.map((a) => a.id)
-				.sort()
-		) === JSON.stringify(question.checkedAnswers.sort());
+	$effect(() => {
+		if (!question) {
+			return;
+		}
+
+		completelyRight =
+			JSON.stringify(
+				question.answers
+					.filter((a) => a.isCorrect)
+					.map((a) => a.id)
+					.sort()
+			) === JSON.stringify(checkedAnswers.sort());
+	});
 
 	function gotoQuestionNumber(newQuestionNumber: number) {
 		goto(`/quiz/${questionType}/${newQuestionNumber}`);
@@ -78,7 +93,7 @@
 		gotoQuestionNumber(nextQuestionId);
 	}
 
-	let questionTextEl: any;
+	let questionTextEl: any = $state();
 
 	function focusQuestionText() {
 		if (questionTextEl) {
@@ -86,7 +101,7 @@
 		}
 	}
 
-	let showSettings = false;
+	let showSettings = $state(false);
 
 	function openQuizSettings() {
 		showSettings = true;
@@ -107,64 +122,71 @@
 
 <QuizHead {questionType} {question} />
 
-<div class="h-full flex flex-col">
-	<div class="flex-grow flex flex-col px-4">
-		<div class="flex flex-col gap-8">
-			<div class="flex flex-col gap-2">
-				<div class="-mx-4 -mt-4 w-screen">
-					<ProgressBar progress={(question.number - 1) / questionCount} />
+{#if question && shuffledAnswers}
+	<div class="h-full flex flex-col">
+		<div class="flex-grow flex flex-col px-4">
+			<div class="flex flex-col gap-8">
+				<div class="flex flex-col gap-2">
+					<div class="-mx-4 -mt-4 w-screen">
+						<ProgressBar progress={(question.number - 1) / questionCount} />
+					</div>
+					<div class="text-sm mt-4 flex flex-row justify-between">
+						<div>Frage {question.number} von {questionCount}</div>
+						<button class="underline hover:text-thw" onclick={openQuizSettings}>
+							Einstellungen
+						</button>
+					</div>
+					<h1
+						bind:this={questionTextEl}
+						class="text-3xl text-center text-thw outline-none font-bold break-words"
+						tabindex="-1"
+					>
+						{question.text}
+					</h1>
 				</div>
-				<div class="text-sm mt-4 flex flex-row justify-between">
-					<div>Frage {question.number} von {questionCount}</div>
-					<button class="underline hover:text-thw" on:click={openQuizSettings}>
-						Einstellungen
-					</button>
-				</div>
-				<h1
-					bind:this={questionTextEl}
-					class="text-3xl text-center text-thw outline-none font-bold break-words"
-					tabindex="-1"
-				>
-					{question.text}
-				</h1>
-			</div>
-			<div class="flex gap-y-2 flex-col md:flex-row w-full items-center">
-				{#if question.image}
-					<img
-						class="flex justify-center h-64 aspect-square m-4"
-						alt={`Fragebild ${question.number}`}
-						src={question.image}
-					/>
-				{/if}
-				<div class="flex flex-col flex-grow gap-2 w-full">
-					{#each shuffledAnswers as answer}
-						<CheckboxAnswer
-							bind:answer
-							checked={question.checkedAnswers.includes(answer.id)}
-							bind:revealAnswers
-							changeCheckedCallback={(value) => {
-								question.checkedAnswers = value
-									? [...question.checkedAnswers, answer.id]
-									: question.checkedAnswers.filter((v) => v != answer.id);
-							}}
+				<div class="flex gap-y-2 flex-col md:flex-row w-full items-center">
+					{#if question.image}
+						<img
+							class="flex justify-center h-64 aspect-square m-4"
+							alt={`Fragebild ${question.number}`}
+							src={question.image}
 						/>
-					{/each}
+					{/if}
+					<div class="flex flex-col flex-grow gap-2 w-full">
+						{#each shuffledAnswers as answer, index}
+							<CheckboxAnswer
+								{answer}
+								checked={checkedAnswers.includes(answer.id)}
+								{revealAnswers}
+								changeCheckedCallback={(value) => {
+									if (!question) {
+										console.warn('Question is undefined');
+										return;
+									}
+									checkedAnswers = value
+										? [...checkedAnswers, answer.id]
+										: checkedAnswers.filter((v) => v != answer.id);
+								}}
+							/>
+						{/each}
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="flex-grow sm:hidden"></div>
-		<div class="w-full pt-8 pb-8">
-			<AnswerButton
-				bind:question
-				bind:answeredCountData
-				bind:completelyRight
-				bind:currentQuestionAnsweredCountData
-				bind:revealAnswers
-				{gotoNextQuestion}
-			/>
+			<div class="flex-grow sm:hidden"></div>
+			<div class="w-full pt-8 pb-8">
+				<AnswerButton
+					{question}
+					{checkedAnswers}
+					{completelyRight}
+					bind:revealAnswers
+					bind:answeredCountData
+					bind:currentQuestionAnsweredCountData
+					{gotoNextQuestion}
+				/>
+			</div>
 		</div>
 	</div>
-</div>
+{/if}
 
 {#if showSettings}
 	<QuizSettingsDialog onClose={() => (showSettings = false)} />

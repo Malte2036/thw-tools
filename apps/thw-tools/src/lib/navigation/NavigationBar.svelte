@@ -3,8 +3,8 @@
 	import logo from '$lib/icons/thw-mzgw.webp';
 	import { navigationItems, getCurrentTitleByPath } from '$lib/shared/navigation';
 
-	$: currentPath = $page.url.pathname;
-	$: isHomePage = currentPath === '/';
+	let currentPath = $derived($page.url.pathname);
+	let isHomePage = $derived(currentPath === '/');
 </script>
 
 {#if !isHomePage}
@@ -14,6 +14,6 @@
 			title={getCurrentTitleByPath(currentPath)}
 			navItems={navigationItems}
 			{currentPath}
-		/>
+		></thw-navigation-bar>
 	</div>
 {/if}

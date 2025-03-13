@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import LinkButton from '$lib/LinkButton.svelte';
 	import { QuestionType } from '$lib/model/question';
 	import QuizHead from '$lib/quiz/QuizHead.svelte';
@@ -10,13 +12,19 @@
 	import { getQuizTypeName } from '$lib/quiz/quizUtils';
 	import { version } from '$app/environment';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	let answeredCountData: AnsweredCountData | undefined;
-	let questionType: QuestionType;
+	let { data }: Props = $props();
 
-	$: questionType = data.questionType;
-	$: {
+	let answeredCountData: AnsweredCountData | undefined = $state();
+	let questionType: QuestionType = $state();
+
+	run(() => {
+		questionType = data.questionType;
+	});
+	run(() => {
 		// Refetch stats when question type changes
 		if (questionType) {
 			try {
@@ -25,7 +33,7 @@
 				console.warn('Could not add count');
 			}
 		}
-	}
+	});
 
 	function getDescriptionForQuestionType(questionType: QuestionType) {
 		const count = data.allQuestions.length;
@@ -43,7 +51,7 @@
 		}
 	}
 
-	$: jsonLd = {
+	let jsonLd = $derived({
 		'@context': 'https://schema.org',
 		'@type': 'ItemList',
 		name: getQuizTypeName(data.questionType),
@@ -74,7 +82,7 @@
 				height: '512'
 			}
 		}
-	};
+	});
 </script>
 
 <QuizHead questionType={data.questionType} question={undefined} />

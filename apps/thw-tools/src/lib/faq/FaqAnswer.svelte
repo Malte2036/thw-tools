@@ -1,12 +1,16 @@
 <script lang="ts">
-	export let text: string;
-	export let links: { href: string; text: string; title: string; external?: boolean }[] = [];
+	interface Props {
+		text: string;
+		links?: { href: string; text: string; title: string; external?: boolean }[];
+	}
+
+	let { text, links = [] }: Props = $props();
 
 	// Replace {{link}} placeholders with indexed versions {{0}}, {{1}}, etc.
-	$: processedText = links?.reduce(
+	let processedText = $derived(links?.reduce(
 		(text, _, index) => text.replace('{{link}}', `{{${index}}}`),
 		text
-	);
+	));
 	console.log('links', links);
 </script>
 

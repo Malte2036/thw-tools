@@ -5,9 +5,13 @@
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import { trackEvent } from '$lib/utils';
 
-	export let questionNumber: number;
-	export let questionCount: number;
-	export let gotoQuestionNumber: (newQuestionNumber: number) => void;
+	interface Props {
+		questionNumber: number;
+		questionCount: number;
+		gotoQuestionNumber: (newQuestionNumber: number) => void;
+	}
+
+	let { questionNumber, questionCount, gotoQuestionNumber }: Props = $props();
 
 	function askForQuestionNumber() {
 		trackEvent('Open Select Question Number');
@@ -32,7 +36,7 @@
 </script>
 
 <h3 class="flex flex-row justify-center items-center gap-2 text-gray-400 font-bold">
-	<div on:click={askForQuestionNumber} on:keydown={askForQuestionNumber} class="cursor-pointer">
+	<div onclick={askForQuestionNumber} onkeydown={askForQuestionNumber} class="cursor-pointer">
 		{questionNumber}/{questionCount}
 	</div>
 	<Button

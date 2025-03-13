@@ -1,12 +1,21 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
-	export let inputValue: string;
 
-	export let label: string | undefined = undefined;
-	export let placeholder: string | undefined = undefined;
 
-	export let type: HTMLInputAttributes['type'] = 'text';
+	interface Props {
+		inputValue: string;
+		label?: string | undefined;
+		placeholder?: string | undefined;
+		type?: HTMLInputAttributes['type'];
+	}
+
+	let {
+		inputValue = $bindable(),
+		label = undefined,
+		placeholder = undefined,
+		type = 'text'
+	}: Props = $props();
 </script>
 
 <div class="flex flex-col gap-1">

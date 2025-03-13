@@ -12,9 +12,9 @@
 		accuracy: number;
 	};
 
-	let categoryStats: CategorySummary[] = [];
-	let loading = true;
-	let error: string | null = null;
+	let categoryStats: CategorySummary[] = $state([]);
+	let loading = $state(true);
+	let error: string | null = $state(null);
 
 	async function loadCategoryStats() {
 		try {
