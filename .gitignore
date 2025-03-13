@@ -45,3 +45,7 @@ Thumbs.db
 
 # Turbo
 .turbo 
+
+
+.nx/cache
+.nx/workspace-data

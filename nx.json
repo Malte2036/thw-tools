@@ -1,0 +1,43 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "namedInputs": {
+    "sharedGlobals": [
+      "{workspaceRoot}/**/.env.*local"
+    ],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ]
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "{projectRoot}/dist/**",
+        "{projectRoot}/.svelte-kit/**",
+        "{projectRoot}/.next/**"
+      ],
+      "cache": true
+    },
+    "lint": {
+      "cache": true
+    },
+    "dev": {
+      "cache": false
+    },
+    "test": {
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "{projectRoot}/src/**/*.tsx",
+        "{projectRoot}/src/**/*.ts",
+        "{projectRoot}/test/**/*.ts",
+        "{projectRoot}/test/**/*.tsx"
+      ],
+      "cache": true
+    }
+  }
+}

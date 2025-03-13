@@ -11,22 +11,24 @@
     "dev:thw-tools": "cd apps/thw-tools && pnpm run dev",
     "dev:inventar": "cd apps/inventar && pnpm run dev",
     "dev": "concurrently \"pnpm dev:backend\" \"pnpm dev:thw-tools\" \"pnpm dev:inventar\"",
-    "build": "turbo run build",
-    "build:backend": "turbo run build --filter=thw-tools-backend",
-    "build:thw-tools": "turbo run build --filter=thw-tools",
-    "build:inventar": "turbo run build --filter=thw-inventar",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
-    "clean": "turbo run clean && rm -rf node_modules",
+    "build": "nx run-many -t build",
+    "build:backend": "nx build thw-tools-backend",
+    "build:thw-tools": "nx build thw-tools",
+    "build:inventar": "nx build thw-inventar",
+    "lint": "nx run-many -t lint",
+    "test": "nx run-many -t test",
+    "clean": "nx run-many -t clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md,svelte,js,jsx,json}\"",
     "prisma:generate": "cd apps/backend && pnpm prisma generate",
     "prisma:migrate:dev": "cd apps/backend && pnpm prisma migrate dev",
-    "prisma:studio": "cd apps/backend && pnpm prisma studio"
+    "prisma:studio": "cd apps/backend && pnpm prisma studio",
+    "graph": "nx graph"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
     "prettier": "^3.2.5",
     "prettier-plugin-svelte": "^3.2.1",
-    "turbo": "^2.0.0"
+    "turbo": "^2.0.0",
+    "nx": "20.5.0"
   }
 }
