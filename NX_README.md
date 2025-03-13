@@ -85,6 +85,104 @@ pnpm exec nx run thw-tools:dev
 pnpm exec nx run thw-tools-backend:start:dev
 ```
 
+## CI/CD Integration
+
+Nx provides powerful features for optimizing your CI/CD pipelines:
+
+### GitHub Actions Integration
+
+Create or update your GitHub Actions workflow file (`.github/workflows/ci.yml`):
+
+```yaml
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9.7.0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+
+      # Run lint on affected projects
+      - run: pnpm exec nx affected -t lint --parallel=3
+
+      # Run tests on affected projects
+      - run: pnpm exec nx affected -t test --parallel=3
+
+      # Build affected projects
+      - run: pnpm exec nx affected -t build --parallel=3
+```
+
+### Nx Cloud for Remote Caching
+
+For even faster builds, consider setting up Nx Cloud:
+
+1. Run `npx nx connect-to-nx-cloud` to connect your workspace to Nx Cloud
+2. Add the following to your CI configuration:
+
+```yaml
+# Additional step for GitHub Actions
+- name: Set up Nx Cloud
+  run: pnpm exec nx-cloud start-ci-run
+```
+
+### Distributed Task Execution
+
+For large monorepos, you can distribute task execution across multiple CI agents:
+
+```yaml
+# Example for GitHub Actions
+jobs:
+  agents:
+    runs-on: ubuntu-latest
+    name: Agent ${{ matrix.agent }}
+    strategy:
+      matrix:
+        agent: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9.7.0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Start Nx Agent ${{ matrix.agent }}
+        run: pnpm exec nx-cloud start-ci-run --agent --agent-number=${{ matrix.agent }}
+
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9.7.0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Start Nx Coordination
+        run: pnpm exec nx-cloud start-ci-run
+      - run: pnpm exec nx affected -t lint,test,build --parallel=3
+```
+
 ## Project Structure
 
 Our monorepo is organized as follows:

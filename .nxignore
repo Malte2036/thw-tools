@@ -1,0 +1,40 @@
+# Exclude node_modules
+node_modules
+
+# Exclude build artifacts
+dist
+.svelte-kit
+.next
+build
+
+# Exclude cache directories
+.turbo
+.nx
+
+# Exclude test files
+**/*.spec.ts
+**/*.test.ts
+**/*.spec.js
+**/*.test.js
+
+# Exclude configuration files
+**/*.config.js
+**/*.config.ts
+**/*.config.cjs
+**/*.config.mjs
+
+# Exclude documentation
+**/*.md
+**/*.mdx
+
+# Exclude Docker files
+**/Dockerfile
+**/.dockerignore
+
+# Exclude git files
+.git
+.gitignore
+
+# Exclude IDE files
+.vscode
+.idea 

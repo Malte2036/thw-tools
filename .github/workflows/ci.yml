@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Needed for Nx affected commands
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -21,7 +23,7 @@ jobs:
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 9.7.0
           run_install: false
 
       - name: Get pnpm store directory
@@ -41,11 +43,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build
-        run: pnpm build
+      # Determine what projects are affected by changes
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v3
 
-      - name: Lint
-        run: pnpm turbo run lint
+      # Run lint on affected projects
+      - name: Lint affected projects
+        run: pnpm exec nx affected -t lint --parallel=3
 
-      - name: Test
-        run: pnpm turbo run test
+      # Run tests on affected projects
+      - name: Test affected projects
+        run: pnpm exec nx affected -t test --parallel=3
+
+      # Build affected projects
+      - name: Build affected projects
+        run: pnpm exec nx affected -t build --parallel=3

@@ -1,0 +1,36 @@
+{
+	"name": "thw-tools",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "apps/thw-tools/src",
+	"projectType": "application",
+	"targets": {
+		"build": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "cd apps/thw-tools && pnpm build"
+			},
+			"dependsOn": ["^build"]
+		},
+		"dev": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "cd apps/thw-tools && pnpm dev"
+			}
+		},
+		"lint": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "cd apps/thw-tools && pnpm lint"
+			}
+		},
+		"test": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "cd apps/thw-tools && pnpm test"
+			}
+		}
+	},
+	"tags": [],
+	"implicitDependencies": [],
+	"explicitDependencies": ["web-components"]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "thw-tools-backend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/backend/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/backend && pnpm build"
+      }
+    },
+    "start:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/backend && pnpm start:dev"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/backend && pnpm lint"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/backend && pnpm test"
+      }
+    }
+  },
+  "tags": []
+}
