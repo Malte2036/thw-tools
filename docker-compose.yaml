@@ -1,0 +1,16 @@
+services:
+  # Inventar Frontend
+  inventar:
+    image: inventar:prod
+    build:
+      context: .
+      dockerfile: apps/inventar/Dockerfile
+      args:
+        PUBLIC_API_URL: ${PUBLIC_API_URL}
+        PUBLIC_KINDE_DOMAIN: ${KINDE_DOMAIN}
+    container_name: thw-inventar-frontend
+    environment:
+      NODE_ENV: production
+    ports:
+      - '3001:5173'
+    restart: always

@@ -31,6 +31,9 @@
     "@lit-labs/virtualizer": "^2.0.14",
     "lit": "^3.1.2"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-musl": "4.9.5"
+  },
   "description": "## VSCode editor support",
   "bugs": {
     "url": "https://github.com/malte2036/thw-tools-components/issues"
