@@ -5,9 +5,9 @@ export const UserIdSchema = z.string().brand<'UserId'>();
 
 export const UserSchema = z.object({
 	id: UserIdSchema,
-	firstName: z.string().optional(),
-	lastName: z.string().optional(),
-	picture: z.string().optional()
+	firstName: z.string().nullable().optional(),
+	lastName: z.string().nullable().optional(),
+	picture: z.string().nullable().optional()
 });
 export type User = z.infer<typeof UserSchema>;
 
