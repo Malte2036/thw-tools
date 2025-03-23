@@ -1,6 +1,6 @@
 <script lang="ts">
 	import logo from '$lib/icons/thw-mzgw.webp';
-	import LinkButton from '../lib/LinkButton.svelte';
+	import { LinkButton } from '@thw-tools/svelte-components';
 	import ChartSimpleIcon from '../lib/icons/ChartSimpleIcon.svelte';
 	import HearthPulseIcon from '../lib/icons/HearthPulseIcon.svelte';
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button } from '@thw-tools/svelte-components';
+	import Button from './Button.svelte';
 	import { trackEvent } from '@thw-tools/shared';
 
 	interface Props {
@@ -32,4 +32,4 @@
 	<Button {secondary} {disabled}>
 		{@render children?.()}
 	</Button>
-</a>
+</a> 

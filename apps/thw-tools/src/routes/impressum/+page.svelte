@@ -1,5 +1,5 @@
-<script>
-	import LinkButton from '$lib/LinkButton.svelte';
+<script lang="ts">
+	import { LinkButton } from '@thw-tools/svelte-components';
 </script>
 
 <svelte:head>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LinkButton from '$lib/LinkButton.svelte';
+	import { LinkButton } from '@thw-tools/svelte-components';
 	import Input from '$lib/Input.svelte';
 	import Select from '$lib/Select.svelte';
 	import { clothingInput } from '$lib/clothing/clothingInputStore';

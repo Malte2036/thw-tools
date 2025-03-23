@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LinkButton from '$lib/LinkButton.svelte';
+	import { LinkButton } from '@thw-tools/svelte-components';
 	import HomeIcon from '$lib/icons/HomeIcon.svelte';
 	import logo from '$lib/icons/thw-mzgw.webp';
 

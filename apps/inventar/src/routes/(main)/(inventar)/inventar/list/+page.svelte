@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Input from '$lib/Input.svelte';
-	import LinkButton from '$lib/LinkButton.svelte';
+	import { LinkButton } from '@thw-tools/svelte-components';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import Select from '$lib/Select.svelte';
 	import Table from '$lib/Table.svelte';

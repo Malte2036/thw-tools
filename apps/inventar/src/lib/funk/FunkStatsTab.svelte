@@ -6,7 +6,7 @@
 	import { Button } from '@thw-tools/svelte-components';
 	import Card from '$lib/Card.svelte';
 	import InfoItem from '$lib/InfoItem.svelte';
-	import LinkButton from '$lib/LinkButton.svelte';
+	import { LinkButton } from '@thw-tools/svelte-components';
 
 	function getBorrowedBatteryCount(): number {
 		return (

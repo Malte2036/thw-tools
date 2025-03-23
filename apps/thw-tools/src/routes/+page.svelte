@@ -1,6 +1,6 @@
 <script lang="ts">
 	import logo from '$lib/icons/thw-mzgw.webp';
-	import LinkButton from '../lib/LinkButton.svelte';
+	import { LinkButton } from '@thw-tools/svelte-components';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { onMount } from 'svelte';
 	import { navigationItems } from '$lib/shared/navigation';

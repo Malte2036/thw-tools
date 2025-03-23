@@ -3,7 +3,7 @@
 	import { Button } from '@thw-tools/svelte-components';
 	import Dialog from '$lib/Dialog.svelte';
 	import ErrorState from '$lib/ErrorDisplay.svelte';
-	import LinkButton from '$lib/LinkButton.svelte';
+	import { LinkButton } from '@thw-tools/svelte-components';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import type { PageData } from './$types';
 

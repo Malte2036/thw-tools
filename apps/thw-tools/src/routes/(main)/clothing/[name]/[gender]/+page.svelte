@@ -9,7 +9,6 @@
 		humanGenderToFriendlyString
 	} from '$lib/clothing/clothingConstantUtils';
 	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
-	import LinkButton from '$lib/LinkButton.svelte';
 	import ClothingSizesInput from '$lib/clothing/ClothingSizesInput.svelte';
 	import {
 		calculateMatchingClothingSizesForInput,
@@ -30,6 +29,7 @@
 	import ClothingInfo from '$lib/clothing/ClothingInfo.svelte';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
+	import { LinkButton } from '@thw-tools/svelte-components';
 
 	interface Props {
 		data: PageData;

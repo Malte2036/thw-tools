@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
 
-	import LinkButton from '$lib/LinkButton.svelte';
+	import { LinkButton } from '@thw-tools/svelte-components';
 	import { QuestionType } from '$lib/model/question';
 	import QuizHead from '$lib/quiz/QuizHead.svelte';
 	import { onMount } from 'svelte';

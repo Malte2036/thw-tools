@@ -84,41 +84,7 @@ Copy your component from the app to `packages/svelte-components/src/components/`
 
 ### 2.2 Update Component to Svelte 5
 
-1. Replace props interface with runes:
-
-```svelte
-<!-- Before -->
-interface Props {
-  secondary?: boolean;
-  disabled?: boolean;
-}
-
-let { secondary = false, disabled = false }: Props = $props();
-
-<!-- After -->
-let secondary = $props<boolean>(false);
-let disabled = $props<boolean>(false);
-```
-
-2. Replace `{@render children?.()}` with `<slot />`:
-
-```svelte
-<!-- Before -->
-{@render children?.()}
-
-<!-- After -->
-<slot />
-```
-
-3. Update state access with $ prefix:
-
-```svelte
-<!-- Before -->
-{disabled}
-
-<!-- After -->
-{$disabled}
-```
+1. Please do not update the implementation of the component
 
 ### 2.3 Export Component
 
