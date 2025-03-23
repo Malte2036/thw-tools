@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from './Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import Dialog from './Dialog.svelte';
 
 	interface Props {

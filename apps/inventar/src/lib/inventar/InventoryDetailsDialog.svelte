@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { InventoryItem } from '$lib/api/inventoryModels';
-    import Button from '$lib/Button.svelte';
+    import { Button } from '@thw-tools/svelte-components';
     import Dialog from '$lib/Dialog.svelte';
 
     interface Props {

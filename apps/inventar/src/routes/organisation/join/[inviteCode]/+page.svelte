@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import Dialog from '$lib/Dialog.svelte';
 	import ErrorState from '$lib/ErrorDisplay.svelte';
 	import LinkButton from '$lib/LinkButton.svelte';

@@ -3,7 +3,7 @@
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { user } from '$lib/shared/stores/userStore';
 	import { getLastFunkItemEventByFunkItemInternalId } from '$lib/shared/stores/funkStore';
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import Card from '$lib/Card.svelte';
 	import InfoItem from '$lib/InfoItem.svelte';
 	import LinkButton from '$lib/LinkButton.svelte';

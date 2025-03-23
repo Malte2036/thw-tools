@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Input from '$lib/Input.svelte';
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import Dialog from '$lib/Dialog.svelte';
 
 	interface Props {

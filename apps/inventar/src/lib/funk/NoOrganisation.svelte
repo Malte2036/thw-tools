@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { createOrganisation } from '$lib/api/organisationApi';
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import Input from '$lib/Input.svelte';
 	import Card from '$lib/Card.svelte';
 	import Dialog from '$lib/Dialog.svelte';

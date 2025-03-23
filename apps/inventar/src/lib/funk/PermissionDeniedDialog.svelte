@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import Dialog from '$lib/Dialog.svelte';
 
 	export let onClose: () => void;

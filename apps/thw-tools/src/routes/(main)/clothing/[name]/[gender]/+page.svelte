@@ -25,7 +25,7 @@
 	} from '$lib/clothing/clothing';
 	import { clothingInput } from '$lib/clothing/clothingInputStore';
 	import { goto } from '$app/navigation';
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import ClothingResultCard from '$lib/clothing/ClothingResultCard.svelte';
 	import ClothingInfo from '$lib/clothing/ClothingInfo.svelte';
 	import { page } from '$app/stores';

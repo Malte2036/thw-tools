@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import Dialog from '$lib/Dialog.svelte';
 	import Toggle from '$lib/Toggle.svelte';
 	import Input from '$lib/Input.svelte';

@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"@thw-tools/shared": "workspace:*",
+		"@thw-tools/svelte-components": "workspace:*",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {

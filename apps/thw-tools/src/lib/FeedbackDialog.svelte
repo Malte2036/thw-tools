@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Dialog from '$lib/Dialog.svelte';
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 
 	interface Props {
 		onClose: () => void;

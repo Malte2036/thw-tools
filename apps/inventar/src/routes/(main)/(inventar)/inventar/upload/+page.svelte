@@ -2,7 +2,7 @@
 	import { goto, invalidateAll } from '$app/navigation';
 	import { uploadInventoryTHWInExportFile } from '$lib/api/inventoryApi';
 	import type { ImportInventoryItemsResult } from '$lib/api/inventoryModels';
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
 	import LinkButton from '$lib/LinkButton.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';

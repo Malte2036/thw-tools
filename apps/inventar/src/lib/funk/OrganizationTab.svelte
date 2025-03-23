@@ -3,7 +3,7 @@
 	import { userToFriendlyString } from '$lib/api/funkModels';
 	import { generateInviteLink, type Organisation, type User } from '$lib/api/organisationModels';
 	import { leaveOrganisation } from '$lib/api/organisationApi';
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { user } from '$lib/shared/stores/userStore';
 	import Table from '$lib/Table.svelte';
