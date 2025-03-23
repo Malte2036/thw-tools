@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getFunkItemByInternalId } from '$lib/shared/stores/funkStore';
-	import { dateToFriendlyString } from '$lib/utils';
+	import { dateToFriendlyString } from '@thw-tools/shared';
 	import {
 		batteryCountToFriendlyString,
 		eventTypeToEmoji,

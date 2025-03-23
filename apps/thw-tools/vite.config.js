@@ -6,7 +6,8 @@ const config = {
 	plugins: [sveltekit()],
 	resolve: {
 		alias: {
-			'@web-components': resolve('../../packages/web-components')
+			'@web-components': resolve('../../packages/web-components'),
+			'@thw-tools/shared': resolve('../../packages/shared')
 		}
 	}
 };

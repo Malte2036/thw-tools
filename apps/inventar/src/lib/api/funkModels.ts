@@ -1,5 +1,5 @@
 import { BRAND, z } from 'zod';
-import { dateToFriendlyString, searchStringIsInArray } from '$lib/utils';
+import { dateToFriendlyString, searchStringIsInArray } from '@thw-tools/shared';
 import { UserIdSchema, type User } from './organisationModels';
 
 export const inventarNummerRegex = /^\d{4}-S?\d{6}$/;

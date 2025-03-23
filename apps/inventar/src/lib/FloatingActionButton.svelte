@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { trackEvent } from './utils';
+	import { trackEvent } from '@thw-tools/shared';
 
 	interface Props {
 		click?: (() => void) | undefined;

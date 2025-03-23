@@ -1,18 +1,17 @@
 <script lang="ts">
-	import '@web-components/src';
 	import { dev, version } from '$app/environment';
-	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
-	import '../app.css';
 	import { page } from '$app/stores';
+	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
 	import Banner from '$lib/Banner.svelte';
-	import Dialog from '$lib/Dialog.svelte';
-	import Button from '$lib/Button.svelte';
+	import FeedbackDialog from '$lib/FeedbackDialog.svelte';
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 	import PwaUpdateNotification from '$lib/PWAUpdateNotification.svelte';
-	import FeedbackDialog from '$lib/FeedbackDialog.svelte';
+	import { trackBuildIdentity } from '$lib/utils';
+	import { formatDate } from '@thw-tools/shared';
+	import '@web-components/src';
 	import { onMount } from 'svelte';
-	import { formatDate, trackIdentity } from '$lib/utils';
+	import '../app.css';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -23,7 +22,7 @@
 	let showInstallPWAHelp = $state(false);
 
 	onMount(() => {
-		trackIdentity();
+		trackBuildIdentity();
 	});
 
 	// hide on /quiz/{questionType}/{questionNumber}

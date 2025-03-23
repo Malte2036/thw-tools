@@ -17,7 +17,8 @@ const config = {
 			relative: false
 		},
 		alias: {
-			'@web-components': path.resolve(__dirname, '../../packages/web-components')
+			'@web-components': path.resolve(__dirname, '../../packages/web-components'),
+			'@thw-tools/shared': path.resolve(__dirname, '../../packages/shared')
 		}
 	}
 };

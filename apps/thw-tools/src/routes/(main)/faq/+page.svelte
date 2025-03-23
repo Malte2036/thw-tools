@@ -6,7 +6,7 @@
 	import InstallPwaDialog from '$lib/InstallPWADialog.svelte';
 	import FeedbackDialog from '$lib/FeedbackDialog.svelte';
 	import { version } from '$app/environment';
-	import { formatDate } from '$lib/utils';
+	import { formatDate } from '@thw-tools/shared';
 
 	interface Props {
 		data: PageData;

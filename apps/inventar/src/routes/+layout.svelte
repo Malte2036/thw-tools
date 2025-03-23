@@ -10,7 +10,7 @@
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 	import PWAUpdateNotification from '$lib/PWAUpdateNotification.svelte';
-	import { dateToFriendlyString } from '$lib/utils';
+	import { dateToFriendlyString } from '@thw-tools/shared';
 	import '../app.css';
 	interface Props {
 		children?: import('svelte').Snippet;

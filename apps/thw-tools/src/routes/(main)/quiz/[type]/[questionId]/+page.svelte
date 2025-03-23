@@ -15,7 +15,7 @@
 	import QuizHead from '$lib/quiz/QuizHead.svelte';
 	import QuizSettingsDialog from '$lib/quiz/QuizSettingsDialog.svelte';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
-	import { randomInt, shuffle } from '$lib/utils';
+	import { randomInt, shuffle } from '@thw-tools/shared';
 	import type { AfterNavigate } from '@sveltejs/kit';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';

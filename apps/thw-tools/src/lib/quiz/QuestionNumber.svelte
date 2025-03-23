@@ -3,7 +3,7 @@
 	import ShuffleIcon from '$lib/icons/ShuffleIcon.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
-	import { trackEvent } from '$lib/utils';
+	import { trackEvent } from '@thw-tools/shared';
 
 	interface Props {
 		questionNumber: number;

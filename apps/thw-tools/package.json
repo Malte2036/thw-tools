@@ -16,6 +16,7 @@
 		"sync": "svelte-kit sync"
 	},
 	"dependencies": {
+		"@thw-tools/shared": "workspace:*",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {

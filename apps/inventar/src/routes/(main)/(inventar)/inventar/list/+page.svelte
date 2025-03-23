@@ -5,7 +5,7 @@
 	import Select from '$lib/Select.svelte';
 	import Table from '$lib/Table.svelte';
 	import type { InventoryItem } from '$lib/api/inventoryModels';
-	import { searchStringIsInArray } from '$lib/utils';
+	import { searchStringIsInArray } from '@thw-tools/shared';
 	import { apiMeta } from '$lib/shared/stores/apiMetaStore';
 	import { inventory } from '$lib/shared/stores/inventoryStore';
 	import {

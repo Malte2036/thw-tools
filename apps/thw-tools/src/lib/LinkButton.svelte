@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from './Button.svelte';
-	import { trackEvent } from './utils';
+	import { trackEvent } from '@thw-tools/shared';
 
 	interface Props {
 		url: string | URL;

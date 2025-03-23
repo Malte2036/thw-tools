@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getOrganisationMemberByInternalId, user } from '$lib/shared/stores/userStore';
-	import { dateToFriendlyString } from '$lib/utils';
+	import { dateToFriendlyString } from '@thw-tools/shared';
 	import { db } from '$lib/utils/db';
 	import {
 		eventTypeToEmoji,

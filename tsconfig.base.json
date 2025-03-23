@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@web-components/*": ["packages/web-components/*"]
+      "@web-components/*": ["packages/web-components/*"],
+      "@thw-tools/shared/*": ["packages/shared/*"]
     },
     "esModuleInterop": true,
     "skipLibCheck": true,
