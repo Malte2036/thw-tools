@@ -47,50 +47,36 @@ pnpm dev:inventar    # Runs SvelteKit inventar frontend
 pnpm build
 
 # Build specific applications
-pnpm build:backend     # Build thw-tools-backend
-pnpm build:thw-tools   # Build thw-tools
-pnpm build:inventar    # Build thw-inventar
+pnpm build:backend
+pnpm build:thw-tools
+pnpm build:inventar
 ```
 
-### Other Commands
+### Common Commands
 
 ```bash
-# Run linting across all workspaces
-pnpm lint
-
-# Run tests across all workspaces
-pnpm test
-
-# Format code using Prettier
-pnpm format
-
-# Clean all build artifacts and node_modules
-pnpm clean
+pnpm lint           # Run linting
+pnpm test          # Run tests
+pnpm format        # Format code
+pnpm clean         # Clean build artifacts and node_modules
 ```
 
-## Working with the Monorepo
-
-### Adding Dependencies
+## Working with Dependencies
 
 ```bash
 # Add a dependency to a specific workspace
 pnpm --filter <workspace-name> add <package-name>
 
-# Examples:
-pnpm --filter thw-tools-backend add @nestjs/jwt
-pnpm --filter thw-tools add svelte-navigator
-pnpm --filter thw-inventar add dexie
-
-# Add a development dependency to a specific workspace
+# Add a development dependency
 pnpm --filter <workspace-name> add -D <package-name>
 
 # Add a dependency to all workspaces
 pnpm add -w <package-name>
 ```
 
-### Using Shared Packages
+### Using Shared Components
 
-The component library in `packages/web-components` can be used in any of the frontend applications. Import components using the path alias:
+Import components from the shared component library using:
 
 ```typescript
 import { Button } from '@web-components/Button';
@@ -99,7 +85,3 @@ import { Button } from '@web-components/Button';
 ## Workspace Management
 
 This monorepo uses PNPM Workspaces and Turborepo for efficient dependency management and build optimization.
-
-## License
-
-[MIT](LICENSE)
