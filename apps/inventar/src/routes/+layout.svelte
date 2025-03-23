@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '@web-components/src';
+	import '@thw-tools/web-components/src';
 
 	import { dev, version } from '$app/environment';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';

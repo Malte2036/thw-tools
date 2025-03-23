@@ -1,4 +1,6 @@
 <script lang="ts">
+	import '@thw-tools/web-components/src';
+	
 	import { dev, version } from '$app/environment';
 	import { page } from '$app/stores';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
@@ -9,7 +11,6 @@
 	import PwaUpdateNotification from '$lib/PWAUpdateNotification.svelte';
 	import { trackBuildIdentity } from '$lib/utils';
 	import { formatDate } from '@thw-tools/shared';
-	import '@web-components/src';
 	import { onMount } from 'svelte';
 	import '../app.css';
 	interface Props {
