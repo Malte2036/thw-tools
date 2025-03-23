@@ -3,43 +3,61 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN npm install -g pnpm@latest
 
-# Set up the monorepo structure
+# Build stage - install all dependencies and build the app
+FROM base AS builder
 WORKDIR /app
-# Copy root workspace files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-# Copy tsconfig base
-COPY tsconfig.base.json ./
-# Copy the web-components package
-COPY packages/web-components ./packages/web-components/
-# Copy the thw-tools app
-COPY apps/thw-tools ./apps/thw-tools/
 
-# Install dependencies for the entire monorepo
-FROM base AS deps
+# Copy workspace configuration files
+COPY pnpm-workspace.yaml ./
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+COPY nx.json ./
+COPY tsconfig.base.json ./
+
+# Copy packages first to leverage layer caching
+COPY packages/ ./packages/
+
+# Copy the app package.json (for dependencies)
+COPY apps/thw-tools/package.json ./apps/thw-tools/
+
+# Install dependencies with cache mount
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-# Build the web-components package first
-FROM deps AS build-web-components
-WORKDIR /app/packages/web-components
-RUN pnpm build
+# Copy the remaining source code
+COPY . .
 
-# Build the thw-tools app
-FROM build-web-components AS build-app
-WORKDIR /app/apps/thw-tools
-RUN pnpm build
+# Define ARGs for build-time environment variables
+ARG PUBLIC_API_URL
+ARG PUBLIC_KINDE_API_CLIENT
+ARG PUBLIC_KINDE_DOMAIN
+ARG PUBLIC_UMAMI_ENDPOINT
+ARG PUBLIC_UMAMI_WEBSITEID
 
-# Production image
-FROM node:20-slim AS production
+# Set environment variables for the build process
+ENV PUBLIC_API_URL=${PUBLIC_API_URL}
+ENV PUBLIC_KINDE_API_CLIENT=${PUBLIC_KINDE_API_CLIENT}
+ENV PUBLIC_KINDE_DOMAIN=${PUBLIC_KINDE_DOMAIN}
+ENV PUBLIC_UMAMI_ENDPOINT=${PUBLIC_UMAMI_ENDPOINT}
+ENV PUBLIC_UMAMI_WEBSITEID=${PUBLIC_UMAMI_WEBSITEID}
+
+# Build the project
+RUN pnpm build:thw-tools
+
+# Use pnpm deploy to create a production bundle with only the necessary dependencies
+RUN pnpm deploy --filter=thw-tools --prod /tmp/prod
+
+# Production stage
+FROM node:20-slim
 WORKDIR /app
 
-# Copy only the built app and its dependencies
-COPY --from=build-app /app/apps/thw-tools/build ./build
-COPY --from=build-app /app/apps/thw-tools/package.json ./
+# Copy just what we need from the builder stage
+COPY --from=builder /tmp/prod/package.json ./package.json
+COPY --from=builder /tmp/prod/node_modules ./node_modules
+COPY --from=builder /app/apps/thw-tools/build ./build
 
-# Install only production dependencies
-RUN npm install -g pnpm@latest
-RUN pnpm install --prod --ignore-scripts
-
-EXPOSE 8000
+# Set environment variables
 ENV NODE_ENV=production
+
+# Expose and run
+EXPOSE 3000
 CMD ["node", "build"]

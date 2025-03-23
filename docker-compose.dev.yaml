@@ -6,9 +6,9 @@ services:
     image: postgres:16-alpine
     container_name: thw-tools-postgres-dev
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-thwtools}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: thwtools
     ports:
       - '5432:5432'
     volumes:
@@ -19,87 +19,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # Backend service in development mode
-  backend:
-    build:
-      context: .
-      dockerfile: apps/backend/Dockerfile
-      target: builder # Use the builder stage for development
-    container_name: thw-tools-backend-dev
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      PORT: 3000
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_USERNAME: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DATABASE: ${POSTGRES_DB:-thwtools}
-      KINDE_DOMAIN: ${KINDE_DOMAIN:-https://auth.thw-tools.de}
-      NODE_ENV: development
-    ports:
-      - '3000:3000'
-    volumes:
-      - ./apps/backend:/app
-      - /app/node_modules
-    command: npm run start:dev
-    restart: unless-stopped
-
-  # Web Components development
-  web-components:
-    image: node:20-slim
-    container_name: thw-web-components-dev
-    working_dir: /app
-    volumes:
-      - ./packages/web-components:/app
-      - web_components_node_modules:/app/node_modules
-    environment:
-      NODE_ENV: development
-    command: sh -c "npm install -g pnpm && pnpm install && pnpm build:watch"
-
-  # THW-Tools Frontend in development mode
-  thw-tools:
-    image: node:20-slim
-    container_name: thw-tools-frontend-dev
-    depends_on:
-      - backend
-      - web-components
-    working_dir: /app
-    volumes:
-      - ./apps/thw-tools:/app
-      - thw_tools_node_modules:/app/node_modules
-      - ./packages/web-components:/packages/web-components
-    environment:
-      PUBLIC_API_URL: http://backend:3000
-      NODE_ENV: development
-    ports:
-      - '8000:5173' # Vite dev server port
-    command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
-
-  # Inventar Frontend in development mode
-  inventar:
-    image: node:20-slim
-    container_name: thw-inventar-frontend-dev
-    depends_on:
-      - backend
-      - web-components
-    working_dir: /app
-    volumes:
-      - ./apps/inventar:/app
-      - inventar_node_modules:/app/node_modules
-      - ./packages/web-components:/packages/web-components
-    environment:
-      PUBLIC_API_URL: http://backend:3000
-      PUBLIC_KINDE_DOMAIN: ${KINDE_DOMAIN:-https://auth.thw-tools.de}
-      NODE_ENV: development
-    ports:
-      - '3001:5173' # Vite dev server port
-    command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
-
 volumes:
   postgres_data:
     name: thw-tools-postgres-dev-data
-  web_components_node_modules:
-  thw_tools_node_modules:
-  inventar_node_modules:

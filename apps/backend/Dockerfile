@@ -1,23 +1,56 @@
-FROM node:20-alpine AS builder
+FROM node:20-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN apt-get update && apt-get install -y curl python3 make g++ && \
+    corepack enable
+
+# Build stage - install all dependencies and build the app
+FROM base AS builder
 WORKDIR /app
-RUN apk add --no-cache python3 make g++
 
-COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm && pnpm install
+# Copy workspace configuration files
+COPY pnpm-workspace.yaml ./
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+COPY nx.json ./
+COPY tsconfig.base.json ./
 
+# Copy packages first to leverage layer caching
+COPY packages/ ./packages/
+
+# Copy the app package.json (for dependencies)
+COPY apps/backend/package.json ./apps/backend/
+
+# Install dependencies with cache mount
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+# Copy the remaining source code
 COPY . .
-RUN npx prisma generate
-RUN pnpm run build
-RUN pnpm prune --prod
 
-FROM node:20-alpine
+# Generate Prisma client
+RUN cd apps/backend && npx prisma generate
+
+# Build the project
+RUN pnpm build:backend
+
+# Production stage
+FROM base
 WORKDIR /app
 
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/pnpm-lock.yaml ./
+# Install runtime dependencies only, and generate Prisma client again in the final image
+COPY apps/backend/package.json ./
+COPY apps/backend/prisma ./prisma
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod
+RUN npx prisma generate
 
-EXPOSE ${PORT}
+# Copy compiled application
+COPY --from=builder /app/apps/backend/dist ./dist
+
+# Set environment variables
+ENV NODE_ENV=production
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Start the application
 CMD ["node", "dist/main"]

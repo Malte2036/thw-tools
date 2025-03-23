@@ -1,4 +1,41 @@
 services:
+  # Backend API
+  # backend:
+  #   image: backend:prod
+  #   build:
+  #     context: .
+  #     dockerfile: apps/backend/Dockerfile
+  #   environment:
+  #     NODE_ENV: production
+  #     DATABASE_URL: ${DATABASE_URL}
+  #     KINDE_DOMAIN: ${KINDE_DOMAIN}
+  #   ports:
+  #     - '3000:3000'
+  #   restart: always
+
+  # THW-Tools Frontend
+  thw-tools:
+    image: thw-tools:prod
+    build:
+      context: .
+      dockerfile: apps/thw-tools/Dockerfile
+      args:
+        PUBLIC_API_URL: ${PUBLIC_API_URL}
+        PUBLIC_UMAMI_ENDPOINT: ${PUBLIC_UMAMI_ENDPOINT}
+        PUBLIC_UMAMI_WEBSITEID: ${PUBLIC_UMAMI_WEBSITEID_THW_TOOLS}
+    container_name: thw-tools-frontend
+    environment:
+      NODE_ENV: production
+      PUBLIC_API_URL: ${PUBLIC_API_URL}
+      PUBLIC_UMAMI_ENDPOINT: ${PUBLIC_UMAMI_ENDPOINT}
+      PUBLIC_UMAMI_WEBSITEID: ${PUBLIC_UMAMI_WEBSITEID_THW_TOOLS}
+
+    # depends_on:
+    #   - backend
+    ports:
+      - '3001:3000'
+    restart: always
+
   # Inventar Frontend
   inventar:
     image: inventar:prod
@@ -7,10 +44,15 @@ services:
       dockerfile: apps/inventar/Dockerfile
       args:
         PUBLIC_API_URL: ${PUBLIC_API_URL}
-        PUBLIC_KINDE_DOMAIN: ${KINDE_DOMAIN}
+        PUBLIC_KINDE_API_CLIENT: ${PUBLIC_KINDE_API_CLIENT}
+        PUBLIC_KINDE_DOMAIN: ${PUBLIC_KINDE_DOMAIN}
+        PUBLIC_UMAMI_ENDPOINT: ${PUBLIC_UMAMI_ENDPOINT}
+        PUBLIC_UMAMI_WEBSITEID: ${PUBLIC_UMAMI_WEBSITEID_INVENTAR}
     container_name: thw-inventar-frontend
     environment:
       NODE_ENV: production
+    # depends_on:
+    #   - backend
     ports:
-      - '3001:5173'
+      - '3002:3000'
     restart: always
