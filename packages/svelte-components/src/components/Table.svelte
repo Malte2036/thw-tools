@@ -10,19 +10,19 @@
 				props: Record<string, any>;
 		  };
 
-	interface Props {
+	let {
+		header = [],
+		values = [],
+		onValueClick = undefined,
+		selectedIndex = $bindable(undefined),
+		height = 600
+	} = $props<{
 		header: string[];
 		values: TableCell[][];
 		onValueClick?: ((row: TableCell[], index: number) => void) | undefined;
 		selectedIndex?: number | undefined;
-	}
-
-	let {
-		header,
-		values,
-		onValueClick = undefined,
-		selectedIndex = $bindable(undefined)
-	}: Props = $props();
+		height?: number;
+	}>();
 
 	function handleRowClick(event: CustomEvent<{ row: TableCell[]; index: number }>) {
 		const { row, index } = event.detail;
@@ -33,4 +33,4 @@
 	}
 </script>
 
-<thw-table {header} {values} {selectedIndex} height={600} onrow-click={handleRowClick}></thw-table>
+<thw-table {header} {values} {selectedIndex} {height} onrow-click={handleRowClick}></thw-table> 

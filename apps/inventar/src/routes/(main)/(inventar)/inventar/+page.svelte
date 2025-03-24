@@ -9,11 +9,10 @@
 	import ListIcon from '$lib/icons/ListIcon.svelte';
 	import UploadIcon from '$lib/icons/UploadIcon.svelte';
 	import InventoryDetailsDialog from '$lib/inventar/InventoryDetailsDialog.svelte';
-	import { LinkButton, Tabs } from '@thw-tools/svelte-components';
+	import { LinkButton, Tabs, Table } from '@thw-tools/svelte-components';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { inventory } from '$lib/shared/stores/inventoryStore';
-	import Table from '$lib/Table.svelte';
 	import { db } from '$lib/utils/db';
 
 	let inventoryItem: InventoryItem | undefined = $state();

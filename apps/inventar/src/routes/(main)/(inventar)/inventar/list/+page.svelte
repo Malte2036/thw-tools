@@ -3,7 +3,7 @@
 	import { LinkButton } from '@thw-tools/svelte-components';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import Select from '$lib/Select.svelte';
-	import Table from '$lib/Table.svelte';
+	import { Table } from '@thw-tools/svelte-components';
 	import type { InventoryItem } from '$lib/api/inventoryModels';
 	import { searchStringIsInArray } from '@thw-tools/shared';
 	import { apiMeta } from '$lib/shared/stores/apiMetaStore';
@@ -16,6 +16,7 @@
 	import { goto } from '$app/navigation';
 	import type { SvelteComponent } from 'svelte';
 	import InventoryFilterDialog from '$lib/inventar/InventoryFilterDialog.svelte';
+	import ErrorState from '$lib/ErrorDisplay.svelte';
 
 	type TableCell =
 		| string

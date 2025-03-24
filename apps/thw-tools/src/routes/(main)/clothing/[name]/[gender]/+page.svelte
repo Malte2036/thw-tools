@@ -2,7 +2,7 @@
 	import { run } from 'svelte/legacy';
 
 	import type { PageData } from './$types';
-	import Table from '$lib/Table.svelte';
+	import { Table } from '@thw-tools/svelte-components';
 	import {
 		humanMeasurementToFriendlyName,
 		clothingNameToFriendlyName,
