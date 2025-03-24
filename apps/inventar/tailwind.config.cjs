@@ -2,7 +2,10 @@ import tailwindcssMotion from 'tailwindcss-motion';
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-	content: ['./src/**/*.{html,js,svelte,ts}'],
+	content: [
+		'./src/**/*.{html,js,svelte,ts}',
+		'../../packages/svelte-components/src/**/*.{html,js,svelte,ts}'
+	],
 	theme: {
 		extend: {
 			colors: {
