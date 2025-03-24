@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
 
-	import Input from '$lib/Input.svelte';
+	import { Input } from '@thw-tools/svelte-components';
 	import { funk } from '$lib/shared/stores/funkStore';
 	import { getOrganisationMemberByInternalId, user } from '$lib/shared/stores/userStore';
 	import { isSearchStringInFunkItemEventBulk, type FunkItemEventBulk } from '../api/funkModels';

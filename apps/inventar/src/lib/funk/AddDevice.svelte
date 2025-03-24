@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { bulkCreateFunkItemEvents } from '$lib/api/funkApi';
-	import { Button } from '@thw-tools/svelte-components';
+	import { Button, Input } from '@thw-tools/svelte-components';
 	import ManuelDeviceIdInput from '$lib/funk/ManuelDeviceIdInput.svelte';
 	import QrScanner from '$lib/funk/QRScanner.svelte';
-	import Input from '$lib/Input.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import {
 		funk,
