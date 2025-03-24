@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import ErrorState from '$lib/ErrorDisplay.svelte';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
-	import Tabs from '$lib/Tabs.svelte';
+	import { Tabs } from '@thw-tools/svelte-components';
 	import AddDevice from '$lib/funk/AddDevice.svelte';
 	import FunkAdvancedTab from '$lib/funk/FunkAdvancedTab.svelte';
 	import FunkBulkHistoryTab from '$lib/funk/FunkBulkHistoryTab.svelte';
