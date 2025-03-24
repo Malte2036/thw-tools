@@ -82,9 +82,26 @@ packages/
 
 Copy your component from the app to `packages/svelte-components/src/components/`.
 
-### 2.2 Update Component to Svelte 5
+### 2.2 Update Componnet to Svelte 5 
 
-1. Please do not update the implementation of the component
+svelte 4:
+```typescript
+<slot name="foo"/>
+<hr />
+<slot name="bar"/>
+```
+
+svelte 5
+```typescript
+<script>
+	let { foo, bar } = $props();
+</script>
+
+{@render foo?.()}
+<hr />
+{@render bar?.()}
+```
+
 
 ### 2.3 Export Component
 
@@ -119,6 +136,16 @@ import Button from '$lib/Button.svelte';
 // After
 import { Button } from '@thw-tools/svelte-components';
 ```
+
+#### 3.2.1 Migrate to svelte 5
+
+If the component is used with the svelte 4 slot syntax, migrate it to svelte 5 snippets:
+
+```svelte5
+{#snippet content()}<div>...</div>{/snippet}
+```
+
+We do not change other logic!
 
 ### 3.3 Remove Local Component
 

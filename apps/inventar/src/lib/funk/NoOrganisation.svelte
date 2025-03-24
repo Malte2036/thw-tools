@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { createOrganisation } from '$lib/api/organisationApi';
-	import { Button } from '@thw-tools/svelte-components';
+	import { Button, Dialog } from '@thw-tools/svelte-components';
 	import Input from '$lib/Input.svelte';
 	import Card from '$lib/Card.svelte';
-	import Dialog from '$lib/Dialog.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 
 	let name: string = $state('');
@@ -70,9 +69,10 @@
 
 {#if showConfirmDialog}
 	<Dialog title="Organisation erstellen">
-		<div slot="content" class="flex flex-col gap-4">
-			<div>
-				Bist du sicher, dass du eine neue Organisation mit dem Namen <span class="font-bold"
+		{#snippet content()}
+			<div class="flex flex-col gap-4">
+				<div>
+					Bist du sicher, dass du eine neue Organisation mit dem Namen <span class="font-bold"
 					>{name}</span
 				> erstellen möchtest?
 			</div>
@@ -81,9 +81,12 @@
 				Einladungslink zu dieser Organisation.
 			</div>
 		</div>
-		<div slot="footer" class="flex gap-4">
-			<Button secondary click={() => (showConfirmDialog = false)}>Abbrechen</Button>
-			<Button click={createOrg}>Organisation erstellen</Button>
-		</div>
-	</Dialog>
+		{/snippet}
+		{#snippet footer()}
+			<div class="flex gap-4">
+				<Button secondary click={() => (showConfirmDialog = false)}>Abbrechen</Button>
+				<Button click={createOrg}>Organisation erstellen</Button>
+			</div>
+		{/snippet}
+</Dialog>
 {/if}

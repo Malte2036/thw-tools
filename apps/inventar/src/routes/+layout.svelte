@@ -5,8 +5,7 @@
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
 
 	import Banner from '$lib/Banner.svelte';
-	import { Button } from '@thw-tools/svelte-components';
-	import Dialog from '$lib/Dialog.svelte';
+	import { Button, Dialog } from '@thw-tools/svelte-components';
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 	import PWAUpdateNotification from '$lib/PWAUpdateNotification.svelte';
@@ -78,7 +77,7 @@
 
 	{#if showFeedback}
 		<Dialog title="Feedback">
-			<div slot="content">
+			{#snippet content()}
 				<div class="flex flex-col gap-2">
 					<div>Du hast Ideen für neue Tools, weitere Quizfragen oder Feedback?</div>
 					<div>
@@ -91,10 +90,12 @@
 						> (Malte Sehmer).
 					</div>
 				</div>
-			</div>
-			<div slot="footer">
-				<Button click={() => (showFeedback = false)}>Schließen</Button>
-			</div>
+			{/snippet}
+			{#snippet footer()}
+				<div>
+					<Button click={() => (showFeedback = false)}>Schließen</Button>
+				</div>
+			{/snippet}
 		</Dialog>
 	{/if}
 

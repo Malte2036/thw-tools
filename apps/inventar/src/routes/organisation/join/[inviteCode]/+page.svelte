@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Button } from '@thw-tools/svelte-components';
-	import Dialog from '$lib/Dialog.svelte';
+	import { Button, Dialog } from '@thw-tools/svelte-components';
 	import ErrorState from '$lib/ErrorDisplay.svelte';
 	import { LinkButton } from '@thw-tools/svelte-components';
 	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
@@ -27,17 +26,21 @@
 		{#if organisation}
 			{#if showSuccessDialog}
 				<Dialog title="Organisation beigetreten">
-					<div slot="content" class="flex flex-col gap-2">
-						<div>
-							Du bist erfolgreich der Organisation "<span class="font-bold"
-								>{organisation.name}</span
+					{#snippet content()}
+						<div class="flex flex-col gap-2">
+							<div>
+								Du bist erfolgreich der Organisation "<span class="font-bold"
+									>{organisation.name}</span
 							>" mit <span class="font-bold">{organisation.members.length} Mitgliedern</span>
 							beigetreten.
+							</div>
 						</div>
-					</div>
-					<div slot="footer">
-						<Button click={handleClose}>Zur Funkgeräteliste</Button>
-					</div>
+					{/snippet}
+					{#snippet footer()}
+						<div>
+							<Button click={handleClose}>Zur Funkgeräteliste</Button>
+						</div>
+					{/snippet}
 				</Dialog>
 			{/if}
 		{:else}
