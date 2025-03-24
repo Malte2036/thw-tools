@@ -2,7 +2,7 @@
 	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
 	import ErrorState from '$lib/ErrorDisplay.svelte';
-	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
+	import { LoadingSpinner } from '@thw-tools/svelte-components';
 	import { Tabs } from '@thw-tools/svelte-components';
 	import AddDevice from '$lib/funk/AddDevice.svelte';
 	import FunkAdvancedTab from '$lib/funk/FunkAdvancedTab.svelte';

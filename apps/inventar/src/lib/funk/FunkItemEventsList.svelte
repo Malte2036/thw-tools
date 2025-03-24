@@ -4,7 +4,7 @@
 	import { getFunkItemEvents } from '$lib/api/funkApi';
 	import ErrorState from '$lib/ErrorDisplay.svelte';
 	import Input from '$lib/Input.svelte';
-	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
+	import { LoadingSpinner } from '@thw-tools/svelte-components';
 	import { getOrganisationMemberByInternalId } from '$lib/shared/stores/userStore';
 	import {
 		isSearchStringInFunkItemEvent,

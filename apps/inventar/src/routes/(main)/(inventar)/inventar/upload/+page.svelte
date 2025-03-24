@@ -4,7 +4,7 @@
 	import type { ImportInventoryItemsResult } from '$lib/api/inventoryModels';
 	import { Button, LinkButton } from '@thw-tools/svelte-components';
 	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
-	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
+	import { LoadingSpinner } from '@thw-tools/svelte-components';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 
 	let uploadPromise: Promise<void> | null = $state(null);
