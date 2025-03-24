@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { LinkButton } from '@thw-tools/svelte-components';
 	import Input from '$lib/Input.svelte';
-	import Select from '$lib/Select.svelte';
+	import { Select } from '@thw-tools/svelte-components';
 	import { clothingInput } from '$lib/clothing/clothingInputStore';
 	import {
 		humanGenderToFriendlyString,

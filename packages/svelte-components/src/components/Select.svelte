@@ -1,17 +1,20 @@
 <script lang="ts">
-	interface Props {
-		options: { value: string; label: string }[];
-		selected: string;
-		label?: string | undefined;
-		onSelect?: (value: string) => void;
-	}
+	type SelectOption = { 
+		value: string; 
+		label: string 
+	};
 
 	let {
-		options,
+		options = [],
 		selected = $bindable(),
 		label = undefined,
 		onSelect = undefined
-	}: Props = $props();
+	} = $props<{
+		options: SelectOption[];
+		selected: string;
+		label?: string;
+		onSelect?: (value: string) => void;
+	}>();
 
 	function handleSelect(event: Event) {
 		const target = event.target as HTMLSelectElement;
@@ -35,4 +38,4 @@
 			<option value={option.value}>{option.label}</option>
 		{/each}
 	</select>
-</div>
+</div> 

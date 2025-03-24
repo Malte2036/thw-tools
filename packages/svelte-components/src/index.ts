@@ -6,3 +6,4 @@ export { default as InstallPWADialog } from './components/InstallPWADialog.svelt
 export { default as Tabs } from './components/Tabs.svelte';
 export { default as Table } from './components/Table.svelte';
 export { default as LoadingSpinner } from './components/LoadingSpinner.svelte';
+export { default as Select } from './components/Select.svelte';
