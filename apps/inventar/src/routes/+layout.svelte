@@ -5,11 +5,10 @@
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
 
 	import Banner from '$lib/Banner.svelte';
-	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
+	import { FeedbackDialog, InstallPWADialog } from '@thw-tools/svelte-components';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 	import PWAUpdateNotification from '$lib/PWAUpdateNotification.svelte';
 	import { dateToFriendlyString } from '@thw-tools/shared';
-	import { FeedbackDialog } from '@thw-tools/svelte-components';
 	import '../app.css';
 	interface Props {
 		children?: import('svelte').Snippet;

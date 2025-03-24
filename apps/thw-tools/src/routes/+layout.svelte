@@ -5,8 +5,7 @@
 	import { page } from '$app/stores';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
 	import Banner from '$lib/Banner.svelte';
-	import { FeedbackDialog } from '@thw-tools/svelte-components';
-	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
+	import { FeedbackDialog, InstallPWADialog } from '@thw-tools/svelte-components';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 	import PwaUpdateNotification from '$lib/PWAUpdateNotification.svelte';
 	import { trackBuildIdentity } from '$lib/utils';

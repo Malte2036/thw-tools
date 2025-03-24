@@ -11,10 +11,10 @@
 </script>
 
 <thw-dialog {title}>
-	<div slot="content">
+	<div slot="content" class="contents">
 		{@render content?.()}
 	</div>
-	<div slot="footer">
+	<div slot="footer" class="contents">
 		{@render footer?.()}
 	</div>
 </thw-dialog>
