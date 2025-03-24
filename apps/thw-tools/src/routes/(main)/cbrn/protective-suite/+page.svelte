@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
 
-	import Input from '$lib/Input.svelte';
-	import { Table } from '@thw-tools/svelte-components';
+	import { Input, Table } from '@thw-tools/svelte-components';
 	import type { ProtectiveSuite, ProtectiveSuiteData } from '$lib/cbrn/ProtectiveSuite';
 
 	import type { PageData } from './$types';

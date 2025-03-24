@@ -16,6 +16,7 @@
 		placeholder = undefined,
 		type = 'text'
 	}: Props = $props();
+
 </script>
 
 <div class="flex flex-col gap-1">
