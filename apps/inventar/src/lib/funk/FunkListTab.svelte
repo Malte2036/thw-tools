@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Input from '$lib/Input.svelte';
+	import { Input } from '@thw-tools/svelte-components';
 	import { funk, getLastFunkItemEventByFunkItemInternalId } from '$lib/shared/stores/funkStore';
 	import { getOrganisationMemberByInternalId, user } from '$lib/shared/stores/userStore';
 	import {

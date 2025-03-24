@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { Button, Dialog } from '@thw-tools/svelte-components';
+	import { Button, Dialog, Input } from '@thw-tools/svelte-components';
 	import Toggle from '$lib/Toggle.svelte';
-	import Input from '$lib/Input.svelte';
 	import { resetVisibleInventoryColumns } from '$lib/shared/stores/inventoryColumnStore';
 	import ColumnsIcon from '$lib/icons/ColumnsIcon.svelte';
 	import CalendarIcon from '$lib/icons/CalendarIcon.svelte';
