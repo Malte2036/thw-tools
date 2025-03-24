@@ -1,9 +1,8 @@
 <script lang="ts">
 	import Input from '$lib/Input.svelte';
 	import { LinkButton } from '@thw-tools/svelte-components';
-	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
+	import { Table, LoadingSpinner } from '@thw-tools/svelte-components';
 	import Select from '$lib/Select.svelte';
-	import { Table } from '@thw-tools/svelte-components';
 	import type { InventoryItem } from '$lib/api/inventoryModels';
 	import { searchStringIsInArray } from '@thw-tools/shared';
 	import { apiMeta } from '$lib/shared/stores/apiMetaStore';

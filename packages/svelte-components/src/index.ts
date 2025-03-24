@@ -5,3 +5,4 @@ export { default as FeedbackDialog } from './components/FeedbackDialog.svelte';
 export { default as InstallPWADialog } from './components/InstallPWADialog.svelte';
 export { default as Tabs } from './components/Tabs.svelte';
 export { default as Table } from './components/Table.svelte';
+export { default as LoadingSpinner } from './components/LoadingSpinner.svelte';

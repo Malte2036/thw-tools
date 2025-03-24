@@ -9,8 +9,7 @@
 	import ListIcon from '$lib/icons/ListIcon.svelte';
 	import UploadIcon from '$lib/icons/UploadIcon.svelte';
 	import InventoryDetailsDialog from '$lib/inventar/InventoryDetailsDialog.svelte';
-	import { LinkButton, Tabs, Table } from '@thw-tools/svelte-components';
-	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
+	import { LinkButton, Tabs, Table, LoadingSpinner } from '@thw-tools/svelte-components';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { inventory } from '$lib/shared/stores/inventoryStore';
 	import { db } from '$lib/utils/db';

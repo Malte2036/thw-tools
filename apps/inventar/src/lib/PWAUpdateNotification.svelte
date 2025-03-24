@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import LoadingSpinner from './LoadingSpinner.svelte';
+	import { LoadingSpinner } from '@thw-tools/svelte-components';
 	import { bannerMessage } from './shared/stores/bannerMessage';
 
 	let updateStatus: 'idle' | 'updating' | 'ready' | 'error' = $state('idle');
