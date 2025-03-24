@@ -1,7 +1,6 @@
 <script lang="ts">
-	import Input from '$lib/Input.svelte';
-	import Button from '$lib/Button.svelte';
-	import Dialog from '$lib/Dialog.svelte';
+	import { Input, Dialog } from '@thw-tools/svelte-components';
+	import { Button } from '@thw-tools/svelte-components';
 
 	interface Props {
 		onSubmit: (firstName: string, lastName: string, note: string) => void;

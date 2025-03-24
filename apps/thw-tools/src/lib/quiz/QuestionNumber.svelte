@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import ShuffleIcon from '$lib/icons/ShuffleIcon.svelte';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';

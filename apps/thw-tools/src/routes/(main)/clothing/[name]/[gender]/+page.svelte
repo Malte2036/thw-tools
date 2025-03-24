@@ -2,14 +2,13 @@
 	import { run } from 'svelte/legacy';
 
 	import type { PageData } from './$types';
-	import Table from '$lib/Table.svelte';
+	import { Table } from '@thw-tools/svelte-components';
 	import {
 		humanMeasurementToFriendlyName,
 		clothingNameToFriendlyName,
 		humanGenderToFriendlyString
 	} from '$lib/clothing/clothingConstantUtils';
 	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
-	import LinkButton from '$lib/LinkButton.svelte';
 	import ClothingSizesInput from '$lib/clothing/ClothingSizesInput.svelte';
 	import {
 		calculateMatchingClothingSizesForInput,
@@ -25,11 +24,12 @@
 	} from '$lib/clothing/clothing';
 	import { clothingInput } from '$lib/clothing/clothingInputStore';
 	import { goto } from '$app/navigation';
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import ClothingResultCard from '$lib/clothing/ClothingResultCard.svelte';
 	import ClothingInfo from '$lib/clothing/ClothingInfo.svelte';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
+	import { LinkButton } from '@thw-tools/svelte-components';
 
 	interface Props {
 		data: PageData;

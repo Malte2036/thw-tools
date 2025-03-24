@@ -1,6 +1,6 @@
 <script lang="ts">
 	import FunkItemEventsList from '$lib/funk/FunkItemEventsList.svelte';
-	import LinkButton from '$lib/LinkButton.svelte';
+	import { LinkButton } from '@thw-tools/svelte-components';
 	import type { PageData } from './$types';
 
 	interface Props {

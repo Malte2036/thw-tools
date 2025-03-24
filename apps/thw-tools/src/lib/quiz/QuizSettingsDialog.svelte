@@ -1,6 +1,5 @@
 <script lang="ts">
-	import Dialog from '$lib/Dialog.svelte';
-	import Button from '$lib/Button.svelte';
+	import { Button, Dialog } from '@thw-tools/svelte-components';
 	import Toggle from '$lib/Toggle.svelte';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 

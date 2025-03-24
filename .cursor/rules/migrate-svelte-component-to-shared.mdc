@@ -1,0 +1,193 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Guide: Migrating a Svelte Component to Shared Component Library
+
+This guide explains how to migrate a component from an app to the shared component library in our monorepo structure.
+
+## 1. Prepare the Shared Component Package
+
+### 1.1 Package Structure
+
+```
+packages/
+  svelte-components/
+    src/
+      components/     # All shared components go here
+      index.ts       # Exports all components
+    package.json
+    tsconfig.json
+```
+
+### 1.2 Package Configuration
+
+`package.json`:
+
+```json
+{
+  "name": "@thw-tools/svelte-components",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "dependencies": {
+    "@thw-tools/shared": "workspace:*",
+    "@thw-tools/web-components": "workspace:*"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0-next.1"
+  },
+  "devDependencies": {
+    "svelte": "^5.0.0-next.1",
+    "svelte-check": "^3.6.0",
+    "typescript": "^5.0.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  }
+}
+```
+
+`tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "target": "ESNext",
+    "module": "ESNext",
+    "isolatedModules": true,
+    "types": ["svelte"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.svelte"],
+  "references": [{ "path": "../shared" }, { "path": "../web-components" }]
+}
+```
+
+## 2. Migrate the Component
+
+### 2.1 Copy Component
+
+Copy your component from the app to `packages/svelte-components/src/components/`.
+
+### 2.2 Update Componnet to Svelte 5 
+
+svelte 4:
+```typescript
+<slot name="foo"/>
+<hr />
+<slot name="bar"/>
+```
+
+svelte 5
+```typescript
+<script>
+	let { foo, bar } = $props();
+</script>
+
+{@render foo?.()}
+<hr />
+{@render bar?.()}
+```
+
+
+### 2.3 Export Component
+
+Add the component export to `src/index.ts`:
+
+```typescript
+export { default as ComponentName } from './components/ComponentName.svelte';
+```
+
+## 3. Update Apps to Use Shared Component
+
+### 3.1 Add Dependency
+
+Ensure `@thw-tools/svelte-components` is in your app's dependencies:
+
+```json
+{
+  "dependencies": {
+    "@thw-tools/svelte-components": "workspace:*"
+  }
+}
+```
+
+### 3.2 Update Imports
+
+Replace local imports with shared component imports:
+
+```typescript
+// Before
+import Button from '$lib/Button.svelte';
+
+// After
+import { Button } from '@thw-tools/svelte-components';
+```
+
+#### 3.2.1 Migrate to svelte 5
+
+If the component is used with the svelte 4 slot syntax, migrate it to svelte 5 snippets:
+
+```svelte5
+{#snippet content()}<div>...</div>{/snippet}
+```
+
+We do not change other logic!
+
+### 3.3 Remove Local Component
+
+Delete the original component from your app's codebase.
+
+## 4. Testing
+
+1. Run `pnpm install` in the root directory
+2. Build the shared components package
+3. Test the component in all apps that use it
+4. Check for type errors with `pnpm check`
+5. Run your test suite if available
+
+## 5. Common Issues
+
+### Type Errors
+
+If you see "Cannot find module '@thw-tools/svelte-components'":
+
+1. Ensure the package is in your app's dependencies
+2. Run `pnpm install`
+3. Restart your TypeScript server
+
+### Build Errors
+
+If you see "failed to resolve extends":
+
+1. Check that your `tsconfig.json` paths are correct
+2. Remove extends and include necessary compiler options directly
+
+### Runtime Errors
+
+1. Check that all dependencies are properly imported
+2. Verify prop types match between apps
+3. Ensure all required dependencies are in package.json
+
+## 6. Best Practices
+
+1. Keep components focused and single-purpose
+2. Document props and usage
+3. Use TypeScript for better type safety
+4. Follow the established naming conventions
+5. Test components in isolation
+6. Keep dependencies minimal
+7. Use Svelte 5 runes consistently

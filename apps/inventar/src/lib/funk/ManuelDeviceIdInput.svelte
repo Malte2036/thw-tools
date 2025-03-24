@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import Input from '$lib/Input.svelte';
 	import { inventarNummerRegex } from '../api/funkModels';
 

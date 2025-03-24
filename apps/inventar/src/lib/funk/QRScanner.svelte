@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import { Html5Qrcode, type Html5QrcodeCameraScanConfig } from 'html5-qrcode';
 	import { onDestroy, onMount } from 'svelte';
 	import PermissionDeniedDialog from './PermissionDeniedDialog.svelte';

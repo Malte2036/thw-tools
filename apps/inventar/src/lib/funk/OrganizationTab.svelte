@@ -3,13 +3,11 @@
 	import { userToFriendlyString } from '$lib/api/funkModels';
 	import { generateInviteLink, type Organisation, type User } from '$lib/api/organisationModels';
 	import { leaveOrganisation } from '$lib/api/organisationApi';
-	import Button from '$lib/Button.svelte';
+	import { Button, Table, LoadingSpinner, Select } from '@thw-tools/svelte-components';
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
 	import { user } from '$lib/shared/stores/userStore';
-	import Table from '$lib/Table.svelte';
 	import Card from '$lib/Card.svelte';
 	import InfoItem from '$lib/InfoItem.svelte';
-	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
 	import ErrorState from '$lib/ErrorDisplay.svelte';
 
 	const organisation: Organisation | null = $derived($user.organisation);

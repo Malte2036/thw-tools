@@ -6,7 +6,7 @@
 	import { user } from '$lib/shared/stores/userStore';
 
 	import ErrorDisplay from '$lib/ErrorDisplay.svelte';
-	import LoadingSpinner from '$lib/LoadingSpinner.svelte';
+	import { LoadingSpinner } from '@thw-tools/svelte-components';
 	import NoOrganisation from '$lib/funk/NoOrganisation.svelte';
 	import type { LayoutData } from './$types';
 

@@ -1,13 +1,12 @@
 <script lang="ts">
-	import LinkButton from '$lib/LinkButton.svelte';
+	import { LinkButton } from '@thw-tools/svelte-components';
 	import type {
 		ClothingMeasurementImportance,
 		ClothingName,
 		ClothingSizes,
 		ClothingSizesTable,
 		HumanMeasurement,
-		MatchingClothingSize,
-		MatchingClothingSizeTable
+		MatchingClothingSize
 	} from './clothing';
 	import {
 		clothingNameToFriendlyName,

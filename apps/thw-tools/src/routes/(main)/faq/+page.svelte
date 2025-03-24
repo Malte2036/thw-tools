@@ -1,10 +1,8 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { fade } from 'svelte/transition';
-	import Button from '$lib/Button.svelte';
+	import { Button, FeedbackDialog, InstallPWADialog } from '@thw-tools/svelte-components';
 	import FaqAnswer from '$lib/faq/FaqAnswer.svelte';
-	import InstallPwaDialog from '$lib/InstallPWADialog.svelte';
-	import FeedbackDialog from '$lib/FeedbackDialog.svelte';
 	import { version } from '$app/environment';
 	import { formatDate } from '@thw-tools/shared';
 
@@ -178,7 +176,7 @@
 </main>
 
 {#if showInstallPWAHelp}
-	<InstallPwaDialog onClose={() => (showInstallPWAHelp = false)} />
+	<InstallPWADialog onClose={() => (showInstallPWAHelp = false)} />
 {/if}
 
 {#if showFeedback}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
-	import Button from './Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 
 	let show = $state(false);
 

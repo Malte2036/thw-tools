@@ -7,7 +7,7 @@
 		login,
 		redirectToLastPathBeforeAuth
 	} from '$lib/api/authApi';
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 

@@ -1,15 +1,15 @@
 <script lang="ts">
+	import '@thw-tools/web-components/src';
+	
 	import { dev, version } from '$app/environment';
 	import { page } from '$app/stores';
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
 	import Banner from '$lib/Banner.svelte';
-	import FeedbackDialog from '$lib/FeedbackDialog.svelte';
-	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
+	import { FeedbackDialog, InstallPWADialog } from '@thw-tools/svelte-components';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 	import PwaUpdateNotification from '$lib/PWAUpdateNotification.svelte';
 	import { trackBuildIdentity } from '$lib/utils';
 	import { formatDate } from '@thw-tools/shared';
-	import '@web-components/src';
 	import { onMount } from 'svelte';
 	import '../app.css';
 	interface Props {

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { bannerMessage } from './shared/stores/bannerMessage';
-	import LoadingSpinner from './LoadingSpinner.svelte';
+	import { LoadingSpinner } from '@thw-tools/svelte-components';
 
 	let updateStatus: 'idle' | 'updating' | 'ready' | 'error' = $state('idle');
 	let registration: ServiceWorkerRegistration | undefined = undefined;

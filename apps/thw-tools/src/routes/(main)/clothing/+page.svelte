@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/Button.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 	import ClothingExportDialog from '$lib/clothing/ClothingExportDialog.svelte';
 	import ClothingHead from '$lib/clothing/ClothingHead.svelte';
 	import ClothingInfo from '$lib/clothing/ClothingInfo.svelte';
