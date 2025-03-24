@@ -5,11 +5,11 @@
 	import { PUBLIC_UMAMI_ENDPOINT, PUBLIC_UMAMI_WEBSITEID } from '$env/static/public';
 
 	import Banner from '$lib/Banner.svelte';
-	import { Button, Dialog } from '@thw-tools/svelte-components';
 	import InstallPWADialog from '$lib/InstallPWADialog.svelte';
 	import NavigationBar from '$lib/navigation/NavigationBar.svelte';
 	import PWAUpdateNotification from '$lib/PWAUpdateNotification.svelte';
 	import { dateToFriendlyString } from '@thw-tools/shared';
+	import { FeedbackDialog } from '@thw-tools/svelte-components';
 	import '../app.css';
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -76,27 +76,7 @@
 	</div>
 
 	{#if showFeedback}
-		<Dialog title="Feedback">
-			{#snippet content()}
-				<div class="flex flex-col gap-2">
-					<div>Du hast Ideen für neue Tools, weitere Quizfragen oder Feedback?</div>
-					<div>
-						Schreib mir gerne eine Direktnachricht in
-						<a
-							data-umami-event="Feedback Dialog Hermine link"
-							href="https://app.thw-messenger.de/thw/app#/contacts/profile/1990855"
-							target="_blank"
-							class="underline text-thw">Hermine</a
-						> (Malte Sehmer).
-					</div>
-				</div>
-			{/snippet}
-			{#snippet footer()}
-				<div>
-					<Button click={() => (showFeedback = false)}>Schließen</Button>
-				</div>
-			{/snippet}
-		</Dialog>
+		<FeedbackDialog onClose={() => (showFeedback = false)} />
 	{/if}
 
 	{#if showInstallPWAHelp}

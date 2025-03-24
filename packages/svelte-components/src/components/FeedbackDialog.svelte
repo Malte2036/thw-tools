@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { Dialog } from '@thw-tools/svelte-components';
-	import { Button } from '@thw-tools/svelte-components';
+	import { Dialog, Button } from '@thw-tools/svelte-components';
 
 	interface Props {
 		onClose: () => void;
@@ -11,7 +10,7 @@
 
 <Dialog title="Feedback">
 	{#snippet content()}
-		<div >
+		<div>
 			<div class="flex flex-col gap-2">
 				<div>Du hast Ideen für neue Tools, weitere Quizfragen oder Feedback?</div>
 				<div>
@@ -27,8 +26,8 @@
 		</div>
 	{/snippet}
 	{#snippet footer()}
-		<div >
+		<div>
 			<Button click={onClose}>Schließen</Button>
 		</div>
 	{/snippet}
-</Dialog>
+</Dialog> 
