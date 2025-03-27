@@ -78,7 +78,7 @@
 
 			<!-- Quick Actions -->
 			<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-				<LinkButton url="list" secondary class="w-full">
+				<LinkButton url="list" secondary>
 					<span class="flex items-center gap-1.5 justify-center">
 						<div class="w-4 h-4">
 							<ListIcon />
@@ -87,7 +87,7 @@
 					</span>
 				</LinkButton>
 
-				<LinkButton url="upload" secondary class="w-full">
+				<LinkButton url="upload" secondary>
 					<span class="flex items-center gap-1.5 justify-center">
 						<div class="w-4 h-4">
 							<UploadIcon />

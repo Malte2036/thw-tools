@@ -212,8 +212,34 @@
     );
   }
 
-  // Update the week view cell height to be taller for better visibility
-  const weekCellHeight = $derived(isMobile ? 'h-auto min-h-16' : 'h-24 sm:h-28 md:h-36 lg:h-40');
+  // Get max events count for the week to determine cell heights in desktop view
+  function getMaxEventsCountForWeek() {
+    let maxCount = 0;
+    weekDays.forEach((day) => {
+      const count = getEventsForDay(day).length;
+      if (count > maxCount) maxCount = count;
+    });
+    return maxCount;
+  }
+
+  // Dynamic week cell height based on number of events
+  function getWeekCellHeight(day: Date) {
+    if (isMobile) return 'min-h-16';
+
+    const eventCount = getEventsForDay(day).length;
+    const maxEvents = getMaxEventsCountForWeek();
+
+    // If we have a significant number of events in any day, adjust all cells to be larger
+    if (maxEvents > 3) {
+      return 'h-auto min-h-40 md:min-h-48 lg:min-h-56';
+    } else if (eventCount > 3) {
+      // Only this specific day has many events
+      return 'h-auto min-h-40 md:min-h-48';
+    } else {
+      // Default height
+      return 'h-24 sm:h-28 md:h-36 lg:h-40';
+    }
+  }
 
   // Format the weekday header more nicely
   function formatWeekdayHeader(date: Date): string {
@@ -420,39 +446,33 @@
               </div>
 
               <!-- Day events -->
-              <div
-                class="p-2 space-y-1.5 {getEventsForDay(day).length === 0
-                  ? 'py-3 text-center text-xs text-gray-500'
-                  : ''}"
-              >
-                {#if getEventsForDay(day).length > 0}
+              <div class="p-2 {getEventsForDay(day).length > 0 ? 'space-y-2' : ''}">
+                {#if getEventsForDay(day).length === 0}
+                  <div class="text-xs text-gray-500 text-center py-2">Keine Termine</div>
+                {:else}
                   {#each getEventsForDay(day) as event}
                     {@const isFirst = isFirstDayOfEvent(event, day)}
                     <button
-                      class="w-full text-left text-xs p-2 rounded-md flex items-center shadow-sm transition-transform hover:scale-[1.01]"
+                      class="w-full text-left p-2 rounded-md flex items-center gap-1 shadow-sm transition-opacity hover:opacity-90"
                       style="background-color: {event.color || '#005b99'}; color: white;"
                       on:click|stopPropagation={() => handleEventClick(event)}
                       title={`${event.title} (${new Date(event.start).toLocaleDateString('de-DE')} - ${new Date(event.end).toLocaleDateString('de-DE')})`}
                     >
+                      {#if !isFirst}
+                        <span class="text-sm mr-1 opacity-80">↪</span>
+                      {/if}
                       <div class="flex-1">
-                        <div class="flex items-center">
-                          {#if !isFirst}
-                            <span class="mr-1 opacity-80">↪</span>
-                          {/if}
-                          <span class="font-medium">{event.title}</span>
+                        <div class="font-medium">
+                          {event.title}
                         </div>
                         {#if isFirst}
-                          <div
-                            class="text-xs opacity-90 mt-0.5 bg-black bg-opacity-20 rounded px-1 inline-block"
-                          >
+                          <div class="text-xs mt-0.5 opacity-80">
                             {formatTime(new Date(event.start))}
                           </div>
                         {/if}
                       </div>
                     </button>
                   {/each}
-                {:else}
-                  Keine Reservierungen
                 {/if}
               </div>
             </div>
@@ -483,7 +503,9 @@
         <div class="grid grid-cols-7 gap-1 sm:gap-2">
           {#each weekDays as day}
             <div
-              class="{weekCellHeight} p-1 sm:p-2 border rounded-md hover:border-thw-300 transition-colors cursor-pointer
+              class="{getWeekCellHeight(
+                day
+              )} p-1 sm:p-2 border rounded-md hover:border-thw-300 transition-colors cursor-pointer
               {isToday(day)
                 ? 'bg-thw-100 border-thw-500 shadow-md'
                 : isSelectedDate(day)

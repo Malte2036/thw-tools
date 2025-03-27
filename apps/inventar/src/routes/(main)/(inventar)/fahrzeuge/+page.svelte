@@ -123,15 +123,25 @@
 		})
 	);
 
-	// Check for vehicleId in URL on page load
+	// Check for vehicleId and calendarView in URL on page load
+	let initialCalendarView = $state<'month' | 'week'>('month');
+
 	$effect(() => {
 		const urlVehicleId = $page.url.searchParams.get('vehicleId');
+		const urlCalendarView = $page.url.searchParams.get('view');
+
 		if (urlVehicleId && $vehicles.items) {
 			const vehicleFromUrl = $vehicles.items.find((v) => v.id === urlVehicleId);
 			if (vehicleFromUrl) {
 				selectedVehicle = vehicleFromUrl;
 			}
 		}
+
+		// Apply calendar view if present in URL
+		initialCalendarView =
+			urlCalendarView === 'week' || urlCalendarView === 'month'
+				? (urlCalendarView as 'month' | 'week')
+				: 'month'; // Default to 'month' if not specified or invalid
 	});
 
 	function handleVehicleSelection(vehicle: Vehicle | null) {
@@ -144,6 +154,12 @@
 			url.searchParams.delete('vehicleId');
 		}
 
+		goto(url.toString(), { replaceState: true });
+	}
+
+	function handleCalendarViewChange(view: 'month' | 'week') {
+		const url = new URL(window.location.href);
+		url.searchParams.set('view', view);
 		goto(url.toString(), { replaceState: true });
 	}
 </script>
@@ -192,7 +208,9 @@
 				vehicles={$vehicles.items}
 				{rentals}
 				initialSelectedVehicle={selectedVehicle}
+				{initialCalendarView}
 				onVehicleSelect={handleVehicleSelection}
+				onCalendarViewChange={handleCalendarViewChange}
 				onCreateRental={handleCreateRental}
 				onCancelRental={handleCancelRental}
 			/>

@@ -10,23 +10,27 @@
 		vehicles = [],
 		rentals = [],
 		initialSelectedVehicle = null,
+		initialCalendarView = 'month',
 		onCreateRental = () => {},
 		onCancelRental = () => {},
-		onVehicleSelect = () => {}
+		onVehicleSelect = () => {},
+		onCalendarViewChange = () => {}
 	} = $props<{
 		vehicles: Vehicle[];
 		rentals: VehicleRental[];
 		initialSelectedVehicle?: Vehicle | null;
+		initialCalendarView?: 'month' | 'week';
 		onCreateRental?: (data: { vehicleId: VehicleId; rental: VehicleRental }) => void;
 		onCancelRental?: (data: { rentalId: VehicleRentalId; reason: string }) => void;
 		onVehicleSelect?: (vehicle: Vehicle | null) => void;
+		onCalendarViewChange?: (view: 'month' | 'week') => void;
 	}>();
 
 	let selectedVehicle = $state<Vehicle | null>(initialSelectedVehicle);
 	let showRentalDialog = $state(false);
 	let showCancelDialog = $state(false);
 	let selectedRental = $state<VehicleRental | null>(null);
-	let calendarView = $state<'month' | 'week'>('month');
+	let calendarView = $state<'month' | 'week'>(initialCalendarView);
 	let selectedDate = $state<Date | null>(null);
 
 	// Form states
@@ -45,6 +49,11 @@
 		// Compare IDs instead of objects to avoid state_proxy_equality_mismatch
 		if (initialSelectedVehicle?.id !== selectedVehicle?.id) {
 			selectedVehicle = initialSelectedVehicle;
+		}
+
+		// Update calendar view if prop changes
+		if (initialCalendarView !== calendarView) {
+			calendarView = initialCalendarView;
 		}
 	});
 
@@ -198,6 +207,7 @@
 
 	function handleViewChange(e: CustomEvent<{ view: 'month' | 'week' }>) {
 		calendarView = e.detail.view;
+		onCalendarViewChange(e.detail.view);
 	}
 
 	function handleVehicleChange(e: Event) {
