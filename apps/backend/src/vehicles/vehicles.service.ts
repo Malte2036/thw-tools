@@ -20,7 +20,7 @@ export class VehiclesService {
       include: {
         rentals: {
           where: {
-            OR: [{ status: 'active' }, { status: 'planned' }],
+            status: 'active',
           },
         },
       },
@@ -90,9 +90,7 @@ export class VehiclesService {
     const overlappingRentals = await this.prisma.vehicleRental.findMany({
       where: {
         vehicleId: createVehicleRentalDto.vehicleId,
-        status: {
-          in: ['planned', 'active'],
-        },
+        status: 'active',
         OR: [
           {
             // Fall 1: Start innerhalb einer existierenden Reservierung
@@ -113,12 +111,7 @@ export class VehiclesService {
       );
     }
 
-    // Status der Ausleihe bestimmen
-    const now = new Date();
-    const isStartingNow = plannedStart <= now && plannedEnd > now;
-    const status = isStartingNow ? 'active' : 'planned';
-
-    // Ausleihe erstellen
+    // Ausleihe erstellen - always active
     const rental = await this.prisma.vehicleRental.create({
       data: {
         vehicleId: createVehicleRentalDto.vehicleId,
@@ -126,7 +119,7 @@ export class VehiclesService {
         purpose: createVehicleRentalDto.purpose,
         plannedStart,
         plannedEnd,
-        status,
+        status: 'active',
       },
       include: {
         vehicle: true,

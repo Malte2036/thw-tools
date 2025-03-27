@@ -73,7 +73,7 @@ describe('VehiclesService', () => {
         include: {
           rentals: {
             where: {
-              OR: [{ status: 'active' }, { status: 'planned' }],
+              status: 'active',
             },
           },
         },
@@ -200,7 +200,7 @@ describe('VehiclesService', () => {
         {
           id: 'existing-rental',
           vehicleId: 'vehicle-id',
-          status: 'planned',
+          status: 'active',
           plannedStart: new Date('2023-06-15T07:00:00Z'),
           plannedEnd: new Date('2023-06-15T10:00:00Z'),
         },
@@ -213,7 +213,7 @@ describe('VehiclesService', () => {
       expect(mockPrismaService.vehicleRental.findMany).toHaveBeenCalled();
     });
 
-    it('should create planned rental successfully', async () => {
+    it('should create active rental successfully', async () => {
       // Set future dates
       const futureDto = {
         ...createRentalDto,
@@ -225,42 +225,14 @@ describe('VehiclesService', () => {
         id: 'rental-id',
         ...futureDto,
         userId,
-        status: 'planned',
+        status: 'active',
       });
 
       const result = await service.createRental(futureDto, 'org-id', userId);
 
       expect(result).toBeDefined();
       expect(mockPrismaService.vehicleRental.create).toHaveBeenCalled();
-      // Kein vehicle.update mehr
       expect(mockPrismaService.vehicle.update).not.toHaveBeenCalled();
-    });
-
-    it('should create active rental when rental starts now', async () => {
-      // Statt die komplette Date-Klasse zu mocken, direkter die DTO-Werte setzen
-      const now = new Date();
-      const oneHourLater = new Date(now.getTime() + 3600000); // 1 Stunde später
-
-      const activeDto = {
-        ...createRentalDto,
-        plannedStart: now.toISOString(),
-        plannedEnd: oneHourLater.toISOString(),
-      };
-
-      mockPrismaService.vehicleRental.create.mockResolvedValue({
-        id: 'rental-id',
-        ...activeDto,
-        userId,
-        status: 'active',
-      });
-
-      const result = await service.createRental(activeDto, 'org-id', userId);
-
-      expect(result).toBeDefined();
-      expect(result.status).toBe('active');
-      // Kein vehicle.update mehr
-      expect(mockPrismaService.vehicle.update).not.toHaveBeenCalled();
-      expect(mockPrismaService.vehicleRental.create).toHaveBeenCalled();
     });
   });
 

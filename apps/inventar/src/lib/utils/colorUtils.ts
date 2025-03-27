@@ -152,16 +152,16 @@ export function getVehicleColor(vehicleId: string | undefined): string {
 /**
  * Determines color based on rental status
  *
- * @param status - Rental status ('active', 'planned', etc.)
+ * @param status - Rental status ('active' or 'canceled')
  * @returns Color corresponding to the status
  */
 export function getRentalStatusColor(status: string): string {
 	switch (status) {
 		case 'active':
 			return '#0066cc'; // Blue
-		case 'planned':
-			return '#666666'; // Gray
+		case 'canceled':
+			return '#999999'; // Gray
 		default:
-			return '#666666'; // Gray
+			return '#666666'; // Dark Gray
 	}
 }

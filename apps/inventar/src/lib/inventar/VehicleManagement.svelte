@@ -111,7 +111,7 @@
 		const rental = rentals.find((r: VehicleRental) => r.id === event.id);
 		if (rental) {
 			selectedRental = rental;
-			if (rental.status === 'active' || rental.status === 'planned') {
+			if (rental.status === 'active') {
 				showCancelDialog = true;
 			}
 		}
@@ -188,7 +188,6 @@
 					title = `${vehicle?.radioCallName || 'Fahrzeug'} - ${rental.purpose}`;
 				}
 
-				// Generate a color based on the vehicle ID if no vehicle is selected
 				console.log(rental.id + '-' + rental.purpose);
 
 				let color = getVehicleColor(

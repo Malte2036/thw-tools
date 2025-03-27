@@ -65,7 +65,7 @@ describe('VehiclesController', () => {
   describe('getAllRentalsForOrganisation', () => {
     it('should return all rentals for an organisation', async () => {
       const mockRentals = [
-        { id: '1', vehicleId: 'v1', userId: 'u1', status: 'planned' },
+        { id: '1', vehicleId: 'v1', userId: 'u1', status: 'active' },
         { id: '2', vehicleId: 'v2', userId: 'u2', status: 'active' },
       ];
       const mockRequest = {
@@ -99,7 +99,7 @@ describe('VehiclesController', () => {
         id: 'r1',
         ...dto,
         userId: 'u1',
-        status: 'planned',
+        status: 'active',
       };
       const mockRequest = {
         organisation: { id: 'org-id' },
