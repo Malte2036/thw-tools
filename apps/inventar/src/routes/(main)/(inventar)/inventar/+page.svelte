@@ -76,6 +76,27 @@
 				<Tabs items={tabItems} onSelect={handleTabSelect} initialSelected={activeTab} />
 			</div>
 
+			<!-- Quick Actions -->
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+				<LinkButton url="list" secondary>
+					<span class="flex items-center gap-1.5 justify-center">
+						<div class="w-4 h-4">
+							<ListIcon />
+						</div>
+						<span>Inventarliste</span>
+					</span>
+				</LinkButton>
+
+				<LinkButton url="upload" secondary>
+					<span class="flex items-center gap-1.5 justify-center">
+						<div class="w-4 h-4">
+							<UploadIcon />
+						</div>
+						<span>Daten importieren</span>
+					</span>
+				</LinkButton>
+			</div>
+
 			<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 				<!-- Scanner Section -->
 				<div

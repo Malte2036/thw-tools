@@ -8,6 +8,7 @@
 			items: [
 				{ name: 'Funkliste', href: '/funk/' },
 				{ name: 'OV Inventar', href: '/inventar/' },
+				{ name: 'Fahrzeugverwaltung', href: '/fahrzeuge/' },
 				{ name: 'Organisation', href: '/organisation/' }
 			]
 		},

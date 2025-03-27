@@ -12,6 +12,7 @@
 	import CircleRadiationIcon from '../lib/icons/CircleRadiationIcon.svelte';
 	import BoltIcon from '../lib/icons/BoltIcon.svelte';
 	import WarehouseIcon from '../lib/icons/WarehouseIcon.svelte';
+	import VehicleIcon from '$lib/icons/VehicleIcon.svelte';
 
 	const description = {
 		headline: 'Funkgeräte Verwaltung & OV Inventar:',
@@ -75,6 +76,12 @@
 					icon: WarehouseIcon,
 					url: '/inventar/',
 					event: 'Open OV Inventar'
+				},
+				{
+					name: 'Fahrzeugverwaltung',
+					icon: VehicleIcon,
+					url: '/fahrzeuge/',
+					event: 'Open Fahrzeugverwaltung'
 				}
 			]
 		},

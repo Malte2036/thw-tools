@@ -8,3 +8,4 @@ export { default as Table } from './components/Table.svelte';
 export { default as LoadingSpinner } from './components/LoadingSpinner.svelte';
 export { default as Select } from './components/Select.svelte';
 export { default as Input } from './components/Input.svelte';
+export { default as Calendar } from './components/Calendar.svelte';

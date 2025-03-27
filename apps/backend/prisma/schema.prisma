@@ -71,6 +71,7 @@ model User {
   eventBulks        FunkItemEventBulk[]
   funkItemEvents    FunkItemEvent[]
   organisations     OrganisationMember[]
+  vehicleRentals    VehicleRental[]
 
   @@map("users")
   @@schema("inventory")
@@ -84,6 +85,7 @@ model Organisation {
   funkItems         FunkItem[]
   inventoryItems    InventoryItem[]
   members           OrganisationMember[]
+  vehicles          Vehicle[]
 
   @@map("organisations")
   @@schema("inventory")
@@ -199,3 +201,40 @@ model InventoryItemCustomData {
   @@map("inventory_item_custom_data")
   @@schema("inventory")
 } 
+
+
+//
+// INVENTORY SCHEMA - Vehicle Models
+//
+model Vehicle {
+  id            String          @id @default(uuid()) @db.Uuid
+  licensePlate  String          @db.VarChar(50)
+  vehicleType   String          @db.VarChar(50)
+  radioCallName String          @db.VarChar(50)
+  unit          String          @db.VarChar(100)
+  organisationId String         @db.Uuid
+  rentals       VehicleRental[]
+  organisation  Organisation    @relation(fields: [organisationId], references: [id])
+  createdAt     DateTime        @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime        @updatedAt @db.Timestamp(6)
+
+  @@map("vehicles")
+  @@schema("inventory")
+}
+
+model VehicleRental {
+  id            String          @id @default(uuid()) @db.Uuid
+  vehicleId     String          @db.Uuid
+  userId        String          @db.Uuid
+  purpose       String          @db.VarChar(255)
+  plannedStart  DateTime        @db.Timestamp(6)
+  plannedEnd    DateTime        @db.Timestamp(6)
+  status        String          @db.VarChar(20)  // 'active', 'planned', 'canceled'
+  vehicle       Vehicle         @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  user          User            @relation(fields: [userId], references: [id])
+  createdAt     DateTime        @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime        @updatedAt @db.Timestamp(6)
+
+  @@map("vehicle_rentals")
+  @@schema("inventory")
+}

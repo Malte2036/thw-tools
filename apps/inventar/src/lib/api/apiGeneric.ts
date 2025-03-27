@@ -189,6 +189,43 @@ export async function apiPatch<T>(
 	}
 }
 
+export async function apiPut<T>(
+	path: string,
+	body?: any,
+	verifyData?: (data: T) => boolean
+): Promise<ResponeData<T>> {
+	const url = new URL(path, PUBLIC_API_URL);
+	try {
+		const response = await fetch(url, {
+			method: 'PUT',
+			headers: await createHeaders(),
+			body: body ? JSON.stringify(body) : undefined
+		});
+
+		if (!response.ok) {
+			checkIfResposeIsUnauthorized(response);
+
+			const errorData = await response.json();
+
+			throw new HttpError(
+				response.status,
+				`Failed to put data to ${url}: ${errorData.message}`,
+				errorData.message ?? response.statusText
+			);
+		}
+
+		const data: T = await response.json();
+		if (verifyData && !verifyData(data)) {
+			throw new CustomError(`Failed to verify data.`);
+		}
+
+		return responseToData(response, data);
+	} catch (error) {
+		console.error('Error putting data:', error);
+		throw error;
+	}
+}
+
 export async function apiGetFile(path: string) {
 	const url = new URL(path, PUBLIC_API_URL);
 	try {

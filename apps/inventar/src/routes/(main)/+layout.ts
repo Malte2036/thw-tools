@@ -1,4 +1,4 @@
-import { isAuthenticated, login } from '$lib/api/authApi';
+import { getUser, isAuthenticated, login } from '$lib/api/authApi';
 import { getFunkItemEventBulks, getFunkItems } from '$lib/api/funkApi';
 import { userToFriendlyString } from '$lib/api/funkModels';
 import { getOrganisationForUser } from '$lib/api/organisationApi';
@@ -25,7 +25,10 @@ export const load = (async ({ url }) => {
 		return EMPTY;
 	}
 
+	const user = await getUser();
+
 	return {
+		userKindeId: user.id,
 		organisation: getOrganisationForUser().then((org) => {
 			org.members.sort((a, b) =>
 				userToFriendlyString(a.user).localeCompare(userToFriendlyString(b.user))

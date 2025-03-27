@@ -1,22 +1,22 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { thwColors, grayColors } from "./colors";
+import { LitElement, html, css, unsafeCSS } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { thwColors, grayColors } from './colors';
 
 /**
  * A button component.
  * @slot - The content of the button.
- * @param {string} type - The type of the button. Can be "primary" or "secondary".
+ * @param {string} type - The type of the button. Can be "primary", "secondary", or "warning".
  * @param {boolean} disabled - Whether the button is disabled.
  * @param {string} size - The size of the button. Can be "small", "medium", or "large".
  */
-@customElement("thw-button")
+@customElement('thw-button')
 export class THWButton extends LitElement {
   /**
    * The type of the button.
-   * @type {"primary" | "secondary"}
+   * @type {"primary" | "secondary" | "warning"}
    * @default "primary"
    */
-  @property({ type: String }) type: "primary" | "secondary" = "primary";
+  @property({ type: String }) type: 'primary' | 'secondary' | 'warning' = 'primary';
 
   /**
    * Whether the button is disabled.
@@ -30,7 +30,7 @@ export class THWButton extends LitElement {
    * @type {"small"| "medium" | "large"}
    * @default "medium"
    */
-  @property({ type: String }) size: "small" | "medium" | "large" = "medium";
+  @property({ type: String }) size: 'small' | 'medium' | 'large' = 'medium';
 
   static override styles = [
     css`
@@ -94,6 +94,21 @@ export class THWButton extends LitElement {
             border-color: ${unsafeCSS(grayColors[400])};
           }
         }
+
+        &.warning {
+          background-color: rgb(220, 38, 38); /* red-600 */
+          color: white;
+          border-color: rgb(220, 38, 38);
+
+          &:hover {
+            background-color: rgb(185, 28, 28); /* red-700 */
+          }
+
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        }
       }
     `,
   ];
@@ -109,6 +124,6 @@ export class THWButton extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "thw-button": THWButton;
+    'thw-button': THWButton;
   }
 }

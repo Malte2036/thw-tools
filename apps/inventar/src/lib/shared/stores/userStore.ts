@@ -17,3 +17,8 @@ export const getOrganisationMemberByInternalId = (
 	internalId: UserId
 ): OrganisationMember | undefined =>
 	organisation?.members?.find((user) => user.userId === internalId);
+
+export const getUserById = (
+	{ organisation }: UserData,
+	userId: UserId | undefined
+): User | undefined => organisation?.members?.find((user) => user.userId === userId)?.user;

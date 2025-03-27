@@ -49,9 +49,10 @@ cp .env.example .env
 # Edit .env with your settings
 ```
 
-4. Generate and run database migrations
+4. Generate Prisma client and run database migrations
 
 ```bash
+npx prisma generate
 npx prisma migrate dev
 ```
 
