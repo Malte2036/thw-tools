@@ -18,13 +18,6 @@ export class VehiclesService {
   async findAllVehiclesForOrganisation(organisationId: string): Promise<any> {
     return this.prisma.vehicle.findMany({
       where: { organisationId },
-      include: {
-        rentals: {
-          where: {
-            status: 'active',
-          },
-        },
-      },
     });
   }
 
@@ -74,9 +67,6 @@ export class VehiclesService {
         vehicle: {
           organisationId,
         },
-      },
-      include: {
-        vehicle: true,
       },
     });
   }
