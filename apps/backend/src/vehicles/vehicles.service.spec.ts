@@ -2,45 +2,29 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { VehiclesService } from './vehicles.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { CreateVehicleDto } from './dto/create-vehicle.dto';
+import { CreateVehicleRentalDto } from './dto/create-vehicle-rental.dto';
+import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
+
+// Mock Prisma Service
+const mockPrismaService = mockDeep<PrismaService>();
 
 describe('VehiclesService', () => {
   let service: VehiclesService;
-  let prisma: PrismaService;
-
-  const mockPrismaService = {
-    vehicle: {
-      findMany: jest.fn(),
-      findFirst: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-    },
-    vehicleRental: {
-      findMany: jest.fn(),
-      findFirst: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-    },
-    organisationMember: {
-      findUnique: jest.fn(),
-    },
-  };
+  let prisma: DeepMockProxy<PrismaService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         VehiclesService,
-        {
-          provide: PrismaService,
-          useValue: mockPrismaService,
-        },
+        { provide: PrismaService, useValue: mockPrismaService },
       ],
     }).compile();
 
     service = module.get<VehiclesService>(VehiclesService);
-    prisma = module.get<PrismaService>(PrismaService);
-  });
+    prisma = module.get(PrismaService);
 
-  afterEach(() => {
+    // Clear all mock info
     jest.clearAllMocks();
   });
 
@@ -49,27 +33,31 @@ describe('VehiclesService', () => {
   });
 
   describe('findAllVehiclesForOrganisation', () => {
-    it('should return all vehicles with their rentals for organisation', async () => {
+    it('should return all vehicles for an organisation', async () => {
+      // Given
+      const organisationId = 'org-123';
       const mockVehicles = [
         {
-          id: '1',
-          licensePlate: 'TEST-123',
-          rentals: [{ id: 'r1', status: 'active' }],
-        },
-        {
-          id: '2',
-          licensePlate: 'TEST-456',
+          id: 'vehicle-1',
+          licensePlate: 'THW-001',
+          vehicleType: 'MTW',
+          radioCallName: 'THW 83/01',
+          unit: 'Bergung',
+          organisationId,
           rentals: [],
         },
       ];
 
-      mockPrismaService.vehicle.findMany.mockResolvedValue(mockVehicles);
+      prisma.vehicle.findMany.mockResolvedValue(mockVehicles);
 
-      const result = await service.findAllVehiclesForOrganisation('org-id');
+      // When
+      const result =
+        await service.findAllVehiclesForOrganisation(organisationId);
 
+      // Then
       expect(result).toEqual(mockVehicles);
-      expect(mockPrismaService.vehicle.findMany).toHaveBeenCalledWith({
-        where: { organisationId: 'org-id' },
+      expect(prisma.vehicle.findMany).toHaveBeenCalledWith({
+        where: { organisationId },
         include: {
           rentals: {
             where: {
@@ -79,6 +67,131 @@ describe('VehiclesService', () => {
         },
       });
     });
+  });
+
+  describe('createVehicle', () => {
+    it('should create a new vehicle successfully', async () => {
+      // Given
+      const organisationId = 'org-123';
+      const createVehicleDto: CreateVehicleDto = {
+        licensePlate: 'THW-001',
+        vehicleType: 'MTW',
+        radioCallName: 'THW 83/01',
+        unit: 'Bergung',
+      };
+
+      const mockOrganisation = {
+        id: organisationId,
+        name: 'THW OV Test',
+        inviteCode: 'ABCDEF',
+      };
+
+      const mockCreatedVehicle = {
+        id: 'vehicle-1',
+        ...createVehicleDto,
+        organisationId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      prisma.organisation.findUnique.mockResolvedValue(mockOrganisation);
+      prisma.vehicle.findFirst.mockResolvedValue(null); // No existing vehicle
+      prisma.vehicle.create.mockResolvedValue(mockCreatedVehicle);
+
+      // When
+      const result = await service.createVehicle(
+        createVehicleDto,
+        organisationId,
+      );
+
+      // Then
+      expect(result).toEqual(mockCreatedVehicle);
+      expect(prisma.organisation.findUnique).toHaveBeenCalledWith({
+        where: { id: organisationId },
+      });
+      expect(prisma.vehicle.findFirst).toHaveBeenCalledWith({
+        where: {
+          licensePlate: createVehicleDto.licensePlate,
+          organisationId,
+        },
+      });
+      expect(prisma.vehicle.create).toHaveBeenCalledWith({
+        data: {
+          ...createVehicleDto,
+          organisationId,
+        },
+      });
+    });
+
+    it('should throw NotFoundException when organisation does not exist', async () => {
+      // Given
+      const organisationId = 'org-123';
+      const createVehicleDto: CreateVehicleDto = {
+        licensePlate: 'THW-001',
+        vehicleType: 'MTW',
+        radioCallName: 'THW 83/01',
+        unit: 'Bergung',
+      };
+
+      prisma.organisation.findUnique.mockResolvedValue(null); // Organisation not found
+
+      // When & Then
+      await expect(
+        service.createVehicle(createVehicleDto, organisationId),
+      ).rejects.toThrow(NotFoundException);
+      expect(prisma.organisation.findUnique).toHaveBeenCalledWith({
+        where: { id: organisationId },
+      });
+      expect(prisma.vehicle.create).not.toHaveBeenCalled();
+    });
+
+    it('should throw BadRequestException when vehicle with same license plate already exists', async () => {
+      // Given
+      const organisationId = 'org-123';
+      const createVehicleDto: CreateVehicleDto = {
+        licensePlate: 'THW-001',
+        vehicleType: 'MTW',
+        radioCallName: 'THW 83/01',
+        unit: 'Bergung',
+      };
+
+      const mockOrganisation = {
+        id: organisationId,
+        name: 'THW OV Test',
+        inviteCode: 'ABCDEF',
+      };
+
+      const existingVehicle = {
+        id: 'vehicle-1',
+        licensePlate: 'THW-001',
+        vehicleType: 'GKW',
+        radioCallName: 'THW 83/02',
+        unit: 'Bergung',
+        organisationId,
+      };
+
+      prisma.organisation.findUnique.mockResolvedValue(mockOrganisation);
+      prisma.vehicle.findFirst.mockResolvedValue(existingVehicle); // Vehicle with same license plate exists
+
+      // When & Then
+      await expect(
+        service.createVehicle(createVehicleDto, organisationId),
+      ).rejects.toThrow(BadRequestException);
+      expect(prisma.organisation.findUnique).toHaveBeenCalledWith({
+        where: { id: organisationId },
+      });
+      expect(prisma.vehicle.findFirst).toHaveBeenCalledWith({
+        where: {
+          licensePlate: createVehicleDto.licensePlate,
+          organisationId,
+        },
+      });
+      expect(prisma.vehicle.create).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('findAllRentalsForOrganisation', () => {
+    // ... existing tests ...
   });
 
   describe('createRental', () => {

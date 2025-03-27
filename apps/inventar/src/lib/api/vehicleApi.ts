@@ -7,7 +7,8 @@ import {
 	type Vehicle,
 	type VehicleRental,
 	type CreateVehicleRentalDto,
-	type VehicleRentalId
+	type VehicleRentalId,
+	type CreateVehicleDto
 } from './vehicleModels';
 
 /**
@@ -46,6 +47,24 @@ export async function fetchVehicles(): Promise<void> {
 		}));
 		throw error;
 	}
+}
+
+/**
+ * Erstellt ein neues Fahrzeug
+ */
+export async function createVehicle(vehicleData: CreateVehicleDto): Promise<Vehicle> {
+	const result = await apiPost<Vehicle>('/vehicles', vehicleData, (data: any) => {
+		const result = VehicleSchema.safeParse(data);
+		if (!result.success) {
+			console.error('Error parsing Vehicle:', result.error);
+		}
+		return result.success;
+	});
+
+	// Fahrzeuge neu laden, um den aktuellen Status zu erhalten
+	fetchVehicles().catch(console.error);
+
+	return result.data;
 }
 
 /**

@@ -203,8 +203,8 @@
 				</svg>
 				<p class="text-xl text-gray-600 font-medium">Keine Fahrzeuge gefunden.</p>
 				<p class="text-gray-500 mt-2">
-					Es wurden keine Fahrzeuge für Ihre Organisation gefunden oder Sie haben nicht die nötigen
-					Rechte, um sie zu sehen.
+					Es wurden keine Fahrzeuge für Ihre Organisation gefunden. Neue Fahrzeuge können im
+					Administrationsbereich unter "Organisation" hinzugefügt werden.
 				</p>
 			</div>
 		{:else}
@@ -231,7 +231,7 @@
 			<div class="mt-6 flex justify-end">
 				<button
 					class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
-					onclick={() => (showErrorDialog = false)}
+					on:click={() => (showErrorDialog = false)}
 				>
 					Schließen
 				</button>

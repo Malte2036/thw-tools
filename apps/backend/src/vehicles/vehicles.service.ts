@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateVehicleRentalDto } from './dto/create-vehicle-rental.dto';
+import { CreateVehicleDto } from './dto/create-vehicle.dto';
 
 @Injectable()
 export class VehiclesService {
@@ -25,6 +26,45 @@ export class VehiclesService {
         },
       },
     });
+  }
+
+  // Neues Fahrzeug erstellen
+  async createVehicle(
+    createVehicleDto: CreateVehicleDto,
+    organisationId: string,
+  ): Promise<any> {
+    // Prüfen, ob die Organisation existiert
+    const organisation = await this.prisma.organisation.findUnique({
+      where: { id: organisationId },
+    });
+
+    if (!organisation) {
+      throw new NotFoundException('Organisation not found');
+    }
+
+    // Prüfen, ob ein Fahrzeug mit gleichem Kennzeichen bereits existiert
+    const existingVehicle = await this.prisma.vehicle.findFirst({
+      where: {
+        licensePlate: createVehicleDto.licensePlate,
+        organisationId,
+      },
+    });
+
+    if (existingVehicle) {
+      throw new BadRequestException(
+        'A vehicle with this license plate already exists in your organisation',
+      );
+    }
+
+    // Fahrzeug erstellen
+    const vehicle = await this.prisma.vehicle.create({
+      data: {
+        ...createVehicleDto,
+        organisationId,
+      },
+    });
+
+    return vehicle;
   }
 
   // Alle Ausleihen für eine Organisation abrufen

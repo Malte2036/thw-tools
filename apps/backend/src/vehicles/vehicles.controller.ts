@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleRentalDto } from './dto/create-vehicle-rental.dto';
+import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { EnsureUserAndOrgGuard } from '../shared/user-org/ensure-user-org.guard';
 import { Request } from 'express';
 
@@ -23,6 +24,15 @@ export class VehiclesController {
     // Organisation-ID aus dem Request (wurde von Middleware hinzugefügt)
     const organisationId = req.organisation.id;
     return this.vehiclesService.findAllVehiclesForOrganisation(organisationId);
+  }
+
+  @Post()
+  async createVehicle(
+    @Body() dto: CreateVehicleDto,
+    @Req() req: Request,
+  ): Promise<any> {
+    const organisationId = req.organisation.id;
+    return this.vehiclesService.createVehicle(dto, organisationId);
   }
 
   @Get('rentals')
