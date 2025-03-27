@@ -49,8 +49,20 @@ describe('VehiclesService', () => {
   });
 
   describe('findAllVehiclesForOrganisation', () => {
-    it('should return all vehicles for organisation', async () => {
-      const mockVehicles = [{ id: '1', licensePlate: 'TEST-123' }];
+    it('should return all vehicles with their rentals for organisation', async () => {
+      const mockVehicles = [
+        {
+          id: '1',
+          licensePlate: 'TEST-123',
+          rentals: [{ id: 'r1', status: 'active' }],
+        },
+        {
+          id: '2',
+          licensePlate: 'TEST-456',
+          rentals: [],
+        },
+      ];
+
       mockPrismaService.vehicle.findMany.mockResolvedValue(mockVehicles);
 
       const result = await service.findAllVehiclesForOrganisation('org-id');
@@ -58,6 +70,13 @@ describe('VehiclesService', () => {
       expect(result).toEqual(mockVehicles);
       expect(mockPrismaService.vehicle.findMany).toHaveBeenCalledWith({
         where: { organisationId: 'org-id' },
+        include: {
+          rentals: {
+            where: {
+              OR: [{ status: 'active' }, { status: 'planned' }],
+            },
+          },
+        },
       });
     });
   });
@@ -73,8 +92,8 @@ describe('VehiclesService', () => {
 
     const mockVehicle = {
       id: 'vehicle-id',
-      status: 'available',
       organisationId: 'org-id',
+      rentals: [],
     };
 
     const mockOrganisationMember = {
@@ -106,9 +125,26 @@ describe('VehiclesService', () => {
         where: {
           id: createRentalDto.vehicleId,
           organisationId: 'org-id',
-          status: 'available',
+        },
+        include: {
+          rentals: {
+            where: {
+              status: 'active',
+            },
+          },
         },
       });
+    });
+
+    it('should throw BadRequestException when vehicle is already in use', async () => {
+      mockPrismaService.vehicle.findFirst.mockResolvedValue({
+        ...mockVehicle,
+        rentals: [{ id: 'active-rental', status: 'active' }],
+      });
+
+      await expect(
+        service.createRental(createRentalDto, 'org-id'),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw BadRequestException when user is not a member of the organisation', async () => {
@@ -178,10 +214,11 @@ describe('VehiclesService', () => {
 
       expect(result).toBeDefined();
       expect(mockPrismaService.vehicleRental.create).toHaveBeenCalled();
-      expect(mockPrismaService.vehicle.update).not.toHaveBeenCalled(); // Vehicle status not updated for future rentals
+      // Kein vehicle.update mehr
+      expect(mockPrismaService.vehicle.update).not.toHaveBeenCalled();
     });
 
-    it('should create active rental and update vehicle status when rental starts now', async () => {
+    it('should create active rental when rental starts now', async () => {
       // Statt die komplette Date-Klasse zu mocken, direkter die DTO-Werte setzen
       const now = new Date();
       const oneHourLater = new Date(now.getTime() + 3600000); // 1 Stunde später
@@ -201,10 +238,9 @@ describe('VehiclesService', () => {
       const result = await service.createRental(activeDto, 'org-id');
 
       expect(result).toBeDefined();
-      expect(mockPrismaService.vehicle.update).toHaveBeenCalledWith({
-        where: { id: activeDto.vehicleId },
-        data: { status: 'rented' },
-      });
+      expect(result.status).toBe('active');
+      // Kein vehicle.update mehr
+      expect(mockPrismaService.vehicle.update).not.toHaveBeenCalled();
       expect(mockPrismaService.vehicleRental.create).toHaveBeenCalled();
     });
   });
@@ -232,7 +268,7 @@ describe('VehiclesService', () => {
       );
     });
 
-    it('should cancel rental and update vehicle status when rental was active', async () => {
+    it('should cancel an active rental without updating vehicle status', async () => {
       mockPrismaService.vehicleRental.findFirst.mockResolvedValue({
         id: 'rental-id',
         status: 'active',
@@ -249,10 +285,8 @@ describe('VehiclesService', () => {
       const result = await service.cancelRental('rental-id', 'org-id');
 
       expect(result).toBeDefined();
-      expect(mockPrismaService.vehicle.update).toHaveBeenCalledWith({
-        where: { id: 'vehicle-id' },
-        data: { status: 'available' },
-      });
+      // Kein vehicle.update mehr
+      expect(mockPrismaService.vehicle.update).not.toHaveBeenCalled();
       expect(mockPrismaService.vehicleRental.update).toHaveBeenCalledWith({
         where: { id: 'rental-id' },
         data: { status: 'canceled' },
@@ -260,7 +294,7 @@ describe('VehiclesService', () => {
       });
     });
 
-    it('should cancel rental but not update vehicle status when rental was planned', async () => {
+    it('should cancel a planned rental', async () => {
       mockPrismaService.vehicleRental.findFirst.mockResolvedValue({
         id: 'rental-id',
         status: 'planned',
@@ -277,7 +311,7 @@ describe('VehiclesService', () => {
       const result = await service.cancelRental('rental-id', 'org-id');
 
       expect(result).toBeDefined();
-      expect(mockPrismaService.vehicle.update).not.toHaveBeenCalled(); // Vehicle status shouldn't be updated
+      expect(mockPrismaService.vehicle.update).not.toHaveBeenCalled();
       expect(mockPrismaService.vehicleRental.update).toHaveBeenCalledWith({
         where: { id: 'rental-id' },
         data: { status: 'canceled' },

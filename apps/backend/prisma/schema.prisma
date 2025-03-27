@@ -192,6 +192,17 @@ model InventoryItem {
   @@schema("inventory")
 }
 
+model InventoryItemCustomData {
+  id          String         @id @default(uuid()) @db.Uuid
+  lastScanned DateTime?      @db.Timestamp(6)
+  note        String?        @db.VarChar(1000)
+  item        InventoryItem?
+
+  @@map("inventory_item_custom_data")
+  @@schema("inventory")
+} 
+
+
 //
 // INVENTORY SCHEMA - Vehicle Models
 //
@@ -201,7 +212,6 @@ model Vehicle {
   vehicleType   String          @db.VarChar(50)
   radioCallName String          @db.VarChar(50)
   unit          String          @db.VarChar(100)
-  status        String          @db.VarChar(20)  // 'available' oder 'rented'
   organisationId String         @db.Uuid
   rentals       VehicleRental[]
   organisation  Organisation    @relation(fields: [organisationId], references: [id])
@@ -228,13 +238,3 @@ model VehicleRental {
   @@map("vehicle_rentals")
   @@schema("inventory")
 }
-
-model InventoryItemCustomData {
-  id          String         @id @default(uuid()) @db.Uuid
-  lastScanned DateTime?      @db.Timestamp(6)
-  note        String?        @db.VarChar(1000)
-  item        InventoryItem?
-
-  @@map("inventory_item_custom_data")
-  @@schema("inventory")
-} 

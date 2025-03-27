@@ -17,6 +17,13 @@ export class VehiclesService {
   async findAllVehiclesForOrganisation(organisationId: string): Promise<any> {
     return this.prisma.vehicle.findMany({
       where: { organisationId },
+      include: {
+        rentals: {
+          where: {
+            OR: [{ status: 'active' }, { status: 'planned' }],
+          },
+        },
+      },
     });
   }
 
@@ -44,12 +51,23 @@ export class VehiclesService {
       where: {
         id: dto.vehicleId,
         organisationId,
-        status: 'available',
+      },
+      include: {
+        rentals: {
+          where: {
+            status: 'active',
+          },
+        },
       },
     });
 
     if (!vehicle) {
-      throw new NotFoundException('Vehicle not found or not available');
+      throw new NotFoundException('Vehicle not found');
+    }
+
+    // Prüfen, ob das Fahrzeug bereits in Benutzung ist
+    if (vehicle.rentals && vehicle.rentals.length > 0) {
+      throw new BadRequestException('Vehicle is already in use');
     }
 
     // Prüfen, ob der Benutzer zur Organisation gehört
@@ -79,25 +97,18 @@ export class VehiclesService {
     const overlappingRentals = await this.prisma.vehicleRental.findMany({
       where: {
         vehicleId: dto.vehicleId,
-        status: { in: ['active', 'planned'] },
+        status: {
+          in: ['planned', 'active'],
+        },
         OR: [
           {
-            AND: [
-              { plannedStart: { lte: plannedStart } },
-              { plannedEnd: { gte: plannedStart } },
-            ],
-          },
-          {
-            AND: [
-              { plannedStart: { lte: plannedEnd } },
-              { plannedEnd: { gte: plannedEnd } },
-            ],
-          },
-          {
-            AND: [
-              { plannedStart: { gte: plannedStart } },
-              { plannedEnd: { lte: plannedEnd } },
-            ],
+            // Fall 1: Start innerhalb einer existierenden Reservierung
+            plannedStart: {
+              lte: plannedEnd,
+            },
+            plannedEnd: {
+              gte: plannedStart,
+            },
           },
         ],
       },
@@ -105,25 +116,17 @@ export class VehiclesService {
 
     if (overlappingRentals.length > 0) {
       throw new BadRequestException(
-        'Vehicle already has an overlapping rental',
+        'There are overlapping rentals for this vehicle',
       );
     }
 
-    // Status des Fahrzeugs aktualisieren, wenn die Ausleihe jetzt beginnt
+    // Status der Ausleihe bestimmen
     const now = new Date();
-    const status =
-      plannedStart <= now && plannedEnd >= now ? 'active' : 'planned';
-
-    // Wenn die Ausleihe aktiv ist, muss das Fahrzeug auf "rented" gesetzt werden
-    if (status === 'active') {
-      await this.prisma.vehicle.update({
-        where: { id: dto.vehicleId },
-        data: { status: 'rented' },
-      });
-    }
+    const isStartingNow = plannedStart <= now && plannedEnd > now;
+    const status = isStartingNow ? 'active' : 'planned';
 
     // Ausleihe erstellen
-    return this.prisma.vehicleRental.create({
+    const rental = await this.prisma.vehicleRental.create({
       data: {
         vehicleId: dto.vehicleId,
         userId: dto.userId,
@@ -134,8 +137,11 @@ export class VehiclesService {
       },
       include: {
         vehicle: true,
+        user: true,
       },
     });
+
+    return rental;
   }
 
   // Ausleihe stornieren
@@ -161,21 +167,19 @@ export class VehiclesService {
       throw new BadRequestException('Rental is already canceled');
     }
 
-    // Wenn die Ausleihe aktiv war, Fahrzeug wieder auf "available" setzen
-    if (rental.status === 'active') {
-      await this.prisma.vehicle.update({
-        where: { id: rental.vehicleId },
-        data: { status: 'available' },
-      });
-    }
-
     // Ausleihe stornieren
-    return this.prisma.vehicleRental.update({
-      where: { id },
-      data: { status: 'canceled' },
+    const updatedRental = await this.prisma.vehicleRental.update({
+      where: {
+        id,
+      },
+      data: {
+        status: 'canceled',
+      },
       include: {
         vehicle: true,
       },
     });
+
+    return updatedRental;
   }
 }
