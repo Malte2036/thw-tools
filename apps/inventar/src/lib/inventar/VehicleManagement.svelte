@@ -3,7 +3,7 @@
 	import type { Vehicle, VehicleRental, VehicleId, VehicleRentalId } from '$lib/api/vehicleModels';
 	import { getUserById, user } from '$lib/shared/stores/userStore';
 	import { userToFriendlyString } from '$lib/api/funkModels';
-	import { getVehicleColor, getRentalStatusColor } from '$lib/utils/colorUtils';
+	import { getMediumColor } from '@thw-tools/shared';
 
 	// Define props using the new $props() syntax
 	const {
@@ -178,22 +178,9 @@
 				// Find the vehicle information
 				const vehicle = vehicles.find((v: Vehicle) => v.id === rental.vehicleId);
 
-				// Create the event title based on whether a vehicle is selected
-				let title;
-				if (selectedVehicle) {
-					// If a vehicle is selected, show the user and purpose
-					title = `${userToFriendlyString(getUserById($user, rental.userId))} - ${rental.purpose}`;
-				} else {
-					// If no vehicle is selected, show the vehicle name and purpose
-					title = `${vehicle?.radioCallName || 'Fahrzeug'} - ${rental.purpose}`;
-				}
+				let title = `${vehicle?.radioCallName || 'Fahrzeug'} - ${rental.purpose}`;
 
-				console.log(rental.id + '-' + rental.purpose);
-
-				let color = getVehicleColor(
-					rental.vehicleId + '-' + rental.id + '-' + rental.purpose.replace(' ', '-')
-				);
-				console.log(color);
+				let color = getMediumColor(rental.vehicleId);
 
 				return {
 					id: rental.id,

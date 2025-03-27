@@ -1,4 +1,4 @@
-import { hashString, randomFromSeed } from './random';
+import { hashString } from './random';
 
 /**
  * Default color to use when ID is not provided
@@ -193,4 +193,21 @@ export function getContrastTextColor(hexColor: string): 'black' | 'white' {
 
   // Return black for bright colors, white for dark colors
   return brightness > 128 ? 'black' : 'white';
+}
+
+/**
+ * Determines color based on rental status
+ *
+ * @param status - Rental status ('active' or 'canceled')
+ * @returns Color corresponding to the status
+ */
+export function getRentalStatusColor(status: string): string {
+  switch (status) {
+    case 'active':
+      return '#0066cc'; // Blue
+    case 'canceled':
+      return '#999999'; // Gray
+    default:
+      return '#666666'; // Dark Gray
+  }
 }
