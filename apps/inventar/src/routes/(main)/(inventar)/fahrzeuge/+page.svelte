@@ -74,7 +74,7 @@
 			console.error('Error creating rental:', error);
 			// Extract error message
 			if (error instanceof Error) {
-				if (error.message.includes('Vehicle is already in use')) {
+				if (error.message.includes('There are overlapping rentals for this vehicle')) {
 					errorMessage =
 						'Das Fahrzeug ist in diesem Zeitraum bereits in Verwendung und kann nicht ausgeliehen werden.';
 				} else {

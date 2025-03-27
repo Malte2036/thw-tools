@@ -138,15 +138,30 @@ describe('VehiclesService', () => {
       });
     });
 
-    it('should throw BadRequestException when vehicle is already in use', async () => {
+    it('should NOT throw BadRequestException when vehicle has active rentals but not overlapping', async () => {
       mockPrismaService.vehicle.findFirst.mockResolvedValue({
         ...mockVehicle,
         rentals: [{ id: 'active-rental', status: 'active' }],
       });
 
-      await expect(
-        service.createRental(createRentalDto, 'org-id', userId),
-      ).rejects.toThrow(BadRequestException);
+      // Mock no overlapping rentals
+      mockPrismaService.vehicleRental.findMany.mockResolvedValue([]);
+
+      // Mock successful rental creation
+      mockPrismaService.vehicleRental.create.mockResolvedValue({
+        id: 'rental-id',
+        ...createRentalDto,
+        userId,
+        status: 'planned',
+      });
+
+      // This should not throw an exception now
+      const result = await service.createRental(
+        createRentalDto,
+        'org-id',
+        userId,
+      );
+      expect(result).toBeDefined();
     });
 
     it('should throw BadRequestException when user is not a member of the organisation', async () => {

@@ -65,10 +65,6 @@ export class VehiclesService {
       throw new NotFoundException('Vehicle not found in your organisation');
     }
 
-    if (vehicle.rentals.length > 0) {
-      throw new BadRequestException('Vehicle is already in use');
-    }
-
     // Check if user is part of the organisation
     const orgMember = await this.prisma.organisationMember.findUnique({
       where: {

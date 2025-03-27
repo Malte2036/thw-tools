@@ -91,7 +91,6 @@ describe('VehiclesController', () => {
     it('should create a new rental', async () => {
       const dto: CreateVehicleRentalDto = {
         vehicleId: 'v1',
-        userId: 'u1',
         purpose: 'Test purpose',
         plannedStart: '2023-06-15T08:00:00Z',
         plannedEnd: '2023-06-15T18:00:00Z',
@@ -99,10 +98,12 @@ describe('VehiclesController', () => {
       const mockRental = {
         id: 'r1',
         ...dto,
+        userId: 'u1',
         status: 'planned',
       };
       const mockRequest = {
         organisation: { id: 'org-id' },
+        user: { id: 'u1' },
       };
 
       mockVehiclesService.createRental.mockResolvedValue(mockRental);
@@ -113,19 +114,20 @@ describe('VehiclesController', () => {
       expect(mockVehiclesService.createRental).toHaveBeenCalledWith(
         dto,
         'org-id',
+        'u1',
       );
     });
 
     it('should forward exceptions from the service', async () => {
       const dto: CreateVehicleRentalDto = {
         vehicleId: 'v1',
-        userId: 'u1',
         purpose: 'Test purpose',
         plannedStart: '2023-06-15T08:00:00Z',
         plannedEnd: '2023-06-15T18:00:00Z',
       };
       const mockRequest = {
         organisation: { id: 'org-id' },
+        user: { id: 'u1' },
       };
 
       const error = new Error('Service error');
