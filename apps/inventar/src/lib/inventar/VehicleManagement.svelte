@@ -133,6 +133,10 @@
 				color: rental.status === 'active' ? 'blue' : rental.status === 'canceled' ? 'red' : 'gray'
 			}))
 	);
+
+	function handleCalendarEventClick(e: CustomEvent<{ id: string }>) {
+		handleEventClick(e.detail);
+	}
 </script>
 
 <div class="space-y-6">
@@ -166,7 +170,6 @@
 							<button
 								class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 								on:click={() => (showRentalDialog = true)}
-								disabled={getVehicleStatus(selectedVehicle.id) !== 'available'}
 							>
 								Fahrzeug ausleihen
 							</button>
@@ -192,7 +195,7 @@
 						</p>
 					</div>
 				{/if}
-				<Calendar events={calendarEvents} on:eventClick={(e) => handleEventClick(e.detail)} />
+				<Calendar events={calendarEvents} on:eventClick={handleCalendarEventClick} />
 			</div>
 		</div>
 	</div>

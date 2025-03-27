@@ -16,8 +16,9 @@
 
 	// Datenstatus
 	let rentals = $state<VehicleRental[]>([]);
-
 	let isFetchingRentals = $state(false);
+	let errorMessage = $state('');
+	let showErrorDialog = $state(false);
 
 	// Lade die Daten beim Komponenten-Laden
 	onMount(async () => {
@@ -65,6 +66,16 @@
 			await loadRentals();
 		} catch (error) {
 			console.error('Error creating rental:', error);
+			// Extract error message
+			if (error instanceof Error) {
+				if (error.message.includes('Vehicle is already in use')) {
+					errorMessage =
+						'Das Fahrzeug ist in diesem Zeitraum bereits in Verwendung und kann nicht ausgeliehen werden.';
+				} else {
+					errorMessage = `Fehler beim Erstellen der Ausleihe: ${error.message}`;
+				}
+				showErrorDialog = true;
+			}
 		}
 	}
 
@@ -79,6 +90,11 @@
 			await loadRentals();
 		} catch (error) {
 			console.error('Error canceling rental:', error);
+			// Extract error message
+			if (error instanceof Error) {
+				errorMessage = `Fehler beim Stornieren der Ausleihe: ${error.message}`;
+				showErrorDialog = true;
+			}
 		}
 	}
 
@@ -184,3 +200,23 @@
 		{/if}
 	</div>
 </div>
+
+<!-- Error Dialog -->
+{#if showErrorDialog}
+	<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+		<div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4">
+			<h2 class="text-xl font-bold text-red-600 mb-4">Fehler</h2>
+			<div class="mb-4">
+				<p class="text-gray-800">{errorMessage}</p>
+			</div>
+			<div class="mt-6 flex justify-end">
+				<button
+					class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
+					onclick={() => (showErrorDialog = false)}
+				>
+					Schließen
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
