@@ -181,19 +181,6 @@
 			</div>
 		</div>
 
-		<div class="mb-4 bg-thw-50 border border-thw-100 p-4 rounded-md">
-			<div class="flex flex-col sm:flex-row gap-2 justify-between">
-				<div>
-					<p class="text-thw-800 font-medium">Angemeldet als:</p>
-					<p class="text-thw-700">{userToFriendlyString($user.user)}</p>
-				</div>
-				<div>
-					<p class="text-thw-800 font-medium">Einheit:</p>
-					<p class="text-thw-700">{$user.organisation?.name}</p>
-				</div>
-			</div>
-		</div>
-
 		{#if $vehicles.fetching || isFetchingRentals}
 			<div class="flex justify-center py-12">
 				<LoadingSpinner />

@@ -17,11 +17,13 @@
   const dispatch = createEventDispatcher<{
     eventClick: CalendarEvent;
     viewChange: { view: 'month' | 'week' };
+    dayClick: { date: Date | null };
   }>();
 
   let currentDate = $state(new Date());
   let currentView = $state<'month' | 'week'>(initialView);
   let isMobile = $state(false);
+  let selectedDate = $state<Date | null>(null);
 
   // Check if we're on a mobile device
   function checkIsMobile() {
@@ -80,6 +82,21 @@
     dispatch('eventClick', event);
   }
 
+  function handleDayClick(date: Date) {
+    // Toggle selection - if clicking the same date, unselect it
+    if (
+      selectedDate &&
+      date.getDate() === selectedDate.getDate() &&
+      date.getMonth() === selectedDate.getMonth() &&
+      date.getFullYear() === selectedDate.getFullYear()
+    ) {
+      selectedDate = null;
+    } else {
+      selectedDate = date;
+    }
+    dispatch('dayClick', { date: selectedDate });
+  }
+
   function previousPeriod() {
     if (currentView === 'month') {
       currentDate = new Date(year, month - 1);
@@ -123,6 +140,15 @@
       date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear()
+    );
+  }
+
+  function isSelectedDate(date: Date): boolean {
+    if (!selectedDate) return false;
+    return (
+      date.getDate() === selectedDate.getDate() &&
+      date.getMonth() === selectedDate.getMonth() &&
+      date.getFullYear() === selectedDate.getFullYear()
     );
   }
 
@@ -286,22 +312,33 @@
         {#each calendarDays as day}
           {@const date = getDateFromNumbers(year, month, day)}
           <div
-            class="h-14 sm:h-20 md:h-24 lg:h-28 p-0.5 sm:p-1 border hover:border-thw-300 rounded-md transition-colors
+            class="h-14 sm:h-20 md:h-24 lg:h-28 p-0.5 sm:p-1 border hover:border-thw-300 rounded-md transition-colors cursor-pointer
             {isToday(date)
-              ? 'bg-thw-50 border-thw-300 shadow-sm'
-              : 'border-gray-200 hover:bg-gray-50'}"
+              ? 'bg-thw-100 border-thw-500 shadow-md'
+              : isSelectedDate(date)
+                ? 'bg-thw-100 border-thw-500 shadow-sm'
+                : 'border-gray-200 hover:bg-gray-50'}"
+            on:click={() => handleDayClick(date)}
           >
             <div class="flex justify-between items-center mb-1 px-1">
               <span
                 class={isToday(date)
-                  ? 'bg-thw-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold'
-                  : 'text-xs sm:text-sm font-medium text-gray-700'}
+                  ? 'bg-thw-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-md'
+                  : isSelectedDate(date)
+                    ? 'bg-thw-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold'
+                    : 'text-xs sm:text-sm font-medium text-gray-700'}
               >
                 {day}
               </span>
               {#if isToday(date)}
-                <span class="text-xs text-thw-600 bg-white px-1 rounded hidden sm:inline"
+                <span
+                  class="text-xs text-thw-700 font-semibold bg-white px-1.5 py-0.5 rounded hidden sm:inline shadow-sm"
                   >Heute</span
+                >
+              {/if}
+              {#if isSelectedDate(date) && !isToday(date)}
+                <span class="text-xs text-thw-500 bg-white px-1 rounded hidden sm:inline"
+                  >Ausgewählt</span
                 >
               {/if}
             </div>
@@ -312,7 +349,7 @@
                 <button
                   class="w-full text-left text-xs p-1 rounded-sm flex items-center gap-0.5 transition-opacity hover:opacity-90"
                   style="background-color: {event.color || '#005b99'}; color: white;"
-                  on:click={() => handleEventClick(event)}
+                  on:click|stopPropagation={() => handleEventClick(event)}
                   title={`${event.title} (${new Date(event.start).toLocaleDateString('de-DE')} - ${new Date(event.end).toLocaleDateString('de-DE')})`}
                 >
                   {#if !isFirst}
@@ -336,15 +373,18 @@
         <div class="space-y-3">
           {#each weekDays as day}
             <div
-              class="border border-gray-200 rounded-lg overflow-hidden shadow-sm {isToday(day)
-                ? 'border-thw-300'
-                : ''}"
+              class="border border-gray-200 rounded-lg overflow-hidden shadow-sm cursor-pointer
+              {isToday(day) ? 'border-thw-300' : isSelectedDate(day) ? 'border-thw-500' : ''}"
+              on:click={() => handleDayClick(day)}
             >
               <!-- Day header -->
               <div
-                class="flex justify-between items-center p-2 {isToday(day)
-                  ? 'bg-thw-100'
-                  : 'bg-gray-50'}"
+                class="flex justify-between items-center p-2
+                {isToday(day)
+                  ? 'bg-thw-200 shadow-inner'
+                  : isSelectedDate(day)
+                    ? 'bg-thw-100'
+                    : 'bg-gray-50'}"
               >
                 <div class="flex items-center gap-2">
                   <div class="flex flex-col">
@@ -352,7 +392,12 @@
                       {day.toLocaleDateString('de-DE', { weekday: 'short' })}
                     </span>
                     <span
-                      class="text-base font-bold {isToday(day) ? 'text-thw-700' : 'text-gray-800'}"
+                      class="text-base font-bold
+                      {isToday(day)
+                        ? 'text-thw-800'
+                        : isSelectedDate(day)
+                          ? 'text-thw-600'
+                          : 'text-gray-800'}"
                     >
                       {day.getDate()}.{day.getMonth() + 1}.
                     </span>
@@ -360,9 +405,16 @@
                 </div>
                 {#if isToday(day)}
                   <span
-                    class="text-xs font-medium text-thw-600 bg-white px-2 py-0.5 rounded-full shadow-sm"
+                    class="text-xs font-medium text-thw-700 bg-white px-2 py-0.5 rounded-full shadow-sm"
                   >
                     Heute
+                  </span>
+                {/if}
+                {#if isSelectedDate(day) && !isToday(day)}
+                  <span
+                    class="text-xs font-medium text-thw-500 bg-white px-2 py-0.5 rounded-full shadow-sm"
+                  >
+                    Ausgewählt
                   </span>
                 {/if}
               </div>
@@ -379,7 +431,7 @@
                     <button
                       class="w-full text-left text-xs p-2 rounded-md flex items-center shadow-sm transition-transform hover:scale-[1.01]"
                       style="background-color: {event.color || '#005b99'}; color: white;"
-                      on:click={() => handleEventClick(event)}
+                      on:click|stopPropagation={() => handleEventClick(event)}
                       title={`${event.title} (${new Date(event.start).toLocaleDateString('de-DE')} - ${new Date(event.end).toLocaleDateString('de-DE')})`}
                     >
                       <div class="flex-1">
@@ -400,7 +452,7 @@
                     </button>
                   {/each}
                 {:else}
-                  Keine Termine
+                  Keine Reservierungen
                 {/if}
               </div>
             </div>
@@ -415,11 +467,12 @@
                 {day.toLocaleDateString('de-DE', { weekday: 'short' })}
               </div>
               <div
-                class="text-sm sm:text-base font-bold mb-1 w-8 h-8 flex items-center justify-center rounded-full {isToday(
-                  day
-                )
-                  ? 'bg-thw-600 text-white shadow-sm'
-                  : 'text-gray-700'}"
+                class="text-sm sm:text-base font-bold mb-1 w-8 h-8 flex items-center justify-center rounded-full
+                {isToday(day)
+                  ? 'bg-thw-700 text-white shadow-md'
+                  : isSelectedDate(day)
+                    ? 'bg-thw-500 text-white shadow-sm'
+                    : 'text-gray-700'}"
               >
                 {day.getDate()}
               </div>
@@ -430,10 +483,13 @@
         <div class="grid grid-cols-7 gap-1 sm:gap-2">
           {#each weekDays as day}
             <div
-              class="{weekCellHeight} p-1 sm:p-2 border rounded-md hover:border-thw-300 transition-colors
+              class="{weekCellHeight} p-1 sm:p-2 border rounded-md hover:border-thw-300 transition-colors cursor-pointer
               {isToday(day)
-                ? 'bg-thw-50 border-thw-300 shadow-sm'
-                : 'border-gray-200 hover:bg-gray-50'}"
+                ? 'bg-thw-100 border-thw-500 shadow-md'
+                : isSelectedDate(day)
+                  ? 'bg-thw-100 border-thw-500 shadow-sm'
+                  : 'border-gray-200 hover:bg-gray-50'}"
+              on:click={() => handleDayClick(day)}
             >
               <div class="space-y-1 overflow-y-auto h-full">
                 {#each getEventsForDay(day) as event}
@@ -441,7 +497,7 @@
                   <button
                     class="w-full text-left text-xs p-1.5 sm:p-2 rounded-md flex items-center shadow-sm transition-opacity hover:opacity-90"
                     style="background-color: {event.color || '#005b99'}; color: white;"
-                    on:click={() => handleEventClick(event)}
+                    on:click|stopPropagation={() => handleEventClick(event)}
                     title={`${event.title} (${new Date(event.start).toLocaleDateString('de-DE')} - ${new Date(event.end).toLocaleDateString('de-DE')})`}
                   >
                     {#if !isFirst}

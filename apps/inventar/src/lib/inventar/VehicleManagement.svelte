@@ -3,6 +3,7 @@
 	import type { Vehicle, VehicleRental, VehicleId, VehicleRentalId } from '$lib/api/vehicleModels';
 	import { getUserById, user } from '$lib/shared/stores/userStore';
 	import { userToFriendlyString } from '$lib/api/funkModels';
+	import { getVehicleColor, getRentalStatusColor } from '$lib/utils/colorUtils';
 
 	// Define props using the new $props() syntax
 	const {
@@ -26,6 +27,7 @@
 	let showCancelDialog = $state(false);
 	let selectedRental = $state<VehicleRental | null>(null);
 	let calendarView = $state<'month' | 'week'>('month');
+	let selectedDate = $state<Date | null>(null);
 
 	// Form states
 	let newRental = $state({
@@ -115,6 +117,23 @@
 		}
 	}
 
+	function handleDayClick(event: CustomEvent<{ date: Date | null }>) {
+		selectedDate = event.detail.date;
+
+		// If we have a selected date, set the start date of the rental form to this date
+		if (selectedDate && showRentalDialog) {
+			const startDate = new Date(selectedDate);
+			startDate.setHours(new Date().getHours());
+			startDate.setMinutes(new Date().getMinutes());
+			newRental.startDate = startDate;
+
+			// Set end date to the next day at the same time
+			const endDate = new Date(startDate);
+			endDate.setDate(endDate.getDate() + 1);
+			newRental.endDate = endDate;
+		}
+	}
+
 	// Convert vehicles to options for the dropdown
 	const vehicleOptions = $derived(
 		vehicles.map((vehicle: Vehicle) => ({
@@ -124,15 +143,27 @@
 	);
 
 	// Calculate the "status" for a vehicle based on active rentals
-	function getVehicleStatus(vehicleId: string): string {
-		const hasActiveRental = rentals.some(
-			(r: VehicleRental) => r.vehicleId === vehicleId && r.status === 'active'
-		);
+	function getVehicleStatus(vehicleId: string, date: Date = new Date()): string {
+		// Convert date to midnight for comparison
+		const compareDate = new Date(date);
+		compareDate.setHours(0, 0, 0, 0);
+		const nextDay = new Date(compareDate);
+		nextDay.setDate(nextDay.getDate() + 1);
+
+		const hasActiveRental = rentals.some((r: VehicleRental) => {
+			if (r.vehicleId !== vehicleId || r.status === 'canceled') return false;
+
+			const rentalStart = new Date(r.plannedStart);
+			const rentalEnd = new Date(r.plannedEnd);
+
+			// Check if the rental period overlaps with the selected date
+			return rentalStart < nextDay && rentalEnd > compareDate;
+		});
 		return hasActiveRental ? 'in use' : 'available';
 	}
 
-	function getVehicleStatusDisplay(vehicleId: string): string {
-		const status = getVehicleStatus(vehicleId);
+	function getVehicleStatusDisplay(vehicleId: string, date: Date = new Date()): string {
+		const status = getVehicleStatus(vehicleId, date);
 		return status === 'available' ? 'Verfügbar' : 'In Benutzung';
 	}
 
@@ -143,13 +174,38 @@
 					(!selectedVehicle || rental.vehicleId === selectedVehicle.id) &&
 					rental.status !== 'canceled'
 			)
-			.map((rental: VehicleRental) => ({
-				id: rental.id,
-				title: `${userToFriendlyString(getUserById($user, rental.userId))} - ${rental.purpose}`,
-				start: rental.plannedStart,
-				end: rental.plannedEnd,
-				color: rental.status === 'active' ? 'blue' : 'gray'
-			}))
+			.map((rental: VehicleRental) => {
+				// Find the vehicle information
+				const vehicle = vehicles.find((v: Vehicle) => v.id === rental.vehicleId);
+
+				// Create the event title based on whether a vehicle is selected
+				let title;
+				if (selectedVehicle) {
+					// If a vehicle is selected, show the user and purpose
+					title = `${userToFriendlyString(getUserById($user, rental.userId))} - ${rental.purpose}`;
+				} else {
+					// If no vehicle is selected, show the vehicle name and purpose
+					title = `${vehicle?.radioCallName || 'Fahrzeug'} - ${rental.purpose}`;
+				}
+
+				// Generate a color based on the vehicle ID if no vehicle is selected
+				let color;
+				if (!selectedVehicle) {
+					// Use the utility function to get a consistent color for each vehicle
+					color = getVehicleColor(rental.vehicleId);
+				} else {
+					// Use the status-based color utility for selected vehicle view
+					color = getRentalStatusColor(rental.status);
+				}
+
+				return {
+					id: rental.id,
+					title,
+					start: rental.plannedStart,
+					end: rental.plannedEnd,
+					color
+				};
+			})
 	);
 
 	function handleCalendarEventClick(e: CustomEvent<{ id: string }>) {
@@ -165,6 +221,35 @@
 		const newVehicle = vehicles.find((v: Vehicle) => v.id === select.value) || null;
 		selectedVehicle = newVehicle;
 		onVehicleSelect(newVehicle);
+	}
+
+	// For opening the rental dialog with a preselected date
+	function showRentalDialogWithDate(date: Date) {
+		if (!selectedVehicle) return;
+
+		// Set the date for the rental form
+		const startDate = new Date(date);
+		startDate.setHours(new Date().getHours());
+		startDate.setMinutes(new Date().getMinutes());
+		newRental.startDate = startDate;
+
+		// Set end date to the next day at the same time
+		const endDate = new Date(startDate);
+		endDate.setDate(endDate.getDate() + 1);
+		newRental.endDate = endDate;
+
+		// Show the dialog
+		showRentalDialog = true;
+	}
+
+	// Format a date as a user-friendly string
+	function formatDateToUserFriendly(date: Date): string {
+		return date.toLocaleDateString('de-DE', {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		});
 	}
 </script>
 
@@ -191,23 +276,46 @@
 							<p><span class="font-medium">Kennzeichen:</span> {selectedVehicle.licensePlate}</p>
 							<p><span class="font-medium">Typ:</span> {selectedVehicle.vehicleType}</p>
 							<p><span class="font-medium">Einheit:</span> {selectedVehicle.unit}</p>
-							<p
-								class={getVehicleStatus(selectedVehicle.id) === 'available'
-									? 'text-green-600'
-									: 'text-red-600'}
-							>
-								<span class="font-medium">Status:</span>
-								{getVehicleStatusDisplay(selectedVehicle.id)}
-							</p>
+
+							{#if selectedDate}
+								<p
+									class={getVehicleStatus(selectedVehicle.id, selectedDate) === 'available'
+										? 'text-green-600'
+										: 'text-red-600'}
+								>
+									<span class="font-medium"
+										>Status am {formatDateToUserFriendly(selectedDate)}:</span
+									>
+									{getVehicleStatusDisplay(selectedVehicle.id, selectedDate)}
+								</p>
+							{:else}
+								<p
+									class={getVehicleStatus(selectedVehicle.id) === 'available'
+										? 'text-green-600'
+										: 'text-red-600'}
+								>
+									<span class="font-medium">Status:</span>
+									{getVehicleStatusDisplay(selectedVehicle.id)}
+								</p>
+							{/if}
 						</div>
 
-						<div class="mt-4">
+						<div class="mt-4 flex flex-wrap gap-2">
 							<button
 								class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 								on:click={() => (showRentalDialog = true)}
 							>
 								Fahrzeug ausleihen
 							</button>
+
+							{#if selectedDate}
+								<button
+									class="bg-thw-500 hover:bg-thw-600 text-white px-4 py-2 rounded-md transition-colors"
+									on:click={() => selectedDate && showRentalDialogWithDate(selectedDate)}
+								>
+									Ausleihe für {selectedDate.getDate()}.{selectedDate.getMonth() + 1}.
+								</button>
+							{/if}
 						</div>
 					</div>
 				</div>
@@ -235,6 +343,7 @@
 					initialView={calendarView}
 					on:eventClick={handleCalendarEventClick}
 					on:viewChange={handleViewChange}
+					on:dayClick={handleDayClick}
 				/>
 			</div>
 		</div>
@@ -252,6 +361,12 @@
 					{selectedVehicle.radioCallName} ({selectedVehicle.licensePlate})
 				</p>
 				<p><span class="font-medium">Benutzer:</span> {userToFriendlyString($user.user)}</p>
+				{#if selectedDate}
+					<p>
+						<span class="font-medium">Ausgewähltes Datum:</span>
+						{formatDateToUserFriendly(selectedDate)}
+					</p>
+				{/if}
 			</div>
 
 			<div class="space-y-4">
