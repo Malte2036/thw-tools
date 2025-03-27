@@ -1,17 +1,17 @@
 services:
   # Backend API
-  # backend:
-  #   image: backend:prod
-  #   build:
-  #     context: .
-  #     dockerfile: apps/backend/Dockerfile
-  #   environment:
-  #     NODE_ENV: production
-  #     DATABASE_URL: ${DATABASE_URL}
-  #     KINDE_DOMAIN: ${KINDE_DOMAIN}
-  #   ports:
-  #     - '3000:3000'
-  #   restart: always
+  backend:
+    image: backend:prod
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
+      KINDE_DOMAIN: ${KINDE_DOMAIN}
+    ports:
+      - '3000:3000'
+    restart: always
 
   # THW-Tools Frontend
   thw-tools:
