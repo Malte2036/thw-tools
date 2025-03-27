@@ -1,23 +1,25 @@
 <script lang="ts">
   import { Calendar } from '@thw-tools/svelte-components';
-  import type { Car, CarLending, User } from '$lib/api/carModels';
+  import type { Vehicle, VehicleRental } from '$lib/api/carModels';
   import { createEventDispatcher } from 'svelte';
 
-  export let cars: Car[] = [];
-  export let lendings: CarLending[] = [];
-  export let currentUser: User;
+  // Wir erhalten jetzt die Backend-Modelle direkt
+  export let cars: Vehicle[] = [];
+  // lendings und currentUser behalten das alte Format bei
+  export let lendings: any[] = [];
+  export let currentUser: any;
   
   const dispatch = createEventDispatcher<{
-    createLending: { carId: string; lending: Omit<CarLending, 'id'> };
+    createLending: { carId: string; lending: any };
     cancelLending: { lendingId: string; reason: string };
     completeLending: { lendingId: string; endKilometer: number };
   }>();
 
-  let selectedCar: Car | null = null;
+  let selectedCar: Vehicle | null = null;
   let showLendingDialog = false;
   let showCancelDialog = false;
   let showCompleteDialog = false;
-  let selectedLending: CarLending | null = null;
+  let selectedLending: any | null = null;
 
   // Form states
   let newLending = {
@@ -117,10 +119,19 @@
     }
   }
 
+  // Konvertiere Backend-Fahrzeuge zu Options für das Dropdown
   $: carOptions = cars.map(car => ({
     value: car.id,
-    label: `${car.funkrufname} (${car.kennzeichen})`
+    label: `${car.radioCallName} (${car.licensePlate})`
   }));
+
+  // Berechne den "status" für ein Fahrzeug basierend auf aktiven Ausleihen
+  function getCarStatus(vehicleId: string): string {
+    const hasActiveRental = lendings.some(
+      l => l.carId === vehicleId && (l.status === 'aktiv' || l.status === 'active')
+    );
+    return hasActiveRental ? 'ausgeliehen' : 'verfügbar';
+  }
 
   $: calendarEvents = lendings
     .filter(lending => !selectedCar || lending.carId === selectedCar.id)
@@ -159,20 +170,19 @@
       {#if selectedCar}
         <div class="mt-4 bg-white rounded-lg border border-gray-200 shadow-sm">
           <div class="p-4">
-            <h3 class="font-bold text-lg text-thw-700">{selectedCar.funkrufname}</h3>
+            <h3 class="font-bold text-lg text-thw-700">{selectedCar.radioCallName}</h3>
             <div class="mt-2 space-y-2 text-sm">
-              <p><span class="font-medium">Kennzeichen:</span> {selectedCar.kennzeichen}</p>
-              <p><span class="font-medium">Typ:</span> {selectedCar.fahrzeugTyp}</p>
-              <p><span class="font-medium">Einheit:</span> {selectedCar.einheit}</p>
-              <p><span class="font-medium">Status:</span> {selectedCar.status}</p>
-              <p><span class="font-medium">Kilometerstand:</span> {selectedCar.kilometerstand} km</p>
+              <p><span class="font-medium">Kennzeichen:</span> {selectedCar.licensePlate}</p>
+              <p><span class="font-medium">Typ:</span> {selectedCar.vehicleType}</p>
+              <p><span class="font-medium">Einheit:</span> {selectedCar.unit}</p>
+              <p><span class="font-medium">Status:</span> {getCarStatus(selectedCar.id)}</p>
             </div>
             
             <div class="mt-4">
               <button 
                 class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 on:click={() => showLendingDialog = true}
-                disabled={selectedCar.status !== 'verfügbar'}
+                disabled={getCarStatus(selectedCar.id) !== 'verfügbar'}
               >
                 Fahrzeug ausleihen
               </button>
@@ -187,7 +197,7 @@
         {#if selectedCar}
           <div class="bg-thw-50 p-2 mb-2 border border-thw-100 rounded-md">
             <p class="text-sm text-thw-700">
-              <span class="font-medium">Kalender für:</span> {selectedCar.funkrufname} ({selectedCar.kennzeichen})
+              <span class="font-medium">Kalender für:</span> {selectedCar.radioCallName} ({selectedCar.licensePlate})
             </p>
           </div>
         {:else}
@@ -206,157 +216,150 @@
   </div>
 </div>
 
-<!-- Create Lending Dialog -->
-{#if showLendingDialog}
+<!-- Ausleihe Dialog -->
+{#if showLendingDialog && selectedCar}
   <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg max-w-md w-full mx-4">
-      <div class="flex justify-between items-center p-4 border-b">
-        <h2 class="text-lg font-semibold">Fahrzeug ausleihen</h2>
-        <button 
-          class="text-gray-400 hover:text-gray-600" 
-          on:click={() => showLendingDialog = false}
-        >
-          ✕
-        </button>
+    <div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4">
+      <h2 class="text-xl font-bold text-thw-700 mb-4">Fahrzeug ausleihen</h2>
+      <div class="mb-4">
+        <p><span class="font-medium">Fahrzeug:</span> {selectedCar.radioCallName} ({selectedCar.licensePlate})</p>
+        <p><span class="font-medium">Benutzer:</span> {currentUser.name} ({currentUser.einheit})</p>
       </div>
-      <div class="p-4">
-        <div class="space-y-4">
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Zweck der Ausleihe</label>
+          <input
+            type="text"
+            class="w-full border border-gray-300 rounded-md p-2"
+            bind:value={newLending.zweck}
+          />
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Zweck</label>
-            <input 
-              type="text"
+            <label class="block text-sm font-medium text-gray-700 mb-1">Startdatum</label>
+            <input
+              type="datetime-local"
               class="w-full border border-gray-300 rounded-md p-2"
-              bind:value={newLending.zweck}
-              placeholder="Grund der Ausleihe"
+              value={formattedStart}
+              on:change={handleStartDateChange}
             />
           </div>
           
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Von</label>
-              <input 
-                type="datetime-local"
-                class="w-full border border-gray-300 rounded-md p-2"
-                value={formattedStart}
-                on:change={handleStartDateChange}
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Bis</label>
-              <input 
-                type="datetime-local"
-                class="w-full border border-gray-300 rounded-md p-2"
-                value={formattedEnd}
-                on:change={handleEndDateChange}
-              />
-            </div>
-          </div>
-
-          <div class="mt-4 flex justify-end gap-2">
-            <button 
-              class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
-              on:click={() => showLendingDialog = false}
-            >
-              Abbrechen
-            </button>
-            <button 
-              class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors"
-              on:click={handleCreateLending}
-            >
-              Ausleihen
-            </button>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Enddatum</label>
+            <input
+              type="datetime-local"
+              class="w-full border border-gray-300 rounded-md p-2"
+              value={formattedEnd}
+              on:change={handleEndDateChange}
+            />
           </div>
         </div>
+      </div>
+      
+      <div class="mt-6 flex justify-end space-x-2">
+        <button
+          class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
+          on:click={() => showLendingDialog = false}
+        >
+          Abbrechen
+        </button>
+        
+        <button
+          class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          on:click={handleCreateLending}
+          disabled={!newLending.zweck}
+        >
+          Ausleihe erstellen
+        </button>
       </div>
     </div>
   </div>
 {/if}
 
-<!-- Cancel Lending Dialog -->
-{#if showCancelDialog}
+<!-- Stornieren Dialog -->
+{#if showCancelDialog && selectedLending}
   <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg max-w-md w-full mx-4">
-      <div class="flex justify-between items-center p-4 border-b">
-        <h2 class="text-lg font-semibold">Ausleihe stornieren</h2>
-        <button 
-          class="text-gray-400 hover:text-gray-600" 
+    <div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4">
+      <h2 class="text-xl font-bold text-red-600 mb-4">Ausleihe stornieren</h2>
+      <div class="mb-4">
+        <p><span class="font-medium">Fahrzeug:</span> {cars.find(c => c.id === selectedLending.carId)?.radioCallName}</p>
+        <p><span class="font-medium">Benutzer:</span> {selectedLending.userName}</p>
+        <p><span class="font-medium">Zweck:</span> {selectedLending.zweck}</p>
+        <p><span class="font-medium">Zeitraum:</span> {selectedLending.geplantStart.toLocaleString('de-DE')} bis {selectedLending.geplantEnde.toLocaleString('de-DE')}</p>
+      </div>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Grund für Stornierung</label>
+          <textarea
+            class="w-full border border-gray-300 rounded-md p-2"
+            rows="3"
+            bind:value={cancelReason}
+          ></textarea>
+        </div>
+      </div>
+      
+      <div class="mt-6 flex justify-end space-x-2">
+        <button
+          class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
           on:click={() => showCancelDialog = false}
         >
-          ✕
+          Abbrechen
         </button>
-      </div>
-      <div class="p-4">
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Grund der Stornierung</label>
-            <input 
-              type="text"
-              class="w-full border border-gray-300 rounded-md p-2"
-              bind:value={cancelReason}
-              placeholder="Grund angeben"
-            />
-          </div>
-
-          <div class="mt-4 flex justify-end gap-2">
-            <button 
-              class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
-              on:click={() => showCancelDialog = false}
-            >
-              Abbrechen
-            </button>
-            <button 
-              class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors"
-              on:click={handleCancelLending}
-            >
-              Stornieren
-            </button>
-          </div>
-        </div>
+        
+        <button
+          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors"
+          on:click={handleCancelLending}
+        >
+          Ausleihe stornieren
+        </button>
       </div>
     </div>
   </div>
 {/if}
 
-<!-- Complete Lending Dialog -->
-{#if showCompleteDialog}
+<!-- Abschließen Dialog -->
+{#if showCompleteDialog && selectedLending}
   <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg max-w-md w-full mx-4">
-      <div class="flex justify-between items-center p-4 border-b">
-        <h2 class="text-lg font-semibold">Ausleihe abschließen</h2>
-        <button 
-          class="text-gray-400 hover:text-gray-600" 
+    <div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4">
+      <h2 class="text-xl font-bold text-thw-700 mb-4">Ausleihe abschließen</h2>
+      <div class="mb-4">
+        <p><span class="font-medium">Fahrzeug:</span> {cars.find(c => c.id === selectedLending.carId)?.radioCallName}</p>
+        <p><span class="font-medium">Benutzer:</span> {selectedLending.userName}</p>
+        <p><span class="font-medium">Zweck:</span> {selectedLending.zweck}</p>
+        <p><span class="font-medium">Startkilometer:</span> {selectedLending.startKilometer} km</p>
+      </div>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Endkilometerstand</label>
+          <input
+            type="number"
+            class="w-full border border-gray-300 rounded-md p-2"
+            bind:value={endKilometer}
+            min={selectedLending.startKilometer}
+          />
+        </div>
+      </div>
+      
+      <div class="mt-6 flex justify-end space-x-2">
+        <button
+          class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
           on:click={() => showCompleteDialog = false}
         >
-          ✕
+          Abbrechen
         </button>
-      </div>
-      <div class="p-4">
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Kilometerstand bei Rückgabe</label>
-            <input 
-              type="number"
-              class="w-full border border-gray-300 rounded-md p-2"
-              bind:value={endKilometer}
-              placeholder="Aktueller Kilometerstand"
-            />
-          </div>
-
-          <div class="mt-4 flex justify-end gap-2">
-            <button 
-              class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
-              on:click={() => showCompleteDialog = false}
-            >
-              Abbrechen
-            </button>
-            <button 
-              class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors"
-              on:click={handleCompleteLending}
-            >
-              Abschließen
-            </button>
-          </div>
-        </div>
+        
+        <button
+          class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors"
+          on:click={handleCompleteLending}
+          disabled={endKilometer < selectedLending.startKilometer}
+        >
+          Ausleihe abschließen
+        </button>
       </div>
     </div>
   </div>
