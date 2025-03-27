@@ -84,11 +84,12 @@ describe('VehiclesService', () => {
   describe('createRental', () => {
     const createRentalDto = {
       vehicleId: 'vehicle-id',
-      userId: 'user-id',
       purpose: 'Test purpose',
       plannedStart: '2023-06-15T08:00:00Z',
       plannedEnd: '2023-06-15T18:00:00Z',
     };
+
+    const userId = 'user-id';
 
     const mockVehicle = {
       id: 'vehicle-id',
@@ -110,6 +111,7 @@ describe('VehiclesService', () => {
       mockPrismaService.vehicleRental.create.mockResolvedValue({
         id: 'rental-id',
         ...createRentalDto,
+        userId,
         status: 'planned',
       });
     });
@@ -118,7 +120,7 @@ describe('VehiclesService', () => {
       mockPrismaService.vehicle.findFirst.mockResolvedValue(null);
 
       await expect(
-        service.createRental(createRentalDto, 'org-id'),
+        service.createRental(createRentalDto, 'org-id', userId),
       ).rejects.toThrow(NotFoundException);
 
       expect(mockPrismaService.vehicle.findFirst).toHaveBeenCalledWith({
@@ -143,7 +145,7 @@ describe('VehiclesService', () => {
       });
 
       await expect(
-        service.createRental(createRentalDto, 'org-id'),
+        service.createRental(createRentalDto, 'org-id', userId),
       ).rejects.toThrow(BadRequestException);
     });
 
@@ -151,7 +153,7 @@ describe('VehiclesService', () => {
       mockPrismaService.organisationMember.findUnique.mockResolvedValue(null);
 
       await expect(
-        service.createRental(createRentalDto, 'org-id'),
+        service.createRental(createRentalDto, 'org-id', userId),
       ).rejects.toThrow(BadRequestException);
 
       expect(
@@ -160,7 +162,7 @@ describe('VehiclesService', () => {
         where: {
           organisationId_userId: {
             organisationId: 'org-id',
-            userId: createRentalDto.userId,
+            userId,
           },
         },
       });
@@ -173,9 +175,9 @@ describe('VehiclesService', () => {
         plannedEnd: '2023-06-15T18:00:00Z',
       };
 
-      await expect(service.createRental(invalidDto, 'org-id')).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.createRental(invalidDto, 'org-id', userId),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw BadRequestException when there are overlapping rentals', async () => {
@@ -190,7 +192,7 @@ describe('VehiclesService', () => {
       ]);
 
       await expect(
-        service.createRental(createRentalDto, 'org-id'),
+        service.createRental(createRentalDto, 'org-id', userId),
       ).rejects.toThrow(BadRequestException);
 
       expect(mockPrismaService.vehicleRental.findMany).toHaveBeenCalled();
@@ -207,10 +209,11 @@ describe('VehiclesService', () => {
       mockPrismaService.vehicleRental.create.mockResolvedValue({
         id: 'rental-id',
         ...futureDto,
+        userId,
         status: 'planned',
       });
 
-      const result = await service.createRental(futureDto, 'org-id');
+      const result = await service.createRental(futureDto, 'org-id', userId);
 
       expect(result).toBeDefined();
       expect(mockPrismaService.vehicleRental.create).toHaveBeenCalled();
@@ -232,10 +235,11 @@ describe('VehiclesService', () => {
       mockPrismaService.vehicleRental.create.mockResolvedValue({
         id: 'rental-id',
         ...activeDto,
+        userId,
         status: 'active',
       });
 
-      const result = await service.createRental(activeDto, 'org-id');
+      const result = await service.createRental(activeDto, 'org-id', userId);
 
       expect(result).toBeDefined();
       expect(result.status).toBe('active');

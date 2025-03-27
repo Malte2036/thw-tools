@@ -43,13 +43,13 @@ export class VehiclesService {
 
   // Neue Ausleihe erstellen
   async createRental(
-    dto: CreateVehicleRentalDto,
+    createVehicleRentalDto: CreateVehicleRentalDto,
     organisationId: string,
+    userId: string,
   ): Promise<any> {
-    // Prüfen, ob Fahrzeug zur Organisation gehört und verfügbar ist
     const vehicle = await this.prisma.vehicle.findFirst({
       where: {
-        id: dto.vehicleId,
+        id: createVehicleRentalDto.vehicleId,
         organisationId,
       },
       include: {
@@ -62,33 +62,30 @@ export class VehiclesService {
     });
 
     if (!vehicle) {
-      throw new NotFoundException('Vehicle not found');
+      throw new NotFoundException('Vehicle not found in your organisation');
     }
 
-    // Prüfen, ob das Fahrzeug bereits in Benutzung ist
-    if (vehicle.rentals && vehicle.rentals.length > 0) {
+    if (vehicle.rentals.length > 0) {
       throw new BadRequestException('Vehicle is already in use');
     }
 
-    // Prüfen, ob der Benutzer zur Organisation gehört
-    const isMember = await this.prisma.organisationMember.findUnique({
+    // Check if user is part of the organisation
+    const orgMember = await this.prisma.organisationMember.findUnique({
       where: {
         organisationId_userId: {
           organisationId,
-          userId: dto.userId,
+          userId,
         },
       },
     });
 
-    if (!isMember) {
-      throw new BadRequestException(
-        'User is not a member of this organisation',
-      );
+    if (!orgMember) {
+      throw new BadRequestException('User is not a member of the organisation');
     }
 
     // Prüfen, ob es überlappende Reservierungen gibt
-    const plannedStart = new Date(dto.plannedStart);
-    const plannedEnd = new Date(dto.plannedEnd);
+    const plannedStart = new Date(createVehicleRentalDto.plannedStart);
+    const plannedEnd = new Date(createVehicleRentalDto.plannedEnd);
 
     if (plannedStart >= plannedEnd) {
       throw new BadRequestException('Start date must be before end date');
@@ -96,7 +93,7 @@ export class VehiclesService {
 
     const overlappingRentals = await this.prisma.vehicleRental.findMany({
       where: {
-        vehicleId: dto.vehicleId,
+        vehicleId: createVehicleRentalDto.vehicleId,
         status: {
           in: ['planned', 'active'],
         },
@@ -128,9 +125,9 @@ export class VehiclesService {
     // Ausleihe erstellen
     const rental = await this.prisma.vehicleRental.create({
       data: {
-        vehicleId: dto.vehicleId,
-        userId: dto.userId,
-        purpose: dto.purpose,
+        vehicleId: createVehicleRentalDto.vehicleId,
+        userId,
+        purpose: createVehicleRentalDto.purpose,
         plannedStart,
         plannedEnd,
         status,
