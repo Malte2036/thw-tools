@@ -18,7 +18,7 @@ export const VehicleSchema = z.object({
 export type Vehicle = z.infer<typeof VehicleSchema>;
 
 // Vehicle rental status enum
-export const VehicleRentalStatusEnum = z.enum(['planned', 'active', 'completed', 'canceled']);
+export const VehicleRentalStatusEnum = z.enum(['active', 'canceled']);
 
 export type VehicleRentalStatus = z.infer<typeof VehicleRentalStatusEnum>;
 
@@ -30,7 +30,7 @@ export const VehicleRentalSchema = z.object({
 	purpose: z.string(),
 	plannedStart: z.union([z.string().datetime(), z.date()]),
 	plannedEnd: z.union([z.string().datetime(), z.date()]),
-	status: z.string(), // 'active', 'planned', 'canceled'
+	status: VehicleRentalStatusEnum,
 	createdAt: z.string().datetime().optional(),
 	updatedAt: z.string().datetime().optional()
 });
