@@ -120,17 +120,24 @@
 		return hasActiveRental ? 'in use' : 'available';
 	}
 
+	function getVehicleStatusDisplay(vehicleId: string): string {
+		const status = getVehicleStatus(vehicleId);
+		return status === 'available' ? 'Verfügbar' : 'In Benutzung';
+	}
+
 	const calendarEvents = $derived(
 		rentals
 			.filter(
-				(rental: VehicleRental) => !selectedVehicle || rental.vehicleId === selectedVehicle.id
+				(rental: VehicleRental) =>
+					(!selectedVehicle || rental.vehicleId === selectedVehicle.id) &&
+					rental.status !== 'canceled'
 			)
 			.map((rental: VehicleRental) => ({
 				id: rental.id,
 				title: `${userToFriendlyString(getUserById($user, rental.userId))} - ${rental.purpose}`,
 				start: rental.plannedStart,
 				end: rental.plannedEnd,
-				color: rental.status === 'active' ? 'blue' : rental.status === 'canceled' ? 'red' : 'gray'
+				color: rental.status === 'active' ? 'blue' : 'gray'
 			}))
 	);
 
@@ -163,13 +170,21 @@
 							<p><span class="font-medium">Kennzeichen:</span> {selectedVehicle.licensePlate}</p>
 							<p><span class="font-medium">Typ:</span> {selectedVehicle.vehicleType}</p>
 							<p><span class="font-medium">Einheit:</span> {selectedVehicle.unit}</p>
-							<p><span class="font-medium">Status:</span> {getVehicleStatus(selectedVehicle.id)}</p>
+							<p
+								class={getVehicleStatus(selectedVehicle.id) === 'available'
+									? 'text-green-600'
+									: 'text-red-600'}
+							>
+								<span class="font-medium">Status:</span>
+								{getVehicleStatusDisplay(selectedVehicle.id)}
+							</p>
 						</div>
 
 						<div class="mt-4">
 							<button
 								class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 								on:click={() => (showRentalDialog = true)}
+								disabled={getVehicleStatus(selectedVehicle.id) !== 'available'}
 							>
 								Fahrzeug ausleihen
 							</button>
