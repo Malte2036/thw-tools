@@ -448,7 +448,7 @@
               <!-- Day events -->
               <div class="p-2 {getEventsForDay(day).length > 0 ? 'space-y-2' : ''}">
                 {#if getEventsForDay(day).length === 0}
-                  <div class="text-xs text-gray-500 text-center py-2">Keine Termine</div>
+                  <div class="text-xs text-gray-500 text-center py-2">Keine Reservierungen</div>
                 {:else}
                   {#each getEventsForDay(day) as event}
                     {@const isFirst = isFirstDayOfEvent(event, day)}
