@@ -7,7 +7,12 @@
 	import { apiMeta } from '$lib/shared/stores/apiMetaStore';
 	import { onMount } from 'svelte';
 	import { userToFriendlyString } from '$lib/api/funkModels';
-	import type { CreateVehicleRentalDto, VehicleRental, VehicleId } from '$lib/api/vehicleModels';
+	import type {
+		CreateVehicleRentalDto,
+		VehicleRental,
+		VehicleId,
+		VehicleRentalId
+	} from '$lib/api/vehicleModels';
 
 	// Datenstatus
 	let rentals = $state<VehicleRental[]>([]);
@@ -37,16 +42,20 @@
 	}
 
 	// Event-Handler
-	async function handleCreateRental(event: CustomEvent<{ carId: VehicleId; rental: any }>) {
+	async function handleCreateRental(data: { vehicleId: VehicleId; rental: VehicleRental }) {
 		try {
-			const { carId, rental } = event.detail;
-
 			// Konvertiere in das Backend-Format
 			const rentalDto: CreateVehicleRentalDto = {
-				vehicleId: carId,
-				purpose: rental.zweck,
-				plannedStart: rental.geplantStart.toISOString(),
-				plannedEnd: rental.geplantEnde.toISOString()
+				vehicleId: data.vehicleId,
+				purpose: data.rental.purpose,
+				plannedStart:
+					data.rental.plannedStart instanceof Date
+						? data.rental.plannedStart.toISOString()
+						: data.rental.plannedStart,
+				plannedEnd:
+					data.rental.plannedEnd instanceof Date
+						? data.rental.plannedEnd.toISOString()
+						: data.rental.plannedEnd
 			};
 
 			// Erstelle die Ausleihe über die API
@@ -59,12 +68,12 @@
 		}
 	}
 
-	async function handleCancelRental(event: CustomEvent<{ rentalId: string; reason: string }>) {
+	async function handleCancelRental(data: { rentalId: VehicleRentalId; reason: string }) {
 		try {
-			const { rentalId } = event.detail;
+			const { rentalId, reason } = data;
 
 			// Storniere die Ausleihe über die API
-			await cancelRental(rentalId);
+			await cancelRental(rentalId, reason);
 
 			// Lade Ausleihen neu, um die Liste zu aktualisieren
 			await loadRentals();
@@ -169,9 +178,8 @@
 			<VehicleManagement
 				vehicles={$vehicles.items}
 				{rentals}
-				on:createRental={handleCreateRental}
-				on:cancelRental={handleCancelRental}
-				on:completeRental={handleCompleteRental}
+				onCreateRental={handleCreateRental}
+				onCancelRental={handleCancelRental}
 			/>
 		{/if}
 	</div>

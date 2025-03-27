@@ -1,18 +1,21 @@
 <script lang="ts">
 	import { Calendar } from '@thw-tools/svelte-components';
-	import type { Vehicle, VehicleRental } from '$lib/api/vehicleModels';
+	import type { Vehicle, VehicleRental, VehicleId, VehicleRentalId } from '$lib/api/vehicleModels';
 	import { getUserById, user } from '$lib/shared/stores/userStore';
-	import { createEventDispatcher } from 'svelte';
 	import { userToFriendlyString } from '$lib/api/funkModels';
 
 	// Define props using the new $props() syntax
-	const { vehicles = [], rentals = [] } = $props<{
+	const {
+		vehicles = [],
+		rentals = [],
+		onCreateRental = () => {},
+		onCancelRental = () => {}
+	} = $props<{
 		vehicles: Vehicle[];
 		rentals: VehicleRental[];
+		onCreateRental?: (data: { vehicleId: VehicleId; rental: VehicleRental }) => void;
+		onCancelRental?: (data: { rentalId: VehicleRentalId; reason: string }) => void;
 	}>();
-
-	// Use the event dispatcher
-	const dispatch = createEventDispatcher();
 
 	let selectedVehicle = $state<Vehicle | null>(null);
 	let showRentalDialog = $state(false);
@@ -65,7 +68,7 @@
 	function handleCreateRental() {
 		if (!selectedVehicle || !$user.user) return;
 
-		dispatch('createRental', {
+		onCreateRental({
 			vehicleId: selectedVehicle.id,
 			rental: {
 				vehicleId: selectedVehicle.id,
@@ -83,7 +86,7 @@
 	function handleCancelRental() {
 		if (!selectedRental) return;
 
-		dispatch('cancelRental', {
+		onCancelRental({
 			rentalId: selectedRental.id,
 			reason: cancelReason
 		});

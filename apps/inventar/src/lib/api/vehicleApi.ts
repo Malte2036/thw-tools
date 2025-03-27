@@ -4,10 +4,10 @@ import { apiGet, apiPost, apiPut } from './apiGeneric';
 import {
 	VehicleSchema,
 	VehicleRentalSchema,
-	CreateVehicleRentalDtoSchema,
 	type Vehicle,
 	type VehicleRental,
-	type CreateVehicleRentalDto
+	type CreateVehicleRentalDto,
+	type VehicleRentalId
 } from './vehicleModels';
 
 /**
@@ -85,7 +85,10 @@ export async function createRental(rentalData: CreateVehicleRentalDto): Promise<
 /**
  * Storniert eine bestehende Fahrzeugausleihe
  */
-export async function cancelRental(rentalId: string, reason?: string): Promise<VehicleRental> {
+export async function cancelRental(
+	rentalId: VehicleRentalId,
+	reason?: string
+): Promise<VehicleRental> {
 	const result = await apiPut<VehicleRental>(
 		`/vehicles/rentals/${rentalId}/cancel`,
 		{ reason: reason || '' },

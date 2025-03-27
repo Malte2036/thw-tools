@@ -22,9 +22,12 @@ export const VehicleRentalStatusEnum = z.enum(['active', 'canceled']);
 
 export type VehicleRentalStatus = z.infer<typeof VehicleRentalStatusEnum>;
 
+export type VehicleRentalId = string & BRAND<'VehicleRentalId'>;
+export const VehicleRentalIdSchema = z.string().brand<'VehicleRentalId'>();
+
 // Vehicle rental model matching the schema.prisma definition
 export const VehicleRentalSchema = z.object({
-	id: z.string().uuid().optional(),
+	id: VehicleRentalIdSchema,
 	vehicleId: VehicleIdSchema,
 	userId: UserIdSchema,
 	purpose: z.string(),
