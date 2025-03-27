@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Button } from '@thw-tools/svelte-components';
 	import type { CreateVehicleDto } from '$lib/api/vehicleModels';
 	import { inventory } from '$lib/shared/stores/inventoryStore';
 
@@ -147,24 +148,14 @@
 				{/if}
 
 				<div class="flex justify-end gap-3 pt-2">
-					<button
-						type="button"
-						class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition-colors"
-						on:click={close}
-						disabled={props.isSubmitting}
-					>
-						Abbrechen
-					</button>
-					<button
-						type="submit"
-						class="px-4 py-2 bg-thw-600 hover:bg-thw-700 text-white rounded-md transition-colors"
-						disabled={props.isSubmitting}
-					>
+					<Button secondary={true} disabled={props.isSubmitting} click={close}>Abbrechen</Button>
+
+					<Button secondary={false} disabled={props.isSubmitting} click={submitForm}>
 						{#if props.isSubmitting}
 							<span class="inline-block animate-spin mr-2">⟳</span>
 						{/if}
 						Fahrzeug erstellen
-					</button>
+					</Button>
 				</div>
 			</form>
 		</div>

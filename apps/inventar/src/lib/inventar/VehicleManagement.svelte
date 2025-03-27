@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Calendar } from '@thw-tools/svelte-components';
+	import { Calendar, Button } from '@thw-tools/svelte-components';
 	import type { Vehicle, VehicleRental, VehicleId, VehicleRentalId } from '$lib/api/vehicleModels';
 	import { getUserById, user } from '$lib/shared/stores/userStore';
 	import { userToFriendlyString } from '$lib/api/funkModels';
@@ -285,20 +285,12 @@
 						</div>
 
 						<div class="mt-4 flex flex-wrap gap-2">
-							<button
-								class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-								on:click={() => (showRentalDialog = true)}
-							>
-								Fahrzeug ausleihen
-							</button>
+							<Button click={() => (showRentalDialog = true)}>Fahrzeug ausleihen</Button>
 
 							{#if selectedDate}
-								<button
-									class="bg-thw-500 hover:bg-thw-600 text-white px-4 py-2 rounded-md transition-colors"
-									on:click={() => selectedDate && showRentalDialogWithDate(selectedDate)}
-								>
+								<Button click={() => selectedDate && showRentalDialogWithDate(selectedDate)}>
 									Ausleihe für {selectedDate.getDate()}.{selectedDate.getMonth() + 1}.
-								</button>
+								</Button>
 							{/if}
 						</div>
 					</div>
@@ -387,20 +379,9 @@
 			</div>
 
 			<div class="mt-6 flex justify-end space-x-2">
-				<button
-					class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
-					on:click={() => (showRentalDialog = false)}
-				>
-					Abbrechen
-				</button>
+				<Button secondary click={() => (showRentalDialog = false)}>Abbrechen</Button>
 
-				<button
-					class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-					on:click={handleCreateRental}
-					disabled={!newRental.purpose}
-				>
-					Ausleihe erstellen
-				</button>
+				<Button click={handleCreateRental} disabled={!newRental.purpose}>Ausleihe erstellen</Button>
 			</div>
 		</div>
 	</div>
@@ -430,19 +411,9 @@
 			</div>
 
 			<div class="mt-6 flex justify-end space-x-2">
-				<button
-					class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
-					on:click={() => (showCancelDialog = false)}
-				>
-					Abbrechen
-				</button>
+				<Button secondary click={() => (showCancelDialog = false)}>Abbrechen</Button>
 
-				<button
-					class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors"
-					on:click={handleCancelRental}
-				>
-					Ausleihe stornieren
-				</button>
+				<Button type="warning" click={handleCancelRental}>Ausleihe stornieren</Button>
 			</div>
 		</div>
 	</div>

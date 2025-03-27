@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { LinkButton, LoadingSpinner } from '@thw-tools/svelte-components';
+	import { LinkButton, LoadingSpinner, Button } from '@thw-tools/svelte-components';
 	import VehicleManagement from '$lib/inventar/VehicleManagement.svelte';
 	import { fetchVehicles, fetchRentals, createRental, cancelRental } from '$lib/api/vehicleApi';
 	import { user } from '$lib/shared/stores/userStore';
@@ -229,12 +229,7 @@
 				<p class="text-gray-800">{errorMessage}</p>
 			</div>
 			<div class="mt-6 flex justify-end">
-				<button
-					class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition-colors"
-					on:click={() => (showErrorDialog = false)}
-				>
-					Schließen
-				</button>
+				<Button secondary click={() => (showErrorDialog = false)}>Schließen</Button>
 			</div>
 		</div>
 	</div>
