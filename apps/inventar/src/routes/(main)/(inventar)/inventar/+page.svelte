@@ -76,6 +76,38 @@
 				<Tabs items={tabItems} onSelect={handleTabSelect} initialSelected={activeTab} />
 			</div>
 
+			<!-- Quick Actions -->
+			<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+				<LinkButton url="list" secondary class="w-full">
+					<span class="flex items-center gap-1.5 justify-center">
+						<div class="w-4 h-4">
+							<ListIcon />
+						</div>
+						<span>Inventarliste</span>
+					</span>
+				</LinkButton>
+
+				<LinkButton url="fahrzeuge" secondary class="w-full">
+					<span class="flex items-center gap-1.5 justify-center">
+						<div class="w-4 h-4">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 17h14m-7-3V5m3 9V5m3 9V5M4 9h16a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6a1 1 0 011-1z" />
+							</svg>
+						</div>
+						<span>Fahrzeugverwaltung</span>
+					</span>
+				</LinkButton>
+
+				<LinkButton url="upload" secondary class="w-full">
+					<span class="flex items-center gap-1.5 justify-center">
+						<div class="w-4 h-4">
+							<UploadIcon />
+						</div>
+						<span>Daten importieren</span>
+					</span>
+				</LinkButton>
+			</div>
+
 			<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 				<!-- Scanner Section -->
 				<div

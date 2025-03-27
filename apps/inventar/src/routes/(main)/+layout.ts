@@ -1,4 +1,4 @@
-import { isAuthenticated, login } from '$lib/api/authApi';
+import { getUser, isAuthenticated, login } from '$lib/api/authApi';
 import { getFunkItemEventBulks, getFunkItems } from '$lib/api/funkApi';
 import { userToFriendlyString } from '$lib/api/funkModels';
 import { getOrganisationForUser } from '$lib/api/organisationApi';
