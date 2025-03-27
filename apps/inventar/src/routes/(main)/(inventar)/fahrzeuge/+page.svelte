@@ -11,14 +11,20 @@
 		CreateVehicleRentalDto,
 		VehicleRental,
 		VehicleId,
-		VehicleRentalId
+		VehicleRentalId,
+		Vehicle
 	} from '$lib/api/vehicleModels';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	// Datenstatus
 	let rentals = $state<VehicleRental[]>([]);
 	let isFetchingRentals = $state(false);
 	let errorMessage = $state('');
 	let showErrorDialog = $state(false);
+
+	// State variables
+	let selectedVehicle = $state<Vehicle | null>(null);
 
 	// Lade die Daten beim Komponenten-Laden
 	onMount(async () => {
@@ -116,6 +122,30 @@
 			year: 'numeric'
 		})
 	);
+
+	// Check for vehicleId in URL on page load
+	$effect(() => {
+		const urlVehicleId = $page.url.searchParams.get('vehicleId');
+		if (urlVehicleId && $vehicles.items) {
+			const vehicleFromUrl = $vehicles.items.find((v) => v.id === urlVehicleId);
+			if (vehicleFromUrl) {
+				selectedVehicle = vehicleFromUrl;
+			}
+		}
+	});
+
+	function handleVehicleSelection(vehicle: Vehicle | null) {
+		selectedVehicle = vehicle;
+		const url = new URL(window.location.href);
+
+		if (vehicle) {
+			url.searchParams.set('vehicleId', vehicle.id);
+		} else {
+			url.searchParams.delete('vehicleId');
+		}
+
+		goto(url.toString(), { replaceState: true });
+	}
 </script>
 
 <div class="px-4 py-6">
@@ -194,6 +224,8 @@
 			<VehicleManagement
 				vehicles={$vehicles.items}
 				{rentals}
+				initialSelectedVehicle={selectedVehicle}
+				onVehicleSelect={handleVehicleSelection}
 				onCreateRental={handleCreateRental}
 				onCancelRental={handleCancelRental}
 			/>

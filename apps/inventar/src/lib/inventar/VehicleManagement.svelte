@@ -8,16 +8,20 @@
 	const {
 		vehicles = [],
 		rentals = [],
+		initialSelectedVehicle = null,
 		onCreateRental = () => {},
-		onCancelRental = () => {}
+		onCancelRental = () => {},
+		onVehicleSelect = () => {}
 	} = $props<{
 		vehicles: Vehicle[];
 		rentals: VehicleRental[];
+		initialSelectedVehicle?: Vehicle | null;
 		onCreateRental?: (data: { vehicleId: VehicleId; rental: VehicleRental }) => void;
 		onCancelRental?: (data: { rentalId: VehicleRentalId; reason: string }) => void;
+		onVehicleSelect?: (vehicle: Vehicle | null) => void;
 	}>();
 
-	let selectedVehicle = $state<Vehicle | null>(null);
+	let selectedVehicle = $state<Vehicle | null>(initialSelectedVehicle);
 	let showRentalDialog = $state(false);
 	let showCancelDialog = $state(false);
 	let selectedRental = $state<VehicleRental | null>(null);
@@ -34,6 +38,14 @@
 	// Format the dates properly for the datetime-local inputs
 	const formattedStart = $derived(formatDateForInput(newRental.startDate));
 	const formattedEnd = $derived(formatDateForInput(newRental.endDate));
+
+	// Set up effect to handle prop changes
+	$effect(() => {
+		// Compare IDs instead of objects to avoid state_proxy_equality_mismatch
+		if (initialSelectedVehicle?.id !== selectedVehicle?.id) {
+			selectedVehicle = initialSelectedVehicle;
+		}
+	});
 
 	function formatDateForInput(date: Date): string {
 		const year = date.getFullYear();
@@ -144,6 +156,13 @@
 	function handleCalendarEventClick(e: CustomEvent<{ id: string }>) {
 		handleEventClick(e.detail);
 	}
+
+	function handleVehicleChange(e: Event) {
+		const select = e.currentTarget as HTMLSelectElement;
+		const newVehicle = vehicles.find((v: Vehicle) => v.id === select.value) || null;
+		selectedVehicle = newVehicle;
+		onVehicleSelect(newVehicle);
+	}
 </script>
 
 <div class="space-y-6">
@@ -153,8 +172,7 @@
 			<select
 				class="w-full border border-gray-300 rounded-md p-2"
 				value={selectedVehicle?.id || ''}
-				on:change={(e) =>
-					(selectedVehicle = vehicles.find((v: Vehicle) => v.id === e.currentTarget.value) || null)}
+				on:change={handleVehicleChange}
 			>
 				<option value="">Bitte auswählen</option>
 				{#each vehicleOptions as option}
@@ -184,7 +202,6 @@
 							<button
 								class="bg-thw-600 hover:bg-thw-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 								on:click={() => (showRentalDialog = true)}
-								disabled={getVehicleStatus(selectedVehicle.id) !== 'available'}
 							>
 								Fahrzeug ausleihen
 							</button>
