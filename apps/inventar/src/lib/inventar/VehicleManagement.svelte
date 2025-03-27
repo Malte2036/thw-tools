@@ -34,8 +34,6 @@
 		purpose: ''
 	});
 
-	let cancelReason = $state('');
-
 	// Format the dates properly for the datetime-local inputs
 	const formattedStart = $derived(formatDateForInput(newRental.startDate));
 	const formattedEnd = $derived(formatDateForInput(newRental.endDate));
@@ -101,7 +99,7 @@
 
 		onCancelRental({
 			rentalId: selectedRental.id,
-			reason: cancelReason
+			reason: ''
 		});
 
 		showCancelDialog = false;
@@ -330,17 +328,6 @@
 						selectedRental?.plannedEnd
 					).toLocaleString('de-DE')}
 				</p>
-			</div>
-
-			<div class="space-y-4">
-				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1">Grund für Stornierung</label>
-					<textarea
-						class="w-full border border-gray-300 rounded-md p-2"
-						rows="3"
-						bind:value={cancelReason}
-					></textarea>
-				</div>
 			</div>
 
 			<div class="mt-6 flex justify-end space-x-2">
