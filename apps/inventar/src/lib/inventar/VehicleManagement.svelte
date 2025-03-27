@@ -25,6 +25,7 @@
 	let showRentalDialog = $state(false);
 	let showCancelDialog = $state(false);
 	let selectedRental = $state<VehicleRental | null>(null);
+	let calendarView = $state<'month' | 'week'>('month');
 
 	// Form states
 	let newRental = $state({
@@ -157,6 +158,10 @@
 		handleEventClick(e.detail);
 	}
 
+	function handleViewChange(e: CustomEvent<{ view: 'month' | 'week' }>) {
+		calendarView = e.detail.view;
+	}
+
 	function handleVehicleChange(e: Event) {
 		const select = e.currentTarget as HTMLSelectElement;
 		const newVehicle = vehicles.find((v: Vehicle) => v.id === select.value) || null;
@@ -166,8 +171,8 @@
 </script>
 
 <div class="space-y-6">
-	<div class="flex flex-col md:flex-row gap-4 items-start">
-		<div class="w-full md:w-64">
+	<div class="flex flex-col md:flex-row gap-4">
+		<div class="w-full md:w-1/3 lg:w-1/4">
 			<div class="mb-1 text-sm font-medium text-gray-700">Fahrzeug auswählen</div>
 			<select
 				class="w-full border border-gray-300 rounded-md p-2"
@@ -211,23 +216,28 @@
 			{/if}
 		</div>
 
-		<div class="w-full min-w-0 overflow-auto">
-			<div class="calendar-container min-w-[700px] md:min-w-0">
+		<div class="w-full min-w-0 overflow-x-auto sm:overflow-visible">
+			<div class="calendar-container bg-white rounded-lg">
 				{#if selectedVehicle}
-					<div class="bg-thw-50 p-2 mb-2 border border-thw-100 rounded-md">
+					<div class="bg-thw-50 p-3 m-0 sm:mx-1 sm:mt-1 border-b border-thw-100 rounded-t-lg">
 						<p class="text-sm text-thw-700">
-							<span class="font-medium">Kalender für:</span>
+							<span class="font-semibold">Kalender für:</span>
 							{selectedVehicle.radioCallName} ({selectedVehicle.licensePlate})
 						</p>
 					</div>
 				{:else}
-					<div class="bg-gray-50 p-2 mb-2 border border-gray-200 rounded-md">
+					<div class="bg-gray-50 p-3 m-0 sm:mx-1 sm:mt-1 border-b border-gray-200 rounded-t-lg">
 						<p class="text-sm text-gray-500">
 							Bitte wählen Sie ein Fahrzeug aus, um dessen Termine im Kalender anzuzeigen.
 						</p>
 					</div>
 				{/if}
-				<Calendar events={calendarEvents} on:eventClick={handleCalendarEventClick} />
+				<Calendar
+					events={calendarEvents}
+					initialView={calendarView}
+					on:eventClick={handleCalendarEventClick}
+					on:viewChange={handleViewChange}
+				/>
 			</div>
 		</div>
 	</div>
