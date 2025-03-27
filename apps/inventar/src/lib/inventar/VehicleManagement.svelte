@@ -189,14 +189,12 @@
 				}
 
 				// Generate a color based on the vehicle ID if no vehicle is selected
-				let color;
-				if (!selectedVehicle) {
-					// Use the utility function to get a consistent color for each vehicle
-					color = getVehicleColor(rental.vehicleId);
-				} else {
-					// Use the status-based color utility for selected vehicle view
-					color = getRentalStatusColor(rental.status);
-				}
+				console.log(rental.id + '-' + rental.purpose);
+
+				let color = getVehicleColor(
+					rental.vehicleId + '-' + rental.id + '-' + rental.purpose.replace(' ', '-')
+				);
+				console.log(color);
 
 				return {
 					id: rental.id,
@@ -334,7 +332,7 @@
 				{:else}
 					<div class="bg-gray-50 p-3 m-0 sm:mx-1 sm:mt-1 border-b border-gray-200 rounded-t-lg">
 						<p class="text-sm text-gray-500">
-							Bitte wählen Sie ein Fahrzeug aus, um dessen Termine im Kalender anzuzeigen.
+							Bitte wähle ein Fahrzeug aus, um dessen Reservierungen im Kalender anzuzeigen.
 						</p>
 					</div>
 				{/if}
