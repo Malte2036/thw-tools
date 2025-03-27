@@ -8,7 +8,7 @@ import {
 	type Vehicle,
 	type VehicleRental,
 	type CreateVehicleRentalDto
-} from './carModels';
+} from './vehicleModels';
 
 /**
  * Lädt alle Fahrzeuge für die Organisation des Benutzers
@@ -22,7 +22,7 @@ export async function fetchVehicles(): Promise<void> {
 		return result.success;
 	});
 
-	vehicles.update((state: { fetching?: Promise<any>; items: Vehicle[] | null }) => ({
+	vehicles.update((state) => ({
 		...state,
 		fetching: fetchPromise
 	}));
@@ -30,7 +30,7 @@ export async function fetchVehicles(): Promise<void> {
 	try {
 		const result = await fetchPromise;
 
-		vehicles.update((state: { fetching?: Promise<any>; items: Vehicle[] | null }) => ({
+		vehicles.update((state) => ({
 			...state,
 			fetching: undefined,
 			items: result.data
@@ -40,7 +40,7 @@ export async function fetchVehicles(): Promise<void> {
 
 		return;
 	} catch (error) {
-		vehicles.update((state: { fetching?: Promise<any>; items: Vehicle[] | null }) => ({
+		vehicles.update((state) => ({
 			...state,
 			fetching: undefined
 		}));
@@ -85,10 +85,10 @@ export async function createRental(rentalData: CreateVehicleRentalDto): Promise<
 /**
  * Storniert eine bestehende Fahrzeugausleihe
  */
-export async function cancelRental(rentalId: string): Promise<VehicleRental> {
+export async function cancelRental(rentalId: string, reason?: string): Promise<VehicleRental> {
 	const result = await apiPut<VehicleRental>(
 		`/vehicles/rentals/${rentalId}/cancel`,
-		{},
+		{ reason: reason || '' },
 		(data: any) => {
 			const result = VehicleRentalSchema.safeParse(data);
 			if (!result.success) {

@@ -25,7 +25,10 @@ export const load = (async ({ url }) => {
 		return EMPTY;
 	}
 
+	const user = await getUser();
+
 	return {
+		userKindeId: user.id,
 		organisation: getOrganisationForUser().then((org) => {
 			org.members.sort((a, b) =>
 				userToFriendlyString(a.user).localeCompare(userToFriendlyString(b.user))

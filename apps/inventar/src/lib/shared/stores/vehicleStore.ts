@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Vehicle } from '$lib/api/carModels';
+import type { Vehicle } from '$lib/api/vehicleModels';
 
 type VehicleState = {
 	items: Vehicle[] | null;

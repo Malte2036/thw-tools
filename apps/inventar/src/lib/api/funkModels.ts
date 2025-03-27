@@ -80,7 +80,11 @@ export function eventTypeToEmoji(eventType: FunkItemEventType): string {
 	return '?';
 }
 
-export function userToFriendlyString(user: User): string {
+export function userToFriendlyString(user: User | null | undefined): string {
+	if (!user) {
+		return 'Unbekannt';
+	}
+
 	if (user.firstName && user.lastName) {
 		return `${user.firstName} ${user.lastName}`;
 	}

@@ -19,7 +19,10 @@
 
 	const subscribeToData = () => {
 		$user.fetching = data.organisation;
-		data.organisation.then((org) => ($user.organisation = org));
+		data.organisation.then((org) => {
+			$user.organisation = org;
+			$user.user = org?.members.find((m) => m.user.kindeId === data.userKindeId)?.user ?? null;
+		});
 
 		$inventory.fetching = data.inventoryItems;
 
