@@ -31,7 +31,6 @@ export const VehicleRentalSchema = z.object({
 // Input DTO für die Erstellung einer Ausleihe
 export const CreateVehicleRentalDtoSchema = z.object({
 	vehicleId: z.string().uuid(),
-	userId: z.string().uuid(),
 	purpose: z.string(),
 	plannedStart: z.string().datetime(),
 	plannedEnd: z.string().datetime()

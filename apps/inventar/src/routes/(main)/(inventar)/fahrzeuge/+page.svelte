@@ -84,7 +84,6 @@
       // Konvertiere in das Backend-Format
       const rentalDto: CreateVehicleRentalDto = {
         vehicleId: carId,
-        userId: currentUser.id,
         purpose: lending.zweck,
         plannedStart: lending.geplantStart.toISOString(),
         plannedEnd: lending.geplantEnde.toISOString()

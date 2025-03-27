@@ -5,10 +5,6 @@ export class CreateVehicleRentalDto {
   @IsNotEmpty()
   vehicleId: string;
 
-  @IsUUID()
-  @IsNotEmpty()
-  userId: string;
-
   @IsString()
   @IsNotEmpty()
   purpose: string;

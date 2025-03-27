@@ -37,7 +37,8 @@ export class VehiclesController {
     @Req() req: Request,
   ): Promise<any> {
     const organisationId = req.organisation.id;
-    return this.vehiclesService.createRental(dto, organisationId);
+    const userId = req.user.id; // Benutzer-ID aus dem Request
+    return this.vehiclesService.createRental(dto, organisationId, userId);
   }
 
   @Put('rentals/:id/cancel')
