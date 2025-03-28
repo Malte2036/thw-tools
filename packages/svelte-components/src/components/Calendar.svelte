@@ -9,9 +9,9 @@
     color?: string;
   }
 
-  const { events = [], initialView = 'month' } = $props<{
+  const { events = [], initialView } = $props<{
     events?: CalendarEvent[];
-    initialView?: 'month' | 'week';
+    initialView?: 'month' | 'week' | undefined;
   }>();
 
   const dispatch = createEventDispatcher<{
@@ -21,14 +21,37 @@
   }>();
 
   let currentDate = $state(new Date());
-  let currentView = $state<'month' | 'week'>(initialView);
   let isMobile = $state(false);
   let selectedDate = $state<Date | null>(null);
+  let currentView = $state<'month' | 'week'>('month');
 
-  // Check if we're on a mobile device
+  // Check if we're on a mobile device and set initial view accordingly
   function checkIsMobile() {
+    const wasMobile = isMobile;
     isMobile = window.innerWidth < 640;
+
+    // If initialView is undefined, set view based on mobile state
+    if (initialView === undefined) {
+      if (isMobile && currentView === 'month') {
+        currentView = 'week';
+        dispatch('viewChange', { view: 'week' });
+      } else if (!isMobile && wasMobile && currentView === 'week') {
+        currentView = 'month';
+        dispatch('viewChange', { view: 'month' });
+      }
+    }
   }
+
+  // Set initial view based on initialView prop or mobile state
+  $effect(() => {
+    if (initialView !== undefined) {
+      currentView = initialView;
+    } else if (isMobile) {
+      currentView = 'week';
+    } else {
+      currentView = 'month';
+    }
+  });
 
   // Add a resize listener to update mobile status
   if (typeof window !== 'undefined') {

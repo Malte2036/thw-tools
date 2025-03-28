@@ -10,7 +10,7 @@
 		vehicles = [],
 		rentals = [],
 		initialSelectedVehicle = null,
-		initialCalendarView = 'month',
+		initialCalendarView = undefined,
 		onCreateRental = () => {},
 		onCancelRental = () => {},
 		onVehicleSelect = () => {},
@@ -19,7 +19,7 @@
 		vehicles: Vehicle[];
 		rentals: VehicleRental[];
 		initialSelectedVehicle?: Vehicle | null;
-		initialCalendarView?: 'month' | 'week';
+		initialCalendarView?: 'month' | 'week' | undefined;
 		onCreateRental?: (data: { vehicleId: VehicleId; rental: VehicleRental }) => void;
 		onCancelRental?: (data: { rentalId: VehicleRentalId; reason: string }) => void;
 		onVehicleSelect?: (vehicle: Vehicle | null) => void;
@@ -30,7 +30,7 @@
 	let showRentalDialog = $state(false);
 	let showCancelDialog = $state(false);
 	let selectedRental = $state<VehicleRental | null>(null);
-	let calendarView = $state<'month' | 'week'>(initialCalendarView);
+	let calendarView = $state<'month' | 'week' | undefined>(initialCalendarView);
 	let selectedDate = $state<Date | null>(null);
 
 	// Form states

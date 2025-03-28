@@ -124,7 +124,7 @@
 	);
 
 	// Check for vehicleId and calendarView in URL on page load
-	let initialCalendarView = $state<'month' | 'week'>('month');
+	let initialCalendarView = $state<'month' | 'week' | undefined>(undefined);
 
 	$effect(() => {
 		const urlVehicleId = $page.url.searchParams.get('vehicleId');
@@ -137,11 +137,9 @@
 			}
 		}
 
-		// Apply calendar view if present in URL
-		initialCalendarView =
-			urlCalendarView === 'week' || urlCalendarView === 'month'
-				? (urlCalendarView as 'month' | 'week')
-				: 'month'; // Default to 'month' if not specified or invalid
+		if (urlCalendarView === 'week' || urlCalendarView === 'month') {
+			initialCalendarView = urlCalendarView as 'month' | 'week';
+		} 
 	});
 
 	function handleVehicleSelection(vehicle: Vehicle | null) {
