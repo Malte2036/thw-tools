@@ -295,7 +295,7 @@
 						</div>
 
 						<div class="mt-4 flex flex-wrap gap-2">
-							<Button click={() => (showRentalDialog = true)}>Fahrzeug ausleihen</Button>
+							<Button click={() => (showRentalDialog = true)}>Fahrzeug reservieren</Button>
 
 							{#if selectedDate}
 								<Button click={() => selectedDate && showRentalDialogWithDate(selectedDate)}>
@@ -340,7 +340,7 @@
 {#if showRentalDialog && selectedVehicle && $user.user}
 	<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
 		<div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4">
-			<h2 class="text-xl font-bold text-thw-700 mb-4">Fahrzeug ausleihen</h2>
+			<h2 class="text-xl font-bold text-thw-700 mb-4">Fahrzeug reservieren</h2>
 			<div class="mb-4">
 				<p>
 					<span class="font-medium">Fahrzeug:</span>
@@ -357,7 +357,7 @@
 
 			<div class="space-y-4">
 				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1">Zweck der Ausleihe</label>
+					<label class="block text-sm font-medium text-gray-700 mb-1">Zweck der Reservierung</label>
 					<input
 						type="text"
 						class="w-full border border-gray-300 rounded-md p-2"

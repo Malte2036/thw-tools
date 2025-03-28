@@ -167,7 +167,7 @@
 		<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
 			<div>
 				<h1 class="text-3xl font-bold text-thw-700">Fahrzeugverwaltung</h1>
-				<p class="text-gray-600 mt-1">Verwalten Sie hier die Fahrzeuge und deren Ausleihen.</p>
+				<p class="text-gray-600 mt-1">Verwalte hier die Fahrzeuge und deren Reservierungen.</p>
 			</div>
 			<div class="text-sm text-gray-500">
 				<span class="font-medium">Letztes Update:</span>
