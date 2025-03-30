@@ -209,18 +209,20 @@
   );
 
   function getEventsForDay(date: Date) {
-    const nextDate = new Date(date);
-    nextDate.setDate(nextDate.getDate() + 1);
+    // Normalize the date to midnight for comparison
+    const dayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+    const dayEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
 
     return events.filter((event: CalendarEvent) => {
       const eventStart = new Date(event.start);
       const eventEnd = new Date(event.end);
 
-      // Check if the event spans this day
+      // Check if the event overlaps with this day
       return (
-        isDateInRange(date, eventStart, eventEnd) ||
-        isDateInRange(nextDate, eventStart, eventEnd) ||
-        (eventStart <= date && eventEnd >= nextDate)
+        (eventStart <= dayEnd && eventEnd >= dayStart) || // Event overlaps with the day
+        (eventStart.getFullYear() === dayStart.getFullYear() &&
+          eventStart.getMonth() === dayStart.getMonth() &&
+          eventStart.getDate() === dayStart.getDate()) // Event starts on this day
       );
     });
   }
