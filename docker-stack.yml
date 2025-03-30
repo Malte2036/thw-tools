@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  backend:
+    image: registry.thw-tools.de/thw-tools-backend:latest
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - KINDE_DOMAIN=${KINDE_DOMAIN}
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    ports:
+      - published: 3000
+        target: 3000
+        protocol: tcp
+        mode: host
+
+  thw-tools:
+    image: registry.thw-tools.de/thw-tools:latest
+    environment:
+      - NODE_ENV=production
+      - PUBLIC_API_URL=${PUBLIC_API_URL}
+      - PUBLIC_UMAMI_ENDPOINT=${PUBLIC_UMAMI_ENDPOINT}
+      - PUBLIC_UMAMI_WEBSITEID=${PUBLIC_UMAMI_WEBSITEID_THW_TOOLS}
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    ports:
+      - published: 3001
+        target: 3000
+        protocol: tcp
+        mode: host
+
+  inventar:
+    image: registry.thw-tools.de/thw-inventar:latest
+    environment:
+      - NODE_ENV=production
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    ports:
+      - published: 3002
+        target: 3000
+        protocol: tcp
+        mode: host

@@ -1,7 +1,7 @@
 services:
   # Backend API
   backend:
-    image: backend:prod
+    image: thw-tools-backend
     build:
       context: .
       dockerfile: apps/backend/Dockerfile
@@ -15,7 +15,7 @@ services:
 
   # THW-Tools Frontend
   thw-tools:
-    image: thw-tools:prod
+    image: thw-tools
     build:
       context: .
       dockerfile: apps/thw-tools/Dockerfile
@@ -38,7 +38,7 @@ services:
 
   # Inventar Frontend
   inventar:
-    image: inventar:prod
+    image: thw-inventar
     build:
       context: .
       dockerfile: apps/inventar/Dockerfile
