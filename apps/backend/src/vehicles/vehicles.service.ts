@@ -7,10 +7,6 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateVehicleRentalDto } from './dto/create-vehicle-rental.dto';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
-import {
-  getRentalConfirmationEmail,
-  getRentalCancellationEmail,
-} from '../email/templates/vehicle-emails';
 import { Vehicle, VehicleRental } from '@prisma/client';
 @Injectable()
 export class VehiclesService {
@@ -104,6 +100,11 @@ export class VehiclesService {
 
     if (!vehicle) {
       throw new NotFoundException('Vehicle not found in your organisation');
+    }
+
+    // Check if the vehicle can be reserved
+    if (vehicle.canBeReserved === false) {
+      throw new BadRequestException('This vehicle cannot be reserved');
     }
 
     // Check if user is part of the organisation

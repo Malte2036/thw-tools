@@ -228,7 +228,7 @@
 			</div>
 		{:else}
 			<VehicleManagement
-				vehicles={$vehicles.items}
+				vehicles={$vehicles.items.filter((vehicle) => vehicle.canBeReserved !== false)}
 				{rentals}
 				initialSelectedVehicle={selectedVehicle}
 				{initialCalendarView}

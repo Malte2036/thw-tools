@@ -191,6 +191,7 @@ model Vehicle {
   specialFeatures  String?         @db.VarChar(1000)
   totalWeight      String?         @db.VarChar(50)
   yearBuilt        Int?
+  canBeReserved    Boolean         @default(true)
   rentals          VehicleRental[]
   organisation     Organisation    @relation(fields: [organisationId], references: [id])
 
