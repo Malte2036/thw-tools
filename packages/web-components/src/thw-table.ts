@@ -1,7 +1,7 @@
-import { LitElement, html, css, unsafeCSS, TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { thwColors } from "./colors";
-import { virtualize } from "@lit-labs/virtualizer/virtualize.js";
+import { LitElement, html, css, unsafeCSS, TemplateResult } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { thwColors } from './colors';
+import { virtualize } from '@lit-labs/virtualizer/virtualize.js';
 
 /**
  * A table component.
@@ -15,14 +15,10 @@ import { virtualize } from "@lit-labs/virtualizer/virtualize.js";
  * @property {(string | TemplateResult | HTMLElement)[]} event.detail.row - The data of the clicked row.
  * @property {number} event.detail.index - The index of the clicked row.
  */
-@customElement("thw-table")
+@customElement('thw-table')
 export class THWTable extends LitElement {
   @property({ type: Array }) header: string[] = [];
-  @property({ type: Array }) values: (
-    | string
-    | TemplateResult
-    | HTMLElement
-  )[][] = [];
+  @property({ type: Array }) values: (string | TemplateResult | HTMLElement)[][] = [];
   @property({ type: Number }) selectedIndex?: number;
   @property({ type: Number }) height?: number;
 
@@ -93,7 +89,9 @@ export class THWTable extends LitElement {
         width: 100%;
         display: flex;
         align-items: stretch;
-        transition: background-color 0.2s, color 0.2s;
+        transition:
+          background-color 0.2s,
+          color 0.2s;
 
         &:hover {
           background-color: ${unsafeCSS(thwColors[200])};
@@ -120,10 +118,7 @@ export class THWTable extends LitElement {
 
   override render() {
     return html`
-      <div
-        class="table-wrapper"
-        style=${this.height ? `height: ${this.height}px;` : ""}
-      >
+      <div class="table-wrapper" style=${this.height ? `height: ${this.height}px;` : ''}>
         <table>
           <thead>
             <tr>
@@ -134,20 +129,14 @@ export class THWTable extends LitElement {
             ${virtualize({
               scroller: true,
               items: this.values,
-              renderItem: (
-                row: (string | TemplateResult | HTMLElement)[],
-                index: number
-              ) =>
-                html`
-                  <tr
-                    class=${this.selectedIndex === index ? "selected" : ""}
-                    @click=${() => this.handleRowClick(row, index)}
-                  >
-                    ${(this.header || []).map(
-                      (_, i) => html`<td>${row[i]}</td>`
-                    )}
-                  </tr>
-                `,
+              renderItem: (row: (string | TemplateResult | HTMLElement)[], index: number) => html`
+                <tr
+                  class=${this.selectedIndex === index ? 'selected' : ''}
+                  @click=${() => this.handleRowClick(row, index)}
+                >
+                  ${(this.header || []).map((_, i) => html`<td>${row[i]}</td>`)}
+                </tr>
+              `,
             })}
           </tbody>
         </table>
@@ -155,13 +144,10 @@ export class THWTable extends LitElement {
     `;
   }
 
-  private handleRowClick(
-    row: (string | TemplateResult | HTMLElement)[],
-    index: number
-  ) {
+  private handleRowClick(row: (string | TemplateResult | HTMLElement)[], index: number) {
     this.selectedIndex = index;
     this.dispatchEvent(
-      new CustomEvent("row-click", {
+      new CustomEvent('row-click', {
         detail: { row, index },
         bubbles: true,
         composed: true,
@@ -172,6 +158,6 @@ export class THWTable extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "thw-table": THWTable;
+    'thw-table': THWTable;
   }
 }

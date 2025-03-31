@@ -194,9 +194,12 @@
 				<h1 class="text-3xl font-bold text-thw-700">Fahrzeugverwaltung</h1>
 				<p class="text-gray-600 mt-1">Verwalte hier die Fahrzeuge und deren Reservierungen.</p>
 			</div>
-			<div class="text-sm text-gray-500">
-				<span class="font-medium">Letztes Update:</span>
-				{lastFetchedStr || 'Noch nicht geladen'}
+			<div class="flex items-center gap-4">
+				<div class="text-sm text-gray-500">
+					<span class="font-medium">Letztes Update:</span>
+					{lastFetchedStr || 'Noch nicht geladen'}
+				</div>
+				<LinkButton url="/fahrzeuge/details" secondary>Fahrzeugdetails</LinkButton>
 			</div>
 		</div>
 
