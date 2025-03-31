@@ -59,3 +59,9 @@ export const CreateVehicleDtoSchema = z.object({
 });
 
 export type CreateVehicleDto = z.infer<typeof CreateVehicleDtoSchema>;
+
+export const vehicleToFriendlyString = (vehicle: Vehicle | undefined) => {
+	if (!vehicle) return '';
+
+	return vehicle.radioCallName;
+};

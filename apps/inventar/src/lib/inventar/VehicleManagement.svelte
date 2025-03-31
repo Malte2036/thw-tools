@@ -4,7 +4,7 @@
 	import { getUserById, user } from '$lib/shared/stores/userStore';
 	import { userToFriendlyString } from '$lib/api/funkModels';
 	import { getMediumColor } from '@thw-tools/shared';
-
+	import { vehicleToFriendlyString } from '$lib/api/vehicleModels';
 	// Define props using the new $props() syntax
 	const {
 		vehicles = [],
@@ -147,7 +147,7 @@
 	const vehicleOptions = $derived(
 		vehicles.map((vehicle: Vehicle) => ({
 			value: vehicle.id,
-			label: `${vehicle.radioCallName} (${vehicle.licensePlate})`
+			label: vehicleToFriendlyString(vehicle)
 		}))
 	);
 
@@ -187,7 +187,7 @@
 				// Find the vehicle information
 				const vehicle = vehicles.find((v: Vehicle) => v.id === rental.vehicleId);
 
-				let title = `${vehicle?.radioCallName || 'Fahrzeug'} - ${rental.purpose}`;
+				let title = `${vehicleToFriendlyString(vehicle)} - ${rental.purpose}`;
 
 				let color = getMediumColor(rental.vehicleId);
 
@@ -254,7 +254,7 @@
 			<select
 				class="w-full border border-gray-300 rounded-md p-2"
 				value={selectedVehicle?.id || ''}
-				on:change={handleVehicleChange}
+				onchange={handleVehicleChange}
 			>
 				<option value="">Bitte auswählen</option>
 				{#each vehicleOptions as option}
@@ -265,7 +265,9 @@
 			{#if selectedVehicle}
 				<div class="mt-4 bg-white rounded-lg border border-gray-200 shadow-sm">
 					<div class="p-4">
-						<h3 class="font-bold text-lg text-thw-700">{selectedVehicle.radioCallName}</h3>
+						<h3 class="font-bold text-lg text-thw-700">
+							{vehicleToFriendlyString(selectedVehicle)}
+						</h3>
 						<div class="mt-2 space-y-2 text-sm">
 							<p><span class="font-medium">Kennzeichen:</span> {selectedVehicle.licensePlate}</p>
 							<p><span class="font-medium">Typ:</span> {selectedVehicle.vehicleType}</p>
@@ -314,7 +316,7 @@
 					<div class="bg-thw-50 p-3 m-0 sm:mx-1 sm:mt-1 border-b border-thw-100 rounded-t-lg">
 						<p class="text-sm text-thw-700">
 							<span class="font-semibold">Kalender für:</span>
-							{selectedVehicle.radioCallName} ({selectedVehicle.licensePlate})
+							{vehicleToFriendlyString(selectedVehicle)}
 						</p>
 					</div>
 				{:else}
@@ -344,7 +346,7 @@
 			<div class="mb-4">
 				<p>
 					<span class="font-medium">Fahrzeug:</span>
-					{selectedVehicle.radioCallName} ({selectedVehicle.licensePlate})
+					{vehicleToFriendlyString(selectedVehicle)}
 				</p>
 				<p><span class="font-medium">Benutzer:</span> {userToFriendlyString($user.user)}</p>
 				{#if selectedDate}
@@ -372,7 +374,7 @@
 							type="datetime-local"
 							class="w-full border border-gray-300 rounded-md p-2"
 							value={formattedStart}
-							on:change={handleStartDateChange}
+							onchange={handleStartDateChange}
 						/>
 					</div>
 
@@ -382,7 +384,7 @@
 							type="datetime-local"
 							class="w-full border border-gray-300 rounded-md p-2"
 							value={formattedEnd}
-							on:change={handleEndDateChange}
+							onchange={handleEndDateChange}
 						/>
 					</div>
 				</div>
@@ -405,7 +407,9 @@
 			<div class="mb-4">
 				<p>
 					<span class="font-medium">Fahrzeug:</span>
-					{vehicles.find((v: Vehicle) => v.id === selectedRental?.vehicleId)?.radioCallName}
+					{vehicleToFriendlyString(
+						vehicles.find((v: Vehicle) => v.id === selectedRental?.vehicleId)
+					)}
 				</p>
 				<p>
 					<span class="font-medium">Benutzer:</span>

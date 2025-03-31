@@ -7,12 +7,14 @@
 	import { apiMeta } from '$lib/shared/stores/apiMetaStore';
 	import { onMount } from 'svelte';
 	import { userToFriendlyString } from '$lib/api/funkModels';
-	import type {
-		CreateVehicleRentalDto,
-		VehicleRental,
-		VehicleId,
-		VehicleRentalId,
-		Vehicle
+	import { bannerMessage } from '$lib/shared/stores/bannerMessage';
+	import {
+		type CreateVehicleRentalDto,
+		type VehicleRental,
+		type VehicleId,
+		type VehicleRentalId,
+		type Vehicle,
+		vehicleToFriendlyString
 	} from '$lib/api/vehicleModels';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -70,6 +72,17 @@
 
 			// Lade Ausleihen neu, um die Liste zu aktualisieren
 			await loadRentals();
+
+			const vehicle = $vehicles.items?.find((v) => v.id === rentalDto.vehicleId);
+
+			// Show success banner
+			$bannerMessage = {
+				message: `${vehicleToFriendlyString(vehicle)} erfolgreich reserviert für ${new Date(rentalDto.plannedStart).toLocaleDateString('de-DE')} bis ${new Date(rentalDto.plannedEnd).toLocaleDateString('de-DE')}`,
+				type: 'info',
+				autoDismiss: {
+					duration: 5000
+				}
+			};
 		} catch (error) {
 			console.error('Error creating rental:', error);
 			// Extract error message
@@ -139,7 +152,7 @@
 
 		if (urlCalendarView === 'week' || urlCalendarView === 'month') {
 			initialCalendarView = urlCalendarView as 'month' | 'week';
-		} 
+		}
 	});
 
 	function handleVehicleSelection(vehicle: Vehicle | null) {
