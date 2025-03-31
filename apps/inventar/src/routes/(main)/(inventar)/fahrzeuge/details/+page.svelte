@@ -77,7 +77,10 @@
 		}
 	}
 
-	function handleViewReservations(vehicleId: string) {
+	function handleViewReservations(vehicleId: string | undefined) {
+		if (!vehicleId) {
+			return;
+		}
 		goto(`/fahrzeuge?vehicleId=${vehicleId}`);
 	}
 

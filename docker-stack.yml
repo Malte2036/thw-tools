@@ -1,14 +1,15 @@
 version: '3.8'
 
 services:
+  # Backend API
   backend:
-    image: registry.thw-tools.de/thw-tools-backend:latest
+    image: thw-tools-backend:latest
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
+      - KINDE_DOMAIN=${KINDE_DOMAIN}
       - RESEND_API_KEY=${RESEND_API_KEY}
       - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
-      - KINDE_DOMAIN=${KINDE_DOMAIN}
     deploy:
       replicas: 2
       update_config:
@@ -26,8 +27,9 @@ services:
         protocol: tcp
         mode: host
 
+  # THW-Tools Frontend
   thw-tools:
-    image: registry.thw-tools.de/thw-tools:latest
+    image: thw-tools:latest
     environment:
       - NODE_ENV=production
       - PUBLIC_API_URL=${PUBLIC_API_URL}
@@ -50,10 +52,16 @@ services:
         protocol: tcp
         mode: host
 
+  # Inventar Frontend
   inventar:
-    image: registry.thw-tools.de/thw-inventar:latest
+    image: thw-inventar:latest
     environment:
       - NODE_ENV=production
+      - PUBLIC_API_URL=${PUBLIC_API_URL}
+      - PUBLIC_KINDE_API_CLIENT=${PUBLIC_KINDE_API_CLIENT}
+      - PUBLIC_KINDE_DOMAIN=${PUBLIC_KINDE_DOMAIN}
+      - PUBLIC_UMAMI_ENDPOINT=${PUBLIC_UMAMI_ENDPOINT}
+      - PUBLIC_UMAMI_WEBSITEID=${PUBLIC_UMAMI_WEBSITEID_INVENTAR}
     deploy:
       replicas: 2
       update_config:
@@ -70,3 +78,7 @@ services:
         target: 3000
         protocol: tcp
         mode: host
+
+networks:
+  default:
+    driver: overlay
