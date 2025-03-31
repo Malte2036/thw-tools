@@ -284,6 +284,7 @@
 						</h3>
 						<div class="mt-2 space-y-2 text-sm">
 							<p><span class="font-medium">Kennzeichen:</span> {selectedVehicle.licensePlate}</p>
+							<p><span class="font-medium">Funkrufname:</span> {selectedVehicle.radioCallName}</p>
 							<p><span class="font-medium">Typ:</span> {selectedVehicle.vehicleType}</p>
 							<p><span class="font-medium">Einheit:</span> {selectedVehicle.unit}</p>
 

@@ -17,6 +17,7 @@
 	let vehicleType = $state('');
 	let radioCallName = $state('');
 	let unit = $state('');
+	let name = $state('');
 
 	// Common THW vehicle types
 	const vehicleTypes = ['MTW', 'MzKw', 'GKW', 'MLW', 'Kipper', 'Anhänger', 'Sonstige'];
@@ -35,16 +36,18 @@
 		vehicleType = '';
 		radioCallName = '';
 		unit = '';
+		name = '';
 	}
 
 	// Create a new vehicle
 	function submitForm() {
-		if (!licensePlate || !vehicleType || !radioCallName || !unit) {
-			if (props.onError) props.onError('Bitte füllen Sie alle Pflichtfelder aus.');
+		if (!licensePlate || !vehicleType || !radioCallName || !unit || !name) {
+			if (props.onError) props.onError('Bitte fülle alle Pflichtfelder aus.');
 			return;
 		}
 
 		const vehicleData: CreateVehicleDto = {
+			name,
 			licensePlate,
 			vehicleType,
 			radioCallName,
@@ -66,7 +69,10 @@
 		if (!$inventory.inventoryItems) return defaultEinheiten;
 
 		// Extract all unique einheiten from inventory items
-		const uniqueEinheiten = [...new Set($inventory.inventoryItems.map((item) => item.einheit))];
+		const uniqueEinheiten = [
+			...defaultEinheiten,
+			...new Set($inventory.inventoryItems.map((item) => item.einheit))
+		];
 
 		// Sort alphabetically
 		return uniqueEinheiten.sort();
@@ -79,6 +85,18 @@
 			<h2 class="text-xl font-bold text-thw-700 mb-4">Neues Fahrzeug hinzufügen</h2>
 
 			<form on:submit|preventDefault={submitForm} class="space-y-4">
+				<div>
+					<label for="name" class="block text-sm font-medium text-gray-700 mb-1"> Name* </label>
+					<input
+						id="name"
+						type="text"
+						class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-thw-500"
+						bind:value={name}
+						placeholder="z.B. MTW OV Stab"
+						required
+					/>
+				</div>
+
 				<div>
 					<label for="licensePlate" class="block text-sm font-medium text-gray-700 mb-1">
 						Kennzeichen*
@@ -119,7 +137,7 @@
 						type="text"
 						class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-thw-500"
 						bind:value={radioCallName}
-						placeholder="z.B. THW 12/34"
+						placeholder="z.B. Heros 86/25"
 						required
 					/>
 				</div>

@@ -26,7 +26,6 @@ export class OrganisationController {
   @Get('me')
   @UseGuards(EnsureUserAndOrgGuard)
   async getOrganisationsForUser(@Req() req: Request) {
-    console.log('req.organisation', req.organisation);
     return req.organisation;
   }
 

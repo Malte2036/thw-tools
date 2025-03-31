@@ -12,7 +12,7 @@ import {
   getRentalConfirmationEmail,
   getRentalCancellationEmail,
 } from '../email/templates/vehicle-emails';
-
+import { Vehicle, VehicleRental } from '@prisma/client';
 @Injectable()
 export class VehiclesService {
   private readonly logger = new Logger(VehiclesService.name);
@@ -23,7 +23,9 @@ export class VehiclesService {
   ) {}
 
   // Fahrzeuge für eine Organisation abrufen
-  async findAllVehiclesForOrganisation(organisationId: string): Promise<any> {
+  async findAllVehiclesForOrganisation(
+    organisationId: string,
+  ): Promise<Vehicle[]> {
     return this.prisma.vehicle.findMany({
       where: { organisationId },
     });
@@ -33,7 +35,7 @@ export class VehiclesService {
   async createVehicle(
     createVehicleDto: CreateVehicleDto,
     organisationId: string,
-  ): Promise<any> {
+  ): Promise<Vehicle> {
     // Prüfen, ob die Organisation existiert
     const organisation = await this.prisma.organisation.findUnique({
       where: { id: organisationId },
@@ -69,7 +71,9 @@ export class VehiclesService {
   }
 
   // Alle Ausleihen für eine Organisation abrufen
-  async findAllRentalsForOrganisation(organisationId: string): Promise<any> {
+  async findAllRentalsForOrganisation(
+    organisationId: string,
+  ): Promise<VehicleRental[]> {
     return this.prisma.vehicleRental.findMany({
       where: {
         vehicle: {
@@ -84,7 +88,7 @@ export class VehiclesService {
     createVehicleRentalDto: CreateVehicleRentalDto,
     organisationId: string,
     userId: string,
-  ): Promise<any> {
+  ): Promise<VehicleRental> {
     const vehicle = await this.prisma.vehicle.findFirst({
       where: {
         id: createVehicleRentalDto.vehicleId,
@@ -196,19 +200,17 @@ export class VehiclesService {
       });
 
       // Don't throw the error as the rental was still created successfully
-      // But add a warning to the response
-      return {
-        ...rental,
-        warning:
-          'Rental created successfully, but confirmation email could not be sent.',
-      };
+      return rental;
     }
 
     return rental;
   }
 
   // Ausleihe stornieren
-  async cancelRental(id: string, organisationId: string): Promise<any> {
+  async cancelRental(
+    id: string,
+    organisationId: string,
+  ): Promise<VehicleRental> {
     // Prüfen, ob die Ausleihe existiert und zur Organisation gehört
     const rental = await this.prisma.vehicleRental.findFirst({
       where: {
@@ -271,14 +273,6 @@ export class VehiclesService {
         vehicleId: rental.vehicle.id,
         rentalId: rental.id,
       });
-
-      // Don't throw the error as the rental was still canceled successfully
-      // But add a warning to the response
-      return {
-        ...updatedRental,
-        warning:
-          'Rental canceled successfully, but cancellation email could not be sent.',
-      };
     }
 
     return updatedRental;

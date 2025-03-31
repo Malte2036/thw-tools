@@ -6,6 +6,7 @@ export const VehicleIdSchema = z.string().brand<'VehicleId'>();
 // Vehicle types
 export const VehicleSchema = z.object({
 	id: VehicleIdSchema,
+	name: z.string(),
 	radioCallName: z.string(),
 	licensePlate: z.string(),
 	vehicleType: z.string(),
@@ -52,6 +53,7 @@ export type CreateVehicleRentalDto = z.infer<typeof CreateVehicleRentalDtoSchema
 
 // Schema for creating a new vehicle
 export const CreateVehicleDtoSchema = z.object({
+	name: z.string(),
 	radioCallName: z.string(),
 	licensePlate: z.string(),
 	vehicleType: z.string(),
@@ -63,5 +65,5 @@ export type CreateVehicleDto = z.infer<typeof CreateVehicleDtoSchema>;
 export const vehicleToFriendlyString = (vehicle: Vehicle | undefined) => {
 	if (!vehicle) return '';
 
-	return vehicle.radioCallName;
+	return vehicle.name;
 };

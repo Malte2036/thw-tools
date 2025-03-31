@@ -208,6 +208,7 @@ model InventoryItemCustomData {
 //
 model Vehicle {
   id            String          @id @default(uuid()) @db.Uuid
+  name          String          @db.VarChar(50)
   licensePlate  String          @db.VarChar(50)
   vehicleType   String          @db.VarChar(50)
   radioCallName String          @db.VarChar(50)
