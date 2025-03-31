@@ -8,6 +8,10 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateVehicleRentalDto } from './dto/create-vehicle-rental.dto';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { EmailService } from '../email/email.service';
+import {
+  getRentalConfirmationEmail,
+  getRentalCancellationEmail,
+} from '../email/templates/vehicle-emails';
 
 @Injectable()
 export class VehiclesService {
@@ -164,25 +168,23 @@ export class VehiclesService {
       },
     });
 
+    this.logger.log(
+      `Successfully created rental ${rental.id} for vehicle ${vehicle.id}`,
+    );
+
     // Send confirmation email to the user
     try {
-      await this.emailService.sendEmail({
-        to: orgMember.user.email,
-        subject: `Fahrzeugausleihe bestätigt: ${vehicle.radioCallName}`,
-        html: `
-          <h2>Ihre Fahrzeugausleihe wurde bestätigt</h2>
-          <p>Hallo ${orgMember.user.firstName} ${orgMember.user.lastName},</p>
-          <p>Deine Fahrzeugausleihe wurde erfolgreich erstellt:</p>
-          <ul>
-            <li><strong>Fahrzeug:</strong> ${vehicle.radioCallName} (${vehicle.licensePlate})</li>
-            <li><strong>Zweck:</strong> ${createVehicleRentalDto.purpose}</li>
-            <li><strong>Von:</strong> ${plannedStart.toLocaleString('de-DE')}</li>
-            <li><strong>Bis:</strong> ${plannedEnd.toLocaleString('de-DE')}</li>
-          </ul>
-          <p><a href="https://funk.thw-duesseldorf.de/fahrzeuge?vehicleId=${vehicle.id}">Zur Fahrzeugausleihe</a></p>
-          <p>Mit freundlichen Grüßen<br>THW-Tools</p>
-        `,
-      });
+      await this.emailService.sendEmail(
+        getRentalConfirmationEmail({
+          vehicle,
+          user: orgMember.user,
+          rental: {
+            purpose: createVehicleRentalDto.purpose,
+            plannedStart,
+            plannedEnd,
+          },
+        }),
+      );
     } catch (error: any) {
       // Log the detailed error for debugging
       this.logger.error('Failed to send rental confirmation email:', {
@@ -217,6 +219,7 @@ export class VehiclesService {
       },
       include: {
         vehicle: true,
+        user: true,
       },
     });
 
@@ -238,8 +241,45 @@ export class VehiclesService {
       },
       include: {
         vehicle: true,
+        user: true,
       },
     });
+
+    this.logger.log(
+      `Successfully canceled rental ${rental.id} for vehicle ${rental.vehicle.id}`,
+    );
+
+    // Send cancellation email to the user
+    try {
+      await this.emailService.sendEmail(
+        getRentalCancellationEmail({
+          vehicle: rental.vehicle,
+          user: rental.user,
+          rental: {
+            purpose: rental.purpose,
+            plannedStart: rental.plannedStart,
+            plannedEnd: rental.plannedEnd,
+          },
+        }),
+      );
+    } catch (error: any) {
+      // Log the detailed error for debugging
+      this.logger.error('Failed to send rental cancellation email:', {
+        error: error.message,
+        userId: rental.user.id,
+        email: rental.user.email,
+        vehicleId: rental.vehicle.id,
+        rentalId: rental.id,
+      });
+
+      // Don't throw the error as the rental was still canceled successfully
+      // But add a warning to the response
+      return {
+        ...updatedRental,
+        warning:
+          'Rental canceled successfully, but cancellation email could not be sent.',
+      };
+    }
 
     return updatedRental;
   }
