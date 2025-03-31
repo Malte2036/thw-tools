@@ -6,6 +6,8 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
       - KINDE_DOMAIN=${KINDE_DOMAIN}
     deploy:
       replicas: 2

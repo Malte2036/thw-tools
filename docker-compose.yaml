@@ -9,6 +9,8 @@ services:
       NODE_ENV: production
       DATABASE_URL: ${DATABASE_URL}
       KINDE_DOMAIN: ${KINDE_DOMAIN}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
     ports:
       - '3000:3000'
     restart: always
