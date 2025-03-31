@@ -7,7 +7,6 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateVehicleRentalDto } from './dto/create-vehicle-rental.dto';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
-import { EmailService } from '../email/email.service';
 import {
   getRentalConfirmationEmail,
   getRentalCancellationEmail,
@@ -17,10 +16,7 @@ import { Vehicle, VehicleRental } from '@prisma/client';
 export class VehiclesService {
   private readonly logger = new Logger(VehiclesService.name);
 
-  constructor(
-    private prisma: PrismaService,
-    private emailService: EmailService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   // Fahrzeuge für eine Organisation abrufen
   async findAllVehiclesForOrganisation(
@@ -88,7 +84,10 @@ export class VehiclesService {
     createVehicleRentalDto: CreateVehicleRentalDto,
     organisationId: string,
     userId: string,
-  ): Promise<VehicleRental> {
+  ): Promise<{
+    vehicle: Vehicle;
+    rental: VehicleRental;
+  }> {
     const vehicle = await this.prisma.vehicle.findFirst({
       where: {
         id: createVehicleRentalDto.vehicleId,
@@ -166,51 +165,23 @@ export class VehiclesService {
         plannedEnd,
         status: 'active',
       },
-      include: {
-        vehicle: true,
-        user: true,
-      },
     });
 
     this.logger.log(
       `Successfully created rental ${rental.id} for vehicle ${vehicle.id}`,
     );
 
-    // Send confirmation email to the user
-    try {
-      await this.emailService.sendEmail(
-        getRentalConfirmationEmail({
-          vehicle,
-          user: orgMember.user,
-          rental: {
-            purpose: createVehicleRentalDto.purpose,
-            plannedStart,
-            plannedEnd,
-          },
-        }),
-      );
-    } catch (error: any) {
-      // Log the detailed error for debugging
-      this.logger.error('Failed to send rental confirmation email:', {
-        error: error.message,
-        userId: orgMember.user.id,
-        email: orgMember.user.email,
-        vehicleId: vehicle.id,
-        rentalId: rental.id,
-      });
-
-      // Don't throw the error as the rental was still created successfully
-      return rental;
-    }
-
-    return rental;
+    return { vehicle, rental };
   }
 
   // Ausleihe stornieren
   async cancelRental(
     id: string,
     organisationId: string,
-  ): Promise<VehicleRental> {
+  ): Promise<{
+    vehicle: Vehicle;
+    rental: VehicleRental;
+  }> {
     // Prüfen, ob die Ausleihe existiert und zur Organisation gehört
     const rental = await this.prisma.vehicleRental.findFirst({
       where: {
@@ -221,7 +192,6 @@ export class VehiclesService {
       },
       include: {
         vehicle: true,
-        user: true,
       },
     });
 
@@ -241,40 +211,12 @@ export class VehiclesService {
       data: {
         status: 'canceled',
       },
-      include: {
-        vehicle: true,
-        user: true,
-      },
     });
 
     this.logger.log(
       `Successfully canceled rental ${rental.id} for vehicle ${rental.vehicle.id}`,
     );
 
-    // Send cancellation email to the user
-    try {
-      await this.emailService.sendEmail(
-        getRentalCancellationEmail({
-          vehicle: rental.vehicle,
-          user: rental.user,
-          rental: {
-            purpose: rental.purpose,
-            plannedStart: rental.plannedStart,
-            plannedEnd: rental.plannedEnd,
-          },
-        }),
-      );
-    } catch (error: any) {
-      // Log the detailed error for debugging
-      this.logger.error('Failed to send rental cancellation email:', {
-        error: error.message,
-        userId: rental.user.id,
-        email: rental.user.email,
-        vehicleId: rental.vehicle.id,
-        rentalId: rental.id,
-      });
-    }
-
-    return updatedRental;
+    return { vehicle: rental.vehicle, rental: updatedRental };
   }
 }
