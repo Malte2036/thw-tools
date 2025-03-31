@@ -416,27 +416,55 @@
 
 <!-- Stornieren Dialog -->
 {#if showCancelDialog && selectedRental && selectedRental.id}
+	{@const selectedVehicle = vehicles.find((v: Vehicle) => v.id === selectedRental?.vehicleId)}
 	<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
 		<div class="bg-white rounded-lg p-6 w-full max-w-lg mx-4">
 			<h2 class="text-xl font-bold text-red-600 mb-4">Ausleihe stornieren</h2>
+
 			<div class="mb-4">
-				<p>
-					<span class="font-medium">Fahrzeug:</span>
-					{vehicleToFriendlyString(
-						vehicles.find((v: Vehicle) => v.id === selectedRental?.vehicleId)
-					)}
-				</p>
-				<p>
-					<span class="font-medium">Benutzer:</span>
-					{userToFriendlyString(getUserById($user, selectedRental?.userId))}
-				</p>
-				<p><span class="font-medium">Zweck:</span> {selectedRental?.purpose}</p>
-				<p>
-					<span class="font-medium">Zeitraum:</span>
-					{new Date(selectedRental?.plannedStart).toLocaleString('de-DE')} bis {new Date(
-						selectedRental?.plannedEnd
-					).toLocaleString('de-DE')}
-				</p>
+				<div class="flex flex-col gap-4">
+					<div>
+						<p>
+							<span class="font-medium">Benutzer:</span>
+							<span class="font-bold">
+								{userToFriendlyString(getUserById($user, selectedRental.userId))}
+							</span>
+						</p>
+					</div>
+					<div>
+						<p>
+							<span class="font-medium">Zweck:</span>
+							<span class="font-bold">{selectedRental.purpose}</span>
+						</p>
+						<p>
+							<span class="font-medium">Zeitraum:</span>
+							<span class="font-bold">
+								{new Date(selectedRental.plannedStart).toLocaleString('de-DE')} bis {new Date(
+									selectedRental.plannedEnd
+								).toLocaleString('de-DE')}
+							</span>
+						</p>
+					</div>
+					<div>
+						<p>
+							<span class="font-medium">Fahrzeug:</span>
+							{vehicleToFriendlyString(selectedVehicle)}
+						</p>
+						<p>
+							<span class="font-medium">Kennzeichen:</span>
+							{selectedVehicle?.licensePlate}
+						</p>
+						<p>
+							<span class="font-medium">Funkrufname:</span>
+							{selectedVehicle?.radioCallName}
+						</p>
+
+						<p>
+							<span class="font-medium">Fahrzeugtyp:</span>
+							{selectedVehicle?.vehicleType}
+						</p>
+					</div>
+				</div>
 			</div>
 
 			<div class="mt-6 flex justify-end space-x-2">

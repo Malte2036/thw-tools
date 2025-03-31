@@ -7,13 +7,22 @@ export const VehicleIdSchema = z.string().brand<'VehicleId'>();
 export const VehicleSchema = z.object({
 	id: VehicleIdSchema,
 	name: z.string(),
-	radioCallName: z.string(),
+	radioCallName: z.string().nullish(),
 	licensePlate: z.string(),
 	vehicleType: z.string(),
-	unit: z.string(),
+	unit: z.string().nullish(),
 	organisationId: OrganisationIdSchema,
-	createdAt: z.string().datetime().optional(),
-	updatedAt: z.string().datetime().optional()
+	bodyManufacturer: z.string().nullish(),
+	bodyType: z.string().nullish(),
+	chassis: z.string().nullish(),
+	load: z.string().nullish(),
+	payload: z.string().nullish(),
+	seats: z.number().nullish(),
+	specialFeatures: z.string().nullish(),
+	totalWeight: z.string().nullish(),
+	yearBuilt: z.number().nullish(),
+	createdAt: z.string().datetime().nullish(),
+	updatedAt: z.string().datetime().nullish()
 });
 
 export type Vehicle = z.infer<typeof VehicleSchema>;
@@ -54,10 +63,19 @@ export type CreateVehicleRentalDto = z.infer<typeof CreateVehicleRentalDtoSchema
 // Schema for creating a new vehicle
 export const CreateVehicleDtoSchema = z.object({
 	name: z.string(),
-	radioCallName: z.string(),
+	radioCallName: z.string().nullish(),
 	licensePlate: z.string(),
 	vehicleType: z.string(),
-	unit: z.string()
+	unit: z.string().nullish(),
+	bodyManufacturer: z.string().nullish(),
+	bodyType: z.string().nullish(),
+	chassis: z.string().nullish(),
+	load: z.string().nullish(),
+	payload: z.string().nullish(),
+	seats: z.number().nullish(),
+	specialFeatures: z.string().nullish(),
+	totalWeight: z.string().nullish(),
+	yearBuilt: z.number().nullish()
 });
 
 export type CreateVehicleDto = z.infer<typeof CreateVehicleDtoSchema>;

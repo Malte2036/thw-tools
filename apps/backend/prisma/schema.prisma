@@ -1,33 +1,20 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["quiz", "inventory"]
-}
-
-//
-// QUIZ SCHEMA - Quiz Models
-//
-enum QuizType {
-  ga
-  agt
-  cbrn
-  radio
-
-  @@map("quiz_type")
-  @@schema("quiz")
+  schemas  = ["inventory", "quiz"]
 }
 
 model Question {
   id      Int              @id @default(autoincrement())
   type    QuizType
   number  Int
-  text    String          @db.Text
-  image   String?         @db.Text
+  text    String
+  image   String?
   answers QuestionAnswer[]
   stats   QuestionStats[]
 
@@ -38,7 +25,7 @@ model Question {
 
 model QuestionAnswer {
   id         Int      @id @default(autoincrement())
-  text       String   @db.Text
+  text       String
   isCorrect  Boolean
   questionId Int
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
@@ -58,34 +45,31 @@ model QuestionStats {
   @@schema("quiz")
 }
 
-//
-// INVENTORY SCHEMA - Core Models
-//
 model User {
-  id                String                @id @default(uuid()) @db.Uuid
-  kindeId           String               @unique @db.VarChar(255)
-  email             String?              @db.VarChar(255)
-  firstName         String?              @db.VarChar(100)
-  lastName          String?              @db.VarChar(100)
-  picture           String?              @db.VarChar(1000)
-  eventBulks        FunkItemEventBulk[]
-  funkItemEvents    FunkItemEvent[]
-  organisations     OrganisationMember[]
-  vehicleRentals    VehicleRental[]
+  id             String               @id @default(uuid()) @db.Uuid
+  kindeId        String               @unique @db.VarChar(255)
+  email          String?              @db.VarChar(255)
+  firstName      String?              @db.VarChar(100)
+  lastName       String?              @db.VarChar(100)
+  picture        String?              @db.VarChar(1000)
+  eventBulks     FunkItemEventBulk[]
+  funkItemEvents FunkItemEvent[]
+  organisations  OrganisationMember[]
+  vehicleRentals VehicleRental[]
 
   @@map("users")
   @@schema("inventory")
 }
 
 model Organisation {
-  id                String                @id @default(uuid()) @db.Uuid
-  name              String               @db.VarChar(255)
-  inviteCode        String               @unique @db.VarChar(50)
-  eventBulks        FunkItemEventBulk[]
-  funkItems         FunkItem[]
-  inventoryItems    InventoryItem[]
-  members           OrganisationMember[]
-  vehicles          Vehicle[]
+  id             String               @id @default(uuid()) @db.Uuid
+  name           String               @db.VarChar(255)
+  inviteCode     String               @unique @db.VarChar(50)
+  eventBulks     FunkItemEventBulk[]
+  funkItems      FunkItem[]
+  inventoryItems InventoryItem[]
+  members        OrganisationMember[]
+  vehicles       Vehicle[]
 
   @@map("organisations")
   @@schema("inventory")
@@ -93,32 +77,21 @@ model Organisation {
 
 model OrganisationMember {
   organisationId String       @db.Uuid
-  userId        String       @db.Uuid
-  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organisation  Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  userId         String       @db.Uuid
+  organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([organisationId, userId])
   @@map("organisation_members")
   @@schema("inventory")
 }
 
-//
-// INVENTORY SCHEMA - Funk Models
-//
-enum FunkItemEventType {
-  borrowed
-  returned
-
-  @@map("funk_item_event_type")
-  @@schema("inventory")
-}
-
 model FunkItem {
-  id            String          @id @default(uuid()) @db.Uuid
-  deviceId      String         @db.VarChar(100)
-  organisationId String        @db.Uuid
-  events        FunkItemEvent[]
-  organisation  Organisation   @relation(fields: [organisationId], references: [id])
+  id             String          @id @default(uuid()) @db.Uuid
+  deviceId       String          @db.VarChar(100)
+  organisationId String          @db.Uuid
+  events         FunkItemEvent[]
+  organisation   Organisation    @relation(fields: [organisationId], references: [id])
 
   @@unique([deviceId, organisationId])
   @@map("funk_items")
@@ -126,56 +99,53 @@ model FunkItem {
 }
 
 model FunkItemEvent {
-  id            String                  @id @default(uuid()) @db.Uuid
-  type          FunkItemEventType
-  date          DateTime                @default(now()) @db.Timestamp(6)
-  funkItemId    String                  @db.Uuid
-  userId        String                  @db.Uuid
-  bulkEvents    FunkItemEventBulkEvent[]
-  funkItem      FunkItem               @relation(fields: [funkItemId], references: [id])
-  user          User                   @relation(fields: [userId], references: [id])
+  id         String                   @id @default(uuid()) @db.Uuid
+  type       FunkItemEventType
+  date       DateTime                 @default(now()) @db.Timestamp(6)
+  funkItemId String                   @db.Uuid
+  userId     String                   @db.Uuid
+  bulkEvents FunkItemEventBulkEvent[]
+  funkItem   FunkItem                 @relation(fields: [funkItemId], references: [id])
+  user       User                     @relation(fields: [userId], references: [id])
 
   @@map("funk_item_events")
   @@schema("inventory")
 }
 
 model FunkItemEventBulk {
-  id            String                  @id @default(uuid()) @db.Uuid
-  eventType     FunkItemEventType
-  batteryCount  Int                     @default(0)
-  date          DateTime                @default(now()) @db.Timestamp(6)
-  userId        String                  @db.Uuid
-  organisationId String                 @db.Uuid
-  events        FunkItemEventBulkEvent[]
-  user          User                    @relation(fields: [userId], references: [id])
-  organisation  Organisation           @relation(fields: [organisationId], references: [id])
+  id             String                   @id @default(uuid()) @db.Uuid
+  eventType      FunkItemEventType
+  batteryCount   Int                      @default(0)
+  date           DateTime                 @default(now()) @db.Timestamp(6)
+  userId         String                   @db.Uuid
+  organisationId String                   @db.Uuid
+  events         FunkItemEventBulkEvent[]
+  organisation   Organisation             @relation(fields: [organisationId], references: [id])
+  user           User                     @relation(fields: [userId], references: [id])
 
   @@map("funk_item_event_bulks")
   @@schema("inventory")
 }
 
 model FunkItemEventBulkEvent {
-  bulkId  String           @db.Uuid
-  eventId String           @db.Uuid
+  bulkId  String            @db.Uuid
+  eventId String            @db.Uuid
   bulk    FunkItemEventBulk @relation(fields: [bulkId], references: [id], onDelete: Cascade)
-  event   FunkItemEvent    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event   FunkItemEvent     @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@id([bulkId, eventId])
   @@map("funk_item_event_bulk_events")
   @@schema("inventory")
 }
 
-//
-// INVENTORY SCHEMA - Inventory Models
-//
 model InventoryItem {
   id             String                   @id @default(uuid()) @db.Uuid
   einheit        String                   @db.VarChar(100)
   ebene          Int
   art            String?                  @db.VarChar(100)
-  menge          Float?                   @db.DoublePrecision
-  mengeIst       Float?                   @db.DoublePrecision
-  verfuegbar     Float?                   @db.DoublePrecision
+  menge          Float?
+  mengeIst       Float?
+  verfuegbar     Float?
   ausstattung    String                   @db.VarChar(255)
   hersteller     String?                  @db.VarChar(100)
   typ            String?                  @db.VarChar(100)
@@ -185,8 +155,8 @@ model InventoryItem {
   status         String?                  @db.VarChar(50)
   organisationId String                   @db.Uuid
   customDataId   String?                  @unique @db.Uuid
-  customData     InventoryItemCustomData? @relation(fields: [customDataId], references: [id], onDelete: SetNull)
-  organisation   Organisation            @relation(fields: [organisationId], references: [id])
+  customData     InventoryItemCustomData? @relation(fields: [customDataId], references: [id])
+  organisation   Organisation             @relation(fields: [organisationId], references: [id])
 
   @@map("inventory_items")
   @@schema("inventory")
@@ -200,42 +170,65 @@ model InventoryItemCustomData {
 
   @@map("inventory_item_custom_data")
   @@schema("inventory")
-} 
+}
 
-
-//
-// INVENTORY SCHEMA - Vehicle Models
-//
 model Vehicle {
-  id            String          @id @default(uuid()) @db.Uuid
-  name          String          @db.VarChar(50)
-  licensePlate  String          @db.VarChar(50)
-  vehicleType   String          @db.VarChar(50)
-  radioCallName String          @db.VarChar(50)
-  unit          String          @db.VarChar(100)
-  organisationId String         @db.Uuid
-  rentals       VehicleRental[]
-  organisation  Organisation    @relation(fields: [organisationId], references: [id])
-  createdAt     DateTime        @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime        @updatedAt @db.Timestamp(6)
+  id               String          @id @default(uuid()) @db.Uuid
+  licensePlate     String          @db.VarChar(50)
+  vehicleType      String          @db.VarChar(50)
+  radioCallName    String?         @db.VarChar(50)
+  unit             String?         @db.VarChar(100)
+  organisationId   String          @db.Uuid
+  createdAt        DateTime        @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime        @updatedAt @db.Timestamp(6)
+  name             String          @db.VarChar(255)
+  bodyManufacturer String?         @db.VarChar(255)
+  bodyType         String?         @db.VarChar(255)
+  chassis          String?         @db.VarChar(255)
+  load             String?         @db.VarChar(255)
+  payload          String?         @db.VarChar(50)
+  seats            Int?
+  specialFeatures  String?         @db.VarChar(1000)
+  totalWeight      String?         @db.VarChar(50)
+  yearBuilt        Int?
+  rentals          VehicleRental[]
+  organisation     Organisation    @relation(fields: [organisationId], references: [id])
 
   @@map("vehicles")
   @@schema("inventory")
 }
 
 model VehicleRental {
-  id            String          @id @default(uuid()) @db.Uuid
-  vehicleId     String          @db.Uuid
-  userId        String          @db.Uuid
-  purpose       String          @db.VarChar(255)
-  plannedStart  DateTime        @db.Timestamp(6)
-  plannedEnd    DateTime        @db.Timestamp(6)
-  status        String          @db.VarChar(20)  // 'active', 'planned', 'canceled'
-  vehicle       Vehicle         @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-  user          User            @relation(fields: [userId], references: [id])
-  createdAt     DateTime        @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime        @updatedAt @db.Timestamp(6)
+  id           String   @id @default(uuid()) @db.Uuid
+  vehicleId    String   @db.Uuid
+  userId       String   @db.Uuid
+  purpose      String   @db.VarChar(255)
+  plannedStart DateTime @db.Timestamp(6)
+  plannedEnd   DateTime @db.Timestamp(6)
+  status       String   @db.VarChar(20)
+  createdAt    DateTime @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime @updatedAt @db.Timestamp(6)
+  user         User     @relation(fields: [userId], references: [id])
+  vehicle      Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 
   @@map("vehicle_rentals")
+  @@schema("inventory")
+}
+
+enum QuizType {
+  ga
+  agt
+  cbrn
+  radio
+
+  @@map("quiz_type")
+  @@schema("quiz")
+}
+
+enum FunkItemEventType {
+  borrowed
+  returned
+
+  @@map("funk_item_event_type")
   @@schema("inventory")
 }
