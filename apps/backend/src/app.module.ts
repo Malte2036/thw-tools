@@ -16,6 +16,7 @@ import { AiModule } from './ai/ai.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserOrgMiddleware } from './shared/user-org/user-org.middleware';
 import { VehiclesModule } from './vehicles/vehicles.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { VehiclesModule } from './vehicles/vehicles.module';
     InventoryModule,
     AiModule,
     VehiclesModule,
+    EmailModule,
   ],
   providers: [
     AppService,

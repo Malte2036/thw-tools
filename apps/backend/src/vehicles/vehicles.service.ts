@@ -7,12 +7,16 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateVehicleRentalDto } from './dto/create-vehicle-rental.dto';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class VehiclesService {
   private readonly logger = new Logger(VehiclesService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private emailService: EmailService,
+  ) {}
 
   // Fahrzeuge für eine Organisation abrufen
   async findAllVehiclesForOrganisation(organisationId: string): Promise<any> {
@@ -103,6 +107,9 @@ export class VehiclesService {
           userId,
         },
       },
+      include: {
+        user: true,
+      },
     });
 
     if (!orgMember) {
@@ -156,6 +163,44 @@ export class VehiclesService {
         user: true,
       },
     });
+
+    // Send confirmation email to the user
+    try {
+      await this.emailService.sendEmail({
+        to: orgMember.user.email,
+        subject: `Fahrzeugausleihe bestätigt: ${vehicle.radioCallName}`,
+        html: `
+          <h2>Ihre Fahrzeugausleihe wurde bestätigt</h2>
+          <p>Hallo ${orgMember.user.firstName} ${orgMember.user.lastName},</p>
+          <p>Deine Fahrzeugausleihe wurde erfolgreich erstellt:</p>
+          <ul>
+            <li><strong>Fahrzeug:</strong> ${vehicle.radioCallName} (${vehicle.licensePlate})</li>
+            <li><strong>Zweck:</strong> ${createVehicleRentalDto.purpose}</li>
+            <li><strong>Von:</strong> ${plannedStart.toLocaleString('de-DE')}</li>
+            <li><strong>Bis:</strong> ${plannedEnd.toLocaleString('de-DE')}</li>
+          </ul>
+          <p><a href="https://funk.thw-duesseldorf.de/fahrzeuge?vehicleId=${vehicle.id}">Zur Fahrzeugausleihe</a></p>
+          <p>Mit freundlichen Grüßen<br>THW-Tools</p>
+        `,
+      });
+    } catch (error: any) {
+      // Log the detailed error for debugging
+      this.logger.error('Failed to send rental confirmation email:', {
+        error: error.message,
+        userId: orgMember.user.id,
+        email: orgMember.user.email,
+        vehicleId: vehicle.id,
+        rentalId: rental.id,
+      });
+
+      // Don't throw the error as the rental was still created successfully
+      // But add a warning to the response
+      return {
+        ...rental,
+        warning:
+          'Rental created successfully, but confirmation email could not be sent.',
+      };
+    }
 
     return rental;
   }
