@@ -141,11 +141,6 @@
 		});
 	};
 
-	const handleSearch = (event: Event) => {
-		const target = event.target as HTMLInputElement;
-		searchTerm = target.value;
-	};
-
 	const handleEinheitChange = (value: string) => {
 		selectedEinheit = value;
 		const url = new URL(window.location.href);
@@ -269,8 +264,7 @@
 			</div>
 			<div class="md:col-span-4">
 				<Input
-					inputValue={searchTerm}
-					onInput={handleSearch}
+					bind:inputValue={searchTerm}
 					placeholder="Suche nach Inventarnummer, Ausstattung, etc."
 					label="Suche"
 				/>
