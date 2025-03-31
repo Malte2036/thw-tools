@@ -10,8 +10,13 @@ services:
       - KINDE_DOMAIN=${KINDE_DOMAIN}
       - RESEND_API_KEY=${RESEND_API_KEY}
       - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
+    command: >
+      sh -c "echo 'DATABASE_URL=${DATABASE_URL}' &&
+             npx prisma generate &&
+             npx prisma migrate deploy &&
+             node dist/main.js"
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         parallelism: 1
         delay: 10s
@@ -25,7 +30,7 @@ services:
       - published: 3000
         target: 3000
         protocol: tcp
-        mode: host
+        mode: ingress
 
   # THW-Tools Frontend
   thw-tools:
@@ -36,7 +41,7 @@ services:
       - PUBLIC_UMAMI_ENDPOINT=${PUBLIC_UMAMI_ENDPOINT}
       - PUBLIC_UMAMI_WEBSITEID=${PUBLIC_UMAMI_WEBSITEID_THW_TOOLS}
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         parallelism: 1
         delay: 10s
@@ -50,7 +55,7 @@ services:
       - published: 3001
         target: 3000
         protocol: tcp
-        mode: host
+        mode: ingress
 
   # Inventar Frontend
   inventar:
@@ -63,7 +68,7 @@ services:
       - PUBLIC_UMAMI_ENDPOINT=${PUBLIC_UMAMI_ENDPOINT}
       - PUBLIC_UMAMI_WEBSITEID=${PUBLIC_UMAMI_WEBSITEID_INVENTAR}
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         parallelism: 1
         delay: 10s
@@ -77,7 +82,7 @@ services:
       - published: 3002
         target: 3000
         protocol: tcp
-        mode: host
+        mode: ingress
 
 networks:
   default:

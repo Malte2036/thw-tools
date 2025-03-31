@@ -1,10 +1,9 @@
-FROM node:20-slim AS base
+# Build stage
+FROM node:20-slim AS builder
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN npm install -g pnpm@latest
 
-# Build stage - install all dependencies and build the app
-FROM base AS builder
 WORKDIR /app
 
 # Copy workspace configuration files
@@ -46,8 +45,8 @@ RUN pnpm build:thw-tools
 # Use pnpm deploy to create a production bundle with only the necessary dependencies
 RUN pnpm deploy --filter=thw-tools --prod /tmp/prod
 
-# Production stage
-FROM node:20-slim
+# Production stage - using Alpine for a much smaller image
+FROM node:20-alpine
 WORKDIR /app
 
 # Copy just what we need from the builder stage

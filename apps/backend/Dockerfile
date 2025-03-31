@@ -1,11 +1,10 @@
-FROM node:20-slim AS base
+# Build stage - uses a larger image with build tools
+FROM node:20-slim AS builder
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN apt-get update && apt-get install -y curl python3 make g++ && \
     corepack enable
 
-# Build stage - install all dependencies and build the app
-FROM base AS builder
 WORKDIR /app
 
 # Copy workspace configuration files
@@ -33,18 +32,37 @@ RUN cd apps/backend && npx prisma generate
 # Build the project
 RUN pnpm build:backend
 
-# Production stage
-FROM base
-WORKDIR /app
+# Create a bundle layer for dependency optimization
+FROM node:20-slim AS deps-optimizer
+WORKDIR /optimizer
 
-# Install runtime dependencies only, and generate Prisma client again in the final image
-COPY apps/backend/package.json ./
-COPY apps/backend/prisma ./prisma
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod
+# Copy package.json and install dependencies
+COPY --from=builder /app/apps/backend/package.json ./
+COPY --from=builder /app/apps/backend/prisma ./prisma
+
+# Install only production dependencies
+RUN npm install --omit=dev
+
+# Generate Prisma client
 RUN npx prisma generate
 
-# Copy compiled application
+# Remove unnecessary engines and files to reduce size
+RUN find node_modules/.prisma -type f -not -path "*libquery_engine-linux-musl*" -not -path "*libquery_engine-debian*" -delete || true
+RUN rm -rf node_modules/@prisma/engines 
+RUN npm prune --production
+RUN rm -rf node_modules/.cache
+
+# Production stage - uses Alpine for minimal size
+FROM node:20-alpine AS release
+WORKDIR /app
+
+# Copy minimized node_modules from the optimizer stage
+COPY --from=deps-optimizer /optimizer/node_modules ./node_modules
+
+# Copy only necessary files for runtime
 COPY --from=builder /app/apps/backend/dist ./dist
+COPY --from=builder /app/apps/backend/prisma ./prisma
+COPY --from=builder /app/apps/backend/package.json ./
 
 # Set environment variables
 ENV NODE_ENV=production

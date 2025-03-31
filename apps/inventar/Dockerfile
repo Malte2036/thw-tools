@@ -1,11 +1,10 @@
-FROM node:18-slim AS base
+# Build stage
+FROM node:18-slim AS builder
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN apt-get update && apt-get install -y curl && \
     corepack enable
 
-# Build stage - install all dependencies and build the app
-FROM base AS builder
 WORKDIR /app
 
 # Copy workspace configuration files
@@ -39,15 +38,14 @@ ARG PUBLIC_KINDE_DOMAIN
 ARG PUBLIC_UMAMI_ENDPOINT
 ARG PUBLIC_UMAMI_WEBSITEID
 
-
 # Build the project
 RUN pnpm build:inventar
 
 # Use pnpm deploy to create a production bundle with only the necessary dependencies
 RUN pnpm deploy --filter=thw-inventar --prod /tmp/prod
 
-# Production stage
-FROM node:18-slim
+# Production stage - using Alpine for a much smaller image
+FROM node:18-alpine
 WORKDIR /app
 
 # Copy just what we need from the builder stage
