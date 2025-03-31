@@ -8,7 +8,7 @@
 		submitButtonText?: string;
 	}
 
-	let { 
+	let {
 		onScan,
 		showButtonText = 'Gerät manuell hinzufügen',
 		submitButtonText = 'Eintragen'
