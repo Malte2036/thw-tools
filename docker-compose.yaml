@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: apps/backend/Dockerfile
+      platforms:
+        - linux/amd64
     environment:
       NODE_ENV: production
       DATABASE_URL: ${DATABASE_URL}
@@ -21,6 +23,8 @@ services:
     build:
       context: .
       dockerfile: apps/thw-tools/Dockerfile
+      platforms:
+        - linux/amd64
       args:
         PUBLIC_API_URL: ${PUBLIC_API_URL}
         PUBLIC_UMAMI_ENDPOINT: ${PUBLIC_UMAMI_ENDPOINT}
@@ -44,6 +48,8 @@ services:
     build:
       context: .
       dockerfile: apps/inventar/Dockerfile
+      platforms:
+        - linux/amd64
       args:
         PUBLIC_API_URL: ${PUBLIC_API_URL}
         PUBLIC_KINDE_API_CLIENT: ${PUBLIC_KINDE_API_CLIENT}
