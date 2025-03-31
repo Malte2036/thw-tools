@@ -117,6 +117,18 @@
 		}
 	}
 
+	function handleRentalCanceled(event: CustomEvent<{ rental: VehicleRental; vehicle: Vehicle }>) {
+		const { rental, vehicle } = event.detail;
+		// Show success banner
+		$bannerMessage = {
+			message: `${vehicleToFriendlyString(vehicle)} Reservierung für ${new Date(rental.plannedStart).toLocaleDateString('de-DE')} bis ${new Date(rental.plannedEnd).toLocaleDateString('de-DE')} wurde storniert`,
+			type: 'info',
+			autoDismiss: {
+				duration: 5000
+			}
+		};
+	}
+
 	// In der aktuellen Implementierung ist diese Funktion nicht möglich,
 	// da es kein direktes Abschließen einer Ausleihe über die API gibt
 	function handleCompleteRental(event: CustomEvent<{ rentalId: string; endKilometer: number }>) {
@@ -224,6 +236,7 @@
 				onCalendarViewChange={handleCalendarViewChange}
 				onCreateRental={handleCreateRental}
 				onCancelRental={handleCancelRental}
+				on:rentalCanceled={handleRentalCanceled}
 			/>
 		{/if}
 	</div>

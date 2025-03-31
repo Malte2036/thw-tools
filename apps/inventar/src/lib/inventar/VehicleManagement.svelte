@@ -5,6 +5,7 @@
 	import { userToFriendlyString } from '$lib/api/funkModels';
 	import { getMediumColor } from '@thw-tools/shared';
 	import { vehicleToFriendlyString } from '$lib/api/vehicleModels';
+	import { createEventDispatcher } from 'svelte';
 	// Define props using the new $props() syntax
 	const {
 		vehicles = [],
@@ -57,6 +58,8 @@
 		}
 	});
 
+	const dispatch = createEventDispatcher();
+
 	function formatDateForInput(date: Date): string {
 		const year = date.getFullYear();
 		const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -105,12 +108,23 @@
 		showRentalDialog = false;
 	}
 
-	function handleCancelRental() {
-		if (!selectedRental) return;
+	async function handleCancelRental() {
+		if (!selectedRental?.id || !selectedRental?.vehicleId) return;
+
+		const rental = selectedRental; // Create a non-null reference
 
 		onCancelRental({
-			rentalId: selectedRental.id,
+			rentalId: rental.id,
 			reason: ''
+		});
+
+		// Get vehicle details for the canceled rental
+		const vehicle = vehicles.find((v: Vehicle) => v.id === rental.vehicleId);
+
+		// Dispatch event with rental and vehicle details
+		dispatch('rentalCanceled', {
+			rental,
+			vehicle
 		});
 
 		showCancelDialog = false;
