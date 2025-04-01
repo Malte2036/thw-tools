@@ -22,11 +22,15 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+    networks:
+      - default
     ports:
       - published: 3000
         target: 3000
         protocol: tcp
         mode: ingress
+    extra_hosts:
+      - 'database:10.0.0.136'
 
   # THW-Tools Frontend
   thw-tools:
@@ -83,3 +87,6 @@ services:
 networks:
   default:
     driver: overlay
+    attachable: true
+    driver_opts:
+      encrypted: ''
