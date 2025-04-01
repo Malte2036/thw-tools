@@ -4,15 +4,11 @@ services:
   # Backend API
   backend:
     image: thw-tools-backend:latest
+    env_file: .env
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL}
-      - KINDE_DOMAIN=${KINDE_DOMAIN}
-      - RESEND_API_KEY=${RESEND_API_KEY}
-      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
     command: >
-      sh -c "echo 'DATABASE_URL=${DATABASE_URL}' &&
-             npx prisma generate &&
+      sh -c "npx prisma generate &&
              npx prisma migrate deploy &&
              node dist/main.js"
     deploy:
