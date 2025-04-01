@@ -11,11 +11,16 @@ import { ZodError } from 'zod';
 @Injectable()
 export class AuthService implements OnModuleInit {
   private jwks: ReturnType<typeof createRemoteJWKSet> | null = null;
-  private readonly jwksUrl = `${process.env.KINDE_DOMAIN}/.well-known/jwks.json`;
   private readonly logger = new Logger(AuthService.name);
 
   async onModuleInit() {
-    const jwksRemote = createRemoteJWKSet(new URL(this.jwksUrl));
+    const kindeDomain = process.env.KINDE_DOMAIN;
+    if (!kindeDomain) {
+      this.logger.error('KINDE_DOMAIN is not set');
+      throw new Error('KINDE_DOMAIN is not set');
+    }
+    const jwksUrl = `${kindeDomain}/.well-known/jwks.json`;
+    const jwksRemote = createRemoteJWKSet(new URL(jwksUrl));
     this.jwks = jwksRemote;
   }
 
