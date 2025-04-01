@@ -97,7 +97,6 @@ export class EmailService {
     } catch (error: any) {
       const errorMessage =
         error.message || 'Unknown error occurred while sending email';
-      this.logger.error('Failed to send email:', error);
       throw new Error(`Failed to send email: ${errorMessage}`);
     }
   }
