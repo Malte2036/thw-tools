@@ -36,9 +36,6 @@ services:
     container_name: thw-tools-frontend
     environment:
       NODE_ENV: production
-      PUBLIC_API_URL: ${PUBLIC_API_URL}
-      PUBLIC_UMAMI_ENDPOINT: ${PUBLIC_UMAMI_ENDPOINT}
-      PUBLIC_UMAMI_WEBSITEID: ${PUBLIC_UMAMI_WEBSITEID_THW_TOOLS}
 
     # depends_on:
     #   - backend

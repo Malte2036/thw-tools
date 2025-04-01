@@ -25,19 +25,9 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # Copy the remaining source code
 COPY . .
 
-# Define ARGs for build-time environment variables
 ARG PUBLIC_API_URL
-ARG PUBLIC_KINDE_API_CLIENT
-ARG PUBLIC_KINDE_DOMAIN
 ARG PUBLIC_UMAMI_ENDPOINT
 ARG PUBLIC_UMAMI_WEBSITEID
-
-# Set environment variables for the build process
-ENV PUBLIC_API_URL=${PUBLIC_API_URL}
-ENV PUBLIC_KINDE_API_CLIENT=${PUBLIC_KINDE_API_CLIENT}
-ENV PUBLIC_KINDE_DOMAIN=${PUBLIC_KINDE_DOMAIN}
-ENV PUBLIC_UMAMI_ENDPOINT=${PUBLIC_UMAMI_ENDPOINT}
-ENV PUBLIC_UMAMI_WEBSITEID=${PUBLIC_UMAMI_WEBSITEID}
 
 # Build the project
 RUN pnpm build:thw-tools
