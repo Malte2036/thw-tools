@@ -13,6 +13,10 @@ services:
       KINDE_DOMAIN: ${KINDE_DOMAIN}
       RESEND_API_KEY: ${RESEND_API_KEY}
       DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
+    command: >
+      sh -c "npx prisma generate &&
+             npx prisma migrate deploy &&
+             node dist/main.js"
     ports:
       - '3000:3000'
     restart: always
