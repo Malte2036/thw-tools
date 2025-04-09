@@ -21,6 +21,7 @@ import { Request } from 'express';
 @ApiTags('organisations')
 @Controller('organisations')
 export class OrganisationController {
+  private readonly logger = new Logger(OrganisationController.name);
   constructor(private readonly organisationService: OrganisationService) {}
 
   @Get('me')
@@ -35,7 +36,9 @@ export class OrganisationController {
     @Body() data: { inviteCode: string },
   ) {
     if (req.organisation) {
-      Logger.warn(`User ${req.user.id} is already a member of an organisation`);
+      this.logger.warn(
+        `User ${req.user.id} is already a member of an organisation`,
+      );
       throw new HttpException(
         'User is already a member of an organisation',
         HttpStatus.BAD_REQUEST,
@@ -46,7 +49,7 @@ export class OrganisationController {
       req.user,
       data.inviteCode,
     );
-    Logger.log(
+    this.logger.log(
       `User ${req.user.id} joined organisation with invite code ${data.inviteCode}`,
     );
 
@@ -63,7 +66,9 @@ export class OrganisationController {
     @Body() data: { name: string },
   ) {
     if (req.organisation) {
-      Logger.warn(`User ${req.user.id} is already a member of an organisation`);
+      this.logger.warn(
+        `User ${req.user.id} is already a member of an organisation`,
+      );
       throw new HttpException(
         'User is already a member of an organisation',
         HttpStatus.BAD_REQUEST,
@@ -75,7 +80,9 @@ export class OrganisationController {
       req.user,
     );
 
-    Logger.log(`User ${req.user.id} created organisation ${createdOrg.id}`);
+    this.logger.log(
+      `User ${req.user.id} created organisation ${createdOrg.id}`,
+    );
 
     return createdOrg;
   }
@@ -87,7 +94,9 @@ export class OrganisationController {
       req.user,
       req.organisation,
     );
-    Logger.log(`User ${req.user.id} left organisation ${req.organisation.id}`);
+    this.logger.log(
+      `User ${req.user.id} left organisation ${req.organisation.id}`,
+    );
 
     return {};
   }

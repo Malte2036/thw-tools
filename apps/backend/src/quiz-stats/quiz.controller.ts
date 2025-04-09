@@ -4,9 +4,9 @@ import {
   Get,
   HttpException,
   HttpStatus,
-  Logger,
   Param,
   Post,
+  Logger,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
@@ -20,6 +20,8 @@ import { QuestionService } from './question.service';
 @ApiTags('quiz')
 @Controller('quiz')
 export class QuizController {
+  private readonly logger = new Logger(QuizController.name);
+
   constructor(
     private readonly questionService: QuestionService,
     private readonly questionStatsService: QuestionStatsService,
@@ -52,7 +54,7 @@ export class QuizController {
     );
 
     if (!question) {
-      Logger.warn(
+      this.logger.warn(
         `Question not found for ${questionType} question ${questionNumber}`,
       );
       throw new HttpException('Question not found', HttpStatus.NOT_FOUND);
@@ -98,7 +100,7 @@ export class QuizController {
         timestamp,
       );
     } catch (error) {
-      Logger.error(
+      this.logger.error(
         `Failed to add question stats for ${questionType} question ${questionNumber}`,
         error.stack,
       );
@@ -128,9 +130,11 @@ export class QuizController {
         timestamp: new Date(),
       });
 
-      Logger.log(`Added question stats for question with id ${questionId}`);
+      this.logger.log(
+        `Added question stats for question with id ${questionId}`,
+      );
     } catch (error) {
-      Logger.error(
+      this.logger.error(
         `Failed to add question stats for question with id ${questionId}`,
         error.stack,
       );

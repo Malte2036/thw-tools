@@ -24,12 +24,13 @@ import { Request } from 'express';
 @ApiTags('inventory')
 @Controller('inventory')
 export class InventoryController {
+  private readonly logger = new Logger(InventoryController.name);
   constructor(private readonly inventoryService: InventoryService) {}
 
   @Get()
   @UseGuards(EnsureUserAndOrgGuard)
   async findAll(@Req() req: Request) {
-    Logger.log('Getting inventory items');
+    this.logger.log('Getting inventory items');
     return this.inventoryService.findAllByOrganisation(req.organisation.id);
   }
 
@@ -41,19 +42,19 @@ export class InventoryController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) {
-      Logger.error('No file provided');
+      this.logger.error('No file provided');
       throw new HttpException('No file provided', HttpStatus.BAD_REQUEST);
     }
 
     if (file.mimetype !== 'text/csv') {
-      Logger.error(`Invalid file type provided: ${file.mimetype}`);
+      this.logger.error(`Invalid file type provided: ${file.mimetype}`);
       throw new HttpException(
         'Only CSV files are allowed',
         HttpStatus.UNSUPPORTED_MEDIA_TYPE,
       );
     }
 
-    Logger.log(
+    this.logger.log(
       `User ${req.user.id} is importing inventory, with file ${file.originalname}`,
     );
 
@@ -61,7 +62,7 @@ export class InventoryController {
       req.organisation,
       file,
     );
-    Logger.log('Processed CSV data');
+    this.logger.log('Processed CSV data');
     return res;
   }
 
@@ -76,7 +77,7 @@ export class InventoryController {
       throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST);
     }
 
-    Logger.log(
+    this.logger.log(
       `Updating custom data for inventory item ${id} for user ${req.user.id}`,
     );
 

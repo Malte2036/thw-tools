@@ -20,12 +20,13 @@ import { EnsureUserAndOrgGuard } from '../shared/user-org/ensure-user-org.guard'
 @ApiTags('funk')
 @Controller('funk')
 export class FunkController {
+  private readonly logger = new Logger(FunkController.name);
   constructor(private readonly funkService: FunkService) {}
 
   @Get()
   @UseGuards(EnsureUserAndOrgGuard)
   async findAll(@Req() req: Request) {
-    Logger.log('Getting funk items');
+    this.logger.log('Getting funk items');
     return this.funkService.getFunkItems(req.organisation.id);
   }
 
@@ -40,7 +41,7 @@ export class FunkController {
       eventType: FunkItemEventType;
     },
   ) {
-    Logger.log(
+    this.logger.log(
       `Bulk creating funk item events with type ${body.eventType} for devices ${body.deviceIds.join(', ')}`,
     );
 
@@ -50,7 +51,7 @@ export class FunkController {
       body.deviceIds.length === 0 ||
       !body.eventType
     ) {
-      Logger.warn('Invalid body', body);
+      this.logger.warn('Invalid body', body);
       throw new HttpException('Invalid body', HttpStatus.BAD_REQUEST);
     }
 

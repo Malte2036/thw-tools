@@ -10,9 +10,9 @@ import { UserService } from '../user/user.service';
 
 @Injectable()
 export class InventoryService {
+  private readonly logger = new Logger(InventoryService.name);
   constructor(
     private prisma: PrismaService,
-    private userService: UserService,
     private csvImportService: ThwinCsvImportService,
   ) {}
 
@@ -23,10 +23,12 @@ export class InventoryService {
     const records = await this.csvImportService.parseCsvFile(file);
     const result = this.csvImportService.processRecords(organisation, records);
 
-    Logger.debug(`Deleting existing inventory items for ${result.einheiten}`);
+    this.logger.debug(
+      `Deleting existing inventory items for ${result.einheiten}`,
+    );
     await this.deleteAllInventoryItemsByEinheit(result.einheiten);
 
-    Logger.debug(`Inserting ${result.count} inventory items`);
+    this.logger.debug(`Inserting ${result.count} inventory items`);
     await this.prisma.inventoryItem.createMany({
       data: result.items,
     });

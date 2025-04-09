@@ -78,6 +78,8 @@ export interface CsvImportResult {
 
 @Injectable()
 export class ThwinCsvImportService {
+  private readonly logger = new Logger(ThwinCsvImportService.name);
+
   async parseCsvFile(file: Express.Multer.File): Promise<InventarCsvRow[]> {
     const records: InventarCsvRow[] = [];
 
@@ -93,7 +95,7 @@ export class ThwinCsvImportService {
         .on('data', (row) => {
           const validationResult = InventarCsvRowSchema.safeParse(row);
           if (!validationResult.success) {
-            Logger.warn(
+            this.logger.warn(
               'Skipping invalid CSV row',
               validationResult.error,
               JSON.stringify(row),
@@ -118,14 +120,14 @@ export class ThwinCsvImportService {
         // If Ebene is null, this is a header row containing the Einheit
         if (record.Ebene === null) {
           currentEinheit = record['Ausstattung | Hersteller | Typ'];
-          Logger.debug(
+          this.logger.debug(
             `Setting Einheit to ${currentEinheit} for the next records`,
           );
           return null;
         }
 
         if (!currentEinheit) {
-          Logger.warn('Skipping record because no Einheit is set', record);
+          this.logger.warn('Skipping record because no Einheit is set', record);
           return null;
         }
 
@@ -165,7 +167,7 @@ export class ThwinCsvImportService {
             status: record.Status,
           };
         } catch (error) {
-          Logger.error(
+          this.logger.error(
             'Error while converting CSV record to InventoryItem',
             error,
             JSON.stringify(record),

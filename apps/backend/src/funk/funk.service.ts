@@ -10,6 +10,8 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class FunkService {
+  private readonly logger = new Logger(FunkService.name);
+
   constructor(private prisma: PrismaService) {}
 
   async getFunkItems(organisationId: string) {
@@ -36,7 +38,9 @@ export class FunkService {
       data.deviceId,
     );
     if (existingItem) {
-      Logger.warn(`Funk item with deviceId ${data.deviceId} already exists`);
+      this.logger.warn(
+        `Funk item with deviceId ${data.deviceId} already exists`,
+      );
       return existingItem;
     }
 
@@ -75,7 +79,7 @@ export class FunkService {
       data.deviceIds.map(async (deviceId) => {
         let item = await this.getFunkItemByDeviceId(organisation.id, deviceId);
         if (!item) {
-          Logger.log(
+          this.logger.log(
             `Creating Funk item with deviceId ${deviceId}, as it does not exist`,
           );
           item = await this.createFunkItem(organisation.id, {
