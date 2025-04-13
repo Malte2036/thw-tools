@@ -13,11 +13,10 @@ Import components using the configured path alias:
 
 ```typescript
   // Import a specific component
-  import { Button } from '@svelte-components/Button';
-  import { Card } from '@svelte-components/Card';
+  import { Button } from '@thw-tools/svelte-components';
 
   // Import multiple components
-  import { Button, Input, Select } from '@svelte-components/forms';
+  import { Button, Input, Select } from '@thw-tools/svelte-components';
 ```
 
 #### Component Props and Types
@@ -26,7 +25,7 @@ Always use TypeScript interfaces for component props:
 
 ```typescript
   // Use the component with proper typing
-  import { Button, type ButtonProps } from '@svelte-components/Button';
+  import { Button } from '@thw-tools/svelte-components';
 
   // Example usage in a Svelte component
   <Button

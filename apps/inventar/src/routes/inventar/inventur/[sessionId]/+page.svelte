@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import Card from '$lib/Card.svelte';
 	import { addItemToSession, setItemCount } from '$lib/inventur/inventurApi';
 	import type { InventurItemEntry } from '$lib/inventur/types';
@@ -13,6 +12,8 @@
 	import InventurScanInput from '$lib/inventur/components/InventurScanInput.svelte';
 	import InventurManualInput from '$lib/inventur/components/InventurManualInput.svelte';
 	import InventurItemsTable from '$lib/inventur/components/InventurItemsTable.svelte';
+	import MissingItemsTable from '$lib/inventur/components/MissingItemsTable.svelte';
+	import { Button } from '@thw-tools/svelte-components';
 
 	let { data }: { data: PageData } = $props();
 	const sessionId = data.sessionId;
@@ -21,10 +22,10 @@
 	let scannedItems = $state<Map<string, InventurItemEntry>>(
 		new Map(data.sessionDetails?.items?.map((item) => [item.inventarItemId!, item]) || [])
 	);
-	// Scan input state
+	// Scan input state - Will be removed later when component refactoring is done
 	let isScanning = $state(false);
 	let scanError = $state<string | null>(null);
-	// Manual input state
+	// Manual input state - Will be removed later when component refactoring is done
 	let isSubmittingManual = $state(false);
 	let manualInputError = $state<string | null>(null);
 	// Debounce state
@@ -40,6 +41,9 @@
 	let tableHeader = $state<string[]>([]);
 	let tableValues = $state<string[][]>([]);
 	let manualItemOptions = $state<{ value: string; label: string }[]>([]);
+	// State for Missing Items display
+	let missingItems = $state<InventoryItem[]>([]);
+	let showMissingItems = $state(false);
 
 	// --- Event Handlers ---
 	async function handleScan(decodedText: string) {
@@ -98,13 +102,13 @@
 		}
 	}
 
-	// Effect to update summary, table data, and manual options
+	// Effect to update summary, table data, manual options, and missing items
 	$effect(() => {
 		const items = $inventory.inventoryItems;
 		const localExpectedFiltered =
 			items?.filter((item: InventoryItem) => item.einheit === data.sessionDetails?.einheit) ?? [];
 
-		// Update Summary Calculations (assign to state vars)
+		// Update Summary Calculations
 		expectedTotalCount = localExpectedFiltered.length;
 		scannedUniqueCount = scannedItems.size;
 		scannedTotalCount = Array.from(scannedItems.values()).reduce(
@@ -116,6 +120,9 @@
 			(item: InventoryItem) => !scannedIds.has(item.id)
 		).length;
 
+		// Update Missing Items List
+		missingItems = localExpectedFiltered.filter((item: InventoryItem) => !scannedIds.has(item.id));
+
 		// Update Table Data
 		tableHeader = ['Inventar Nr.', 'Ausstattung', 'Typ', 'Gezählt'];
 		tableValues = Array.from(scannedItems.values()).map((entry) => {
@@ -123,9 +130,9 @@
 				? items?.find((item) => item.id === entry.inventarItemId)
 				: undefined;
 			return [
-				fullItem?.inventarNummer ?? 'N/A',
-				fullItem?.ausstattung ?? 'N/A',
-				fullItem?.typ ?? 'N/A',
+				fullItem?.inventarNummer ?? '',
+				fullItem?.ausstattung ?? '',
+				fullItem?.typ ?? '',
 				(entry.scannedCount ?? 0).toString()
 			];
 		});
@@ -174,6 +181,26 @@
 	<Card title="Erfasste Geräte">
 		{#snippet children()}
 			<InventurItemsTable header={tableHeader} values={tableValues} />
+		{/snippet}
+	</Card>
+
+	<Card title="Fehlende Geräte ({missingCount})">
+		{#snippet children()}
+			<Button click={() => (showMissingItems = !showMissingItems)} secondary>
+				{#if showMissingItems}
+					Liste ausblenden
+				{:else}
+					Liste anzeigen
+				{/if}
+			</Button>
+
+			{#if showMissingItems}
+				{#if missingItems.length > 0}
+					<MissingItemsTable {missingItems} />
+				{:else}
+					<p class="mt-4 text-gray-500">Alle Geräte dieser Einheit wurden erfasst.</p>
+				{/if}
+			{/if}
 		{/snippet}
 	</Card>
 
