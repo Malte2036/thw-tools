@@ -46,30 +46,32 @@ model QuestionStats {
 }
 
 model User {
-  id             String               @id @default(uuid()) @db.Uuid
-  kindeId        String               @unique @db.VarChar(255)
-  email          String?              @db.VarChar(255)
-  firstName      String?              @db.VarChar(100)
-  lastName       String?              @db.VarChar(100)
-  picture        String?              @db.VarChar(1000)
-  eventBulks     FunkItemEventBulk[]
-  funkItemEvents FunkItemEvent[]
-  organisations  OrganisationMember[]
-  vehicleRentals VehicleRental[]
+  id               String                       @id @default(uuid()) @db.Uuid
+  kindeId          String                       @unique @db.VarChar(255)
+  email            String?                      @db.VarChar(255)
+  firstName        String?                      @db.VarChar(100)
+  lastName         String?                      @db.VarChar(100)
+  picture          String?                      @db.VarChar(1000)
+  eventBulks       FunkItemEventBulk[]
+  funkItemEvents   FunkItemEvent[]
+  organisations    OrganisationMember[]
+  vehicleRentals   VehicleRental[]
+  inventurSessions InventurSessionParticipant[]
 
   @@map("users")
   @@schema("inventory")
 }
 
 model Organisation {
-  id             String               @id @default(uuid()) @db.Uuid
-  name           String               @db.VarChar(255)
-  inviteCode     String               @unique @db.VarChar(50)
-  eventBulks     FunkItemEventBulk[]
-  funkItems      FunkItem[]
-  inventoryItems InventoryItem[]
-  members        OrganisationMember[]
-  vehicles       Vehicle[]
+  id               String               @id @default(uuid()) @db.Uuid
+  name             String               @db.VarChar(255)
+  inviteCode       String               @unique @db.VarChar(50)
+  eventBulks       FunkItemEventBulk[]
+  funkItems        FunkItem[]
+  inventoryItems   InventoryItem[]
+  members          OrganisationMember[]
+  vehicles         Vehicle[]
+  inventurSessions InventurSession[]
 
   @@map("organisations")
   @@schema("inventory")
@@ -139,24 +141,25 @@ model FunkItemEventBulkEvent {
 }
 
 model InventoryItem {
-  id             String                   @id @default(uuid()) @db.Uuid
-  einheit        String                   @db.VarChar(100)
-  ebene          Int
-  art            String?                  @db.VarChar(100)
-  menge          Float?
-  mengeIst       Float?
-  verfuegbar     Float?
-  ausstattung    String                   @db.VarChar(255)
-  hersteller     String?                  @db.VarChar(100)
-  typ            String?                  @db.VarChar(100)
-  inventarNummer String?                  @db.VarChar(50)
-  sachNummer     String?                  @db.VarChar(50)
-  gerateNummer   String?                  @db.VarChar(50)
-  status         String?                  @db.VarChar(50)
-  organisationId String                   @db.Uuid
-  customDataId   String?                  @unique @db.Uuid
-  customData     InventoryItemCustomData? @relation(fields: [customDataId], references: [id])
-  organisation   Organisation             @relation(fields: [organisationId], references: [id])
+  id              String                   @id @default(uuid()) @db.Uuid
+  einheit         String                   @db.VarChar(100)
+  ebene           Int
+  art             String?                  @db.VarChar(100)
+  menge           Float?
+  mengeIst        Float?
+  verfuegbar      Float?
+  ausstattung     String                   @db.VarChar(255)
+  hersteller      String?                  @db.VarChar(100)
+  typ             String?                  @db.VarChar(100)
+  inventarNummer  String?                  @db.VarChar(50)
+  sachNummer      String?                  @db.VarChar(50)
+  gerateNummer    String?                  @db.VarChar(50)
+  status          String?                  @db.VarChar(50)
+  organisationId  String                   @db.Uuid
+  customDataId    String?                  @unique @db.Uuid
+  customData      InventoryItemCustomData? @relation(fields: [customDataId], references: [id])
+  organisation    Organisation             @relation(fields: [organisationId], references: [id])
+  inventurEntries InventurItemEntry[] // Added inverse relation
 
   @@map("inventory_items")
   @@schema("inventory")
@@ -216,6 +219,58 @@ model VehicleRental {
   @@schema("inventory")
 }
 
+// --- Inventur Models START ---
+
+model InventurSession {
+  id             String                @id @default(uuid()) @db.Uuid
+  startTime      DateTime              @default(now()) @db.Timestamp(6)
+  endTime        DateTime?
+  organisationId String                @db.Uuid // Directly linked to Organisation
+  einheit        String                @db.VarChar(100) // Specific unit within the organisation (Required)
+  status         InventurSessionStatus @default(running) // running, completed, aborted
+
+  // Relations
+  organisation Organisation                 @relation(fields: [organisationId], references: [id])
+  participants InventurSessionParticipant[] // Link to participants join table
+  items        InventurItemEntry[] // Combined item entries
+
+  @@map("inventur_sessions")
+  @@schema("inventory")
+}
+
+// Join table for Many-to-Many between InventurSession and User
+model InventurSessionParticipant {
+  inventurSessionId String @db.Uuid
+  userId            String @db.Uuid
+
+  // Relations
+  inventurSession InventurSession @relation(fields: [inventurSessionId], references: [id], onDelete: Cascade)
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([inventurSessionId, userId])
+  @@map("inventur_session_participants")
+  @@schema("inventory")
+}
+
+model InventurItemEntry {
+  id                String  @id @default(uuid()) @db.Uuid
+  inventurSessionId String  @db.Uuid
+  inventarItemId    String? @db.Uuid // Nullable: Links to InventoryItem if known. If null, it's a 'found_unknown' item.
+  scannedCount      Int? // Number of times this item was scanned. If > 0, it's 'scanned'. If expected but not present (inventarItemId set, scannedCount null/0), it's 'missing'.
+  note              String? @db.Text // Note for any entry (e.g., reason for missing, details of found item)
+
+  // Relations
+  inventurSession InventurSession @relation(fields: [inventurSessionId], references: [id], onDelete: Cascade)
+  inventarItem    InventoryItem?  @relation(fields: [inventarItemId], references: [id]) // Relation is optional
+
+  // Explicitly map the unique constraint name
+  @@unique([inventurSessionId, inventarItemId], map: "InventurItemEntry_session_item_unique")
+  @@map("inventur_item_entries")
+  @@schema("inventory")
+}
+
+// --- Inventur Models END ---
+
 enum QuizType {
   ga
   agt
@@ -233,3 +288,18 @@ enum FunkItemEventType {
   @@map("funk_item_event_type")
   @@schema("inventory")
 }
+
+// --- Inventur Enums START ---
+
+enum InventurSessionStatus {
+  running
+  completed
+  aborted
+
+  @@map("inventur_session_status")
+  @@schema("inventory")
+}
+
+// Removed InventurItemStatus enum
+
+// --- Inventur Enums END ---
