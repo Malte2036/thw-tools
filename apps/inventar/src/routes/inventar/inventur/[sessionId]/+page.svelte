@@ -25,7 +25,7 @@
 	// Scan input state - Will be removed later when component refactoring is done
 	let isScanning = $state(false);
 	let scanError = $state<string | null>(null);
-	// Manual input state - Will be removed later when component refactoring is done
+	// Manual input state - Uncommented
 	let isSubmittingManual = $state(false);
 	let manualInputError = $state<string | null>(null);
 	// Debounce state
@@ -55,6 +55,7 @@
 		scanError = null;
 		isScanning = true;
 		try {
+			// Use inventarNummer here as before
 			const updatedEntry = await addItemToSession(sessionId, { inventarNummer: decodedText });
 			if (updatedEntry.inventarItemId) {
 				scannedItems.set(updatedEntry.inventarItemId, updatedEntry);
@@ -69,18 +70,25 @@
 				});
 			}
 		} catch (err: any) {
-			console.error('Error adding item:', err);
+			console.error('Error adding item via scan:', err);
 			scanError = err.response?.data?.message || err.message || 'Fehler beim Hinzufügen des Items.';
 		} finally {
 			isScanning = false;
 		}
 	}
 
-	async function handleManualSubmit(itemId: string, count: number) {
+	// Updated: handleManualSubmit increases count by a given amount
+	async function handleManualSubmit(itemId: string, increaseBy: number) {
 		manualInputError = null;
 		isSubmittingManual = true;
 		try {
-			const updatedEntry = await setItemCount(sessionId, itemId, { count });
+			// Get the current count from state, default to 0 if not found
+			const currentCount = scannedItems.get(itemId)?.scannedCount ?? 0;
+			const newCount = currentCount + increaseBy;
+
+			// Call setItemCount with the new calculated count
+			const updatedEntry = await setItemCount(sessionId, itemId, { count: newCount });
+
 			if (updatedEntry.inventarItemId) {
 				scannedItems.set(updatedEntry.inventarItemId, updatedEntry);
 				scannedItems = scannedItems; // Trigger updates
@@ -88,15 +96,16 @@
 					(item) => item.id === updatedEntry.inventarItemId
 				);
 				bannerMessage.set({
-					message: `Anzahl für '${fullItem?.inventarNummer || updatedEntry.inventarItemId}' auf ${updatedEntry.scannedCount} gesetzt.`,
+					// Updated message to reflect increase
+					message: `Anzahl für '${fullItem?.inventarNummer || updatedEntry.inventarItemId}' um ${increaseBy} erhöht (neu: ${updatedEntry.scannedCount})`,
 					type: 'info',
 					autoDismiss: { duration: 3000 }
 				});
 			}
 		} catch (err: any) {
-			console.error('Error setting item count:', err);
+			console.error('Error increasing item count:', err);
 			manualInputError =
-				err.response?.data?.message || err.message || 'Fehler beim Setzen der Anzahl.';
+				err.response?.data?.message || err.message || 'Fehler beim Erhöhen der Anzahl.';
 		} finally {
 			isSubmittingManual = false;
 		}

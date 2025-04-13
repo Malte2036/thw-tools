@@ -11,7 +11,7 @@
 
 	interface Props {
 		itemOptions: SelectOption[];
-		onSubmit: (itemId: string, count: number) => Promise<void>; // Callback for submission
+		onSubmit: (itemId: string, increaseBy: number) => Promise<void>;
 		isLoading: boolean;
 		error: string | null;
 	}
@@ -19,26 +19,21 @@
 	let { itemOptions, onSubmit, isLoading, error }: Props = $props();
 
 	let selectedItemId = $state<string>('');
-	let countInput = $state<string>('1'); // Default count to 1
-	let count = $state<number>(1);
+	let increaseByInput = $state<string>('1');
+	let increaseBy = $state<number>(1);
 
-	// Sync string input with number state
 	$effect(() => {
-		const num = parseInt(countInput, 10);
-		count = isNaN(num) || num < 0 ? 0 : num; // Ensure non-negative
+		const num = parseInt(increaseByInput, 10);
+		increaseBy = isNaN(num) || num < 0 ? 0 : num;
 	});
 
-	// Keep input string in sync
 	$effect(() => {
-		countInput = count.toString();
+		increaseByInput = increaseBy.toString();
 	});
 
 	async function handleSubmit() {
-		if (!selectedItemId) return; // Button should be disabled anyway
-		await onSubmit(selectedItemId, count);
-		// Optionally reset form here if onSubmit doesn't handle it
-		// selectedItemId = '';
-		// count = 1;
+		if (!selectedItemId) return;
+		await onSubmit(selectedItemId, increaseBy);
 	}
 </script>
 
@@ -47,7 +42,7 @@
 		<Select label="Item auswählen" options={itemOptions} bind:selected={selectedItemId} />
 	</div>
 	<div>
-		<Input label="Anzahl" type="number" inputmode="numeric" bind:inputValue={countInput} />
+		<Input label="Erhöhen um" type="number" inputmode="numeric" bind:inputValue={increaseByInput} />
 	</div>
 </div>
 {#if error}
@@ -58,7 +53,7 @@
 		{#if isLoading}
 			<LoadingSpinner /> Speichern...
 		{:else}
-			Anzahl setzen
+			Anzahl erhöhen
 		{/if}
 	</Button>
 </div>
