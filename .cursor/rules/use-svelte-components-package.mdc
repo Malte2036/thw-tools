@@ -1,22 +1,23 @@
 ---
 description: 
-globs: 
+globs: *.svelte
 alwaysApply: false
 ---
 
-The component library in `packages/web-components` provides reusable UI components for all frontend applications in the monorepo. Follow these guidelines when using shared components:
+```markdown
+The component library in `packages/svelte-components` provides reusable UI components for all frontend applications in the monorepo. Follow these guidelines when using shared components:
 
 #### Importing Components
 
 Import components using the configured path alias:
 
 ```typescript
-// Import a specific component
-import { Button } from '@web-components/Button';
-import { Card } from '@web-components/Card';
+  // Import a specific component
+  import { Button } from '@svelte-components/Button';
+  import { Card } from '@svelte-components/Card';
 
-// Import multiple components
-import { Button, Input, Select } from '@web-components/forms';
+  // Import multiple components
+  import { Button, Input, Select } from '@svelte-components/forms';
 ```
 
 #### Component Props and Types
@@ -25,7 +26,7 @@ Always use TypeScript interfaces for component props:
 
 ```typescript
   // Use the component with proper typing
-  import { Button, type ButtonProps } from '@web-components/Button';
+  import { Button, type ButtonProps } from '@svelte-components/Button';
 
   // Example usage in a Svelte component
   <Button
@@ -48,11 +49,12 @@ Always use TypeScript interfaces for component props:
 
 When creating new components for the shared library:
 
-1. Follow the established naming conventions
-2. Include comprehensive TypeScript types
-3. Write unit tests for all components
-4. Document usage examples in component comments
-5. Ensure components work across all frontend applications
+1.  **Consider placement:** If a component is generic and could be used across multiple projects, create it in the `svelte-components` package. Otherwise, keep it within the specific project's component directory.
+2.  Follow the established naming conventions
+3.  Include comprehensive TypeScript types
+4.  Write unit tests for all components
+5.  Document usage examples in component comments
+6.  Ensure components work across all frontend applications
 
 #### Cursor Rule for LLM
 
@@ -66,8 +68,9 @@ This rule should be applied whenever suggesting or generating code for any front
 
 When suggesting code that uses shared components:
 
-- Always import from `@web-components/[ComponentName]`
+- Always import from `@svelte-components/[ComponentName]` if it's a shared component.
 - Use proper TypeScript typing for all component props
 - Follow the component API as defined in the component library
 - Suggest using composition over direct style overrides
 - Recommend the most appropriate component for the use case
+```
