@@ -22,10 +22,10 @@
 	let scannedItems = $state<Map<string, InventurItemEntry>>(
 		new Map(data.sessionDetails?.items?.map((item) => [item.inventarItemId!, item]) || [])
 	);
-	// Scan input state - Will be removed later when component refactoring is done
-	let isScanning = $state(false);
-	let scanError = $state<string | null>(null);
-	// Manual input state - Uncommented
+	// Scan input state REMOVED - Handled by component
+	// let isScanning = $state(false);
+	// let scanError = $state<string | null>(null);
+	// Manual input state - Still handled here for now
 	let isSubmittingManual = $state(false);
 	let manualInputError = $state<string | null>(null);
 	// Debounce state
@@ -46,16 +46,16 @@
 	let showMissingItems = $state(false);
 
 	// --- Event Handlers ---
+	// Updated: handleScan simplified as component handles loading/error UI
 	async function handleScan(decodedText: string) {
 		const now = Date.now();
 		if (decodedText === lastScannedValue && now - lastScanTime < DEBOUNCE_MS) return;
 		lastScannedValue = decodedText;
 		lastScanTime = now;
 
-		scanError = null;
-		isScanning = true;
+		// We don't need to manage loading/error state here anymore.
+		// Just call the API and update our data on success.
 		try {
-			// Use inventarNummer here as before
 			const updatedEntry = await addItemToSession(sessionId, { inventarNummer: decodedText });
 			if (updatedEntry.inventarItemId) {
 				scannedItems.set(updatedEntry.inventarItemId, updatedEntry);
@@ -70,10 +70,8 @@
 				});
 			}
 		} catch (err: any) {
-			console.error('Error adding item via scan:', err);
-			scanError = err.response?.data?.message || err.message || 'Fehler beim Hinzufügen des Items.';
-		} finally {
-			isScanning = false;
+			// Log error, but the component will display it to the user.
+			console.error('Error adding item via scan (parent handler):', err);
 		}
 	}
 
@@ -172,7 +170,7 @@
 
 	<Card title="Gerät scannen">
 		{#snippet children()}
-			<InventurScanInput onScan={handleScan} isLoading={isScanning} error={scanError} />
+			<InventurScanInput onScan={handleScan} />
 		{/snippet}
 	</Card>
 
