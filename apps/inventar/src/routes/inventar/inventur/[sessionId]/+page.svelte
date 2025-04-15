@@ -152,64 +152,83 @@
 	});
 </script>
 
-<div class="container mx-auto p-4 flex flex-col gap-4">
-	<h1 class="text-2xl font-bold mb-4">
-		Inventur: {data.sessionDetails?.einheit} <span class="font-mono text-lg">({sessionId})</span>
+<div class="container mx-auto p-2 sm:p-4 flex flex-col gap-4 max-w-6xl">
+	<h1 class="text-2xl sm:text-3xl font-bold mb-2 sm:mb-4 flex flex-wrap items-center gap-2">
+		Inventur: <span class="text-thw-700">{data.sessionDetails?.einheit}</span>
+		<span class="font-mono text-base sm:text-lg text-gray-500">({sessionId})</span>
 	</h1>
 
-	<Card title="Übersicht">
-		{#snippet children()}
-			<InventurSummary
-				{expectedTotalCount}
-				{scannedUniqueCount}
-				{scannedTotalCount}
-				{missingCount}
-			/>
-		{/snippet}
-	</Card>
+	<!-- Responsive grid: 2 columns on desktop, stacked on mobile -->
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+		<!-- Left: Summary, Scan, Manual -->
+		<div class="flex flex-col gap-6">
+			<!-- Sticky summary bar on mobile -->
+			<div
+				class="lg:static sticky top-0 z-20 bg-white/90 backdrop-blur-md rounded-xl shadow-md p-2 sm:p-4 mb-2"
+			>
+				<Card title="Übersicht">
+					{#snippet children()}
+						<InventurSummary
+							{expectedTotalCount}
+							{scannedUniqueCount}
+							{scannedTotalCount}
+							{missingCount}
+						/>
+					{/snippet}
+				</Card>
+			</div>
 
-	<Card title="Gerät scannen">
-		{#snippet children()}
-			<InventurScanInput onScan={handleScan} />
-		{/snippet}
-	</Card>
+			<Card title="Gerät scannen">
+				{#snippet children()}
+					<InventurScanInput onScan={handleScan} />
+				{/snippet}
+			</Card>
 
-	<Card title="Manuelle Eingabe">
-		{#snippet children()}
-			<InventurManualInput
-				itemOptions={manualItemOptions}
-				onSubmit={handleManualSubmit}
-				isLoading={isSubmittingManual}
-				error={manualInputError}
-			/>
-		{/snippet}
-	</Card>
+			<Card title="Manuelle Eingabe">
+				{#snippet children()}
+					<InventurManualInput
+						itemOptions={manualItemOptions}
+						onSubmit={handleManualSubmit}
+						isLoading={isSubmittingManual}
+						error={manualInputError}
+					/>
+				{/snippet}
+			</Card>
+		</div>
 
-	<Card title="Erfasste Geräte">
-		{#snippet children()}
-			<InventurItemsTable header={tableHeader} values={tableValues} />
-		{/snippet}
-	</Card>
+		<!-- Right: Tables -->
+		<div class="flex flex-col gap-6">
+			<Card title="Erfasste Geräte">
+				{#snippet children()}
+					<InventurItemsTable header={tableHeader} values={tableValues} />
+				{/snippet}
+			</Card>
 
-	<Card title="Fehlende Geräte ({missingCount})">
-		{#snippet children()}
-			<Button click={() => (showMissingItems = !showMissingItems)} secondary>
-				{#if showMissingItems}
-					Liste ausblenden
-				{:else}
-					Liste anzeigen
-				{/if}
-			</Button>
+			<Card title={`Fehlende Geräte (${missingCount})`}>
+				{#snippet children()}
+					<div class="flex flex-col gap-2">
+						<Button click={() => (showMissingItems = !showMissingItems)} secondary>
+							{#if showMissingItems}
+								<span class="sr-only">Fehlende Liste ausblenden</span>
+								Liste ausblenden
+							{:else}
+								<span class="sr-only">Fehlende Liste anzeigen</span>
+								Liste anzeigen
+							{/if}
+						</Button>
 
-			{#if showMissingItems}
-				{#if missingItems.length > 0}
-					<MissingItemsTable {missingItems} />
-				{:else}
-					<p class="mt-4 text-gray-500">Alle Geräte dieser Einheit wurden erfasst.</p>
-				{/if}
-			{/if}
-		{/snippet}
-	</Card>
-
-	<!-- TODO: Add manual input option -->
+						{#if showMissingItems}
+							{#if missingItems.length > 0}
+								<div class="mt-2 bg-orange-50 rounded-lg p-2 sm:p-4 shadow-inner">
+									<MissingItemsTable {missingItems} />
+								</div>
+							{:else}
+								<p class="mt-4 text-gray-500">Alle Geräte dieser Einheit wurden erfasst.</p>
+							{/if}
+						{/if}
+					</div>
+				{/snippet}
+			</Card>
+		</div>
+	</div>
 </div>
