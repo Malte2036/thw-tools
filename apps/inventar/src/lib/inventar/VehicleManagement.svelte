@@ -159,10 +159,12 @@
 
 	// Convert vehicles to options for the dropdown
 	const vehicleOptions = $derived(
-		vehicles.map((vehicle: Vehicle) => ({
-			value: vehicle.id,
-			label: vehicleToFriendlyString(vehicle)
-		}))
+		vehicles
+			.map((vehicle: Vehicle) => ({
+				value: vehicle.id,
+				label: vehicleToFriendlyString(vehicle)
+			}))
+			.sort((a: { label: string }, b: { label: string }) => a.label.localeCompare(b.label))
 	);
 
 	// Calculate the "status" for a vehicle based on active rentals
