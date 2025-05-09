@@ -354,7 +354,7 @@
       </div>
 
       <div class="grid grid-cols-7 gap-1 sm:gap-2">
-        {#each Array(firstDayOfMonth - 1 || 7) as _}
+        {#each Array(firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1) as _}
           <div
             class="h-14 sm:h-20 md:h-24 lg:h-28 p-0.5 border border-gray-100 bg-gray-50 rounded-md opacity-50"
           ></div>
