@@ -5,6 +5,7 @@ import CircleRadiationIcon from '$lib/icons/CircleRadiationIcon.svelte';
 import VestIcon from '$lib/icons/VestIcon.svelte';
 import HearthPulseIcon from '$lib/icons/HearthPulseIcon.svelte';
 import BoltIcon from '$lib/icons/BoltIcon.svelte';
+import RadioIcon from '$lib/icons/RadioIcon.svelte';
 
 export type NavigationItem = {
 	name: string;
@@ -33,6 +34,8 @@ export function getCurrentTitleByPath(path: string): string | undefined {
 		return 'CBRN-Schutzanzug';
 	} else if (path.startsWith('/clothing')) {
 		return 'Bekleidungsrechner';
+	} else if (path.startsWith('/funkrufnamen')) {
+		return 'THW Funkrufnamen';
 	} else if (path === '/') {
 		return undefined;
 	} else {
@@ -75,6 +78,12 @@ export const navigationItems: NavigationCategory[] = [
 		title: 'Tools',
 		description: 'Hilfreiche Werkzeuge für den THW-Alltag',
 		items: [
+			{
+				name: 'THW Funkrufnamen',
+				href: '/funkrufnamen/',
+				event: 'Open Funkrufnamen',
+				icon: RadioIcon
+			},
 			{
 				name: 'Bekleidungsrechner',
 				href: '/clothing/',
