@@ -58,6 +58,9 @@ export async function GET() {
             <priority>0.8</priority>
         </url>
         <url>
+            <loc>https://thw-tools.de/funkrufnamen/</loc>
+            <priority>0.8</priority>
+        <url>
             <loc>https://thw-tools.de/quiz/stats/</loc>
             <priority>0.4</priority>
         </url>
