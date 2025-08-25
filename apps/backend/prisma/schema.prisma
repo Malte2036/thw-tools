@@ -70,6 +70,7 @@ model Organisation {
   inventoryItems InventoryItem[]
   members        OrganisationMember[]
   vehicles       Vehicle[]
+  missions       Mission[]
 
   @@map("organisations")
   @@schema("inventory")
@@ -139,24 +140,25 @@ model FunkItemEventBulkEvent {
 }
 
 model InventoryItem {
-  id             String                   @id @default(uuid()) @db.Uuid
-  einheit        String                   @db.VarChar(100)
-  ebene          Int
-  art            String?                  @db.VarChar(100)
-  menge          Float?
-  mengeIst       Float?
-  verfuegbar     Float?
-  ausstattung    String                   @db.VarChar(255)
-  hersteller     String?                  @db.VarChar(100)
-  typ            String?                  @db.VarChar(100)
-  inventarNummer String?                  @db.VarChar(50)
-  sachNummer     String?                  @db.VarChar(50)
-  gerateNummer   String?                  @db.VarChar(50)
-  status         String?                  @db.VarChar(50)
-  organisationId String                   @db.Uuid
-  customDataId   String?                  @unique @db.Uuid
-  customData     InventoryItemCustomData? @relation(fields: [customDataId], references: [id])
-  organisation   Organisation             @relation(fields: [organisationId], references: [id])
+  id              String            @id @default(uuid()) @db.Uuid
+  einheit         String            @db.VarChar(100)
+  ebene           Int
+  art             String?           @db.VarChar(100)
+  menge           Float?
+  mengeIst        Float?
+  verfuegbar      Float?
+  ausstattung     String            @db.VarChar(255)
+  hersteller      String?           @db.VarChar(100)
+  typ             String?           @db.VarChar(100)
+  inventarNummer  String?           @db.VarChar(50)
+  sachNummer      String?           @db.VarChar(50)
+  gerateNummer    String?           @db.VarChar(50)
+  status          String?           @db.VarChar(50)
+  organisationId  String            @db.Uuid
+  customDataId    String?           @unique @db.Uuid
+  customData      InventoryItemCustomData? @relation(fields: [customDataId], references: [id])
+  organisation    Organisation      @relation(fields: [organisationId], references: [id])
+  missionMaterial MissionMaterial[]
 
   @@map("inventory_items")
   @@schema("inventory")
@@ -231,5 +233,60 @@ enum FunkItemEventType {
   returned
 
   @@map("funk_item_event_type")
+  @@schema("inventory")
+}
+
+model Mission {
+  id             String            @id @default(uuid()) @db.Uuid
+  name           String            @db.VarChar(255)
+  location       String?           @db.VarChar(255)
+  description    String?           @db.VarChar(1000)
+  startDate      DateTime          @default(now()) @db.Timestamp(6)
+  endDate        DateTime?         @db.Timestamp(6)
+  status         MissionStatus     @default(ACTIVE)
+  organisationId String            @db.Uuid
+  organisation   Organisation      @relation(fields: [organisationId], references: [id])
+  materials      MissionMaterial[]
+  createdAt      DateTime          @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime          @updatedAt @db.Timestamp(6)
+
+  @@map("missions")
+  @@schema("inventory")
+}
+
+model MissionMaterial {
+  id              String         @id @default(uuid()) @db.Uuid
+  missionId       String         @db.Uuid
+  mission         Mission        @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  inventoryItemId String?        @db.Uuid
+  inventoryItem   InventoryItem? @relation(fields: [inventoryItemId], references: [id])
+  manualName      String?        @db.VarChar(255)
+  manualQuantity  Float?         @default(1)
+  manualUnit      String?        @db.VarChar(50)
+  status          MaterialStatus @default(CHECKED_OUT)
+  checkedOutAt    DateTime       @default(now()) @db.Timestamp(6)
+  returnedAt      DateTime?      @db.Timestamp(6)
+  createdAt       DateTime       @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime       @updatedAt @db.Timestamp(6)
+
+  @@map("mission_materials")
+  @@schema("inventory")
+}
+
+enum MissionStatus {
+  ACTIVE
+  COMPLETED
+
+  @@map("mission_status")
+  @@schema("inventory")
+}
+
+enum MaterialStatus {
+  CHECKED_OUT
+  RETURNED
+  LOST
+  DEFECTIVE
+
+  @@map("material_status")
   @@schema("inventory")
 }

@@ -9,6 +9,7 @@
 				{ name: 'Funkliste', href: '/funk/' },
 				{ name: 'OV Inventar', href: '/inventar/' },
 				{ name: 'Fahrzeugverwaltung', href: '/fahrzeuge/' },
+				{ name: 'Einsätze', href: '/missions/' },
 				{ name: 'Organisation', href: '/organisation/' }
 			]
 		},

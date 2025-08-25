@@ -17,6 +17,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserOrgMiddleware } from './shared/user-org/user-org.middleware';
 import { VehiclesModule } from './vehicles/vehicles.module';
 import { EmailModule } from './email/email.module';
+import { MissionsModule } from './missions/missions.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { EmailModule } from './email/email.module';
     AiModule,
     VehiclesModule,
     EmailModule,
+    MissionsModule,
   ],
   providers: [
     AppService,
@@ -51,7 +53,7 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware, UserOrgMiddleware)
-      .forRoutes('/funk', '/inventory', '/organisations', '/vehicles');
+      .forRoutes('/funk', '/inventory', '/organisations', '/vehicles', '/missions');
 
     consumer
       .apply(LoggingMiddleware)
