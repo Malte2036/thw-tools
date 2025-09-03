@@ -6,7 +6,9 @@ import { useEffect, useCallback } from 'react';
 import { useOrganisationStore } from '../store/organisationStore';
 import { useUserStore } from '../store/userStore';
 import { saveLastPath } from '@/utils/redirectAuth';
-import { fetchAndSetVehicles } from '@/api/vehicle/vehicleApi';
+import { fetchAndSetVehicles, fetchRentals } from '@/api/vehicle/vehicleApi';
+import { useVehicleStore } from '../store/vehicleStore';
+import { LoadingSpinner } from '@/components/base';
 
 export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
   const {
@@ -20,9 +22,14 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
 
   const setUser = useUserStore((state) => state.setUser);
   const setOrganisation = useOrganisationStore((state) => state.setOrganisation);
+  const setRentals = useVehicleStore((state) => state.setRentals);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
@@ -43,21 +50,27 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
       throw new Error('No access token or id token');
     }
 
-    const [organisation, vehicles] = await Promise.all([
+    await Promise.all([
       getOrganisationForUser({
         idToken,
         token: accessToken,
+      }).then((organisation) => {
+        const user =
+          organisation.members.find((m) => m.user.kindeId === kindeUser.id)?.user ?? null;
+        setUser(user);
+        setOrganisation(organisation);
       }),
       fetchAndSetVehicles({
         idToken,
         token: accessToken,
       }),
+      fetchRentals({
+        idToken,
+        token: accessToken,
+      }).then((rentals) => {
+        setRentals(rentals);
+      }),
     ]);
-
-    const user = organisation.members.find((m) => m.user.kindeId === kindeUser.id)?.user ?? null;
-
-    setUser(user);
-    setOrganisation(organisation);
   }, [getAccessToken, getIdToken, isAuthenticated, kindeUser]);
 
   useEffect(() => {

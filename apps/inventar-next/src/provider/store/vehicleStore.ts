@@ -1,16 +1,24 @@
 import { User, UserSchema } from '@/api/user/userModels';
-import { Vehicle, VehicleSchema } from '@/api/vehicle/vehicleModels';
+import {
+  Vehicle,
+  VehicleRental,
+  VehicleRentalSchema,
+  VehicleSchema,
+} from '@/api/vehicle/vehicleModels';
 import { create } from 'zustand';
 
 interface VehicleStore {
-  vehicles: Vehicle[] | null;
   fetching: boolean;
-  setVehicles: (vehicles: Vehicle[] | null) => void;
+  vehicles: Vehicle[] | null;
+  rentals: VehicleRental[] | null;
   setFetching: (fetching: boolean) => void;
+  setVehicles: (vehicles: Vehicle[] | null) => void;
+  setRentals: (rentals: VehicleRental[] | null) => void;
 }
 
 export const useVehicleStore = create<VehicleStore>((set) => ({
   vehicles: null,
+  rentals: null,
   fetching: false,
   setVehicles: (vehicles: Vehicle[] | null) => {
     if (!vehicles) {
@@ -23,5 +31,14 @@ export const useVehicleStore = create<VehicleStore>((set) => ({
   },
   setFetching: (fetching: boolean) => {
     set({ fetching });
+  },
+  setRentals: (rentals: VehicleRental[] | null) => {
+    if (!rentals) {
+      set({ rentals: null, fetching: false });
+      return;
+    }
+
+    const parsedRentals = VehicleRentalSchema.array().parse(rentals);
+    set({ rentals: parsedRentals, fetching: false });
   },
 }));
