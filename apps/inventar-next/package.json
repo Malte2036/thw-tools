@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.1",
     "@kinde-oss/kinde-auth-react": "^5.6.0",
     "@lit/react": "^1.0.8",
     "@thw-tools/shared": "workspace:*",
@@ -16,6 +17,7 @@
     "next": "15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-hook-form": "^7.62.0",
     "zod": "^4.1.5",
     "zustand": "^5.0.8"
   },

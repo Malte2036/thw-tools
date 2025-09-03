@@ -1,5 +1,10 @@
 import { CustomError, HttpError, UnauthorizedError } from './error';
 
+export type ApiRequestOptions = {
+  idToken: string;
+  token: string;
+};
+
 const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const checkIfResposeIsUnauthorized = (res: Response) => {
@@ -29,7 +34,7 @@ function responseToData<T>(response: Response, data: T): ResponeData<T> {
 }
 
 async function createHeaders(
-  { idToken, token }: { idToken: string; token: string },
+  { idToken, token }: ApiRequestOptions,
   includeContentType = true
 ): Promise<Headers> {
   const headers = new Headers();
@@ -46,7 +51,7 @@ async function createHeaders(
 
 export async function apiGet<T>(
   path: string,
-  { idToken, token }: { idToken: string; token: string },
+  { idToken, token }: ApiRequestOptions,
   verifyData?: (data: T) => boolean
 ): Promise<ResponeData<T>> {
   const url = new URL(path, PUBLIC_API_URL);
@@ -82,7 +87,7 @@ export async function apiGet<T>(
 
 export async function apiPost<T>(
   path: string,
-  { idToken, token }: { idToken: string; token: string },
+  { idToken, token }: ApiRequestOptions,
   body?: any,
   verifyData?: (data: T) => boolean
 ): Promise<ResponeData<T>> {
@@ -120,7 +125,7 @@ export async function apiPost<T>(
 
 export async function apiPostFile<T>(
   path: string,
-  { idToken, token }: { idToken: string; token: string },
+  { idToken, token }: ApiRequestOptions,
   file: File,
   verifyData?: (data: T) => boolean
 ): Promise<ResponeData<T>> {
@@ -160,7 +165,7 @@ export async function apiPostFile<T>(
 
 export async function apiPatch<T>(
   path: string,
-  { idToken, token }: { idToken: string; token: string },
+  { idToken, token }: ApiRequestOptions,
   body?: any,
   verifyData?: (data: T) => boolean
 ): Promise<ResponeData<T>> {
@@ -198,7 +203,7 @@ export async function apiPatch<T>(
 
 export async function apiPut<T>(
   path: string,
-  { idToken, token }: { idToken: string; token: string },
+  { idToken, token }: ApiRequestOptions,
   body?: any,
   verifyData?: (data: T) => boolean
 ): Promise<ResponeData<T>> {
@@ -234,10 +239,7 @@ export async function apiPut<T>(
   }
 }
 
-export async function apiGetFile(
-  path: string,
-  { idToken, token }: { idToken: string; token: string }
-) {
+export async function apiGetFile(path: string, { idToken, token }: ApiRequestOptions) {
   const url = new URL(path, PUBLIC_API_URL);
   try {
     const response = await fetch(url, {

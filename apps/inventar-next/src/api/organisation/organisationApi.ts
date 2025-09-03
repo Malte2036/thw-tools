@@ -1,14 +1,10 @@
-import { apiGet, apiPost } from '../apiGeneric';
+import { apiGet, apiPost, ApiRequestOptions } from '../apiGeneric';
 import { Organisation, OrganisationSchema } from './organisationModels';
 
-export async function getOrganisationForUser({
-  idToken,
-  token,
-}: {
-  idToken: string;
-  token: string;
-}): Promise<Organisation> {
-  const response = await apiGet<Organisation>('/organisations/me', { idToken, token }, (data) => {
+export async function getOrganisationForUser(
+  requestOptions: ApiRequestOptions
+): Promise<Organisation> {
+  const response = await apiGet<Organisation>('/organisations/me', requestOptions, (data) => {
     const result = OrganisationSchema.safeParse(data);
     if (!result.success) {
       console.error('Error parsing Organisation:', result.error);
@@ -21,30 +17,22 @@ export async function getOrganisationForUser({
 
 export async function joinOrganisation(
   inviteCode: string,
-  { idToken, token }: { idToken: string; token: string }
+  requestOptions: ApiRequestOptions
 ): Promise<Organisation> {
-  const response = await apiPost<Organisation>(
-    `/organisations/join/`,
-    { idToken, token },
-    { inviteCode }
-  );
+  const response = await apiPost<Organisation>(`/organisations/join/`, requestOptions, {
+    inviteCode,
+  });
   return OrganisationSchema.parse(response.data);
 }
 
 export async function createOrganisation(
   name: string,
-  { idToken, token }: { idToken: string; token: string }
+  requestOptions: ApiRequestOptions
 ): Promise<Organisation> {
-  const response = await apiPost<Organisation>('/organisations/', { idToken, token }, { name });
+  const response = await apiPost<Organisation>('/organisations/', requestOptions, { name });
   return OrganisationSchema.parse(response.data);
 }
 
-export async function leaveOrganisation({
-  idToken,
-  token,
-}: {
-  idToken: string;
-  token: string;
-}): Promise<void> {
-  await apiPost<void>('/organisations/leave', { idToken, token });
+export async function leaveOrganisation(requestOptions: ApiRequestOptions): Promise<void> {
+  await apiPost<void>('/organisations/leave', requestOptions);
 }

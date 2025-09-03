@@ -6,6 +6,7 @@ import { useEffect, useCallback } from 'react';
 import { useOrganisationStore } from '../store/organisationStore';
 import { useUserStore } from '../store/userStore';
 import { saveLastPath } from '@/utils/redirectAuth';
+import { fetchAndSetVehicles } from '@/api/vehicle/vehicleApi';
 
 export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
   const {
@@ -42,10 +43,16 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
       throw new Error('No access token or id token');
     }
 
-    const organisation = await getOrganisationForUser({
-      idToken,
-      token: accessToken,
-    });
+    const [organisation, vehicles] = await Promise.all([
+      getOrganisationForUser({
+        idToken,
+        token: accessToken,
+      }),
+      fetchAndSetVehicles({
+        idToken,
+        token: accessToken,
+      }),
+    ]);
 
     const user = organisation.members.find((m) => m.user.kindeId === kindeUser.id)?.user ?? null;
 

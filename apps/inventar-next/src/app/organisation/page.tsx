@@ -3,16 +3,25 @@
 import { leaveOrganisation } from '@/api/organisation/organisationApi';
 import { generateInviteLink } from '@/api/organisation/organisationModels';
 import { userToFriendlyString } from '@/api/user/userModels';
+import { createVehicle } from '@/api/vehicle/vehicleApi';
 import Button from '@/components/base/Button';
 import Card from '@/components/base/Card';
 import Table from '@/components/base/Table';
+import AddVehicleDialog from '@/components/dialog/AddVehicleDialog';
 import { useOrganisationStore } from '@/provider/store/organisationStore';
+import { useVehicleStore } from '@/provider/store/vehicleStore';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 export default function OrganisationPage() {
   const { getAccessToken, getIdToken } = useKindeAuth();
   const { organisation, setOrganisation } = useOrganisationStore();
+
+  const [showAddVehicleDialog, setShowAddVehicleDialog] = useState(false);
+  const [isAddingVehicle, setIsAddingVehicle] = useState(false);
+
+  const vehicles = useVehicleStore((state) => state.vehicles);
+  console.log('vehicles', vehicles);
 
   const memberTableValues = useMemo(() => {
     return organisation?.members.map((member) => [userToFriendlyString(member.user)]) ?? [];
@@ -117,10 +126,7 @@ export default function OrganisationPage() {
             Als Administrator kannst du hier Fahrzeuge für deine Organisation hinzufügen.
           </div>
           <div>
-            <Button
-            // TODO: Add onClick
-            // onClick={() => (showAddVehicleDialog = true)}
-            >
+            <Button onClick={() => setShowAddVehicleDialog(true)}>
               <span className="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -140,6 +146,62 @@ export default function OrganisationPage() {
           </div>
         </div>
       </Card>
+      <AddVehicleDialog
+        isOpen={showAddVehicleDialog}
+        onClose={() => setShowAddVehicleDialog(false)}
+        onSubmit={async (data) => {
+          try {
+            setIsAddingVehicle(true);
+
+            const accessToken = await getAccessToken();
+            const idToken = await getIdToken();
+            if (!accessToken || !idToken) {
+              throw new Error('No access token or id token');
+            }
+
+            await createVehicle(
+              {
+                idToken,
+                token: accessToken,
+              },
+              data
+            );
+
+            setShowAddVehicleDialog(false);
+
+            // TODO: Add banner message
+            // bannerMessage.set({
+            //   message: 'Fahrzeug erfolgreich hinzugefügt',
+            //   type: 'info',
+            //   autoDismiss: { duration: 5000 },
+            // });
+          } catch (error) {
+            console.error('Error creating vehicle:', error);
+            if (error instanceof Error) {
+              if (error.message.includes('license plate already exists')) {
+                // TODO: Add banner message
+                // addVehicleError = 'Ein Fahrzeug mit diesem Kennzeichen existiert bereits.';
+              } else {
+                // TODO: Add banner message
+                // addVehicleError = `Fehler beim Erstellen des Fahrzeugs: ${error.message}`;
+              }
+            }
+          } finally {
+            setIsAddingVehicle(false);
+          }
+        }}
+        isSubmitting={isAddingVehicle}
+        onError={(message) => {
+          console.log('error', message);
+          // TODO: Add banner message
+          // addVehicleError = message;
+        }}
+        errorMessage={
+          ''
+          // TODO: Add banner message
+          // addVehicleError}
+        }
+      />
     </div>
   );
 }
