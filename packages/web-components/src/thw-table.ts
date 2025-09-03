@@ -18,7 +18,7 @@ import { virtualize } from '@lit-labs/virtualizer/virtualize.js';
 @customElement('thw-table')
 export class THWTable extends LitElement {
   @property({ type: Array }) header: string[] = [];
-  @property({ type: Array }) values: (string | TemplateResult | HTMLElement)[][] = [];
+  @property({ type: Array }) values: (string | TemplateResult | HTMLElement | Element)[][] = [];
   @property({ type: Number }) selectedIndex?: number;
   @property({ type: Number }) height?: number;
 
@@ -129,7 +129,10 @@ export class THWTable extends LitElement {
             ${virtualize({
               scroller: true,
               items: this.values,
-              renderItem: (row: (string | TemplateResult | HTMLElement)[], index: number) => html`
+              renderItem: (
+                row: (string | TemplateResult | HTMLElement | Element)[],
+                index: number
+              ) => html`
                 <tr
                   class=${this.selectedIndex === index ? 'selected' : ''}
                   @click=${() => this.handleRowClick(row, index)}
@@ -144,7 +147,7 @@ export class THWTable extends LitElement {
     `;
   }
 
-  private handleRowClick(row: (string | TemplateResult | HTMLElement)[], index: number) {
+  private handleRowClick(row: (string | TemplateResult | HTMLElement | Element)[], index: number) {
     this.selectedIndex = index;
     this.dispatchEvent(
       new CustomEvent('row-click', {
