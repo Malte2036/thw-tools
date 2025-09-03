@@ -9,6 +9,8 @@ import { saveLastPath } from '@/utils/redirectAuth';
 import { fetchAndSetVehicles, fetchRentals } from '@/api/vehicle/vehicleApi';
 import { useVehicleStore } from '../store/vehicleStore';
 import { LoadingSpinner } from '@/components/base';
+import { useFunkStore } from '../store/funkStore';
+import { getFunkItemEventBulks, getFunkItems } from '@/api/funk/funkApi';
 
 export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
   const {
@@ -23,6 +25,8 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
   const setUser = useUserStore((state) => state.setUser);
   const setOrganisation = useOrganisationStore((state) => state.setOrganisation);
   const setRentals = useVehicleStore((state) => state.setRentals);
+  const setFunkItems = useFunkStore((state) => state.setFunkItems);
+  const setFunkItemEventBulks = useFunkStore((state) => state.setFunkItemEventBulks);
 
   const fetchState = useCallback(async () => {
     if (!isAuthenticated || !kindeUser || isLoading) {
@@ -53,9 +57,15 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
       fetchRentals({
         idToken,
         token: accessToken,
-      }).then((rentals) => {
-        setRentals(rentals);
-      }),
+      }).then(setRentals),
+      getFunkItems({
+        idToken,
+        token: accessToken,
+      }).then(setFunkItems),
+      getFunkItemEventBulks({
+        idToken,
+        token: accessToken,
+      }).then(setFunkItemEventBulks),
     ]);
   }, [
     isAuthenticated,
@@ -66,6 +76,8 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
     setUser,
     setOrganisation,
     setRentals,
+    setFunkItems,
+    setFunkItemEventBulks,
   ]);
 
   useEffect(() => {
