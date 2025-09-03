@@ -5,6 +5,7 @@ import {
   Vehicle,
   VehicleId,
   VehicleRental,
+  VehicleRentalId,
   vehicleToFriendlyString,
 } from '@/api/vehicle/vehicleModels';
 import { Button } from '@/components/base';
@@ -13,12 +14,14 @@ import { useVehicleStore } from '@/provider/store/vehicleStore';
 import { formatDate, getMediumColor } from '@thw-tools/shared';
 import { useMemo, useState } from 'react';
 import CreateVehicleRentalDialog from './CreateVehicleRentalDialog';
+import DeleteVehicleRentalDialog from './DeleteVehicleRentalDialog';
 
 type Props = {
   initialSelectedVehicle: Vehicle | null;
   initialCalendarView: CalendarView | undefined;
   onCalendarViewChange: (view: CalendarView) => void;
   onCreateRental: (data: CreateVehicleRentalDto) => void;
+  onCancelRental: (vehicle: Vehicle, rental: VehicleRental) => void;
   onVehicleSelect: (vehicle: Vehicle | null) => void;
 };
 
@@ -27,6 +30,7 @@ export default function VehicleManagement({
   initialCalendarView,
   onCalendarViewChange,
   onCreateRental,
+  onCancelRental,
   onVehicleSelect,
 }: Props) {
   const { vehicles, rentals } = useVehicleStore();
@@ -139,6 +143,11 @@ export default function VehicleManagement({
     } else {
       setSelectedDate(date);
     }
+  }
+
+  async function handleCancelRental(vehicle: Vehicle, rental: VehicleRental) {
+    onCancelRental(vehicle, rental);
+    setShowCancelDialog(false);
   }
 
   if (!vehicles || !rentals) return null;
@@ -272,6 +281,13 @@ export default function VehicleManagement({
           setRental={setNewRental}
           closeDialog={() => setShowRentalDialog(false)}
           createRental={() => onCreateRental(newRental)}
+        />
+      )}
+      {showCancelDialog && selectedRental && (
+        <DeleteVehicleRentalDialog
+          selectedRental={selectedRental}
+          closeDialog={() => setShowCancelDialog(false)}
+          deleteRental={handleCancelRental}
         />
       )}
     </>

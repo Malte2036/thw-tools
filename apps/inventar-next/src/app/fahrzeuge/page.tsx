@@ -9,10 +9,11 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import {
   CreateVehicleRentalDto,
   Vehicle,
+  VehicleRental,
   vehicleToFriendlyString,
 } from '@/api/vehicle/vehicleModels';
 import { CalendarView } from '@/components/Calendar';
-import { createRental, fetchRentals } from '@/api/vehicle/vehicleApi';
+import { cancelRental, createRental, fetchRentals } from '@/api/vehicle/vehicleApi';
 import { ApiRequestOptions } from '@/api/apiGeneric';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import { toast } from 'sonner';
@@ -101,6 +102,31 @@ export default function FahrzeugePage() {
     }
   }
 
+  async function handleRentalCanceled(vehicle: Vehicle, rental: VehicleRental) {
+    const accessToken = await getAccessToken();
+    const idToken = await getIdToken();
+    if (!accessToken || !idToken) {
+      throw new Error('No access token or id token');
+    }
+
+    await cancelRental(
+      {
+        token: accessToken,
+        idToken: idToken,
+      },
+      rental.id
+    );
+
+    await fetchRentals({
+      token: accessToken,
+      idToken: idToken,
+    }).then(setRentals);
+
+    toast.success(
+      `${vehicleToFriendlyString(vehicle)} Reservierung für ${new Date(rental.plannedStart).toLocaleDateString('de-DE')} bis ${new Date(rental.plannedEnd).toLocaleDateString('de-DE')} wurde storniert`
+    );
+  }
+
   return (
     <div className="px-4">
       <div className="bg-white rounded-lg shadow-md p-6">
@@ -152,6 +178,7 @@ export default function FahrzeugePage() {
             initialSelectedVehicle={selectedVehicle}
             onVehicleSelect={handleVehicleSelection}
             onCreateRental={handleCreateRental}
+            onCancelRental={handleRentalCanceled}
           />
         )}
       </div>
