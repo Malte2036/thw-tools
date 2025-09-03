@@ -1,12 +1,11 @@
 'use client';
 
+import { getOrganisationForUser } from '@/api/organisation/organisationApi';
 import { KindeProvider } from '@kinde-oss/kinde-auth-react';
 
 const getKindeSettings = () => {
   const KINDE_DOMAIN = process.env.NEXT_PUBLIC_KINDE_DOMAIN;
   const KINDE_CLIENT_ID = process.env.NEXT_PUBLIC_KINDE_API_CLIENT;
-
-  console.log(KINDE_DOMAIN, KINDE_CLIENT_ID);
 
   if (!KINDE_DOMAIN || !KINDE_CLIENT_ID) {
     throw new Error(`NEXT_PUBLIC_KINDE_DOMAIN or NEXT_PUBLIC_KINDE_CLIENT_ID is not set`);
@@ -30,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       logoutUri={origin}
       redirectUri={origin}
       callbacks={{
-        onSuccess: (user) => {
+        onSuccess: async (user) => {
           console.log(`Successfully authenticated user: ${user.email}`, user);
         },
         onError: (error) => {

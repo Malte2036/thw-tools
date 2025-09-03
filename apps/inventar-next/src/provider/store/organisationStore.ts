@@ -1,0 +1,20 @@
+import { Organisation, OrganisationSchema } from '@/api/organisation/organisationModels';
+import { create } from 'zustand';
+
+interface OrganisationStore {
+  organisation: Organisation | null;
+  setOrganisation: (organisation: Organisation) => void;
+}
+
+export const useOrganisationStore = create<OrganisationStore>((set) => ({
+  organisation: null,
+  setOrganisation: (organisation: Organisation | null) => {
+    if (!organisation) {
+      set({ organisation: null });
+      return;
+    }
+
+    const parsedOrganisation = OrganisationSchema.parse(organisation);
+    set({ organisation: parsedOrganisation });
+  },
+}));
