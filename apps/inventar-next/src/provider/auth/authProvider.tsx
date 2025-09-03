@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       clientId={kindeSettings.clientId}
       domain={kindeSettings.domain}
       logoutUri={origin}
-      redirectUri={origin + '/auth/callback'}
+      redirectUri={origin + '/auth/callback/next'}
       callbacks={{
         onSuccess: async (user) => {
           console.log(`Successfully authenticated user: ${user.email}`, user);
