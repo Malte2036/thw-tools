@@ -18,3 +18,7 @@ export const OrganisationSchema = z.object({
   inviteCode: z.string(),
 });
 export type Organisation = z.infer<typeof OrganisationSchema>;
+
+export const generateInviteLink = (organisation: Organisation): string => {
+  return `${window.location.origin}/organisation/join/${organisation.inviteCode}`;
+};

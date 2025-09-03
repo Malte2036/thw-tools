@@ -11,3 +11,23 @@ export const UserSchema = z.object({
   picture: z.string().nullable().optional(),
 });
 export type User = z.infer<typeof UserSchema>;
+
+export function userToFriendlyString(user: User | null | undefined): string {
+  if (!user) {
+    return 'Unbekannt';
+  }
+
+  if (user.firstName && user.lastName) {
+    return `${user.firstName} ${user.lastName}`;
+  }
+
+  if (user.firstName) {
+    return user.firstName;
+  }
+
+  if (user.lastName) {
+    return user.lastName;
+  }
+
+  return 'Unbekannt';
+}

@@ -3,7 +3,7 @@ import { create } from 'zustand';
 
 interface OrganisationStore {
   organisation: Organisation | null;
-  setOrganisation: (organisation: Organisation) => void;
+  setOrganisation: (organisation: Organisation | null) => void;
 }
 
 export const useOrganisationStore = create<OrganisationStore>((set) => ({

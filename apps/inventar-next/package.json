@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@kinde-oss/kinde-auth-react": "^5.6.0",
+    "@lit/react": "^1.0.8",
+    "@thw-tools/shared": "workspace:*",
+    "@thw-tools/web-components": "workspace:*",
     "next": "15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",

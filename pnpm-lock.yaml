@@ -239,6 +239,15 @@ importers:
       '@kinde-oss/kinde-auth-react':
         specifier: ^5.6.0
         version: 5.6.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@lit/react':
+        specifier: ^1.0.8
+        version: 1.0.8(@types/react@19.1.12)
+      '@thw-tools/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@thw-tools/web-components':
+        specifier: workspace:*
+        version: link:../../packages/web-components
       next:
         specifier: 15.5.2
         version: 15.5.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.85.1)
@@ -1316,6 +1325,11 @@ packages:
 
   '@lit-labs/virtualizer@2.1.0':
     resolution: {integrity: sha512-I79sNaalK9rD6FWO/AoxBMnA6jjNBrQu7F6lzz8W/GkQLcqveMWK3IrJAilso+XeFFn7BvlxBv6FqZaoMt+Qkg==}
+
+  '@lit/react@1.0.8':
+    resolution: {integrity: sha512-p2+YcF+JE67SRX3mMlJ1TKCSTsgyOVdAwd/nxp3NuV1+Cb6MWALbN6nT7Ld4tpmYofcE5kcaSY1YBB9erY+6fw==}
+    peerDependencies:
+      '@types/react': 17 || 18 || 19
 
   '@lit/reactive-element@2.0.4':
     resolution: {integrity: sha512-GFn91inaUa2oHLak8awSIigYz0cU0Payr1rcFsrkf5OJ5eSPxElyZfKh0f2p9FsTiZWXQdWGJeXZICEfXXYSXQ==}
@@ -7386,6 +7400,10 @@ snapshots:
     dependencies:
       lit: 3.2.1
       tslib: 2.8.1
+
+  '@lit/react@1.0.8(@types/react@19.1.12)':
+    dependencies:
+      '@types/react': 19.1.12
 
   '@lit/reactive-element@2.0.4':
     dependencies:
