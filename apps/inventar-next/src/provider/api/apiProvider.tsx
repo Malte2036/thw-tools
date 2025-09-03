@@ -5,16 +5,34 @@ import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import { useEffect, useCallback } from 'react';
 import { useOrganisationStore } from '../store/organisationStore';
 import { useUserStore } from '../store/userStore';
+import { saveLastPath } from '@/utils/redirectAuth';
 
 export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user: kindeUser, getAccessToken, getIdToken } = useKindeAuth();
+  const {
+    isAuthenticated,
+    login,
+    isLoading,
+    user: kindeUser,
+    getAccessToken,
+    getIdToken,
+  } = useKindeAuth();
 
   const setUser = useUserStore((state) => state.setUser);
   const setOrganisation = useOrganisationStore((state) => state.setOrganisation);
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    saveLastPath(new URL(window.location.href));
+    login();
+    return <div>Not authenticated. Redirecting to login...</div>;
+  }
+
   const fetchState = useCallback(async () => {
-    if (!kindeUser) {
-      throw new Error('No kinde user');
+    if (!isAuthenticated || !kindeUser) {
+      throw new Error('Not authenticated or no kinde user');
     }
 
     const accessToken = await getAccessToken();
@@ -33,7 +51,7 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
 
     setUser(user);
     setOrganisation(organisation);
-  }, [getAccessToken, getIdToken]);
+  }, [getAccessToken, getIdToken, isAuthenticated, kindeUser]);
 
   useEffect(() => {
     fetchState();

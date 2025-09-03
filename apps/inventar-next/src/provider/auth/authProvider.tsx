@@ -1,7 +1,8 @@
 'use client';
 
-import { getOrganisationForUser } from '@/api/organisation/organisationApi';
+import { redirectToLastPathBeforeAuth } from '@/utils/redirectAuth';
 import { KindeProvider } from '@kinde-oss/kinde-auth-react';
+import { useRouter } from 'next/navigation';
 
 const getKindeSettings = () => {
   const KINDE_DOMAIN = process.env.NEXT_PUBLIC_KINDE_DOMAIN;
@@ -19,6 +20,7 @@ const getKindeSettings = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const kindeSettings = getKindeSettings();
+  const router = useRouter();
 
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
@@ -27,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       clientId={kindeSettings.clientId}
       domain={kindeSettings.domain}
       logoutUri={origin}
-      redirectUri={origin}
+      redirectUri={origin + '/auth/callback'}
       callbacks={{
         onSuccess: async (user) => {
           console.log(`Successfully authenticated user: ${user.email}`, user);
@@ -37,6 +39,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         },
         onEvent: (event) => {
           console.log('onEvent', event);
+
+          if (event === 'login') {
+            redirectToLastPathBeforeAuth(router.push);
+          }
         },
       }}
     >
