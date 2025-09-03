@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react';
 type Props = {
   isOpen: boolean;
   isSubmitting: boolean;
-  errorMessage: string;
   onClose: () => void;
   onSubmit: (data: CreateVehicleDto) => void;
   onError: (message: string) => void;
@@ -17,7 +16,6 @@ type Props = {
 export default function AddVehicleDialog({
   isOpen,
   isSubmitting,
-  errorMessage,
   onClose,
   onSubmit,
   onError,
@@ -170,12 +168,6 @@ export default function AddVehicleDialog({
               <span className="text-red-600 text-sm">{errors.canBeReserved.message}</span>
             )}
           </div>
-
-          {errorMessage && (
-            <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-md">
-              {errorMessage}
-            </div>
-          )}
         </form>
       </div>
       <div slot="footer">

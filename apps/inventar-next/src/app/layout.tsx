@@ -8,6 +8,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { useState } from 'react';
 import FeedbackDialog from '@/components/dialog/FeedbackDialog';
+import { Toaster } from '@/components/ui/sonner';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -64,6 +65,7 @@ export default function RootLayout({
             <div className="text-gray-400">Build: TODO</div>
           </div>
         </div>
+        <Toaster />
         {showFeedbackDialog && <FeedbackDialog onClose={() => setShowFeedbackDialog(false)} />}
       </body>
     </html>

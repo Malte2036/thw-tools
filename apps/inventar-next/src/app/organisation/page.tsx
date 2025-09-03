@@ -12,6 +12,7 @@ import { useOrganisationStore } from '@/provider/store/organisationStore';
 import { useVehicleStore } from '@/provider/store/vehicleStore';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 export default function OrganisationPage() {
   const { getAccessToken, getIdToken } = useKindeAuth();
@@ -43,27 +44,14 @@ export default function OrganisationPage() {
       token: accessToken,
     });
 
-    // TODO: Add banner message
-    // bannerMessage.set({
-    //   message: 'Organisation verlassen!',
-    //   type: 'info',
-    //   autoDismiss: {
-    //     duration: 5000,
-    //   },
-    // });
-
     setOrganisation(null);
+    toast.success('Organisation verlassen!');
   };
 
   const copyInviteLink = () => {
     navigator.clipboard.writeText(generateInviteLink(organisation));
 
-    // TODO: Add banner message
-    // bannerMessage.set({
-    //   message: 'Einladungslink kopiert',
-    //   autoDismiss: { duration: 5000 },
-    //   type: 'info',
-    // });
+    toast.info('Einladungslink kopiert');
   };
 
   const shareInviteLink = async () => {
@@ -73,12 +61,7 @@ export default function OrganisationPage() {
         url: generateInviteLink(organisation),
       });
 
-      // TODO: Add banner message
-      //   $bannerMessage = {
-      //     message: 'Einladungslink geteilt',
-      //     autoDismiss: { duration: 5000 },
-      //     type: 'info',
-      //   };
+      toast.info('Einladungslink geteilt');
     } catch (error) {
       console.error('Error sharing link', error);
     }
@@ -169,21 +152,14 @@ export default function OrganisationPage() {
 
             setShowAddVehicleDialog(false);
 
-            // TODO: Add banner message
-            // bannerMessage.set({
-            //   message: 'Fahrzeug erfolgreich hinzugefügt',
-            //   type: 'info',
-            //   autoDismiss: { duration: 5000 },
-            // });
+            toast.success('Fahrzeug erfolgreich hinzugefügt');
           } catch (error) {
             console.error('Error creating vehicle:', error);
             if (error instanceof Error) {
               if (error.message.includes('license plate already exists')) {
-                // TODO: Add banner message
-                // addVehicleError = 'Ein Fahrzeug mit diesem Kennzeichen existiert bereits.';
+                toast.error('Ein Fahrzeug mit diesem Kennzeichen existiert bereits.');
               } else {
-                // TODO: Add banner message
-                // addVehicleError = `Fehler beim Erstellen des Fahrzeugs: ${error.message}`;
+                toast.error(`Fehler beim Erstellen des Fahrzeugs: ${error.message}`);
               }
             }
           } finally {
@@ -193,14 +169,8 @@ export default function OrganisationPage() {
         isSubmitting={isAddingVehicle}
         onError={(message) => {
           console.log('error', message);
-          // TODO: Add banner message
-          // addVehicleError = message;
+          toast.error(message);
         }}
-        errorMessage={
-          ''
-          // TODO: Add banner message
-          // addVehicleError}
-        }
       />
     </div>
   );

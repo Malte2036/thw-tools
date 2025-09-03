@@ -72,8 +72,8 @@ export async function fetchRentals(requestOptions: ApiRequestOptions): Promise<V
     return result.success;
   });
 
-  // TODO: Add rentals store
-  //   updateLastFetched('rentals');
+  // TODO: Add last fetched
+  // updateLastFetched('rentals');
   return result.data;
 }
 
