@@ -28,30 +28,21 @@ export default function CreateVehicleRentalDialog({
 }: Props) {
   const user = useUserStore((state) => state.user);
 
-  function formatDateForInput(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  }
-
   return (
     <Dialog title="Fahrzeug reservieren">
       <div slot="content">
         <div className="mb-4">
           <p>
-            <span className="font-medium">Fahrzeug:</span>
+            <span className="font-medium">Fahrzeug: </span>
             {vehicleToFriendlyString(selectedVehicle)}
           </p>
           <p>
-            <span className="font-medium">Benutzer:</span> {userToFriendlyString(user)}
+            <span className="font-medium">Benutzer: </span>
+            {userToFriendlyString(user)}
           </p>
           {selectedDate && (
             <p>
-              <span className="font-medium">Ausgewähltes Datum:</span>
+              <span className="font-medium">Ausgewähltes Datum: </span>
               {dateToFriendlyString(selectedDate)}
             </p>
           )}
