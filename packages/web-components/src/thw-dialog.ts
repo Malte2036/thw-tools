@@ -1,6 +1,6 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { thwColors } from "./colors";
+import { LitElement, html, css, unsafeCSS } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { thwColors } from './colors';
 
 /**
  * A dialog component.
@@ -9,13 +9,13 @@ import { thwColors } from "./colors";
  * @param {string} title - The title of the dialog.
  * @param {() => void} onOutsideClick - The function to call when the user clicks outside the dialog.
  **/
-@customElement("thw-dialog")
+@customElement('thw-dialog')
 export class THWDialog extends LitElement {
   /**
    * The title of the dialog.
    * @type {string}
    */
-  @property({ type: String }) title: string = "Dialog title";
+  @property({ type: String }) title: string = 'Dialog title';
 
   /**
    * The function to call when the user clicks outside the dialog.
@@ -50,10 +50,12 @@ export class THWDialog extends LitElement {
           flex-direction: column;
           gap: 0.5rem;
           border-radius: 0.375rem;
+          width: 32rem;
           max-width: 32rem;
           max-height: calc(100vh - 4rem);
           background-color: #ffffff;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          box-shadow:
+            0 4px 6px -1px rgba(0, 0, 0, 0.1),
             0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
           .title {
@@ -92,9 +94,9 @@ export class THWDialog extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener("click", (event) => {
-      let outerWrapper = this.shadowRoot?.querySelector(".outerWrapper");
-      let innerWrapper = this.shadowRoot?.querySelector(".innerWrapper");
+    document.addEventListener('click', (event) => {
+      let outerWrapper = this.shadowRoot?.querySelector('.outerWrapper');
+      let innerWrapper = this.shadowRoot?.querySelector('.innerWrapper');
       if (
         event.composedPath().includes(outerWrapper!) &&
         !event.composedPath().includes(innerWrapper!)
@@ -107,6 +109,6 @@ export class THWDialog extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "thw-dialog": THWDialog;
+    'thw-dialog': THWDialog;
   }
 }

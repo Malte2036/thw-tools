@@ -16,6 +16,7 @@
     "build:backend": "nx build thw-tools-backend",
     "build:thw-tools": "nx build thw-tools",
     "build:inventar": "nx build thw-inventar",
+    "build:web-components": "nx build web-components",
     "lint": "nx run-many -t lint",
     "test": "nx run-many -t test",
     "clean": "nx run-many -t clean && rm -rf node_modules",
