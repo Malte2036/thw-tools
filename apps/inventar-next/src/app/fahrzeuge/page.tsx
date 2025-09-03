@@ -138,7 +138,7 @@ export default function FahrzeugePage() {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <LinkButton url="/fahrzeuge/details" secondary>
+            <LinkButton url="/fahrzeuge/details" type="secondary">
               Fahrzeugdetails
             </LinkButton>
           </div>
@@ -168,7 +168,7 @@ export default function FahrzeugePage() {
             <p className="text-xl text-gray-600 font-medium">Keine Fahrzeuge gefunden.</p>
             <p className="text-gray-500 mt-2">
               Es wurden keine Fahrzeuge für Ihre Organisation gefunden. Neue Fahrzeuge können im
-              Administrationsbereich unter "Organisation" hinzugefügt werden.
+              Administrationsbereich unter &quot;Organisation&quot; hinzugefügt werden.
             </p>
           </div>
         ) : (

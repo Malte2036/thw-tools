@@ -24,22 +24,8 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
   const setOrganisation = useOrganisationStore((state) => state.setOrganisation);
   const setRentals = useVehicleStore((state) => state.setRentals);
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    saveLastPath(new URL(window.location.href));
-    login();
-    return <div>Not authenticated. Redirecting to login...</div>;
-  }
-
   const fetchState = useCallback(async () => {
-    if (!isAuthenticated || !kindeUser) {
+    if (!isAuthenticated || !kindeUser || isLoading) {
       throw new Error('Not authenticated or no kinde user');
     }
 
@@ -71,11 +57,34 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
         setRentals(rentals);
       }),
     ]);
-  }, [getAccessToken, getIdToken, isAuthenticated, kindeUser]);
+  }, [
+    isAuthenticated,
+    kindeUser,
+    isLoading,
+    getAccessToken,
+    getIdToken,
+    setUser,
+    setOrganisation,
+    setRentals,
+  ]);
 
   useEffect(() => {
     fetchState();
   }, [fetchState]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    saveLastPath(new URL(window.location.href));
+    login();
+    return <div>Not authenticated. Redirecting to login...</div>;
+  }
 
   return <div>{children}</div>;
 };

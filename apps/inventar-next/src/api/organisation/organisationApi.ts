@@ -16,8 +16,8 @@ export async function getOrganisationForUser(
 }
 
 export async function joinOrganisation(
-  inviteCode: string,
-  requestOptions: ApiRequestOptions
+  requestOptions: ApiRequestOptions,
+  inviteCode: string
 ): Promise<Organisation> {
   const response = await apiPost<Organisation>(`/organisations/join/`, requestOptions, {
     inviteCode,
@@ -26,8 +26,8 @@ export async function joinOrganisation(
 }
 
 export async function createOrganisation(
-  name: string,
-  requestOptions: ApiRequestOptions
+  requestOptions: ApiRequestOptions,
+  name: string
 ): Promise<Organisation> {
   const response = await apiPost<Organisation>('/organisations/', requestOptions, { name });
   return OrganisationSchema.parse(response.data);
