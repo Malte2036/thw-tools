@@ -56,7 +56,7 @@ export function Calendar({
         switchView('week');
       }
     }
-  }, [initialView, currentView, isMobile]);
+  }, [initialView, currentView, isMobile, switchView]);
 
   // Set initial view based on initialView prop or mobile state
   useEffect(() => {
@@ -67,7 +67,7 @@ export function Calendar({
     } else {
       switchView('month');
     }
-  }, [initialView, isMobile]);
+  }, [initialView, isMobile, switchView]);
 
   // Add a resize listener to update mobile status
   useEffect(() => {
@@ -214,28 +214,6 @@ export function Calendar({
     [weekStartDate]
   );
 
-  const eventsInMonth = useMemo(
-    () =>
-      events.filter((event: CalendarEvent) => {
-        const eventStart = new Date(event.start);
-        const eventEnd = new Date(event.end);
-        const monthStart = new Date(year, month, 1);
-        const monthEnd = new Date(year, month + 1, 0, 23, 59, 59);
-        return eventStart <= monthEnd && eventEnd >= monthStart;
-      }),
-    [events, year, month]
-  );
-
-  const eventsInWeek = useMemo(
-    () =>
-      events.filter((event: CalendarEvent) => {
-        const eventStart = new Date(event.start);
-        const eventEnd = new Date(event.end);
-        return eventStart <= weekEndDate && eventEnd >= weekStartDate;
-      }),
-    [events, weekEndDate, weekStartDate]
-  );
-
   const getEventsForDay = useCallback(
     (date: Date) => {
       // Normalize the date to midnight for comparison
@@ -299,13 +277,6 @@ export function Calendar({
     },
     [isMobile, getEventsForDay, getMaxEventsCountForWeek]
   );
-
-  // Format the weekday header more nicely
-  const formatWeekdayHeader = useCallback((date: Date): string => {
-    const dayName = date.toLocaleDateString('de-DE', { weekday: 'short' });
-    const dayNum = date.getDate();
-    return `${dayName} ${dayNum}`;
-  }, []);
 
   // Format time in a concise way
   const formatTime = useCallback((date: Date): string => {

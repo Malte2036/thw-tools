@@ -2,6 +2,7 @@
 
 import { Tabs } from '@/components/base';
 import AddDevice from '@/components/scan/AddDevice';
+import { useFunkStore } from '@/provider/store/funkStore';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -11,6 +12,11 @@ export default function FunkPage() {
   const [selectedTab, setSelectedTab] = useState<FunkTab>('Funkgeräte');
   const params = useParams();
   const router = useRouter();
+
+  const { funkItems, funkItemEventBulks } = useFunkStore();
+  console.log('funkItems', funkItems);
+  console.log('funkItemEventBulks', funkItemEventBulks);
+
   useEffect(() => {
     const tab = params.tab;
     if (tab) {
@@ -18,22 +24,34 @@ export default function FunkPage() {
     }
   }, [params.tab]);
 
-  console.log(selectedTab);
-
   return (
     <div className="flex flex-col gap-4 p-4">
-      <AddDevice />
+      <AddDevice
+        reset={() => {
+          console.log('reset');
+        }}
+      />
 
       <div className="flex w-full justify-center">
         <Tabs
+          initialSelected={selectedTab}
           items={['Funkgeräte', 'Ausleihhistorie', 'Erweitert'] satisfies FunkTab[]}
           onSelect={(item) => {
             setSelectedTab(item as FunkTab);
             router.push(`/funk?tab=${item}`);
           }}
-          initialSelected={selectedTab}
         />
       </div>
+      {funkItems && funkItemEventBulks && (
+        <>
+          {funkItems.map((item) => (
+            <div key={item.id}>{item.deviceId}</div>
+          ))}
+          {funkItemEventBulks.map((bulk) => (
+            <div key={bulk.id}>{bulk.id}</div>
+          ))}
+        </>
+      )}
       {/* 
 {#await $funk.fetching}
     <LoadingSpinner />

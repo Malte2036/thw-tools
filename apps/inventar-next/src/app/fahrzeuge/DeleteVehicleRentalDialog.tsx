@@ -1,14 +1,8 @@
 import { userToFriendlyString } from '@/api/user/userModels';
-import {
-  CreateVehicleRentalDto,
-  Vehicle,
-  VehicleRental,
-  vehicleToFriendlyString,
-} from '@/api/vehicle/vehicleModels';
+import { Vehicle, VehicleRental, vehicleToFriendlyString } from '@/api/vehicle/vehicleModels';
 import { Button, Dialog } from '@/components/base';
 import { useUserStore } from '@/provider/store/userStore';
 import { useVehicleStore } from '@/provider/store/vehicleStore';
-import { dateToFriendlyString } from '@thw-tools/shared';
 
 type Props = {
   selectedRental: VehicleRental;

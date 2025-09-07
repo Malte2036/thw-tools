@@ -1,14 +1,13 @@
 'use client';
 
+import FeedbackDialog from '@/components/dialog/FeedbackDialog';
 import InventarNavigationBar from '@/components/navigationBar/InventarNavigationBar';
+import { Toaster } from '@/components/ui/sonner';
 import { ApiProvider } from '@/provider/api/apiProvider';
 import { AuthProvider } from '@/provider/auth/authProvider';
-import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
 import { useState } from 'react';
-import FeedbackDialog from '@/components/dialog/FeedbackDialog';
-import { Toaster } from '@/components/ui/sonner';
+import './globals.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

@@ -1,37 +1,80 @@
+import { ApiRequestOptions } from '@/api/apiGeneric';
+import { bulkCreateFunkItemEvents, getFunkItemEventBulks, getFunkItems } from '@/api/funk/funkApi';
 import {
   FunkItem,
+  FunkItemDeviceId,
+  FunkItemEvent,
   FunkItemEventBulk,
-  FunkItemEventBulkSchema,
-  FunkItemSchema,
+  FunkItemEventId,
+  FunkItemId,
+  FunkItemEventType,
 } from '@/api/funk/funkModels';
 import { create } from 'zustand';
 
 interface FunkStore {
   funkItems: FunkItem[] | null;
   funkItemEventBulks: FunkItemEventBulk[] | null;
-  setFunkItems: (funkItems: FunkItem[] | null) => void;
-  setFunkItemEventBulks: (funkItemEventBulks: FunkItemEventBulk[] | null) => void;
+  fetch: (requestOptions: ApiRequestOptions) => Promise<void>;
+  bulkCreateFunkItemEvents: (
+    requestOptions: ApiRequestOptions,
+    deviceIds: FunkItemDeviceId[],
+    batteryCount: number,
+    eventType: FunkItemEventType
+  ) => Promise<void>;
+  getFunkItemByInternalId: (internalId: FunkItemId) => FunkItem | undefined;
+  getFunkItemByDeviceId: (deviceId: FunkItemDeviceId) => FunkItem | undefined;
+  getFunkItemEventByInternalId: (internalId: FunkItemEventId) => FunkItemEvent | undefined;
+  getLastFunkItemEventByFunkItemInternalId: (internalId: FunkItemId) => FunkItemEvent | undefined;
+  getAllFunkItemEventsByFunkItemDeviceId: (deviceId: FunkItemDeviceId) => FunkItemEvent[];
 }
 
-export const useFunkStore = create<FunkStore>((set) => ({
+export const useFunkStore = create<FunkStore>((set, get) => ({
   funkItems: null,
   funkItemEventBulks: null,
-  setFunkItems: (funkItems: FunkItem[] | null) => {
-    if (!funkItems) {
-      set({ funkItems: null });
-      return;
-    }
+  fetch: async (requestOptions: ApiRequestOptions) => {
+    const [funkItems, funkItemEventBulks] = await Promise.all([
+      getFunkItems(requestOptions),
+      getFunkItemEventBulks(requestOptions),
+    ]);
 
-    const parsedFunkItems = FunkItemSchema.array().parse(funkItems);
-    set({ funkItems: parsedFunkItems });
+    set({ funkItems, funkItemEventBulks });
   },
-  setFunkItemEventBulks: (funkItemEventBulks: FunkItemEventBulk[] | null) => {
-    if (!funkItemEventBulks) {
-      set({ funkItemEventBulks: null });
-      return;
-    }
+  bulkCreateFunkItemEvents: async (
+    requestOptions: ApiRequestOptions,
+    deviceIds: FunkItemDeviceId[],
+    batteryCount: number,
+    eventType: FunkItemEventType
+  ) => {
+    await bulkCreateFunkItemEvents(requestOptions, deviceIds, batteryCount, eventType);
+    await get().fetch(requestOptions);
+  },
+  getFunkItemByInternalId: (internalId: FunkItemId) => {
+    return get().funkItems?.find((item) => item.id === internalId);
+  },
+  getFunkItemEventByInternalId: (internalId: FunkItemEventId) => {
+    return get()
+      .funkItemEventBulks?.flatMap((bulk) => bulk.events)
+      .find((event) => event.eventId === internalId)?.event;
+  },
+  getLastFunkItemEventByFunkItemInternalId: (internalId: FunkItemId) => {
+    return get()
+      .funkItemEventBulks?.flatMap((bulk) => bulk.events)
+      .find((event) => event.event.funkItemId === internalId)?.event;
+  },
+  getFunkItemByDeviceId: (deviceId: FunkItemDeviceId) => {
+    return get().funkItems?.find((item) => item.deviceId === deviceId);
+  },
+  getAllFunkItemEventsByFunkItemDeviceId: (deviceId: FunkItemDeviceId) => {
+    const events = get().funkItemEventBulks?.flatMap((bulk) => bulk.events);
+    if (!events) return [];
 
-    const parsedFunkItemEventBulks = FunkItemEventBulkSchema.array().parse(funkItemEventBulks);
-    set({ funkItemEventBulks: parsedFunkItemEventBulks });
+    return events
+      .map((event) => ({
+        event,
+        deviceId:
+          event.event.funkItemId && get().getFunkItemByInternalId(event.event.funkItemId)?.deviceId,
+      }))
+      .filter((event) => event.deviceId === deviceId)
+      .map((event) => event.event.event);
   },
 }));

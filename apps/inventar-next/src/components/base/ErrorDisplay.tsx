@@ -16,7 +16,7 @@ export interface ErrorDisplayProps extends React.HTMLAttributes<HTMLElement> {
   /**
    * Error object to display
    */
-  error?: any;
+  error?: unknown;
 }
 
 /**

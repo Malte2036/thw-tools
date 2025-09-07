@@ -88,7 +88,7 @@ export async function apiGet<T>(
 export async function apiPost<T>(
   path: string,
   { idToken, token }: ApiRequestOptions,
-  body?: any,
+  body?: unknown,
   verifyData?: (data: T) => boolean
 ): Promise<ResponeData<T>> {
   const url = new URL(path, PUBLIC_API_URL);
@@ -166,7 +166,7 @@ export async function apiPostFile<T>(
 export async function apiPatch<T>(
   path: string,
   { idToken, token }: ApiRequestOptions,
-  body?: any,
+  body?: unknown,
   verifyData?: (data: T) => boolean
 ): Promise<ResponeData<T>> {
   const url = new URL(path, PUBLIC_API_URL);
@@ -204,7 +204,7 @@ export async function apiPatch<T>(
 export async function apiPut<T>(
   path: string,
   { idToken, token }: ApiRequestOptions,
-  body?: any,
+  body?: unknown,
   verifyData?: (data: T) => boolean
 ): Promise<ResponeData<T>> {
   const url = new URL(path, PUBLIC_API_URL);

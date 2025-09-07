@@ -1,4 +1,3 @@
-import { User, UserSchema } from '@/api/user/userModels';
 import {
   Vehicle,
   VehicleRental,

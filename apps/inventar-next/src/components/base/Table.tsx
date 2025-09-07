@@ -6,7 +6,7 @@ import '@thw-tools/web-components';
 import { THWTable } from '@thw-tools/web-components';
 
 // Define the Table props interface based on the web component properties
-export interface TableProps extends React.HTMLAttributes<HTMLElement> {
+export type TableProps = React.HTMLAttributes<HTMLElement> & {
   /**
    * Array of header strings for the table columns
    */
@@ -15,7 +15,7 @@ export interface TableProps extends React.HTMLAttributes<HTMLElement> {
   /**
    * Array of data rows (each row is an array of values)
    */
-  values?: any[][];
+  values?: unknown[][];
 
   /**
    * Index of the currently selected row
@@ -26,7 +26,7 @@ export interface TableProps extends React.HTMLAttributes<HTMLElement> {
    * Height of the table in pixels
    */
   height?: number;
-}
+};
 
 /**
  * React wrapper for the thw-table web component.

@@ -6,9 +6,7 @@ import '@thw-tools/web-components';
 import { THWLoadingSpinner } from '@thw-tools/web-components';
 
 // Define the LoadingSpinner props interface
-export interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLElement> {
-  // No additional props needed for the loading spinner
-}
+export type LoadingSpinnerProps = React.HTMLAttributes<HTMLElement>;
 
 /**
  * React wrapper for the thw-loading-spinner web component.

@@ -8,10 +8,20 @@ import { THWDialog } from '@thw-tools/web-components';
 // Define the Dialog props interface based on the web component properties
 export interface DialogProps extends React.HTMLAttributes<HTMLElement> {
   /**
-   * Title of the dialog
-   * @default "Dialog title"
+   * Whether the dialog is open
+   * @default false
+   */
+  open?: boolean;
+
+  /**
+   * Dialog title
    */
   title?: string;
+
+  /**
+   * Callback function when dialog is closed
+   */
+  onClose?: () => void;
 
   /**
    * Callback function when clicking outside the dialog
@@ -25,16 +35,12 @@ export interface DialogProps extends React.HTMLAttributes<HTMLElement> {
  * @example
  * ```tsx
  * <Dialog
- *   title="Confirm Action"
+ *   open={isOpen}
+ *   title="Confirmation"
+ *   onClose={() => setIsOpen(false)}
  *   onOutsideClick={() => setIsOpen(false)}
  * >
- *   <div slot="content">
- *     <p>Are you sure you want to continue?</p>
- *   </div>
- *   <div slot="footer">
- *     <Button onClick={() => setIsOpen(false)}>Cancel</Button>
- *     <Button type="warning" onClick={handleConfirm}>Confirm</Button>
- *   </div>
+ *   <p>Are you sure you want to continue?</p>
  * </Dialog>
  * ```
  */
@@ -43,8 +49,10 @@ export const Dialog = createComponent({
   elementClass: THWDialog,
   react: React,
   events: {
+    onClose: 'close',
     onOutsideClick: 'outside-click',
   },
 });
 
+// Export the component as default
 export default Dialog;

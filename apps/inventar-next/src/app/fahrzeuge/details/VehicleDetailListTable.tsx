@@ -1,6 +1,5 @@
 import { Vehicle } from '@/api/vehicle/vehicleModels';
-import { Button, Table } from '@/components/base';
-import { useRouter } from 'next/navigation';
+import { Table } from '@/components/base';
 import { useMemo } from 'react';
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
 export default function VehicleDetailListTable({ filteredVehicles }: Props) {
   // const router = useRouter();
 
-  let sortedVehicles = useMemo(() => {
+  const sortedVehicles = useMemo(() => {
     return [...filteredVehicles].sort((a, b) => a.name.localeCompare(b.name));
   }, [filteredVehicles]);
 

@@ -1,16 +1,15 @@
 'use client';
 
 import { getOrganisationForUser } from '@/api/organisation/organisationApi';
+import { fetchAndSetVehicles, fetchRentals } from '@/api/vehicle/vehicleApi';
+import { LoadingSpinner } from '@/components/base';
+import { saveLastPath } from '@/utils/redirectAuth';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
-import { useEffect, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
+import { useFunkStore } from '../store/funkStore';
 import { useOrganisationStore } from '../store/organisationStore';
 import { useUserStore } from '../store/userStore';
-import { saveLastPath } from '@/utils/redirectAuth';
-import { fetchAndSetVehicles, fetchRentals } from '@/api/vehicle/vehicleApi';
 import { useVehicleStore } from '../store/vehicleStore';
-import { LoadingSpinner } from '@/components/base';
-import { useFunkStore } from '../store/funkStore';
-import { getFunkItemEventBulks, getFunkItems } from '@/api/funk/funkApi';
 
 export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
   const {
@@ -25,8 +24,7 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
   const setUser = useUserStore((state) => state.setUser);
   const setOrganisation = useOrganisationStore((state) => state.setOrganisation);
   const setRentals = useVehicleStore((state) => state.setRentals);
-  const setFunkItems = useFunkStore((state) => state.setFunkItems);
-  const setFunkItemEventBulks = useFunkStore((state) => state.setFunkItemEventBulks);
+  const fetchFunk = useFunkStore((state) => state.fetch);
 
   const fetchState = useCallback(async () => {
     if (!isAuthenticated || !kindeUser || isLoading) {
@@ -58,14 +56,10 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
         idToken,
         token: accessToken,
       }).then(setRentals),
-      getFunkItems({
+      fetchFunk({
         idToken,
         token: accessToken,
-      }).then(setFunkItems),
-      getFunkItemEventBulks({
-        idToken,
-        token: accessToken,
-      }).then(setFunkItemEventBulks),
+      }),
     ]);
   }, [
     isAuthenticated,
@@ -76,8 +70,7 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
     setUser,
     setOrganisation,
     setRentals,
-    setFunkItems,
-    setFunkItemEventBulks,
+    fetchFunk,
   ]);
 
   useEffect(() => {

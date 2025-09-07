@@ -5,7 +5,6 @@ import {
   Vehicle,
   VehicleId,
   VehicleRental,
-  VehicleRentalId,
   vehicleToFriendlyString,
 } from '@/api/vehicle/vehicleModels';
 import { Button } from '@/components/base';
@@ -60,9 +59,9 @@ export default function VehicleManagement({
           // Find the vehicle information
           const vehicle = vehicles?.find((v: Vehicle) => v.id === rental.vehicleId);
 
-          let title = `${vehicleToFriendlyString(vehicle)} - ${rental.purpose}`;
+          const title = `${vehicleToFriendlyString(vehicle)} - ${rental.purpose}`;
 
-          let color = getMediumColor(rental.vehicleId);
+          const color = getMediumColor(rental.vehicleId);
 
           return {
             id: rental.id,

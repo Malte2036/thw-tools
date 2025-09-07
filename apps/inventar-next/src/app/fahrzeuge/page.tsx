@@ -1,22 +1,21 @@
 'use client';
 
-import { LoadingSpinner } from '@/components/base';
-import LinkButton from '@/components/base/LinkButton';
-import { useVehicleStore } from '@/provider/store/vehicleStore';
-import VehicleManagement from './VehicleManagement';
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { cancelRental, createRental, fetchRentals } from '@/api/vehicle/vehicleApi';
 import {
   CreateVehicleRentalDto,
   Vehicle,
   VehicleRental,
   vehicleToFriendlyString,
 } from '@/api/vehicle/vehicleModels';
+import { LoadingSpinner } from '@/components/base';
+import LinkButton from '@/components/base/LinkButton';
 import { CalendarView } from '@/components/Calendar';
-import { cancelRental, createRental, fetchRentals } from '@/api/vehicle/vehicleApi';
-import { ApiRequestOptions } from '@/api/apiGeneric';
+import { useVehicleStore } from '@/provider/store/vehicleStore';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import VehicleManagement from './VehicleManagement';
 
 export default function FahrzeugePage() {
   const { getAccessToken, getIdToken } = useKindeAuth();

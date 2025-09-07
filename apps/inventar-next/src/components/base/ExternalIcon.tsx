@@ -6,9 +6,7 @@ import '@thw-tools/web-components';
 import { THWExternalIcon } from '@thw-tools/web-components';
 
 // Define the ExternalIcon props interface
-export interface ExternalIconProps extends React.HTMLAttributes<HTMLElement> {
-  // No additional props needed for the external icon
-}
+export type ExternalIconProps = React.HTMLAttributes<HTMLElement>;
 
 /**
  * React wrapper for the thw-external-icon web component.
