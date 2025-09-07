@@ -22,18 +22,15 @@ export default function FunkPage() {
 
   return (
     <div className="flex flex-col gap-4 p-4">
-      <AddDevice
-        reset={() => {
-          console.log('reset');
-        }}
-      />
+      <AddDevice />
 
       <div className="flex w-full justify-center">
         <Tabs
           initialSelected={selectedTab}
           items={['Funkgeräte', 'Ausleihhistorie', 'Erweitert'] satisfies FunkTab[]}
-          onSelect={(item) => {
-            setSelectedTab(item as FunkTab);
+          onSelect={(event) => {
+            const item = event.detail;
+            setSelectedTab(item);
             router.push(`/funk?tab=${item}`);
           }}
         />

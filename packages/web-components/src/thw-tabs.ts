@@ -1,6 +1,6 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { thwColors, grayColors } from "./colors";
+import { LitElement, html, css, unsafeCSS } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { thwColors, grayColors } from './colors';
 
 /**
  * A tabs component.
@@ -8,7 +8,7 @@ import { thwColors, grayColors } from "./colors";
  * @param {Function} onSelect - The callback function when a tab is selected.
  * @param {string | undefined} initialSelected - The initial selected item.
  */
-@customElement("thw-tabs")
+@customElement('thw-tabs')
 export class THWTabs extends LitElement {
   /**
    * The items of the tabs.
@@ -74,7 +74,7 @@ export class THWTabs extends LitElement {
         ${this.items.map(
           (item) => html`
             <button
-              class="tabButton ${this.selectedItem === item ? "selected" : ""}"
+              class="tabButton ${this.selectedItem === item ? 'selected' : ''}"
               @click=${() => this.selectItem(item)}
             >
               ${item}
@@ -94,20 +94,49 @@ export class THWTabs extends LitElement {
 
     // Call the onSelect callback
     this.onSelect(item);
+
+    // Dispatch a custom event for React wrapper
+    this.dispatchEvent(
+      new CustomEvent('select', {
+        detail: item,
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   connectedCallback() {
     super.connectedCallback();
+    this.updateSelectedItem();
+  }
+
+  private updateSelectedItem() {
+    if (this.items.length === 0) {
+      this.selectedItem = null;
+      this.requestUpdate();
+      return;
+    }
 
     this.selectedItem =
       this.initialSelected && this.items.includes(this.initialSelected)
         ? this.initialSelected
         : this.items[0];
+
+    this.requestUpdate();
+  }
+
+  protected updated(changedProperties: Map<string | number | symbol, unknown>) {
+    super.updated(changedProperties);
+
+    // Update selected item when items or initialSelected changes
+    if (changedProperties.has('items') || changedProperties.has('initialSelected')) {
+      this.updateSelectedItem();
+    }
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "thw-tabs": THWTabs;
+    'thw-tabs': THWTabs;
   }
 }

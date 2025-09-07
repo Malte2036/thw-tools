@@ -6,21 +6,21 @@ import '@thw-tools/web-components';
 import { THWTabs } from '@thw-tools/web-components';
 
 // Define the Tabs props interface based on the web component properties
-export interface TabsProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
+export interface TabsProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   /**
    * Array of tab item strings
    */
-  items?: string[];
+  items?: T[];
 
   /**
    * Callback function when a tab is selected
    */
-  onSelect?: (item: string) => void;
+  onSelect?: (item: CustomEvent<T>) => void;
 
   /**
    * Initially selected tab item
    */
-  initialSelected?: string;
+  initialSelected?: T;
 }
 
 /**
