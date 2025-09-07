@@ -15,11 +15,7 @@ import { ApiRequestOptions } from '@/api/apiGeneric';
 import { batteryCountToFriendlyString, eventTypeToFriendlyString } from '@/api/funk/funkModels';
 import ManuelDeviceIdInput from './ManuelDeviceIdInput';
 
-interface Props {
-  reset: () => void;
-}
-
-export default function AddDevice({ reset }: Props) {
+export default function AddDevice() {
   const { getAccessToken, getIdToken } = useKindeAuth();
 
   const [scannedDeviceIds, setScannedDeviceIds] = useState<
@@ -108,7 +104,6 @@ export default function AddDevice({ reset }: Props) {
     );
 
     setScannedDeviceIds([]);
-    reset();
   };
 
   return (
