@@ -88,6 +88,11 @@ pids+=($!)
 tag_and_push "thw-inventar:latest" "${REGISTRY}/thw-inventar:${TAG}" "inventar frontend (${TAG})" &
 pids+=($!)
 
+# Inventar Next frontend
+tag_and_push "thw-inventar-next:latest" "${REGISTRY}/thw-inventar-next:${TAG}" "inventar-next frontend (${TAG})" &
+pids+=($!)
+
+
 # Wait for all processes to complete
 failures=0
 for pid in "${pids[@]}"; do
