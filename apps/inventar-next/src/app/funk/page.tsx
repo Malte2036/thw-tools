@@ -2,7 +2,7 @@
 
 import { Tabs } from '@/components/base';
 import AddDevice from '@/components/scan/AddDevice';
-import { useFunkStore } from '@/provider/store/funkStore';
+import FunkListTab from '@/components/scan/FunkListTab';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -12,10 +12,6 @@ export default function FunkPage() {
   const [selectedTab, setSelectedTab] = useState<FunkTab>('Funkgeräte');
   const params = useParams();
   const router = useRouter();
-
-  const { funkItems, funkItemEventBulks } = useFunkStore();
-  console.log('funkItems', funkItems);
-  console.log('funkItemEventBulks', funkItemEventBulks);
 
   useEffect(() => {
     const tab = params.tab;
@@ -42,16 +38,7 @@ export default function FunkPage() {
           }}
         />
       </div>
-      {funkItems && funkItemEventBulks && (
-        <>
-          {funkItems.map((item) => (
-            <div key={item.id}>{item.deviceId}</div>
-          ))}
-          {funkItemEventBulks.map((bulk) => (
-            <div key={bulk.id}>{bulk.id}</div>
-          ))}
-        </>
-      )}
+      {selectedTab === 'Funkgeräte' && <FunkListTab />}
       {/* 
 {#await $funk.fetching}
     <LoadingSpinner />
