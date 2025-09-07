@@ -1,9 +1,7 @@
 import { CreateVehicleDto, CreateVehicleDtoSchema } from '@/api/vehicle/vehicleModels';
-import { Dialog } from '../base';
-import { Button } from '../base';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState, useEffect } from 'react';
+import { Button, Dialog } from '../base';
 
 type Props = {
   isOpen: boolean;
@@ -22,12 +20,10 @@ export default function AddVehicleDialog({
 }: Props) {
   const {
     register,
-    handleSubmit,
     reset,
     getValues,
     formState: { errors, isValid },
   } = useForm<CreateVehicleDto>({
-    resolver: zodResolver(CreateVehicleDtoSchema),
     defaultValues: {
       canBeReserved: true,
     },

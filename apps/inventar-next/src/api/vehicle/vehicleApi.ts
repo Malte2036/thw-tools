@@ -46,13 +46,18 @@ export async function createVehicle(
   requestOptions: ApiRequestOptions,
   vehicleData: CreateVehicleDto
 ): Promise<Vehicle> {
-  const result = await apiPost<Vehicle>('/vehicles', requestOptions, vehicleData, (data: any) => {
-    const result = VehicleSchema.safeParse(data);
-    if (!result.success) {
-      console.error('Error parsing Vehicle:', result.error);
+  const result = await apiPost<Vehicle>(
+    '/vehicles',
+    requestOptions,
+    vehicleData,
+    (data: unknown) => {
+      const result = VehicleSchema.safeParse(data);
+      if (!result.success) {
+        console.error('Error parsing Vehicle:', result.error);
+      }
+      return result.success;
     }
-    return result.success;
-  });
+  );
 
   // Fahrzeuge neu laden, um den aktuellen Status zu erhalten
   fetchAndSetVehicles(requestOptions).catch(console.error);
@@ -88,7 +93,7 @@ export async function createRental(
     '/vehicles/rentals',
     requestOptions,
     rentalData,
-    (data: any) => {
+    (data: unknown) => {
       const result = VehicleRentalSchema.safeParse(data);
       if (!result.success) {
         console.error('Error parsing VehicleRental:', result.error);
@@ -115,7 +120,7 @@ export async function cancelRental(
     `/vehicles/rentals/${rentalId}/cancel`,
     requestOptions,
     { reason: reason || '' },
-    (data: any) => {
+    (data: unknown) => {
       const result = VehicleRentalSchema.safeParse(data);
       if (!result.success) {
         console.error('Error parsing VehicleRental:', result.error);

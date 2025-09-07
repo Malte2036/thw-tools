@@ -78,7 +78,7 @@ export const CreateVehicleDtoSchema = z.object({
   specialFeatures: z.string().nullish(),
   totalWeight: z.string().nullish(),
   yearBuilt: z.number().nullish(),
-  canBeReserved: z.boolean().default(true),
+  canBeReserved: z.boolean(),
 });
 
 export type CreateVehicleDto = z.infer<typeof CreateVehicleDtoSchema>;

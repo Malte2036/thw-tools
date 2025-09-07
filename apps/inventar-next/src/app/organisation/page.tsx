@@ -9,7 +9,6 @@ import Card from '@/components/base/Card';
 import Table from '@/components/base/Table';
 import AddVehicleDialog from '@/components/dialog/AddVehicleDialog';
 import { useOrganisationStore } from '@/provider/store/organisationStore';
-import { useVehicleStore } from '@/provider/store/vehicleStore';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -20,9 +19,6 @@ export default function OrganisationPage() {
 
   const [showAddVehicleDialog, setShowAddVehicleDialog] = useState(false);
   const [isAddingVehicle, setIsAddingVehicle] = useState(false);
-
-  const vehicles = useVehicleStore((state) => state.vehicles);
-  console.log('vehicles', vehicles);
 
   const memberTableValues = useMemo(() => {
     return organisation?.members.map((member) => [userToFriendlyString(member.user)]) ?? [];
@@ -118,9 +114,9 @@ export default function OrganisationPage() {
                   fill="currentColor"
                 >
                   <path
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   />
                 </svg>
                 Fahrzeug hinzufügen
