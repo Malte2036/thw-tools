@@ -1,7 +1,7 @@
 import { eventTypeToFriendlyString, FunkItemEventType } from '@/api/funk/funkModels';
 import { cn } from '@/lib/utils';
 
-export default function InventarItemEventTypeBadge({ type }: { type: FunkItemEventType }) {
+export default function FunkItemEventTypeBadge({ type }: { type: FunkItemEventType }) {
   return (
     <div
       className={cn(

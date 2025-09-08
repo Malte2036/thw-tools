@@ -5,7 +5,7 @@ import { Html5Qrcode, type Html5QrcodeCameraScanConfig } from 'html5-qrcode';
 import { Button } from '@/components/base';
 import { useSettingsStore } from '@/provider/store/settingsStore';
 import PermissionDeniedDialog from './PermissionDeniedDialog';
-import FloatingActionButton from './FloatingActionButton';
+import FloatingActionButton from '../funk/FloatingActionButton';
 import QRCodeIcon from './QRCodeIcon';
 
 // Constants

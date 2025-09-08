@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Input } from '../base';
 import { useFunkStore } from '@/provider/store/funkStore';
-import InventarItemEventBulkItem from './InventarItemEventBulkItem';
+import FunkItemEventBulkItem from './FunkItemEventBulkItem';
 import { FunkItemDeviceId, isSearchStringInFunkItemEventBulk } from '@/api/funk/funkModels';
 import { useOrganisationStore } from '@/provider/store/organisationStore';
 
@@ -39,7 +39,7 @@ export default function FunkBulkHistoryTab() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         {filteredBulks.map((bulk) => (
-          <InventarItemEventBulkItem key={bulk.id} bulk={bulk} />
+          <FunkItemEventBulkItem key={bulk.id} bulk={bulk} />
         ))}
       </div>
     );

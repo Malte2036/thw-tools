@@ -4,7 +4,7 @@ import {
   FunkItemEvent,
   FunkItemEventType,
 } from '@/api/funk/funkModels';
-import QRScanner from './QRScanner';
+import QRScanner from '../scan/QRScanner';
 import { toast } from 'sonner';
 import { useCallback, useState } from 'react';
 import { useFunkStore } from '@/provider/store/funkStore';
@@ -13,7 +13,7 @@ import Input from '../base/Input';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import { ApiRequestOptions } from '@/api/apiGeneric';
 import { batteryCountToFriendlyString, eventTypeToFriendlyString } from '@/api/funk/funkModels';
-import ManuelDeviceIdInput from './ManuelDeviceIdInput';
+import ManuelDeviceIdInput from '../scan/ManuelDeviceIdInput';
 
 export default function AddDevice() {
   const { getAccessToken, getIdToken } = useKindeAuth();

@@ -7,9 +7,9 @@ import { userToFriendlyString } from '@/api/user/userModels';
 import { useFunkStore } from '@/provider/store/funkStore';
 import { useOrganisationStore } from '@/provider/store/organisationStore';
 import { dateToFriendlyString } from '@thw-tools/shared';
-import InventarItemEventTypeBadge from './InventarItemEventTypeBadge';
+import FunkItemEventTypeBadge from './FunkItemEventTypeBadge';
 
-export default function InventarItemEventBulkItem({ bulk }: { bulk: FunkItemEventBulk }) {
+export default function FunkItemEventBulkItem({ bulk }: { bulk: FunkItemEventBulk }) {
   const getOrganisationMemberByInternalId = useOrganisationStore(
     (state) => state.getOrganisationMemberByInternalId
   );
@@ -26,7 +26,7 @@ export default function InventarItemEventBulkItem({ bulk }: { bulk: FunkItemEven
             {' am '}
             <span>{dateToFriendlyString(new Date(bulk.date))}</span>
           </div>
-          <InventarItemEventTypeBadge type={bulk.eventType} />
+          <FunkItemEventTypeBadge type={bulk.eventType} />
         </div>
         <ul className="pl-3 flex flex-col justify-start w-full text-sm text-gray-500 list-disc">
           <li>{batteryCountToFriendlyString(bulk.batteryCount)}</li>

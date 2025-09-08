@@ -2,9 +2,9 @@
 
 import { Tabs } from '@/components/base';
 import AddDevice from '@/components/scan/AddDevice';
-import FunkAdvancedTab from '@/components/scan/FunkAdvancedTab';
-import FunkBulkHistoryTab from '@/components/scan/FunkBulkHistoryTab';
-import FunkListTab from '@/components/scan/FunkListTab';
+import FunkAdvancedTab from '@/components/funk/FunkAdvancedTab';
+import FunkBulkHistoryTab from '@/components/funk/FunkBulkHistoryTab';
+import FunkListTab from '@/components/funk/FunkListTab';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
