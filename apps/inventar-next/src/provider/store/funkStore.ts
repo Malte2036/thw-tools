@@ -26,6 +26,8 @@ interface FunkStore {
   getFunkItemEventByInternalId: (internalId: FunkItemEventId) => FunkItemEvent | undefined;
   getLastFunkItemEventByFunkItemInternalId: (internalId: FunkItemId) => FunkItemEvent | undefined;
   getAllFunkItemEventsByFunkItemDeviceId: (deviceId: FunkItemDeviceId) => FunkItemEvent[];
+  getBorrowedDevicesCount: () => number;
+  getBorrowedBatteryCount: () => number;
 }
 
 export const useFunkStore = create<FunkStore>((set, get) => ({
@@ -76,5 +78,15 @@ export const useFunkStore = create<FunkStore>((set, get) => ({
       }))
       .filter((event) => event.deviceId === deviceId)
       .map((event) => event.event.event);
+  },
+  getBorrowedDevicesCount: () => {
+    return (
+      get().funkItems?.filter(
+        (item) => get().getLastFunkItemEventByFunkItemInternalId(item.id)?.type === 'borrowed'
+      ).length ?? 0
+    );
+  },
+  getBorrowedBatteryCount: () => {
+    return get().funkItemEventBulks?.reduce((acc, bulk) => acc + bulk.batteryCount, 0) ?? 0;
   },
 }));

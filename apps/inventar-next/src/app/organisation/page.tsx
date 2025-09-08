@@ -6,6 +6,7 @@ import { userToFriendlyString } from '@/api/user/userModels';
 import { createVehicle } from '@/api/vehicle/vehicleApi';
 import Button from '@/components/base/Button';
 import Card from '@/components/base/Card';
+import InfoItem from '@/components/base/InfoItem';
 import Table from '@/components/base/Table';
 import AddVehicleDialog from '@/components/dialog/AddVehicleDialog';
 import { useOrganisationStore } from '@/provider/store/organisationStore';
@@ -65,7 +66,9 @@ export default function OrganisationPage() {
 
   return (
     <div className="flex flex-col gap-6 p-4">
-      <Card title="Organisation">Name: {organisation.name}</Card>
+      <Card title="Organisation">
+        <InfoItem label="Name" value={organisation.name} />
+      </Card>
       <Card title={`Mitglieder (${organisation.members.length})`}>
         <Table header={['Name']} values={memberTableValues} />
         <div className="mt-3">

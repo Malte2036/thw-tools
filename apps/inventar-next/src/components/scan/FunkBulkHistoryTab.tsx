@@ -30,7 +30,7 @@ export default function FunkBulkHistoryTab() {
         )
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) ?? []
     );
-  }, [funkItemEventBulks, searchTerm, getOrganisationMemberByInternalId]);
+  }, [funkItemEventBulks, searchTerm, getOrganisationMemberByInternalId, getFunkItemByInternalId]);
 
   const renderBulks = () => {
     if (!filteredBulks || filteredBulks.length === 0) {
