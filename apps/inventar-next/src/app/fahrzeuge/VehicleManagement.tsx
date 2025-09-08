@@ -250,7 +250,7 @@ export default function VehicleManagement({
               {selectedVehicle ? (
                 <div className="bg-thw-50 p-3 m-0 sm:mx-1 sm:mt-1 border-b border-thw-100 rounded-t-lg">
                   <p className="text-sm text-thw-700">
-                    <span className="font-semibold">Kalender für:</span>
+                    <span className="font-semibold">Kalender für:</span>{' '}
                     {vehicleToFriendlyString(selectedVehicle)}
                   </p>
                 </div>

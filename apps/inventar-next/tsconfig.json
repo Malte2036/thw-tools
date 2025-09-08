@@ -20,7 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@/icons/*": ["./public/icons/*"],
+      "@/icons/*": ["./src/icons/*"],
       "@web-components/*": ["../../packages/web-components/dist/*"]
     }
   },
