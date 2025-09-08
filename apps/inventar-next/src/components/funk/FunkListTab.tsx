@@ -97,7 +97,6 @@ export default function FunkListTab() {
                 key={data.item.id}
                 event={data?.lastEvent}
                 deviceId={data?.item?.deviceId}
-                item={data?.item}
                 isSelected={false}
               />
             ))}
@@ -133,7 +132,6 @@ export default function FunkListTab() {
                 key={data.item.id}
                 event={data.lastEvent}
                 deviceId={data.item.deviceId}
-                item={data.item}
                 isSelected={false}
               />
             ))}

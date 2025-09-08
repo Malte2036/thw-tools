@@ -1,7 +1,6 @@
 import {
   eventTypeToEmoji,
   eventTypeToFriendlyString,
-  FunkItem,
   FunkItemDeviceId,
   FunkItemEvent,
   userToFriendlyString,
@@ -15,7 +14,6 @@ type Props = {
   event: FunkItemEvent;
   deviceId: FunkItemDeviceId;
   isSelected: boolean;
-  item: FunkItem;
   secondary?: boolean;
 };
 
@@ -23,7 +21,6 @@ export default function FunkItemEventItem({
   event,
   deviceId,
   isSelected,
-  item,
   secondary = false,
 }: Props) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -35,13 +32,11 @@ export default function FunkItemEventItem({
   const eventUser = getOrganisationMemberByInternalId(event.userId)?.user;
 
   useEffect(() => {
-    if (!item.deviceId) return;
-
     // TODO: Implement if inventoryStore is implemented
     // getInventoryItemByInventarNummer(item.deviceId).then((inventoryItem) => {
     //   setItemType(inventoryItem?.typ ?? undefined);
     // });
-  }, [item.deviceId]);
+  }, []);
 
   return (
     <a
