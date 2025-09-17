@@ -88,9 +88,16 @@ pids+=($!)
 tag_and_push "thw-inventar:latest" "${REGISTRY}/thw-inventar:${TAG}" "inventar frontend (${TAG})" &
 pids+=($!)
 
-# Inventar Next frontend
-tag_and_push "thw-inventar-next:latest" "${REGISTRY}/thw-inventar-next:${TAG}" "inventar-next frontend (${TAG})" &
-pids+=($!)
+# if MODE is prod
+if [[ "$MODE" == "prod" ]]; then
+echo -e "${BLUE} Skipping inventar-next frontend build and push for ${TAG} mode${NC}"
+else
+  # Inventar Next frontend
+  tag_and_push "thw-inventar-next:latest" "${REGISTRY}/thw-inventar-next:${TAG}" "inventar-next frontend (${TAG})" &
+  pids+=($!)
+fi
+
+
 
 
 # Wait for all processes to complete

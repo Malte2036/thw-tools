@@ -75,9 +75,9 @@ services:
       platforms:
         - linux/amd64
       args:
-        NEXT_PUBLIC_KINDE_DOMAIN: ${PUBLIC_KINDE_DOMAIN}
-        NEXT_PUBLIC_KINDE_API_CLIENT: ${PUBLIC_KINDE_API_CLIENT}
-        NEXT_PUBLIC_API_URL: ${PUBLIC_API_URL}
+        NEXT_PUBLIC_KINDE_DOMAIN: ${NEXT_PUBLIC_KINDE_DOMAIN}
+        NEXT_PUBLIC_KINDE_API_CLIENT: ${NEXT_PUBLIC_KINDE_API_CLIENT}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     container_name: thw-inventar-next-frontend
     environment:
       NODE_ENV: production

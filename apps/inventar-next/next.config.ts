@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   // async rewrites() {
   //   const svelteKitUrl = process.env.SVELTEKIT_URL;
   //   console.log(`Forwarding Next.js requests to SvelteKit URL: ${svelteKitUrl}`);

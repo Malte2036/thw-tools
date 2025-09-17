@@ -26,25 +26,36 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # Copy the remaining source code
 COPY . .
 
-ARG PUBLIC_API_URL
-ARG PUBLIC_KINDE_API_CLIENT
-ARG PUBLIC_KINDE_DOMAIN
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_KINDE_API_CLIENT
+ARG NEXT_PUBLIC_KINDE_DOMAIN
 
 # Set environment variables for the build
-ENV NEXT_PUBLIC_API_URL=$PUBLIC_API_URL
-ENV NEXT_PUBLIC_KINDE_API_CLIENT=$PUBLIC_KINDE_API_CLIENT
-ENV NEXT_PUBLIC_KINDE_DOMAIN=$PUBLIC_KINDE_DOMAIN
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_KINDE_API_CLIENT=$NEXT_PUBLIC_KINDE_API_CLIENT
+ENV NEXT_PUBLIC_KINDE_DOMAIN=$NEXT_PUBLIC_KINDE_DOMAIN
 
 # Build the project
 RUN cd apps/inventar-next && pnpm run build
 
-# Production stage - using nginx for static files
-FROM nginx:stable-alpine
+# Production stage - using Node.js for Next.js standalone
+FROM node:18-slim AS runner
 WORKDIR /app
 
-# Copy the built static files
-COPY --from=builder /app/apps/inventar-next/out /usr/share/nginx/html
+ENV NODE_ENV=production
+
+# Create a non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy the standalone build
+COPY --from=builder /app/apps/inventar-next/.next/standalone ./
+COPY --from=builder /app/apps/inventar-next/.next/static ./apps/inventar-next/.next/static
+COPY --from=builder /app/apps/inventar-next/public ./apps/inventar-next/public
+
+# Set the correct permissions
+USER nextjs
 
 # Expose and run
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+CMD ["node", "apps/inventar-next/server.js"]
