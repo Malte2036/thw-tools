@@ -2,18 +2,25 @@
 
 This monorepo contains the source code for [thw-tools.de](https://thw-tools.de/), a collection of unofficial tools and applications for the German Federal Agency for Technical Relief (THW). The project is built by THW volunteers for THW volunteers.
 
-![THW Tools Screenshot](./assets/screenshot_quiz.png)
+<img src="./assets/screenshot_1.png" alt="THW Tools Screenshot" style="max-height: 400px;">
 
 ## Applications
 
 This monorepo hosts the following applications:
 
-| Application            | Description                                                                | URL                                                         |
-| ---------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| **THW Tools**          | The main application with various tools and quizzes for THW members.       | [thw-tools.de](https://thw-tools.de/)                       |
-| **Inventar**           | An inventory management system for THW local sections.                     | [mein.thw-duesseldorf.de](https://mein.thw-duesseldorf.de/) |
-| **Elektro-Rechner**    | A voltage drop calculator for electrical equipment.                        | [elektro.thw-tools.de](https://elektro.thw-tools.de/)       |
-| **Finnentest-Tracker** | A tool to track and evaluate the results of the "Finnentest" fitness test. | [finnentest.thw-tools.de](https://finnentest.thw-tools.de/) |
+| Application | Description | URL |
+| --- | --- | --- |
+| **THW Tools** | The main application with various tools and quizzes for THW members. | [thw-tools.de](https://thw-tools.de/) |
+| **Inventar** | An inventory management system for THW local sections. | [mein.thw-duesseldorf.de](https://mein.thw-duesseldorf.de/) |
+
+## Related Projects
+
+The following applications are part of the THW Tools ecosystem but are hosted in separate repositories:
+
+| Application | URL | Repository |
+| --- | --- | --- |
+| **Elektro-Rechner** | [elektro.thw-tools.de](https://elektro.thw-tools.de/) | [github.com/Malte2036/thw-elektro](https://github.com/Malte2036/thw-elektro) |
+| **Finnentest-Tracker** | [finnentest.thw-tools.de](https://finnentest.thw-tools.de/) | [github.com/Malte2036/thw-finnentest](https://github.com/Malte2036/thw-finnentest/) |
 
 ## Using the Inventory Management App
 
@@ -30,7 +37,7 @@ The monorepo is organized as follows:
 ├── apps/
 │   ├── backend/         # NestJS backend API
 │   ├── inventar/        # SvelteKit frontend for Inventar
-│   └── thw-tools/       # SvelteKit frontend for THW Tools, Elektro-Rechner, and Finnentest-Tracker
+│   └── thw-tools/       # SvelteKit frontend for THW Tools
 ├── packages/
 │   ├── shared/          # Shared utilities and types
 │   └── web-components/  # Shared web components
