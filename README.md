@@ -1,87 +1,88 @@
 # THW Tools Monorepo
 
-This monorepo contains all THW Tools applications and shared packages.
+This monorepo contains the source code for [thw-tools.de](https://thw-tools.de/), a collection of unofficial tools and applications for the German Federal Agency for Technical Relief (THW). The project is built by THW volunteers for THW volunteers.
 
-## Structure
+![THW Tools Screenshot](./assets/screenshot_quiz.png)
+
+## Applications
+
+This monorepo hosts the following applications:
+
+| Application            | Description                                                                | URL                                                         |
+| ---------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **THW Tools**          | The main application with various tools and quizzes for THW members.       | [thw-tools.de](https://thw-tools.de/)                       |
+| **Inventar**           | An inventory management system for THW local sections.                     | [mein.thw-duesseldorf.de](https://mein.thw-duesseldorf.de/) |
+| **Elektro-Rechner**    | A voltage drop calculator for electrical equipment.                        | [elektro.thw-tools.de](https://elektro.thw-tools.de/)       |
+| **Finnentest-Tracker** | A tool to track and evaluate the results of the "Finnentest" fitness test. | [finnentest.thw-tools.de](https://finnentest.thw-tools.de/) |
+
+## Using the Inventory Management App
+
+If you are interested in using the inventory management app for your own THW local section (Ortsverband), please contact me to get it set up.
+
+**Contact:** Malte via [Hermine Messenger](https://app.thw-messenger.de/thw/app#/contacts/profile/1990855).
+
+## Monorepo Structure
+
+The monorepo is organized as follows:
 
 ```
-/thw-tools-monorepo
-├── apps
-│   ├── backend          # NestJS backend (thw-tools-backend)
-│   ├── thw-tools        # SvelteKit main frontend (thw-tools)
-│   └── inventar         # SvelteKit second frontend (thw-inventar)
-└── packages
-    └── web-components   # Shared component library
+/
+├── apps/
+│   ├── backend/         # NestJS backend API
+│   ├── inventar/        # SvelteKit frontend for Inventar
+│   └── thw-tools/       # SvelteKit frontend for THW Tools, Elektro-Rechner, and Finnentest-Tracker
+├── packages/
+│   ├── shared/          # Shared utilities and types
+│   └── web-components/  # Shared web components
 ```
+
+## Tech Stack
+
+The project is built with the following technologies:
+
+- **Frontend:** SvelteKit, Next.js, TypeScript, Tailwind CSS
+- **Backend:** NestJS, TypeScript, PostgreSQL, Prisma
+- **Monorepo Management:** pnpm, Turborepo
 
 ## Getting Started
 
-### Prerequisites
+To get started with the development, you need to have [Node.js](https://nodejs.org/) (v18 or later) and [pnpm](https://pnpm.io/) installed.
 
-- [Node.js](https://nodejs.org/) (v16 or later)
-- [PNPM](https://pnpm.io/) (v7 or later)
+1.  **Clone the repository:**
 
-### Installation
+    ```bash
+    git clone https://github.com/Malte2036/thw-tools.git
+    cd thw-tools
+    ```
 
-```bash
-# Install dependencies for all workspaces
-pnpm install
-```
+2.  **Install dependencies:**
 
-### Development
+    ```bash
+    pnpm install
+    ```
 
-```bash
-# Start all applications in development mode
-pnpm dev
+3.  **Set up environment variables:**
 
-# Start individual applications
-pnpm dev:backend     # Runs NestJS backend with --watch
-pnpm dev:thw-tools   # Runs SvelteKit thw-tools frontend
-pnpm dev:inventar    # Runs SvelteKit inventar frontend
-```
+    Each application has its own `.env.example` file. Copy it to `.env` and fill in the required values.
 
-### Building
+4.  **Start the development servers:**
 
-```bash
-# Build all applications
-pnpm build
+    ```bash
+    pnpm dev
+    ```
 
-# Build specific applications
-pnpm build:backend
-pnpm build:thw-tools
-pnpm build:inventar
-```
+    This will start all applications in development mode. You can also start individual applications:
 
-### Common Commands
+    ```bash
+    pnpm --filter thw-tools dev
+    pnpm --filter inventar dev
+    pnpm --filter backend dev
+    ```
 
-```bash
-pnpm lint           # Run linting
-pnpm test          # Run tests
-pnpm format        # Format code
-pnpm clean         # Clean build artifacts and node_modules
-```
+## Contributing
 
-## Working with Dependencies
+Contributions are welcome! If you want to contribute to the project, please feel free to open an issue or submit a pull request.
 
-```bash
-# Add a dependency to a specific workspace
-pnpm --filter <workspace-name> add <package-name>
+## Disclaimer
 
-# Add a development dependency
-pnpm --filter <workspace-name> add -D <package-name>
-
-# Add a dependency to all workspaces
-pnpm add -w <package-name>
-```
-
-### Using Shared Components
-
-Import components from the shared component library using:
-
-```typescript
-import { Button } from '@web-components/Button';
-```
-
-## Workspace Management
-
-This monorepo uses PNPM Workspaces and Turborepo for efficient dependency management and build optimization.
+This is a private project and has no official connection to the German Federal Agency for Technical Relief (THW). The THW logo is used for decorative purposes only.
