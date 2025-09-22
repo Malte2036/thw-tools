@@ -590,7 +590,6 @@
 					<Table
 						header={['Organisation', 'TMO/DMO & 4-Meter Band']}
 						values={filteredOrganizations}
-						height={500}
 					/>
 					<div class="mt-4 text-sm text-gray-500">
 						<p>
@@ -608,7 +607,6 @@
 					<Table
 						header={['Organisationseinheit', 'Kennnummer']}
 						values={filteredThwUnits}
-						height={500}
 					/>
 				{:else if activeTab === 2}
 					<!-- Vehicle/Person Numbers Table -->
@@ -621,7 +619,6 @@
 					<Table
 						header={['Beschreibung', 'Kennnummer']}
 						values={filteredVehiclePersonNumbers}
-						height={500}
 					/>
 				{:else if activeTab === 3}
 					<!-- Examples Table -->
@@ -631,7 +628,7 @@
 							Praktische Beispiele für die Anwendung der Funkrufnamen-Regelung.
 						</p>
 					</div>
-					<Table header={['Beschreibung', 'Funkrufname']} values={filteredExamples} height={500} />
+					<Table header={['Beschreibung', 'Funkrufname']} values={filteredExamples} />
 				{/if}
 			</div>
 		</div>

@@ -15,13 +15,11 @@
     values = [],
     onValueClick = undefined,
     selectedIndex = $bindable(undefined),
-    height = 600,
   } = $props<{
     header: string[];
     values: TableCell[][];
     onValueClick?: ((row: TableCell[], index: number) => void) | undefined;
     selectedIndex?: number | undefined;
-    height?: number;
   }>();
 
   function handleRowClick(event: CustomEvent<{ row: TableCell[]; index: number }>) {
@@ -33,4 +31,4 @@
   }
 </script>
 
-<thw-table {header} {values} {selectedIndex} {height} onrow-click={handleRowClick}></thw-table>
+<thw-table {header} {values} {selectedIndex} onrow-click={handleRowClick}></thw-table>

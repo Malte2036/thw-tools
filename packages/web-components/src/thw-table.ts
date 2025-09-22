@@ -8,7 +8,6 @@ import { virtualize } from '@lit-labs/virtualizer/virtualize.js';
  * @param {string[]} header - The header of the table.
  * @param {(string | TemplateResult | HTMLElement)[][]} values - The values of the table.
  * @param {number | undefined} selectedIndex - The index of the selected row.
- * @param {number | undefined} height - The maximum height of the table.
  *
  * @fires {CustomEvent} row-click - Fired when a row is clicked.
  * @property {Object} event.detail
@@ -20,14 +19,13 @@ export class THWTable extends LitElement {
   @property({ type: Array }) header: string[] = [];
   @property({ type: Array }) values: (string | TemplateResult | HTMLElement)[][] = [];
   @property({ type: Number }) selectedIndex?: number;
-  @property({ type: Number }) height?: number;
 
   static override styles = css`
     .table-wrapper {
       overflow: auto;
     }
     table {
-      width: 100%;
+      max-width: 100%;
       height: 100%;
       background-color: white;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -118,7 +116,7 @@ export class THWTable extends LitElement {
 
   override render() {
     return html`
-      <div class="table-wrapper" style=${this.height ? `height: ${this.height}px;` : ''}>
+      <div class="table-wrapper">
         <table>
           <thead>
             <tr>
