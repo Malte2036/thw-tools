@@ -48,16 +48,28 @@ RUN npx prisma generate
 
 # Remove unnecessary engines and files to reduce size
 RUN find node_modules/.prisma -type f -not -path "*libquery_engine-linux-musl*" -not -path "*libquery_engine-debian*" -delete || true
-RUN rm -rf node_modules/@prisma/engines 
+RUN rm -rf node_modules/@prisma/engines
 RUN npm prune --production
 RUN rm -rf node_modules/.cache
+
+# MINIMAL CHANGE: split prisma out so node_modules can be copied without it
+RUN mkdir -p /optimizer/node_modules_no_prisma \
+    && cp -a node_modules/. /optimizer/node_modules_no_prisma/ \
+    && rm -rf /optimizer/node_modules_no_prisma/@prisma \
+              /optimizer/node_modules_no_prisma/.prisma \
+    && mkdir -p /optimizer/prisma_bundle \
+    && cp -a node_modules/@prisma /optimizer/prisma_bundle/@prisma \
+    && cp -a node_modules/.prisma /optimizer/prisma_bundle/.prisma
 
 # Production stage - uses Alpine for minimal size
 FROM node:20-alpine AS release
 WORKDIR /app
 
 # Copy minimized node_modules from the optimizer stage
-COPY --from=deps-optimizer /optimizer/node_modules ./node_modules
+# (now in two layers: big node_modules without Prisma, then Prisma only)
+COPY --from=deps-optimizer /optimizer/node_modules_no_prisma ./node_modules
+COPY --from=deps-optimizer /optimizer/prisma_bundle/.prisma ./node_modules/.prisma
+COPY --from=deps-optimizer /optimizer/prisma_bundle/@prisma ./node_modules/@prisma
 
 # Copy only necessary files for runtime
 COPY --from=builder /app/apps/backend/dist ./dist

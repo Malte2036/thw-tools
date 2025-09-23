@@ -10,15 +10,50 @@ BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# Read build mode from the first argument (prod or dev)
-MODE=$1
-if [[ "$MODE" != "prod" && "$MODE" != "dev" ]]; then
-  echo -e "${RED}❌ Error: Invalid mode specified. Use 'prod' or 'dev'.${NC}"
-  echo "Usage: $0 <prod|dev>"
+# Parse command line arguments
+ONLY_PUSH=false
+USE_CACHE=false
+MODE=""
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --only-push)
+      ONLY_PUSH=true
+      shift
+      ;;
+    --cache)
+      USE_CACHE=true
+      shift
+      ;;
+    prod|dev)
+      if [[ -n "$MODE" ]]; then
+        echo -e "${RED}❌ Error: Multiple modes specified. Use only one mode.${NC}"
+        exit 1
+      fi
+      MODE=$1
+      shift
+      ;;
+    *)
+      echo -e "${RED}❌ Error: Unknown option '$1'${NC}"
+      echo "Usage: $0 [--only-push] [--cache] <prod|dev>"
+      exit 1
+      ;;
+  esac
+done
+
+# Check if mode is specified
+if [[ -z "$MODE" ]]; then
+  echo -e "${RED}❌ Error: Mode not specified. Use 'prod' or 'dev'.${NC}"
+  echo "Usage: $0 [--only-push] [--cache] <prod|dev>"
   exit 1
 fi
 
-echo -e "${BLUE}🚀 Starting build and push process in '${MODE}' mode...${NC}"
+if [[ "$ONLY_PUSH" == "true" ]]; then
+  echo -e "${BLUE}🚀 Starting push process in '${MODE}' mode (skipping build)...${NC}"
+else
+  echo -e "${BLUE}🚀 Starting build and push process in '${MODE}' mode...${NC}"
+fi
 
 # Set environment file and tag based on mode
 if [[ "$MODE" == "prod" ]]; then
@@ -66,9 +101,18 @@ tag_and_push() {
 # Trap to capture ctrl+c and exit gracefully
 trap 'echo -e "${RED}🛑 Build and push aborted${NC}"; exit 1' INT
 
-# Build all services using docker compose
-echo -e "${BLUE}🏗️ Building Docker images for AMD64 architecture...${NC}"
-docker compose --env-file "${ENV_FILE}" build --no-cache
+# Build all services using docker compose (skip if --only-push is used)
+if [[ "$ONLY_PUSH" != "true" ]]; then
+  if [[ "$USE_CACHE" == "true" ]]; then
+    echo -e "${BLUE}🏗️ Building Docker images for AMD64 architecture (with cache)...${NC}"
+    docker compose --env-file "${ENV_FILE}" build
+  else
+    echo -e "${BLUE}🏗️ Building Docker images for AMD64 architecture (no cache)...${NC}"
+    docker compose --env-file "${ENV_FILE}" build --no-cache
+  fi
+else
+  echo -e "${BLUE}⏭️ Skipping build step (--only-push mode)${NC}"
+fi
 
 # Tag and push images to registry in parallel
 echo -e "${BLUE}📦 Tagging and pushing images with tag '${TAG}' to registry in parallel...${NC}"
