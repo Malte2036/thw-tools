@@ -1,6 +1,5 @@
 generator client {
   provider        = "prisma-client-js"
-  binaryTargets   = ["linux-musl"]
   previewFeatures = ["multiSchema"]
 }
 

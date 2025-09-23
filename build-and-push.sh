@@ -14,6 +14,7 @@ NC='\033[0m' # No Color
 ONLY_PUSH=false
 USE_CACHE=false
 MODE=""
+SINGLE_IMAGE=""
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -26,6 +27,14 @@ while [[ $# -gt 0 ]]; do
       USE_CACHE=true
       shift
       ;;
+    --image)
+      SINGLE_IMAGE="$2"
+      if [[ -z "$SINGLE_IMAGE" ]]; then
+        echo -e "${RED}❌ Error: --image requires a value (backend, thw-tools, or inventar)${NC}"
+        exit 1
+      fi
+      shift 2
+      ;;
     prod|dev)
       if [[ -n "$MODE" ]]; then
         echo -e "${RED}❌ Error: Multiple modes specified. Use only one mode.${NC}"
@@ -36,7 +45,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     *)
       echo -e "${RED}❌ Error: Unknown option '$1'${NC}"
-      echo "Usage: $0 [--only-push] [--cache] <prod|dev>"
+      echo "Usage: $0 [--only-push] [--cache] [--image <backend|thw-tools|inventar>] <prod|dev>"
       exit 1
       ;;
   esac
@@ -45,8 +54,21 @@ done
 # Check if mode is specified
 if [[ -z "$MODE" ]]; then
   echo -e "${RED}❌ Error: Mode not specified. Use 'prod' or 'dev'.${NC}"
-  echo "Usage: $0 [--only-push] [--cache] <prod|dev>"
+  echo "Usage: $0 [--only-push] [--cache] [--image <backend|thw-tools|inventar>] <prod|dev>"
   exit 1
+fi
+
+# Validate single image option if provided
+if [[ -n "$SINGLE_IMAGE" ]]; then
+  case "$SINGLE_IMAGE" in
+    backend|thw-tools|inventar)
+      # Valid image name
+      ;;
+    *)
+      echo -e "${RED}❌ Error: Invalid image name '$SINGLE_IMAGE'. Use 'backend', 'thw-tools', or 'inventar'.${NC}"
+      exit 1
+      ;;
+  esac
 fi
 
 if [[ "$ONLY_PUSH" == "true" ]]; then
@@ -101,50 +123,97 @@ tag_and_push() {
 # Trap to capture ctrl+c and exit gracefully
 trap 'echo -e "${RED}🛑 Build and push aborted${NC}"; exit 1' INT
 
-# Build all services using docker compose (skip if --only-push is used)
+# Build services using docker compose (skip if --only-push is used)
 if [[ "$ONLY_PUSH" != "true" ]]; then
-  if [[ "$USE_CACHE" == "true" ]]; then
-    echo -e "${BLUE}🏗️ Building Docker images for AMD64 architecture (with cache)...${NC}"
-    docker compose --env-file "${ENV_FILE}" build
+  if [[ -n "$SINGLE_IMAGE" ]]; then
+    # Build only the specified image
+    echo -e "${BLUE}🏗️ Building Docker image for ${SINGLE_IMAGE} (AMD64 architecture)...${NC}"
+    if [[ "$USE_CACHE" == "true" ]]; then
+      docker compose --env-file "${ENV_FILE}" build "${SINGLE_IMAGE}"
+    else
+      docker compose --env-file "${ENV_FILE}" build --no-cache "${SINGLE_IMAGE}"
+    fi
   else
-    echo -e "${BLUE}🏗️ Building Docker images for AMD64 architecture (no cache)...${NC}"
-    docker compose --env-file "${ENV_FILE}" build --no-cache
+    # Build all services
+    if [[ "$USE_CACHE" == "true" ]]; then
+      echo -e "${BLUE}🏗️ Building Docker images for AMD64 architecture (with cache)...${NC}"
+      docker compose --env-file "${ENV_FILE}" build
+    else
+      echo -e "${BLUE}🏗️ Building Docker images for AMD64 architecture (no cache)...${NC}"
+      docker compose --env-file "${ENV_FILE}" build --no-cache
+    fi
   fi
 else
   echo -e "${BLUE}⏭️ Skipping build step (--only-push mode)${NC}"
 fi
 
-# Tag and push images to registry in parallel
-echo -e "${BLUE}📦 Tagging and pushing images with tag '${TAG}' to registry in parallel...${NC}"
-
-# Array to store background processes
-pids=()
-
-# Backend
-tag_and_push "thw-tools-backend:latest" "${REGISTRY}/thw-tools-backend:${TAG}" "backend (${TAG})" &
-pids+=($!)
-
-# THW-Tools frontend
-tag_and_push "thw-tools:latest" "${REGISTRY}/thw-tools:${TAG}" "thw-tools frontend (${TAG})" &
-pids+=($!)
-
-# Inventar frontend
-tag_and_push "thw-inventar:latest" "${REGISTRY}/thw-inventar:${TAG}" "inventar frontend (${TAG})" &
-pids+=($!)
-
-# Wait for all processes to complete
-failures=0
-for pid in "${pids[@]}"; do
-  if ! wait $pid; then
-    failures=$((failures+1))
-  fi
-done
-
-# Check if any failures occurred
-if [ $failures -eq 0 ]; then
-  echo -e "${GREEN}✨ Build and push for tag '${TAG}' complete successfully!${NC}"
-  exit 0
+# Tag and push images to registry
+if [[ -n "$SINGLE_IMAGE" ]]; then
+  echo -e "${BLUE}📦 Tagging and pushing ${SINGLE_IMAGE} with tag '${TAG}' to registry...${NC}"
+  
+  # Push only the specified image
+  case "$SINGLE_IMAGE" in
+    backend)
+      if tag_and_push "thw-tools-backend:latest" "${REGISTRY}/thw-tools-backend:${TAG}" "backend (${TAG})"; then
+        echo -e "${GREEN}✨ Build and push for ${SINGLE_IMAGE} with tag '${TAG}' complete successfully!${NC}"
+        exit 0
+      else
+        echo -e "${RED}❌ Build and push for ${SINGLE_IMAGE} with tag '${TAG}' failed${NC}"
+        exit 1
+      fi
+      ;;
+    thw-tools)
+      if tag_and_push "thw-tools:latest" "${REGISTRY}/thw-tools:${TAG}" "thw-tools frontend (${TAG})"; then
+        echo -e "${GREEN}✨ Build and push for ${SINGLE_IMAGE} with tag '${TAG}' complete successfully!${NC}"
+        exit 0
+      else
+        echo -e "${RED}❌ Build and push for ${SINGLE_IMAGE} with tag '${TAG}' failed${NC}"
+        exit 1
+      fi
+      ;;
+    inventar)
+      if tag_and_push "thw-inventar:latest" "${REGISTRY}/thw-inventar:${TAG}" "inventar frontend (${TAG})"; then
+        echo -e "${GREEN}✨ Build and push for ${SINGLE_IMAGE} with tag '${TAG}' complete successfully!${NC}"
+        exit 0
+      else
+        echo -e "${RED}❌ Build and push for ${SINGLE_IMAGE} with tag '${TAG}' failed${NC}"
+        exit 1
+      fi
+      ;;
+  esac
 else
-  echo -e "${RED}❌ Build and push for tag '${TAG}' completed with ${failures} failure(s)${NC}"
-  exit 1
+  # Push all images in parallel
+  echo -e "${BLUE}📦 Tagging and pushing images with tag '${TAG}' to registry in parallel...${NC}"
+  
+  # Array to store background processes
+  pids=()
+  
+  # Backend
+  tag_and_push "thw-tools-backend:latest" "${REGISTRY}/thw-tools-backend:${TAG}" "backend (${TAG})" &
+  pids+=($!)
+  
+  # THW-Tools frontend
+  tag_and_push "thw-tools:latest" "${REGISTRY}/thw-tools:${TAG}" "thw-tools frontend (${TAG})" &
+  pids+=($!)
+  
+  # Inventar frontend
+  tag_and_push "thw-inventar:latest" "${REGISTRY}/thw-inventar:${TAG}" "inventar frontend (${TAG})" &
+  pids+=($!)
+  
+  # Wait for all processes to complete
+  failures=0
+  for pid in "${pids[@]}"; do
+    if ! wait $pid; then
+      failures=$((failures+1))
+    fi
+  done
+  
+  # Check if any failures occurred
+  if [ $failures -eq 0 ]; then
+    echo -e "${GREEN}✨ Build and push for tag '${TAG}' complete successfully!${NC}"
+    exit 0
+  else
+    echo -e "${RED}❌ Build and push for tag '${TAG}' completed with ${failures} failure(s)${NC}"
+    exit 1
+  fi
 fi 
