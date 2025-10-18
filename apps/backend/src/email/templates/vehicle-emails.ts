@@ -19,8 +19,8 @@ export const getRentalConfirmationEmail = (data: VehicleEmailData) => ({
     <ul>
       <li><strong>Fahrzeug:</strong> ${data.vehicle.name} (${data.vehicle.licensePlate})</li>
       <li><strong>Zweck:</strong> ${data.rental.purpose}</li>
-      <li><strong>Von:</strong> ${new Date(data.rental.plannedStart).toLocaleString('de-DE')}</li>
-      <li><strong>Bis:</strong> ${new Date(data.rental.plannedEnd).toLocaleString('de-DE')}</li>
+      <li><strong>Von:</strong> ${new Date(data.rental.plannedStart).toLocaleString('de-DE', { timeZone: 'Europe/Berlin' })}</li>
+      <li><strong>Bis:</strong> ${new Date(data.rental.plannedEnd).toLocaleString('de-DE', { timeZone: 'Europe/Berlin' })}</li>
     </ul>
     <p><a href="https://funk.thw-duesseldorf.de/fahrzeuge?vehicleId=${data.vehicle.id}">Zur Fahrzeugreservierung</a></p>
     <p>Viele Grüße<br>${data.orgName}</p>
@@ -37,8 +37,8 @@ export const getRentalCancellationEmail = (data: VehicleEmailData) => ({
     <ul>
       <li><strong>Fahrzeug:</strong> ${data.vehicle.name} (${data.vehicle.licensePlate})</li>
       <li><strong>Zweck:</strong> ${data.rental.purpose}</li>
-      <li><strong>Von:</strong> ${new Date(data.rental.plannedStart).toLocaleString('de-DE')}</li>
-      <li><strong>Bis:</strong> ${new Date(data.rental.plannedEnd).toLocaleString('de-DE')}</li>
+      <li><strong>Von:</strong> ${new Date(data.rental.plannedStart).toLocaleString('de-DE', { timeZone: 'Europe/Berlin' })}</li>
+      <li><strong>Bis:</strong> ${new Date(data.rental.plannedEnd).toLocaleString('de-DE', { timeZone: 'Europe/Berlin' })}</li>
     </ul>
     <p><a href="https://funk.thw-duesseldorf.de/fahrzeuge?vehicleId=${data.vehicle.id}">Zur Fahrzeugübersicht</a></p>
     <p>Viele Grüße<br>${data.orgName}</p>
