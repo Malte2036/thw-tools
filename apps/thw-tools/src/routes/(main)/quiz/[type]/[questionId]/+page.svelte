@@ -14,6 +14,8 @@
 	import ProgressBar from '$lib/quiz/ProgressBar.svelte';
 	import QuizHead from '$lib/quiz/QuizHead.svelte';
 	import QuizSettingsDialog from '$lib/quiz/QuizSettingsDialog.svelte';
+	import { getQuizTypeShortName } from '$lib/quiz/quizUtils';
+	import SettingsIcon from '$lib/icons/SettingsIcon.svelte';
 	import shuffleQuiz from '$lib/shared/stores/shuffleQuiz';
 	import { randomInt, shuffle } from '@thw-tools/shared';
 	import type { AfterNavigate } from '@sveltejs/kit';
@@ -123,36 +125,54 @@
 <QuizHead {questionType} {question} />
 
 {#if question && shuffledAnswers}
-	<div class="h-full flex flex-col">
-		<div class="flex-grow flex flex-col px-4">
+	<div class="flex min-h-full flex-col bg-gradient-to-b from-white to-thw-50">
+		<div class="px-4 pt-4">
+			<div class="flex items-center justify-between gap-2">
+				<a
+					href={`/quiz/${questionType}/listing/`}
+					class="min-w-0 truncate text-sm font-semibold text-thw-700 transition-colors hover:text-thw"
+					data-umami-event={`Open ${questionType.toUpperCase()} Quiz Listing`}
+					>{getQuizTypeShortName(questionType)}</a
+				>
+				<span
+					class="shrink-0 rounded-full bg-white px-3 py-1 text-xs font-semibold tabular-nums text-thw-800 shadow-card ring-1 ring-thw-100"
+				>
+					Frage {question.number} / {questionCount}
+				</span>
+				<button
+					class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-thw-700 transition-colors hover:bg-thw-100"
+					onclick={openQuizSettings}
+					aria-label="Quiz Einstellungen"
+					data-umami-event="Open Quiz Settings"
+				>
+					<div class="h-5 w-5">
+						<SettingsIcon />
+					</div>
+				</button>
+			</div>
+			<div class="mt-3">
+				<ProgressBar progress={(question.number - 1) / questionCount} />
+			</div>
+		</div>
+
+		<main class="flex-1 px-4 pb-6 pt-6">
 			<div class="flex flex-col gap-8">
-				<div class="flex flex-col gap-2">
-					<div class="-mx-4 -mt-4 w-screen">
-						<ProgressBar progress={(question.number - 1) / questionCount} />
-					</div>
-					<div class="text-sm mt-4 flex flex-row justify-between">
-						<div>Frage {question.number} von {questionCount}</div>
-						<button class="underline hover:text-thw" onclick={openQuizSettings}>
-							Einstellungen
-						</button>
-					</div>
-					<h1
-						bind:this={questionTextEl}
-						class="text-3xl text-center text-thw outline-none font-bold break-words"
-						tabindex="-1"
-					>
-						{question.text}
-					</h1>
-				</div>
-				<div class="flex gap-y-2 flex-col md:flex-row w-full items-center">
+				<h1
+					bind:this={questionTextEl}
+					class="text-2xl font-bold break-words text-thw outline-none sm:text-3xl"
+					tabindex="-1"
+				>
+					{question.text}
+				</h1>
+				<div class="flex w-full flex-col gap-y-2 md:flex-row md:items-center">
 					{#if question.image}
 						<img
-							class="flex justify-center h-64 aspect-square m-4"
+							class="mx-auto mb-2 aspect-square h-48 rounded-2xl bg-white object-contain shadow-card md:mb-0 md:h-64"
 							alt={`Fragebild ${question.number}`}
 							src={question.image}
 						/>
 					{/if}
-					<div class="flex flex-col flex-grow gap-2 w-full">
+					<div class="flex w-full flex-grow flex-col gap-2.5">
 						{#each shuffledAnswers as answer, index}
 							<CheckboxAnswer
 								{answer}
@@ -172,18 +192,20 @@
 					</div>
 				</div>
 			</div>
-			<div class="flex-grow sm:hidden"></div>
-			<div class="w-full pt-8 pb-8">
-				<AnswerButton
-					{question}
-					{checkedAnswers}
-					{completelyRight}
-					bind:revealAnswers
-					bind:answeredCountData
-					bind:currentQuestionAnsweredCountData
-					{gotoNextQuestion}
-				/>
-			</div>
+		</main>
+
+		<div
+			class="sticky bottom-0 bg-gradient-to-t from-white via-white to-transparent px-4 pt-4 pb-safe"
+		>
+			<AnswerButton
+				{question}
+				{checkedAnswers}
+				{completelyRight}
+				bind:revealAnswers
+				bind:answeredCountData
+				bind:currentQuestionAnsweredCountData
+				{gotoNextQuestion}
+			/>
 		</div>
 	</div>
 {/if}

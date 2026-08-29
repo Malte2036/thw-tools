@@ -13,114 +13,151 @@
 	let { answer, checked, revealAnswers, changeCheckedCallback }: Props = $props();
 
 	let isCheckedVariant = $derived(checked && !revealAnswers);
-	let isUncheckedVariant = $derived(
-		!checked && (!revealAnswers || (!answer.isCorrect && revealAnswers))
-	);
-	let isCorrectVariant = $derived(revealAnswers && checked && answer.isCorrect);
-	let isWrongVariant = $derived(
-		revealAnswers && ((checked && !answer.isCorrect) || (!checked && answer.isCorrect))
+	let isChosenCorrectVariant = $derived(revealAnswers && checked && answer.isCorrect);
+	let isMissedCorrectVariant = $derived(revealAnswers && !checked && answer.isCorrect);
+	let isWrongVariant = $derived(revealAnswers && checked && !answer.isCorrect);
+	let isDimmed = $derived(revealAnswers && !answer.isCorrect && !isWrongVariant);
+
+	let containerClass = $derived(
+		isChosenCorrectVariant
+			? 'border-correct bg-correct-200'
+			: isMissedCorrectVariant
+				? 'border-dashed border-correct bg-white'
+				: isWrongVariant
+					? 'border-wrong bg-wrong-200'
+					: isCheckedVariant
+						? 'border-thw bg-thw-50'
+						: 'border-gray-200 bg-white'
 	);
 
-	let shouldShowCheckMark = $derived((revealAnswers && answer.isCorrect) || isCheckedVariant);
-	let shouldShowXMark = $derived(revealAnswers && !answer.isCorrect);
+	let circleClass = $derived(
+		revealAnswers
+			? answer.isCorrect
+				? isChosenCorrectVariant
+					? 'bg-correct-600 text-white'
+					: 'border-2 border-correct-600 bg-white text-correct-600'
+				: isWrongVariant
+					? 'bg-wrong-600 text-white'
+					: 'border-2 border-gray-300 bg-white'
+			: isCheckedVariant
+				? 'bg-thw text-white'
+				: 'border-2 border-gray-300 bg-white'
+	);
+
+	let showCheck = $derived(revealAnswers ? answer.isCorrect : isCheckedVariant);
+	let showX = $derived(isWrongVariant);
+	let statusLabel = $derived(
+		revealAnswers
+			? answer.isCorrect
+				? isChosenCorrectVariant
+					? 'Richtig'
+					: 'Nicht gewählt'
+				: isWrongVariant
+					? 'Deine Antwort'
+					: null
+			: null
+	);
+	let statusLabelClass = $derived(
+		statusLabel === 'Richtig'
+			? 'bg-correct-200 text-correct-700'
+			: statusLabel === 'Nicht gewählt'
+				? 'bg-gray-100 text-gray-600'
+				: 'bg-wrong-200 text-wrong-700'
+	);
 </script>
 
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<div
+<label
 	data-testid="answer-container"
-	class="transition-colors hover:cursor-pointer flex justify-between p-2 items-center rounded-lg border-2 border-gray text-xl"
+	class="flex min-h-14 cursor-pointer select-none items-center gap-3 rounded-2xl border-2 p-4 shadow-card transition-all duration-150 hover:border-thw-300 {containerClass}"
 	class:checkedVariant={isCheckedVariant}
-	class:uncheckedVariant={isUncheckedVariant}
-	class:correctVariant={isCorrectVariant}
+	class:uncheckedVariant={!isCheckedVariant && !isChosenCorrectVariant && !isWrongVariant}
+	class:correctVariant={isChosenCorrectVariant}
+	class:missedCorrectVariant={isMissedCorrectVariant}
 	class:wrongVariant={isWrongVariant}
-	class:isAnswerCorrect={revealAnswers && answer.isCorrect}
-	class:isAnswerWrong={revealAnswers && !answer.isCorrect}
-	onclick={() => {
-		changeCheckedCallback(!checked);
-	}}
+	class:opacity-60={isDimmed}
+	class:wrong-shake={isWrongVariant}
+	class:correct-pop={isChosenCorrectVariant}
 >
-	<div>{answer.text}</div>
-	<div class="relative w-6 h-6 aspect-square">
-		<label
-			class="absolute w-px h-px p-0 -m-px overflow-hidden clip-rect-0 whitespace-nowrap border-0"
-			for="answer-checkbox"
+	<span class="flex-1 break-words text-base font-medium leading-snug text-gray-900">
+		{answer.text}
+	</span>
+
+	<span class="flex shrink-0 items-center gap-2 pl-1">
+		{#if statusLabel}
+			<span
+				class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold whitespace-nowrap {statusLabelClass}"
+				>{statusLabel}</span
+			>
+		{/if}
+		<span
+			class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors duration-150 {circleClass}"
+			aria-hidden="true"
 		>
-			Select answer: {answer.text}
-		</label>
-		<input
-			id="answer-checkbox"
-			type="checkbox"
-			bind:checked
-			aria-label="Select answer: {answer.text}"
-			class="absolute top-0 left-0 w-full h-full rounded-full border-gray border-2 appearance-none flex-shrink-0 cursor-pointer"
-		/>
-		{#if shouldShowXMark}
-			<div
-				class="absolute inset-0 flex items-center justify-center text-white p-1.5"
-				data-testid="x-mark"
-				aria-hidden="true"
-			>
-				<!-- Safari requires explicit wrapper with dimensions for SVG in flex containers -->
-				<div class="w-[12px] h-[16px]">
-					<XMarkIcon />
-				</div>
-			</div>
-		{/if}
-		{#if shouldShowCheckMark}
-			<div
-				class="absolute inset-0 flex items-center justify-center text-white p-1.5"
-				data-testid="check-mark"
-				aria-hidden="true"
-			>
-				<!-- Safari requires explicit wrapper with dimensions for SVG in flex containers -->
-				<div class="w-full h-full">
-					<CheckIcon />
-				</div>
-			</div>
-		{/if}
-	</div>
-</div>
+			<span class="flex h-4 w-4 items-center justify-center">
+				{#if showX}
+					<span data-testid="x-mark">
+						<XMarkIcon />
+					</span>
+				{:else if showCheck}
+					<span data-testid="check-mark">
+						<CheckIcon />
+					</span>
+				{/if}
+			</span>
+		</span>
+	</span>
+
+	<input
+		type="checkbox"
+		class="sr-only"
+		{checked}
+		disabled={revealAnswers}
+		onchange={() => {
+			if (!revealAnswers) {
+				changeCheckedCallback(!checked);
+			}
+		}}
+		aria-label="Antwort auswählen: {answer.text}"
+	/>
+</label>
 
 <style lang="scss">
-	.uncheckedVariant {
-		@apply border-gray;
-
-		input {
-			@apply bg-white border-gray;
+	@keyframes wrong-shake {
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+		20% {
+			transform: translateX(-4px);
+		}
+		40% {
+			transform: translateX(4px);
+		}
+		60% {
+			transform: translateX(-3px);
+		}
+		80% {
+			transform: translateX(3px);
 		}
 	}
 
-	.checkedVariant {
-		@apply border-thw;
-
-		input {
-			@apply bg-thw border-thw;
+	@keyframes correct-pop {
+		0% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.02);
+		}
+		100% {
+			transform: scale(1);
 		}
 	}
 
-	.correctVariant {
+	.wrong-shake {
+		animation: wrong-shake 300ms ease-in-out;
 	}
 
-	.wrongVariant {
-		@apply border-wrong text-wrong;
-	}
-
-	.isAnswerCorrect {
-		input {
-			@apply bg-correct border-correct;
-		}
-
-		&.correctVariant {
-			@apply border-correct bg-correct-200;
-		}
-	}
-
-	.isAnswerWrong {
-		@apply line-through;
-
-		input {
-			@apply bg-wrong border-wrong;
-		}
+	.correct-pop {
+		animation: correct-pop 200ms ease-out;
 	}
 </style>
