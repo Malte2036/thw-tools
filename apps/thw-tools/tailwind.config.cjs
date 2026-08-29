@@ -9,25 +9,30 @@ module.exports = {
 			colors: {
 				thw: {
 					DEFAULT: '#120A8F',
-					50: '#f8f7fe',
-					100: '#eeedfe',
-					200: '#dedcfd',
-					300: '#c8c4fb',
-					400: '#a49ef8',
-					500: '#7f77f5',
-					600: '#5e54f3',
-					700: '#4c40f2',
-					800: '#1f11ee',
-					900: '#1a0ec7'
+					50: '#f1f3fd',
+					100: '#e2e7fa',
+					200: '#c6d0f5',
+					300: '#9eabed',
+					400: '#7180e3',
+					500: '#4f5bd8',
+					600: '#353fc4',
+					700: '#262eaa',
+					800: '#1a2094',
+					900: '#120a8f',
+					950: '#0e086d'
 				},
 				accent: '#EEE648',
 				correct: {
 					DEFAULT: '#24CEA6',
-					200: '#24cea640'
+					200: '#24cea640',
+					600: '#0e9f7c',
+					700: '#0a6f58'
 				},
 				wrong: {
 					DEFAULT: '#DE5444',
-					200: '#de544440'
+					200: '#de544440',
+					600: '#b03a2f',
+					700: '#8a2a20'
 				},
 				gray: {
 					DEFAULT: '#D9D9D9',
@@ -43,6 +48,9 @@ module.exports = {
 					900: '#545454',
 					950: '#363636'
 				}
+			},
+			boxShadow: {
+				card: '0 1px 2px 0 rgb(18 10 143 / 0.05), 0 4px 12px 0 rgb(18 10 143 / 0.06)'
 			},
 			fontFamily: {
 				calibri: ['Calibri', 'sans-serif']
